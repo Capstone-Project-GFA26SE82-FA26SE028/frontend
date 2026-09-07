@@ -1,0 +1,82 @@
+/* Nạp theme và utilities; chưa dùng Preflight để giữ giao diện hiện tại. */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* CSS cũ ở layer components để utilities có thể ghi đè khi cần. */
+@layer components {
+  :root {
+    font-family: system-ui, sans-serif;
+    color: #24332b;
+    background: #f6f8f5;
+    font-synthesis: none;
+    line-height: 1.6;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    min-width: 320px;
+  }
+  a {
+    color: #25633d;
+    text-underline-offset: 4px;
+  }
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+  :focus-visible {
+    outline: 3px solid #b16a15;
+    outline-offset: 4px;
+  }
+  .site-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px max(24px, calc((100vw - 1080px) / 2));
+    background: white;
+    border-bottom: 1px solid #dce3dc;
+  }
+  .brand {
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  nav {
+    display: flex;
+    gap: 24px;
+  }
+  nav a.active {
+    font-weight: 700;
+  }
+  .container {
+    max-width: 1080px;
+    margin: auto;
+    padding: 32px 24px;
+  }
+  .empty-state {
+    padding: 32px;
+    background: white;
+    border: 1px solid #dce3dc;
+    border-radius: 12px;
+  }
+  .empty-state p {
+    color: #536358;
+  }
+  .skip-link {
+    position: absolute;
+    top: -100px;
+    left: 16px;
+    padding: 8px;
+    background: white;
+  }
+  .skip-link:focus {
+    top: 8px;
+  }
+
+}
