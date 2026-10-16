@@ -1,4 +1,51 @@
-// KHUNG SOURCE: chưa triển khai.
-// TODO: Thanh chọn danh mục món ăn.
-// File hiện chưa được sử dụng trong luồng chạy của ứng dụng.
-export {}
+import { useLayoutEffect, useRef } from 'react'
+import { Icon } from '../../../../components/Icon/Icon'
+import { categories } from '../data/menu'
+export function CategoryTabs({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange: (id: string) => void
+}) {
+  const listRef = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    const list = listRef.current
+    const active = list?.querySelector<HTMLButtonElement>(
+      '[aria-pressed="true"]',
+    )
+    if (!list || !active || !window.matchMedia('(max-width: 767px)').matches)
+      return
+    const left = active.offsetLeft - list.offsetLeft
+    if (
+      left < list.scrollLeft ||
+      left + active.offsetWidth > list.scrollLeft + list.clientWidth
+    ) {
+      list.scrollTo({
+        left: left - (list.clientWidth - active.offsetWidth) / 2,
+        behavior: 'instant',
+      })
+    }
+  }, [value])
+
+  return (
+    <div
+      ref={listRef}
+      role="group"
+      className="relative flex gap-2 overflow-x-auto py-1 md:flex-wrap md:overflow-visible"
+      aria-label="Danh mục món ăn"
+    >
+      {categories.map((c) => (
+        <button
+          key={c.id}
+          onClick={() => onChange(c.id)}
+          aria-pressed={value === c.id}
+          className={`flex min-h-12 shrink-0 items-center gap-2 whitespace-nowrap rounded-2xl px-4 py-3 text-sm font-semibold transition-colors sm:px-5 ${value === c.id ? 'bg-brand text-white shadow-md shadow-brand/10' : 'border border-stone-200 bg-white text-muted hover:border-brand hover:text-brand'}`}
+        >
+          <Icon name={c.icon} size={18} />
+          {c.label}
+        </button>
+      ))}
+    </div>
+  )
+}
