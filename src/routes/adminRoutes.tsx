@@ -1,3 +1,4 @@
+import { SessionsPage } from '../features/admin/sessions/pages/SessionsPage'
 import { RolesPage } from '../features/admin/roles/pages/RolesPage'
 import { UsersPage } from '../features/admin/users/pages/UsersPage'
 import { Link, type RouteObject } from 'react-router-dom'
@@ -11,9 +12,10 @@ export const adminRoute: RouteObject = {
   children: [
     { path: 'users', Component: UsersPage },
     { path: 'roles', Component: RolesPage },
+    { path: 'sessions', Component: SessionsPage },
     ...adminNavigation
       .flatMap((group) => group.items)
-      .filter((item) => !['users', 'roles'].includes(item.id))
+      .filter((item) => !['users', 'roles', 'sessions'].includes(item.id))
       .map((item) => ({
         ...(item.id === 'overview'
           ? { index: true as const }
