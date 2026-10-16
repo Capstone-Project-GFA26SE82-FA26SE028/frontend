@@ -1,3 +1,4 @@
+import { CartPage } from '../features/customer/cart/pages/CartPage'
 import { MenuPage } from '../features/customer/menu/pages/MenuPage'
 import { PhoneEntryPage } from '../features/customer/table-session/pages/PhoneEntryPage'
 import { CustomerSessionGate } from '../features/customer/table-session/components/CustomerSessionGate'
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
         element: <CustomerSessionGate />,
         children: [
           { path: 'menu', element: <MenuPage /> },
+          { path: 'cart', element: <CartPage /> },
           ...[
             { path: 'cart', title: 'Giỏ hàng' },
             { path: 'orders', title: 'Đơn của bạn' },
