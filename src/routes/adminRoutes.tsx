@@ -1,3 +1,4 @@
+import { HealthPage } from '../features/admin/health/pages/HealthPage'
 import { ActivityPage } from '../features/admin/activity/pages/ActivityPage'
 import { PaymentMethodsPage } from '../features/admin/payment-methods/pages/PaymentMethodsPage'
 import { TaxFeesPage } from '../features/admin/tax-fees/pages/TaxFeesPage'
@@ -27,6 +28,7 @@ export const adminRoute: RouteObject = {
     { path: 'tax-fees', Component: TaxFeesPage },
     { path: 'payment-methods', Component: PaymentMethodsPage },
     { path: 'activity', Component: ActivityPage },
+    { path: 'health', Component: HealthPage },
     ...adminNavigation
       .flatMap((group) => group.items)
       .filter(
@@ -42,6 +44,7 @@ export const adminRoute: RouteObject = {
             'tax-fees',
             'payment-methods',
             'activity',
+            'health',
           ].includes(item.id),
       )
       .map((item) => ({
