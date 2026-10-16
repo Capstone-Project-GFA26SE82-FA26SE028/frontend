@@ -1,3 +1,4 @@
+import { TableQrPage } from '../features/admin/table-qr/pages/TableQrPage'
 import { TablesPage } from '../features/admin/tables/pages/TablesPage'
 import { AreasPage } from '../features/admin/areas/pages/AreasPage'
 import { RestaurantProfilePage } from '../features/admin/restaurant-profile/pages/RestaurantProfilePage'
@@ -19,6 +20,7 @@ export const adminRoute: RouteObject = {
     { path: 'restaurant-profile', Component: RestaurantProfilePage },
     { path: 'areas', Component: AreasPage },
     { path: 'tables', Component: TablesPage },
+    { path: 'table-qr', Component: TableQrPage },
     ...adminNavigation
       .flatMap((group) => group.items)
       .filter(
@@ -30,6 +32,7 @@ export const adminRoute: RouteObject = {
             'restaurant-profile',
             'areas',
             'tables',
+            'table-qr',
           ].includes(item.id),
       )
       .map((item) => ({
