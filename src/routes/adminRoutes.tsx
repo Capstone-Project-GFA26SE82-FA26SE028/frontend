@@ -1,3 +1,4 @@
+import { DashboardPage } from '../features/admin/dashboard/pages/DashboardPage'
 import { HealthPage } from '../features/admin/health/pages/HealthPage'
 import { ActivityPage } from '../features/admin/activity/pages/ActivityPage'
 import { PaymentMethodsPage } from '../features/admin/payment-methods/pages/PaymentMethodsPage'
@@ -11,13 +12,12 @@ import { RolesPage } from '../features/admin/roles/pages/RolesPage'
 import { UsersPage } from '../features/admin/users/pages/UsersPage'
 import { Link, type RouteObject } from 'react-router-dom'
 import { AdminLayout } from '../layouts/admin/AdminLayout'
-import { adminNavigation } from '../layouts/admin/navigation'
 
-// Replace each temporary element when its feature is migrated.
 export const adminRoute: RouteObject = {
   path: '/admin',
   Component: AdminLayout,
   children: [
+    { index: true, Component: DashboardPage },
     { path: 'users', Component: UsersPage },
     { path: 'roles', Component: RolesPage },
     { path: 'sessions', Component: SessionsPage },
@@ -29,37 +29,6 @@ export const adminRoute: RouteObject = {
     { path: 'payment-methods', Component: PaymentMethodsPage },
     { path: 'activity', Component: ActivityPage },
     { path: 'health', Component: HealthPage },
-    ...adminNavigation
-      .flatMap((group) => group.items)
-      .filter(
-        (item) =>
-          ![
-            'users',
-            'roles',
-            'sessions',
-            'restaurant-profile',
-            'areas',
-            'tables',
-            'table-qr',
-            'tax-fees',
-            'payment-methods',
-            'activity',
-            'health',
-          ].includes(item.id),
-      )
-      .map((item) => ({
-        ...(item.id === 'overview'
-          ? { index: true as const }
-          : { path: item.id }),
-        element: (
-          <section className="rounded-2xl border border-slate-200/60 bg-white p-6">
-            <h1 className="text-2xl font-bold text-slate-800">{item.label}</h1>
-            <p className="mt-2 text-sm text-slate-500">
-              Nội dung chức năng sẽ được chuyển ở bước tiếp theo.
-            </p>
-          </section>
-        ),
-      })),
     {
       path: '*',
       element: (
