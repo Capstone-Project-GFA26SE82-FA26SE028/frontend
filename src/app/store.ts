@@ -1,3 +1,4 @@
+import adminPaymentMethodsReducer from '../features/admin/payment-methods/paymentMethodSlice'
 import adminTaxFeesReducer from '../features/admin/tax-fees/taxFeeSlice'
 import adminAreasReducer from '../features/admin/areas/areaSlice'
 import adminTablesReducer from '../features/admin/tables/tableSlice'
@@ -14,6 +15,7 @@ export const store = configureStore({
     adminAreas: adminAreasReducer,
     adminTables: adminTablesReducer,
     adminTaxFees: adminTaxFeesReducer,
+    adminPaymentMethods: adminPaymentMethodsReducer,
   },
 })
 let previousAdminState = store.getState().admin
