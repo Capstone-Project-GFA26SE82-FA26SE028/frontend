@@ -1,3 +1,4 @@
+import { PaymentMethodsPage } from '../features/admin/payment-methods/pages/PaymentMethodsPage'
 import { TaxFeesPage } from '../features/admin/tax-fees/pages/TaxFeesPage'
 import { TableQrPage } from '../features/admin/table-qr/pages/TableQrPage'
 import { TablesPage } from '../features/admin/tables/pages/TablesPage'
@@ -23,6 +24,7 @@ export const adminRoute: RouteObject = {
     { path: 'tables', Component: TablesPage },
     { path: 'table-qr', Component: TableQrPage },
     { path: 'tax-fees', Component: TaxFeesPage },
+    { path: 'payment-methods', Component: PaymentMethodsPage },
     ...adminNavigation
       .flatMap((group) => group.items)
       .filter(
@@ -36,6 +38,7 @@ export const adminRoute: RouteObject = {
             'tables',
             'table-qr',
             'tax-fees',
+            'payment-methods',
           ].includes(item.id),
       )
       .map((item) => ({
