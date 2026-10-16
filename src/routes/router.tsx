@@ -1,3 +1,4 @@
+import { MenuPage } from '../features/customer/menu/pages/MenuPage'
 import { PhoneEntryPage } from '../features/customer/table-session/pages/PhoneEntryPage'
 import { CustomerSessionGate } from '../features/customer/table-session/components/CustomerSessionGate'
 import { TableAccessPage } from '../features/admin/table-qr/pages/TableAccessPage'
@@ -24,22 +25,24 @@ export const router = createBrowserRouter([
       {
         element: <CustomerSessionGate />,
         children: [
-          { path: 'menu', title: 'Thực đơn' },
-          { path: 'cart', title: 'Giỏ hàng' },
-          { path: 'orders', title: 'Đơn của bạn' },
-          { path: 'checkout', title: 'Xác nhận gọi món' },
-          { path: 'payment', title: 'Thanh toán' },
-        ].map((page) => ({
-          path: page.path,
-          element: (
-            <section className="panel my-6 p-6">
-              <h1 className="text-2xl font-bold">{page.title}</h1>
-              <p className="mt-2 text-sm text-muted">
-                Nội dung chức năng sẽ được chuyển ở bước tiếp theo.
-              </p>
-            </section>
-          ),
-        })),
+          { path: 'menu', element: <MenuPage /> },
+          ...[
+            { path: 'cart', title: 'Giỏ hàng' },
+            { path: 'orders', title: 'Đơn của bạn' },
+            { path: 'checkout', title: 'Xác nhận gọi món' },
+            { path: 'payment', title: 'Thanh toán' },
+          ].map((page) => ({
+            path: page.path,
+            element: (
+              <section className="panel my-6 p-6">
+                <h1 className="text-2xl font-bold">{page.title}</h1>
+                <p className="mt-2 text-sm text-muted">
+                  Nội dung chức năng sẽ được chuyển ở bước tiếp theo.
+                </p>
+              </section>
+            ),
+          })),
+        ],
       },
       {
         path: 'reservation',
