@@ -1,3 +1,4 @@
+import { ReservationPage } from '../features/customer/reservation/pages/ReservationPage'
 import { PaymentPage } from '../features/customer/payment/pages/PaymentPage'
 import { OrderTrackingPage } from '../features/customer/order-tracking/pages/OrderTrackingPage'
 import { CheckoutPage } from '../features/customer/checkout/pages/CheckoutPage'
@@ -36,17 +37,7 @@ export const router = createBrowserRouter([
           { path: 'payment', element: <PaymentPage /> },
         ],
       },
-      {
-        path: 'reservation',
-        element: (
-          <section className="panel my-6 p-6">
-            <h1 className="text-2xl font-bold">Đặt bàn</h1>
-            <p className="mt-2 text-sm text-muted">
-              Nội dung chức năng sẽ được chuyển ở bước tiếp theo.
-            </p>
-          </section>
-        ),
-      },
+      { path: 'reservation', element: <ReservationPage /> },
       {
         path: '*',
         element: (
