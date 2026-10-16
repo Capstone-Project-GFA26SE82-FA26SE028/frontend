@@ -1,3 +1,4 @@
+import { PaymentPage } from '../features/customer/payment/pages/PaymentPage'
 import { OrderTrackingPage } from '../features/customer/order-tracking/pages/OrderTrackingPage'
 import { CheckoutPage } from '../features/customer/checkout/pages/CheckoutPage'
 import { CartPage } from '../features/customer/cart/pages/CartPage'
@@ -32,17 +33,7 @@ export const router = createBrowserRouter([
           { path: 'cart', element: <CartPage /> },
           { path: 'checkout', element: <CheckoutPage /> },
           { path: 'orders', element: <OrderTrackingPage /> },
-          ...[{ path: 'payment', title: 'Thanh toán' }].map((page) => ({
-            path: page.path,
-            element: (
-              <section className="panel my-6 p-6">
-                <h1 className="text-2xl font-bold">{page.title}</h1>
-                <p className="mt-2 text-sm text-muted">
-                  Nội dung chức năng sẽ được chuyển ở bước tiếp theo.
-                </p>
-              </section>
-            ),
-          })),
+          { path: 'payment', element: <PaymentPage /> },
         ],
       },
       {
