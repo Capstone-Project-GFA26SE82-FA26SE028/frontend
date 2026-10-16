@@ -1,3 +1,4 @@
+import { CheckoutPage } from '../features/customer/checkout/pages/CheckoutPage'
 import { CartPage } from '../features/customer/cart/pages/CartPage'
 import { MenuPage } from '../features/customer/menu/pages/MenuPage'
 import { PhoneEntryPage } from '../features/customer/table-session/pages/PhoneEntryPage'
@@ -28,10 +29,9 @@ export const router = createBrowserRouter([
         children: [
           { path: 'menu', element: <MenuPage /> },
           { path: 'cart', element: <CartPage /> },
+          { path: 'checkout', element: <CheckoutPage /> },
           ...[
-            { path: 'cart', title: 'Giỏ hàng' },
             { path: 'orders', title: 'Đơn của bạn' },
-            { path: 'checkout', title: 'Xác nhận gọi món' },
             { path: 'payment', title: 'Thanh toán' },
           ].map((page) => ({
             path: page.path,
