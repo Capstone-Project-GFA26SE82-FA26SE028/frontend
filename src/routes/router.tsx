@@ -1,3 +1,4 @@
+import { TableAccessPage } from '../features/admin/table-qr/pages/TableAccessPage'
 import { adminRoute } from './adminRoutes'
 import { createBrowserRouter, Link, Navigate } from 'react-router-dom'
 import { CustomerLayout } from '../layouts/CustomerLayout'
@@ -7,6 +8,25 @@ import { EmptyState } from '../components/EmptyState/EmptyState'
 
 export const router = createBrowserRouter([
   adminRoute,
+  { path: '/table-access/:token', Component: TableAccessPage },
+  // Temporary destination until the Customer table-session feature is migrated.
+  {
+    path: '/welcome',
+    element: (
+      <main className="flex min-h-dvh items-center justify-center bg-cream p-5">
+        <section className="panel max-w-md p-8 text-center">
+          <h1 className="text-xl font-semibold">Nhập số điện thoại</h1>
+          <p className="mt-3 text-sm text-muted">
+            Giao diện tham gia phiên bàn sẽ được chuyển ở bước Customer. Hiện
+            tại bạn đang xem trước chức năng QR bàn.
+          </p>
+          <Link className="btn-primary mt-5" to="/admin/table-qr">
+            Về mã QR bàn
+          </Link>
+        </section>
+      </main>
+    ),
+  },
   {
     element: <CustomerLayout />,
     errorElement: (
