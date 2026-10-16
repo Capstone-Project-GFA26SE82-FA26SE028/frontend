@@ -1,3 +1,4 @@
+import customerSessionReducer from '../features/customer/table-session/sessionSlice'
 import orderReducer from '../features/customer/order-tracking/orderSlice'
 import adminPaymentMethodsReducer from '../features/admin/payment-methods/paymentMethodSlice'
 import adminTaxFeesReducer from '../features/admin/tax-fees/taxFeeSlice'
@@ -12,6 +13,7 @@ export const store = configureStore({
   reducer: {
     cart: cartReducer,
     orders: orderReducer,
+    customerSession: customerSessionReducer,
     admin: adminReducer,
     adminProfile: adminProfileReducer,
     adminAreas: adminAreasReducer,
