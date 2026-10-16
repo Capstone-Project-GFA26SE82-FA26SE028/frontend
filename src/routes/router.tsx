@@ -1,3 +1,4 @@
+import { OrderTrackingPage } from '../features/customer/order-tracking/pages/OrderTrackingPage'
 import { CheckoutPage } from '../features/customer/checkout/pages/CheckoutPage'
 import { CartPage } from '../features/customer/cart/pages/CartPage'
 import { MenuPage } from '../features/customer/menu/pages/MenuPage'
@@ -30,10 +31,8 @@ export const router = createBrowserRouter([
           { path: 'menu', element: <MenuPage /> },
           { path: 'cart', element: <CartPage /> },
           { path: 'checkout', element: <CheckoutPage /> },
-          ...[
-            { path: 'orders', title: 'Đơn của bạn' },
-            { path: 'payment', title: 'Thanh toán' },
-          ].map((page) => ({
+          { path: 'orders', element: <OrderTrackingPage /> },
+          ...[{ path: 'payment', title: 'Thanh toán' }].map((page) => ({
             path: page.path,
             element: (
               <section className="panel my-6 p-6">
