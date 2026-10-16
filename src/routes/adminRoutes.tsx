@@ -1,3 +1,4 @@
+import { RolesPage } from '../features/admin/roles/pages/RolesPage'
 import { UsersPage } from '../features/admin/users/pages/UsersPage'
 import { Link, type RouteObject } from 'react-router-dom'
 import { AdminLayout } from '../layouts/admin/AdminLayout'
@@ -9,9 +10,10 @@ export const adminRoute: RouteObject = {
   Component: AdminLayout,
   children: [
     { path: 'users', Component: UsersPage },
+    { path: 'roles', Component: RolesPage },
     ...adminNavigation
       .flatMap((group) => group.items)
-      .filter((item) => item.id !== 'users')
+      .filter((item) => !['users', 'roles'].includes(item.id))
       .map((item) => ({
         ...(item.id === 'overview'
           ? { index: true as const }
