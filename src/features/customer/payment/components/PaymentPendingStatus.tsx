@@ -8,7 +8,8 @@ export function PaymentPendingStatus() {
         Chờ xác nhận thanh toán
       </div>
       <p className="mt-2 text-sm leading-6">
-        Thanh toán chưa hoàn tất. Vui lòng liên hệ nhân viên để kiểm tra hóa đơn và xác nhận thanh toán.
+        Thanh toán chưa hoàn tất. Vui lòng liên hệ nhân viên để kiểm tra hóa đơn
+        và xác nhận thanh toán.
       </p>
     </div>
   )

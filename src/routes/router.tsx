@@ -1,3 +1,4 @@
+import { BillingFeedbackPage } from '../features/customer/billing-feedback/pages/BillingFeedbackPage'
 import { ReservationPage } from '../features/customer/reservation/pages/ReservationPage'
 import { PaymentPage } from '../features/customer/payment/pages/PaymentPage'
 import { OrderTrackingPage } from '../features/customer/order-tracking/pages/OrderTrackingPage'
@@ -35,6 +36,8 @@ export const router = createBrowserRouter([
           { path: 'checkout', element: <CheckoutPage /> },
           { path: 'orders', element: <OrderTrackingPage /> },
           { path: 'payment', element: <PaymentPage /> },
+          { path: 'bill', element: <BillingFeedbackPage /> },
+          { path: 'bill/:invoiceId', element: <BillingFeedbackPage /> },
         ],
       },
       { path: 'reservation', element: <ReservationPage /> },
