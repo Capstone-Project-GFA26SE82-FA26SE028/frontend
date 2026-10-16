@@ -1,3 +1,4 @@
+import { adminRoute } from './adminRoutes'
 import { createBrowserRouter, Link, Navigate } from 'react-router-dom'
 import { CustomerLayout } from '../layouts/CustomerLayout'
 import { MenuPage } from '../features/customer/menu/pages/MenuPage'
@@ -5,6 +6,7 @@ import { CartPage } from '../features/customer/cart/pages/CartPage'
 import { EmptyState } from '../components/EmptyState/EmptyState'
 
 export const router = createBrowserRouter([
+  adminRoute,
   {
     element: <CustomerLayout />,
     errorElement: (
