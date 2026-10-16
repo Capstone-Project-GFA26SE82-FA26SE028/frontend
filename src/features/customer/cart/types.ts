@@ -1,4 +1,3 @@
-// Local cart model, not the backend order contract.
 export type CartItem = {
   id: string
   dishId: string
@@ -6,5 +5,7 @@ export type CartItem = {
   quantity: number
   unitPrice: number
   note: string
+  image: string
+  option: string
 }
 export type CartState = { items: CartItem[] }

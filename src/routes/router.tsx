@@ -1,14 +1,12 @@
 import { TableAccessPage } from '../features/admin/table-qr/pages/TableAccessPage'
 import { adminRoute } from './adminRoutes'
 import { createBrowserRouter, Link, Navigate } from 'react-router-dom'
-import { CustomerLayout } from '../layouts/CustomerLayout'
-import { MenuPage } from '../features/customer/menu/pages/MenuPage'
-import { CartPage } from '../features/customer/cart/pages/CartPage'
+import { CustomerLayout } from '../layouts/customer/CustomerLayout'
 import { EmptyState } from '../components/EmptyState/EmptyState'
 
 export const router = createBrowserRouter([
   adminRoute,
-  { path: '/table-access/:token', Component: TableAccessPage },
+  { path: '/table-access/:token', element: <TableAccessPage /> },
   // Temporary destination until the Customer table-session feature is migrated.
   {
     path: '/welcome',
@@ -37,9 +35,23 @@ export const router = createBrowserRouter([
       />
     ),
     children: [
-      { index: true, element: <Navigate to="/" replace /> },
-      { path: 'menu', element: <MenuPage /> },
-      { path: 'cart', element: <CartPage /> },
+      { index: true, element: <Navigate to="/menu" replace /> },
+      ...[
+        { path: 'menu', title: 'Thực đơn' },
+        { path: 'cart', title: 'Giỏ hàng' },
+        { path: 'orders', title: 'Đơn của bạn' },
+        { path: 'reservation', title: 'Đặt bàn' },
+      ].map((page) => ({
+        path: page.path,
+        element: (
+          <section className="panel my-6 p-6">
+            <h1 className="text-2xl font-bold">{page.title}</h1>
+            <p className="mt-2 text-sm text-muted">
+              Nội dung chức năng sẽ được chuyển ở bước tiếp theo.
+            </p>
+          </section>
+        ),
+      })),
       {
         path: '*',
         element: (
