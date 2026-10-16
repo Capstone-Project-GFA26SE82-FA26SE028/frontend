@@ -12,7 +12,8 @@ export function PaymentSummary({ total, orderCount }: PaymentSummaryProps) {
         </span>
       </div>
       <p className="mt-4 text-xs leading-5 text-muted">
-        Tổng tạm tính chưa bao gồm thuế, phí và ưu đãi. Vui lòng kiểm tra hóa đơn trước khi thanh toán.
+        Tổng tạm tính chưa bao gồm thuế, phí và ưu đãi. Vui lòng kiểm tra hóa
+        đơn trước khi thanh toán.
       </p>
     </>
   )

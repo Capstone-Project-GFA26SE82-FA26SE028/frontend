@@ -26,8 +26,7 @@ export function PaymentMethodSelector({
           {
             id: 'bank',
             label: 'Chuyển khoản ngân hàng',
-            description:
-              'Vui lòng liên hệ nhân viên để nhận mã chuyển khoản.',
+            description: 'Vui lòng liên hệ nhân viên để nhận mã chuyển khoản.',
           },
         ] satisfies { id: PaymentMethod; label: string; description: string }[]
       ).map((m) => (
