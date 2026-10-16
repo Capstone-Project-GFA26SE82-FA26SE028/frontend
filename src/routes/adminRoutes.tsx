@@ -15,20 +15,20 @@ import { AdminLayout } from '../layouts/admin/AdminLayout'
 
 export const adminRoute: RouteObject = {
   path: '/admin',
-  Component: AdminLayout,
+  element: <AdminLayout />,
   children: [
-    { index: true, Component: DashboardPage },
-    { path: 'users', Component: UsersPage },
-    { path: 'roles', Component: RolesPage },
-    { path: 'sessions', Component: SessionsPage },
-    { path: 'restaurant-profile', Component: RestaurantProfilePage },
-    { path: 'areas', Component: AreasPage },
-    { path: 'tables', Component: TablesPage },
-    { path: 'table-qr', Component: TableQrPage },
-    { path: 'tax-fees', Component: TaxFeesPage },
-    { path: 'payment-methods', Component: PaymentMethodsPage },
-    { path: 'activity', Component: ActivityPage },
-    { path: 'health', Component: HealthPage },
+    { index: true, element: <DashboardPage /> },
+    { path: 'users', element: <UsersPage /> },
+    { path: 'roles', element: <RolesPage /> },
+    { path: 'sessions', element: <SessionsPage /> },
+    { path: 'restaurant-profile', element: <RestaurantProfilePage /> },
+    { path: 'areas', element: <AreasPage /> },
+    { path: 'tables', element: <TablesPage /> },
+    { path: 'table-qr', element: <TableQrPage /> },
+    { path: 'tax-fees', element: <TaxFeesPage /> },
+    { path: 'payment-methods', element: <PaymentMethodsPage /> },
+    { path: 'activity', element: <ActivityPage /> },
+    { path: 'health', element: <HealthPage /> },
     {
       path: '*',
       element: (
