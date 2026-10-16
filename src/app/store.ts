@@ -1,3 +1,5 @@
+import adminAreasReducer from '../features/admin/areas/areaSlice'
+import adminTablesReducer from '../features/admin/tables/tableSlice'
 import adminProfileReducer from '../features/admin/restaurant-profile/profileSlice'
 import adminReducer, { adminStorageKey } from './adminReducer'
 import { configureStore } from '@reduxjs/toolkit'
@@ -8,6 +10,8 @@ export const store = configureStore({
     cart: cartReducer,
     admin: adminReducer,
     adminProfile: adminProfileReducer,
+    adminAreas: adminAreasReducer,
+    adminTables: adminTablesReducer,
   },
 })
 let previousAdminState = store.getState().admin

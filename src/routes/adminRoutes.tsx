@@ -1,3 +1,4 @@
+import { AreasPage } from '../features/admin/areas/pages/AreasPage'
 import { RestaurantProfilePage } from '../features/admin/restaurant-profile/pages/RestaurantProfilePage'
 import { SessionsPage } from '../features/admin/sessions/pages/SessionsPage'
 import { RolesPage } from '../features/admin/roles/pages/RolesPage'
@@ -15,13 +16,18 @@ export const adminRoute: RouteObject = {
     { path: 'roles', Component: RolesPage },
     { path: 'sessions', Component: SessionsPage },
     { path: 'restaurant-profile', Component: RestaurantProfilePage },
+    { path: 'areas', Component: AreasPage },
     ...adminNavigation
       .flatMap((group) => group.items)
       .filter(
         (item) =>
-          !['users', 'roles', 'sessions', 'restaurant-profile'].includes(
-            item.id,
-          ),
+          ![
+            'users',
+            'roles',
+            'sessions',
+            'restaurant-profile',
+            'areas',
+          ].includes(item.id),
       )
       .map((item) => ({
         ...(item.id === 'overview'
