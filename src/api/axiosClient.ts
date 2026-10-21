@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// Configure authentication after agreeing on the backend contract.
+// Auth interceptors are registered in features/auth/api/authApi.ts.
 export const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
   timeout: 15_000,

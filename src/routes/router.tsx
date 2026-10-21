@@ -1,3 +1,6 @@
+import { LoginPage } from '../features/auth/pages/LoginPage'
+import { ProtectedRoute } from './ProtectedRoute'
+import { RoleRoute } from './RoleRoute'
 import { BillingFeedbackPage } from '../features/customer/billing-feedback/pages/BillingFeedbackPage'
 import { ReservationPage } from '../features/customer/reservation/pages/ReservationPage'
 import { PaymentPage } from '../features/customer/payment/pages/PaymentPage'
@@ -14,7 +17,13 @@ import { CustomerLayout } from '../layouts/customer/CustomerLayout'
 import { EmptyState } from '../components/EmptyState/EmptyState'
 
 export const router = createBrowserRouter([
-  adminRoute,
+  { path: '/login', element: <LoginPage /> },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      { element: <RoleRoute roles={['admin']} />, children: [adminRoute] },
+    ],
+  },
   { path: '/table-access/:token', element: <TableAccessPage /> },
   { path: '/', element: <PhoneEntryPage /> },
   { path: '/welcome', element: <PhoneEntryPage /> },

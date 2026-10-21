@@ -1,3 +1,5 @@
+import { useAppSelector } from '../../../app/hooks'
+import { LogoutButton } from '../../../features/auth/components/LogoutButton'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Icon } from '../../../components/Icon/Icon'
@@ -13,6 +15,8 @@ export function AdminHeader({
   onQuery: (q: string) => void
   onMenu: () => void
 }) {
+  const user = useAppSelector((state) => state.auth.session?.user)
+  const displayName = user?.fullName || user?.userName || 'Tài khoản'
   const { pathname } = useLocation()
   const pageName =
     adminNavigation
@@ -158,10 +162,10 @@ export function AdminHeader({
               className="flex min-h-11 items-center gap-2 rounded-xl px-1.5 text-slate-600 transition-colors hover:bg-slate-50 sm:gap-2.5"
             >
               <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 font-semibold text-emerald-800">
-                A
+                {displayName.slice(0, 1).toUpperCase()}
               </span>
               <span className="hidden text-base font-semibold sm:block">
-                Quản trị viên
+                {displayName}
               </span>
               <Icon
                 name="chevron"
@@ -176,11 +180,9 @@ export function AdminHeader({
               >
                 <div className="border-b border-slate-100 px-5 py-4">
                   <p className="text-base font-semibold text-[#344760]">
-                    Quản trị viên
+                    {displayName}
                   </p>
-                  <p className="mt-1 text-sm text-slate-400">
-                    Quản trị nhà hàng FoodHub
-                  </p>
+                  <p className="mt-1 text-sm text-slate-400">{user?.email}</p>
                 </div>
                 <div className="p-2">
                   <button
@@ -193,6 +195,7 @@ export function AdminHeader({
                     <Icon name="users" size={17} />
                     Thông tin tài khoản
                   </button>
+                  <LogoutButton />
                 </div>
               </div>
             )}
@@ -226,10 +229,9 @@ export function AdminHeader({
               </div>
             ) : panel === 'profile' ? (
               <>
-                <p className="font-semibold">Quản trị viên FoodHub</p>
+                <p className="font-semibold">{displayName}</p>
                 <p className="mt-3 text-base leading-6 text-slate-500">
-                  Tài khoản dùng để xem trước giao diện. Chưa kết nối đăng nhập
-                  và phân quyền Backend.
+                  {user?.email} · Quản trị nhà hàng
                 </p>
               </>
             ) : (
