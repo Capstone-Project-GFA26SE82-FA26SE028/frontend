@@ -148,11 +148,13 @@ export function Pagination({
   page,
   onPage,
   size = 6,
+  locale = 'vi',
 }: {
   total: number
   page: number
   onPage: (page: number) => void
   size?: number
+  locale?: 'vi' | 'en'
 }) {
   const pages = Math.max(1, Math.ceil(total / size))
   return (
@@ -161,11 +163,11 @@ export function Pagination({
         {total
           ? `${(page - 1) * size + 1}–${Math.min(page * size, total)}`
           : '0'}{' '}
-        trên {total} kết quả
+        {locale === 'en' ? 'of' : 'trên'} {total} {locale === 'en' ? 'results' : 'kết quả'}
       </p>
       <div className="flex items-center gap-2">
         <button
-          aria-label="Trang trước"
+          aria-label={locale === 'en' ? 'Previous page' : 'Trang trước'}
           disabled={page <= 1}
           onClick={() => onPage(page - 1)}
           className={`${secondaryButton} px-3`}
@@ -176,7 +178,7 @@ export function Pagination({
           {page} / {pages}
         </span>
         <button
-          aria-label="Trang sau"
+          aria-label={locale === 'en' ? 'Next page' : 'Trang sau'}
           disabled={page >= pages}
           onClick={() => onPage(page + 1)}
           className={`${secondaryButton} px-3`}
@@ -240,6 +242,8 @@ export function ConfirmAction({
   onConfirm,
   children,
   confirmLabel = 'Xác nhận',
+  cancelLabel = 'Hủy',
+  closeLabel,
   disabled = false,
 }: {
   title: string
@@ -248,16 +252,18 @@ export function ConfirmAction({
   onConfirm: () => void
   children?: ReactNode
   confirmLabel?: string
+  cancelLabel?: string
+  closeLabel?: string
   disabled?: boolean
 }) {
   return (
-    <Modal title={title} onClose={onClose}>
+    <Modal title={title} onClose={onClose} closeLabel={closeLabel}>
       <div className="space-y-5 p-6">
         <p className="text-sm leading-6 text-slate-600">{description}</p>
         {children}
         <div className="flex justify-end gap-2">
           <button onClick={onClose} className={secondaryButton}>
-            Hủy
+            {cancelLabel}
           </button>
           <button
             disabled={disabled}

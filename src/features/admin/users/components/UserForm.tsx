@@ -1,120 +1,158 @@
 import { useForm, useWatch } from 'react-hook-form'
+import { UserAvatar } from './UserAvatar'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Modal } from '../../../../components/Modal/Modal'
-import { userFormSchema, type UserFormValues } from '../schemas'
-import {
-  roles,
-  roleLabels,
-  type AdminUser,
-  type AdminRestaurant,
-} from '../types'
+import { accountFormSchema, type AccountFormValues } from '../schemas/userSchema'
+import { userRoleLabel, type UserAccount, type UserRole } from '../types'
 import {
   Field,
   fieldClass,
   primaryButton,
   secondaryButton,
 } from '../../components/AdminUI'
+
 export function UserForm({
   user,
-  restaurants,
+  roles,
   onClose,
   onSave,
 }: {
-  user: AdminUser | null
-  restaurants: AdminRestaurant[]
+  user: UserAccount | null
+  roles: UserRole[]
   onClose: () => void
-  onSave: (values: UserFormValues) => string
+  onSave: (values: AccountFormValues) => Promise<string>
 }) {
   const {
     register,
     handleSubmit,
     setError,
+    setValue,
     control,
-    formState: { errors },
-  } = useForm<UserFormValues>({
-    resolver: zodResolver(userFormSchema),
-    defaultValues: user ?? {
-      name: '',
-      email: '',
-      phone: '',
-      role: 'Manager',
-      restaurantId: '',
+    formState: { errors, isSubmitting },
+  } = useForm<AccountFormValues>({
+    resolver: zodResolver(accountFormSchema(!!user)),
+    defaultValues: {
+      userName: user?.userName || '',
+      name: user?.name || '',
+      email: user?.email || '',
+      phone: user?.phone || '',
+      role: user?.role || '',
+      password: '',
+      avatarUrl: user?.avatarUrl || '',
     },
   })
-  const role = useWatch({ control, name: 'role' })
+  const avatarUrl = useWatch({ control, name: 'avatarUrl' })
+  const name = useWatch({ control, name: 'name' })
+  const close = () => {
+    if (!isSubmitting) onClose()
+  }
   return (
     <Modal
-      title={user ? 'Cập nhật tài khoản' : 'Thêm tài khoản'}
-      onClose={onClose}
+      closeLabel="Close"
+      title={user ? 'Edit account' : 'Add account'}
+      onClose={close}
     >
       <form
+        noValidate
         className="space-y-4 p-6"
-        onSubmit={handleSubmit((values) => {
-          const error = onSave({
-            ...values,
-            restaurantId: values.role === 'Admin' ? '' : values.restaurantId,
-          })
+        onSubmit={handleSubmit(async (values) => {
+          const error = await onSave(values)
           if (error) setError('root', { message: error })
         })}
       >
-        <p className="rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-500">
-          Tạo hồ sơ người dùng trong bản dùng thử. Chưa cấp mật khẩu, gửi lời
-          mời hay tạo phiên đăng nhập thật.
-        </p>
-        {(
-          [
-            ['name', 'Họ và tên'],
-            ['email', 'Email'],
-            ['phone', 'Số điện thoại'],
-          ] as const
-        ).map(([key, label]) => (
-          <Field key={key} label={label} error={errors[key]?.message}>
-            <input
-              className={fieldClass}
-              {...register(key)}
-              type={
-                key === 'email' ? 'email' : key === 'phone' ? 'tel' : 'text'
-              }
-              aria-invalid={Boolean(errors[key])}
-            />
+        <fieldset disabled={isSubmitting} className="space-y-4">
+          <div className="flex flex-col items-center gap-2 rounded-2xl bg-slate-50 p-4">
+            <UserAvatar src={avatarUrl} name={name} large />
+            <span className="text-xs text-slate-500">Profile photo preview</span>
+          </div>
+          <Field label="Avatar URL (optional)" error={errors.avatarUrl?.message}>
+            <input type="url" className={fieldClass} placeholder="https://example.com/avatar.jpg"
+              {...register('avatarUrl')} aria-invalid={!!errors.avatarUrl} />
           </Field>
-        ))}
-        <Field label="Vai trò" error={errors.role?.message}>
-          <select {...register('role')} className={fieldClass}>
-            {roles.map((r) => (
-              <option key={r} value={r}>
-                {roleLabels[r]}
-              </option>
-            ))}
-          </select>
-        </Field>
-        {role !== 'Admin' && (
-          <Field
-            label="Nhà hàng phụ trách"
-            error={errors.restaurantId?.message}
-          >
-            <select {...register('restaurantId')} className={fieldClass}>
-              <option value="">Chọn nhà hàng</option>
-              {restaurants.map((r) => (
-                <option key={r.id} value={r.id}>
-                  {r.name}
-                  {!r.active ? ' · Tạm dừng' : ''}
-                </option>
-              ))}
-            </select>
-          </Field>
-        )}
+          {avatarUrl && <button type="button" className="text-sm font-medium text-rose-600"
+            onClick={() => setValue('avatarUrl', '', { shouldDirty: true, shouldValidate: true })}>Remove photo</button>}
+          {(
+            [
+              ['userName', 'Username'],
+              ['name', 'Full name'],
+              ['email', 'Email'],
+              ['phone', 'Phone number (optional)'],
+            ] as const
+          ).map(([key, label]) => (
+            <Field key={key} label={label} error={errors[key]?.message}>
+              <input
+                className={fieldClass}
+                {...register(key)}
+                inputMode={key === 'phone' ? 'tel' : undefined}
+                placeholder={key === 'phone' ? '0901234567' : undefined}
+                type={
+                  key === 'email' ? 'email' : key === 'phone' ? 'tel' : 'text'
+                }
+                autoComplete={
+                  key === 'userName'
+                    ? 'off'
+                    : key === 'phone'
+                      ? 'tel'
+                      : key === 'name'
+                        ? 'name'
+                        : 'email'
+                }
+                aria-invalid={!!errors[key]}
+              />
+            </Field>
+          ))}
+          {!user && (
+            <Field label="Password" error={errors.password?.message}>
+              <input
+                type="password"
+                autoComplete="new-password"
+                className={fieldClass}
+                {...register('password')}
+                aria-invalid={!!errors.password}
+              />
+            </Field>
+          )}
+          {user ? (
+            <div className="rounded-xl bg-slate-50 p-3 text-sm text-slate-600">
+              Role: {userRoleLabel(user.role)}. Manage role assignments in Roles
+              &amp; Permissions.
+            </div>
+          ) : (
+            <Field label="Role" error={errors.role?.message}>
+              <select {...register('role')} className={fieldClass}>
+                <option value="">Select a role</option>
+                {roles.map((role) => (
+                  <option key={role.roleId} value={role.roleId}>
+                    {userRoleLabel(role.roleId)}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          )}
+        </fieldset>
         {errors.root && (
           <p role="alert" className="text-sm text-rose-600">
             {errors.root.message}
           </p>
         )}
         <div className="flex justify-end gap-2 border-t border-slate-100 pt-4">
-          <button type="button" onClick={onClose} className={secondaryButton}>
-            Hủy
+          <button
+            type="button"
+            disabled={isSubmitting}
+            onClick={close}
+            className={secondaryButton}
+          >
+            Cancel
           </button>
-          <button className={primaryButton}>
-            {user ? 'Lưu thay đổi' : 'Tạo tài khoản'}
+          <button
+            disabled={isSubmitting || (!user && !roles.length)}
+            className={primaryButton}
+          >
+            {isSubmitting
+              ? 'Saving…'
+              : user
+                ? 'Save changes'
+                : 'Create account'}
           </button>
         </div>
       </form>

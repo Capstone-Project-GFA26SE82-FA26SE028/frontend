@@ -36,3 +36,37 @@ export type UsersState = {
   restaurants: AdminRestaurant[]
   users: AdminUser[]
 }
+
+// API-backed accounts. Legacy AdminUser remains for screens not yet migrated.
+export type UserAccount = {
+  id: string
+  userName: string
+  name: string
+  email: string
+  phone: string
+  role: string
+  active: boolean
+  created: string | null
+  updated: string | null
+  avatarUrl: string | null
+}
+export type UserRole = { roleId: string; roleName: string }
+export function userRoleLabel(roleId: string) {
+  const labels: Record<string, string> = {
+    admin: 'System administrator',
+    manager: 'Restaurant manager',
+    waiter: 'Waiter',
+    cashier: 'Cashier',
+    kitchen: 'Kitchen staff',
+    inventory: 'Inventory manager',
+    supplier: 'Supplier',
+  }
+  return labels[roleId] || roleId
+}
+export type UserQuery = {
+  page: number
+  pageSize: number
+  search?: string
+  roleId?: string
+  isActive?: boolean
+}

@@ -6,12 +6,14 @@ export function Modal({
   onClose,
   size = 'default',
   subtitle,
+  closeLabel = 'Đóng',
 }: {
   title: string
   children: ReactNode
   onClose: () => void
   size?: 'default' | 'wide'
   subtitle?: string
+  closeLabel?: string
 }) {
   const ref = useRef<HTMLDialogElement>(null)
   useEffect(() => {
@@ -32,7 +34,7 @@ export function Modal({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
-      className={`fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] ${size === 'wide' ? 'max-w-3xl' : 'max-w-lg'} overflow-y-auto rounded-3xl border-0 bg-white p-0 text-ink shadow-2xl`}
+      className={`modal-scroll fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] ${size === 'wide' ? 'max-w-3xl' : 'max-w-lg'} overflow-y-auto rounded-3xl border-0 bg-white p-0 text-ink shadow-2xl`}
     >
       <div className="sticky top-0 z-10 flex items-center justify-between border-b border-stone-100 bg-white px-6 py-3">
         <div className="min-w-0">
@@ -43,7 +45,7 @@ export function Modal({
         </div>
         <button
           onClick={onClose}
-          aria-label="Đóng"
+          aria-label={closeLabel}
           className="flex size-11 items-center justify-center rounded-full hover:bg-mint"
         >
           <Icon name="close" />

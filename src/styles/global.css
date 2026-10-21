@@ -53,6 +53,37 @@
     @apply rounded-3xl border border-stone-200/80 bg-white;
   }
 }
+.modal-scroll {
+  overscroll-behavior: contain;
+}
+.modal-scroll::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+.modal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  margin-block: 20px;
+}
+.modal-scroll::-webkit-scrollbar-thumb {
+  background: #b7cec2;
+  border: 2px solid white;
+  border-radius: 999px;
+}
+.modal-scroll::-webkit-scrollbar-thumb:hover {
+  background: #679b80;
+}
+.modal-scroll::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+@supports not selector(::-webkit-scrollbar) {
+  .modal-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #b7cec2 transparent;
+  }
+}
+
 dialog::backdrop {
   background: rgb(16 37 26 / 55%);
   backdrop-filter: blur(5px);

@@ -5,10 +5,10 @@ export function AdminSidebarProfile({
   collapsed?: boolean
 }) {
   const user = useAppSelector((state) => state.auth.session?.user)
-  const displayName = user?.fullName || user?.userName || 'Tài khoản'
+  const displayName = user?.fullName || user?.userName || 'Account'
   return (
     <div
-      aria-label="Hồ sơ quản trị viên"
+      aria-label="Administrator profile"
       className={`flex min-h-[92px] shrink-0 items-center gap-3 border-t border-white/10 ${collapsed ? 'justify-center px-2' : 'px-5'}`}
     >
       <span className="relative flex size-11 shrink-0 items-center justify-center rounded-full bg-emerald-400/15 text-lg font-semibold text-emerald-100 ring-1 ring-inset ring-emerald-300/20">
@@ -27,7 +27,7 @@ export function AdminSidebarProfile({
               {displayName}
             </p>
             <p className="mt-0.5 text-sm text-emerald-100/65">
-              Quản trị nhà hàng
+              Restaurant administrator
             </p>
           </div>
           <span
