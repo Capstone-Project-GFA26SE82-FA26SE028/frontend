@@ -58,7 +58,7 @@ export function userApiError(error: unknown): string {
       return 'You do not have permission to manage accounts.'
     const data = error.response.data
     const message = typeof data?.message === 'string' ? data.message : ''
-    if (message.includes('Admin hoạt động cuối cùng'))
+    if (message.includes('Admin hoạt động cuối cùng') || message.includes('last active Admin'))
       return 'The last active administrator cannot be deactivated or reassigned.'
     if (message.includes('tự khóa')) return 'You cannot deactivate your own account.'
     if (message.includes('Role không tồn tại')) return 'The selected role no longer exists.'
@@ -107,12 +107,28 @@ export async function saveUserAccount(
         roleId: values.role,
         password: values.password,
       })
-  return mapUser(result(data, userSchema))
+  const saved = mapUser(result(data, userSchema))
+  if (existing && values.role !== saved.role) {
+    try {
+      return await setUserRole(existing.id, values.role)
+    } catch (error) {
+      throw new Error(`Account details were saved, but the role change was not confirmed. ${userApiError(error)} Refresh the account to check its current role before retrying.`, { cause: error })
+    }
+  }
+  return saved
 }
 export async function setUserStatus(id: string, isActive: boolean) {
   const { data } = await axiosClient.patch(
     '/users/' + encodeURIComponent(id) + '/status',
     { isActive },
+  )
+  return mapUser(result(data, userSchema))
+}
+
+export async function setUserRole(id: string, roleId: string) {
+  const { data } = await axiosClient.patch(
+    '/users/' + encodeURIComponent(id) + '/role',
+    { roleId },
   )
   return mapUser(result(data, userSchema))
 }

@@ -112,13 +112,7 @@ export function UserForm({
               />
             </Field>
           )}
-          {user ? (
-            <div className="rounded-xl bg-slate-50 p-3 text-sm text-slate-600">
-              Role: {userRoleLabel(user.role)}. Manage role assignments in Roles
-              &amp; Permissions.
-            </div>
-          ) : (
-            <Field label="Role" error={errors.role?.message}>
+<Field label="Role" error={errors.role?.message}>
               <select {...register('role')} className={fieldClass}>
                 <option value="">Select a role</option>
                 {roles.map((role) => (
@@ -128,7 +122,6 @@ export function UserForm({
                 ))}
               </select>
             </Field>
-          )}
         </fieldset>
         {errors.root && (
           <p role="alert" className="text-sm text-rose-600">
@@ -145,7 +138,7 @@ export function UserForm({
             Cancel
           </button>
           <button
-            disabled={isSubmitting || (!user && !roles.length)}
+            disabled={isSubmitting || !roles.length}
             className={primaryButton}
           >
             {isSubmitting
