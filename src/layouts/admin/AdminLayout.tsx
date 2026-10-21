@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { AdminSidebar } from './components/AdminSidebar'
 import { AdminHeader } from './components/AdminHeader'
-export type AdminOutletContext = { query: string }
+export type AdminOutletContext = {
+  query: string
+  setQuery: (value: string) => void
+}
 export function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -29,7 +32,7 @@ export function AdminLayout() {
         '/admin/table-qr': 'Mã QR bàn',
         '/admin/tax-fees': 'VAT & phí dịch vụ',
         '/admin/payment-methods': 'Phương thức thanh toán',
-        '/admin/users': 'Người dùng',
+        '/admin/users': 'User accounts',
         '/admin/activity': 'Nhật ký hoạt động',
         '/admin/roles': 'Vai trò & phân quyền',
         '/admin/health': 'Giám sát dịch vụ',
@@ -69,8 +72,6 @@ export function AdminLayout() {
       </aside>
       <div className={collapsed ? 'lg:pl-18' : 'lg:pl-68'}>
         <AdminHeader
-          query={query}
-          onQuery={setQuery}
           onMenu={() => {
             if (matchMedia('(min-width:1024px)').matches) {
               setSidebarOpen(false)
@@ -85,11 +86,13 @@ export function AdminLayout() {
           id="admin-main"
           className="mx-auto max-w-[1760px] px-3 py-4 sm:px-5"
         >
-          <Outlet context={{ query } satisfies AdminOutletContext} />
+          <Outlet context={{ query, setQuery } satisfies AdminOutletContext} />
         </main>
         <footer className="mx-5 flex flex-wrap justify-between gap-1 border-t border-slate-200/50 py-3 text-xs text-slate-500">
           <span>FoodHub · Không gian quản trị nhà hàng</span>
-          <span>Bản xem trước · Toàn bộ số liệu là dữ liệu mẫu</span>
+          {pathname !== '/admin/users' && (
+            <span>Bản xem trước · Toàn bộ số liệu là dữ liệu mẫu</span>
+          )}
         </footer>
       </div>
     </div>

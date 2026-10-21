@@ -4,26 +4,27 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Icon } from '../../../components/Icon/Icon'
 import { Modal } from '../../../components/Modal/Modal'
-import { adminNavigation } from '../navigation'
 
-export function AdminHeader({
-  query,
-  onQuery,
-  onMenu,
-}: {
-  query: string
-  onQuery: (q: string) => void
-  onMenu: () => void
-}) {
+
+export function AdminHeader({ onMenu }: { onMenu: () => void }) {
   const user = useAppSelector((state) => state.auth.session?.user)
-  const displayName = user?.fullName || user?.userName || 'Tài khoản'
+  const displayName = user?.fullName || user?.userName || 'Account'
   const { pathname } = useLocation()
-  const pageName =
-    adminNavigation
-      .flatMap((g) => g.items)
-      .find((item) => item.id === (pathname.split('/')[2] || 'overview'))
-      ?.label || 'Tổng quan'
-  const searchRef = useRef<HTMLInputElement>(null)
+  const pageNames: Record<string, string> = {
+    overview: 'Overview',
+    users: 'User accounts',
+    roles: 'Roles & permissions',
+    sessions: 'Login sessions',
+    'restaurant-profile': 'Restaurant information',
+    areas: 'Restaurant areas',
+    tables: 'Tables',
+    'table-qr': 'Table QR codes',
+    'tax-fees': 'VAT & service charges',
+    'payment-methods': 'Payment methods',
+    activity: 'Activity log',
+    health: 'System monitoring',
+  }
+  const pageName = pageNames[pathname.split('/')[2] || 'overview'] || 'Overview'
   const profileRef = useRef<HTMLDivElement>(null)
   const profileButtonRef = useRef<HTMLButtonElement>(null)
   const [profileOpen, setProfileOpen] = useState(false)
@@ -32,10 +33,6 @@ export function AdminHeader({
   >(null)
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault()
-        searchRef.current?.focus()
-      }
       if (e.key === 'Escape' && profileOpen) {
         setProfileOpen(false)
         profileButtonRef.current?.focus()
@@ -55,7 +52,7 @@ export function AdminHeader({
     <>
       <header className="sticky top-0 z-20 flex flex-wrap items-center gap-2 border-b border-slate-100 bg-white px-3 py-2 sm:gap-3 sm:px-5 lg:h-[68px] lg:flex-nowrap lg:py-0">
         <button
-          aria-label="Đóng mở điều hướng"
+          aria-label="Toggle navigation"
           onClick={onMenu}
           className="flex size-10 shrink-0 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-emerald-50 hover:text-emerald-700"
         >
@@ -63,7 +60,7 @@ export function AdminHeader({
         </button>
         <div className="min-w-0 flex-1 max-[400px]:basis-[calc(100%-56px)]">
           <nav
-            aria-label="Đường dẫn trang"
+            aria-label="Breadcrumb"
             className="flex items-center gap-1.5 text-sm leading-5"
           >
             <Link to="/admin" className="text-slate-400 hover:text-emerald-700">
@@ -75,45 +72,12 @@ export function AdminHeader({
             </span>
           </nav>
           <p className="truncate text-base font-semibold tracking-tight text-[#253754] leading-5">
-            Quản trị nhà hàng
+            Restaurant administration
           </p>
         </div>
-        {![
-          '/admin',
-          '/admin/restaurant-profile',
-          '/admin/tax-fees',
-          '/admin/payment-methods',
-        ].includes(pathname) && (
-          <label className="relative order-last mt-1 w-full min-w-0 lg:order-none lg:mt-0 lg:w-[min(27vw,340px)]">
-            <span className="sr-only">Tìm kiếm trong trang hiện tại</span>
-            <Icon
-              name="search"
-              size={19}
-              className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-slate-400"
-            />
-            <input
-              ref={searchRef}
-              type="search"
-              value={query}
-              onChange={(e) => onQuery(e.target.value)}
-              placeholder={
-                {
-                  '/admin/users': 'Tìm tên, email người dùng…',
-                  '/admin/activity': 'Tìm thao tác, đối tượng…',
-                  '/admin/roles': 'Tìm tài khoản trong vai trò…',
-                  '/admin/health': 'Tìm dịch vụ…',
-                }[pathname] || 'Tìm kiếm trong trang…'
-              }
-              className="h-11 w-full rounded-lg border border-slate-200 bg-white pr-16 pl-10 text-base text-slate-700 shadow-[0_0_0_1px_#f1f5f9] placeholder:text-slate-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 sm:text-base"
-            />
-            <kbd className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 rounded bg-slate-50 px-1.5 py-0.5 text-xs text-slate-400">
-              Ctrl K
-            </kbd>
-          </label>
-        )}
         <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
           <button
-            aria-label="Thông báo"
+            aria-label="Notifications"
             onClick={() => {
               setProfileOpen(false)
               setPanel('notifications')
@@ -123,8 +87,8 @@ export function AdminHeader({
             <Icon name="bell" size={21} />
           </button>
           <button
-            aria-label="Tin nhắn hỗ trợ"
-            title="Tin nhắn hỗ trợ"
+            aria-label="Support messages"
+            title="Support messages"
             onClick={() => {
               setProfileOpen(false)
               setPanel('messages')
@@ -138,8 +102,8 @@ export function AdminHeader({
             />
           </button>
           <button
-            aria-label="Giao diện tối — chưa kích hoạt"
-            title="Giao diện tối — chưa kích hoạt"
+            aria-label="Dark mode — unavailable"
+            title="Dark mode — unavailable"
             disabled
             className="flex size-11 items-center justify-center rounded-xl text-slate-500 transition-colors hover:bg-emerald-50 hover:text-emerald-700"
           >
@@ -155,7 +119,7 @@ export function AdminHeader({
           >
             <button
               ref={profileButtonRef}
-              aria-label="Mở menu tài khoản"
+              aria-label="Open account menu"
               aria-expanded={profileOpen}
               aria-controls="admin-profile-dropdown"
               onClick={() => setProfileOpen((v) => !v)}
@@ -193,7 +157,7 @@ export function AdminHeader({
                     className="flex min-h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-base text-slate-600 hover:bg-emerald-50 hover:text-emerald-800"
                   >
                     <Icon name="users" size={17} />
-                    Thông tin tài khoản
+                    Account details
                   </button>
                   <LogoutButton />
                 </div>
@@ -206,11 +170,12 @@ export function AdminHeader({
         <Modal
           title={
             panel === 'profile'
-              ? 'Tài khoản quản trị'
+              ? 'Administrator account'
               : panel === 'messages'
-                ? 'Tin nhắn hỗ trợ'
-                : 'Thông báo mới'
+                ? 'Support messages'
+                : 'Notifications'
           }
+          closeLabel="Close"
           onClose={() => setPanel(null)}
         >
           <div className="p-6">
@@ -220,24 +185,23 @@ export function AdminHeader({
                   <Icon name="message" size={27} />
                 </span>
                 <p className="mt-4 text-lg font-semibold">
-                  Chưa có cuộc trò chuyện
+                  No conversations yet
                 </p>
                 <p className="mt-2 text-sm leading-6 text-slate-500">
-                  Hộp thư hỗ trợ nhà hàng sẽ hiển thị tại đây khi kết nối dịch
-                  vụ tin nhắn.
+                  Support conversations will appear here when messaging is connected.
                 </p>
               </div>
             ) : panel === 'profile' ? (
               <>
                 <p className="font-semibold">{displayName}</p>
                 <p className="mt-3 text-base leading-6 text-slate-500">
-                  {user?.email} · Quản trị nhà hàng
+                  {user?.email} · Restaurant administration
                 </p>
               </>
             ) : (
               <>
                 <p className="py-4 text-sm text-slate-500">
-                  Chưa có thông báo mới.
+                  No new notifications.
                 </p>
               </>
             )}

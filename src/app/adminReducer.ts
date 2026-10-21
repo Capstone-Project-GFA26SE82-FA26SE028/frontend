@@ -4,7 +4,7 @@ import usersReducer, {
   userRuleError,
 } from '../features/admin/users/usersSlice'
 import activityReducer from '../features/admin/activity/activitySlice'
-import { usersStorageSchema } from '../features/admin/users/schemas'
+import { usersStorageSchema } from '../features/admin/users/schemas/userSchema'
 import { activityStorageSchema } from '../features/admin/activity/schemas'
 import { initialUsersState } from '../features/admin/users/data/mockUsers'
 import type { UsersState } from '../features/admin/users/types'

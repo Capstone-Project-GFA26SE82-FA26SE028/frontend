@@ -7,56 +7,56 @@ export const adminNavigation: {
   title: string
   items: AdminNavigationItem[]
 }[] = [
-  { title: '', items: [{ id: 'overview', label: 'Tổng quan', icon: 'home' }] },
+  { title: '', items: [{ id: 'overview', label: 'Overview', icon: 'home' }] },
   {
-    title: 'QUẢN LÝ TÀI KHOẢN',
+    title: 'ACCOUNT MANAGEMENT',
     items: [
-      { id: 'users', label: 'Tài khoản người dùng', icon: 'users' },
-      { id: 'roles', label: 'Vai trò & phân quyền', icon: 'shield' },
+      { id: 'users', label: 'User accounts', icon: 'users' },
+      { id: 'roles', label: 'Roles & permissions', icon: 'shield' },
       {
         id: 'sessions',
-        label: 'Phiên đăng nhập',
+        label: 'Login sessions',
         icon: 'monitor',
       },
     ],
   },
   {
-    title: 'QUẢN LÝ NHÀ HÀNG',
+    title: 'RESTAURANT MANAGEMENT',
     items: [
       {
         id: 'restaurant-profile',
-        label: 'Thông tin nhà hàng',
+        label: 'Restaurant information',
         icon: 'store',
       },
-      { id: 'areas', label: 'Khu vực nhà hàng', icon: 'grid' },
+      { id: 'areas', label: 'Restaurant areas', icon: 'grid' },
       {
         id: 'tables',
-        label: 'Danh sách bàn',
+        label: 'Tables',
         icon: 'utensils',
       },
-      { id: 'table-qr', label: 'Mã QR bàn', icon: 'grid' },
+      { id: 'table-qr', label: 'Table QR codes', icon: 'grid' },
     ],
   },
   {
-    title: 'CẤU HÌNH',
+    title: 'CONFIGURATION',
     items: [
       {
         id: 'tax-fees',
-        label: 'VAT & phí dịch vụ',
+        label: 'VAT & service charges',
         icon: 'coin',
       },
       {
         id: 'payment-methods',
-        label: 'Phương thức thanh toán',
+        label: 'Payment methods',
         icon: 'receipt',
       },
     ],
   },
   {
-    title: 'HỆ THỐNG',
+    title: 'SYSTEM',
     items: [
-      { id: 'activity', label: 'Nhật ký hoạt động', icon: 'clipboard' },
-      { id: 'health', label: 'Giám sát hệ thống', icon: 'activity' },
+      { id: 'activity', label: 'Activity log', icon: 'clipboard' },
+      { id: 'health', label: 'System monitoring', icon: 'activity' },
     ],
   },
 ]

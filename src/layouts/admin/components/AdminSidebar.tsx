@@ -17,7 +17,7 @@ export function AdminSidebar({
       <Link
         to="/admin"
         onClick={onNavigate}
-        aria-label="FoodHub - Tổng quan"
+        aria-label="FoodHub - Overview"
         className={`flex min-h-[76px] shrink-0 items-center gap-3 ${collapsed ? 'justify-center' : 'px-6'}`}
       >
         <span className="relative flex size-10 shrink-0 rotate-[-15deg] items-center justify-center rounded-[40%] border-2 border-lime-300/60 bg-linear-to-br from-lime-400 to-emerald-600 text-[#004c32] shadow-[3px_2px_0_#7ddc5740]">
@@ -29,13 +29,13 @@ export function AdminSidebar({
               FoodHub
             </span>
             <p className="text-xs text-white/85">
-              Nền tảng quản lý nhiều nhà hàng
+              Restaurant management platform
             </p>
           </div>
         )}
       </Link>
       <nav
-        aria-label="Điều hướng Admin"
+        aria-label="Admin navigation"
         className="min-h-0 flex-1 space-y-4 overflow-y-auto px-3 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {adminNavigation.map((g, i) => (
