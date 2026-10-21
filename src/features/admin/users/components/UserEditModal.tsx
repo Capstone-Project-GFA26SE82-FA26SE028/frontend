@@ -1,6 +1,6 @@
 import { Modal } from '../../../../components/Modal/Modal'
 import { secondaryButton } from '../../components/AdminUI'
-import { useUser } from '../hooks/useUsers'
+import { useUser, useUserRoles } from '../hooks/useUsers'
 import { userApiError } from '../api/userApi'
 import { UserForm } from './UserForm'
 import type { UserAccount } from '../types'
@@ -16,11 +16,12 @@ export function UserEditModal({
   onSave: (values: AccountFormValues, user: UserAccount) => Promise<string>
 }) {
   const { data, isPending, isError, error, refetch } = useUser(id)
-  if (!isPending && !isError && data)
+  const roles = useUserRoles()
+  if (!isPending && !isError && data && roles.isSuccess)
     return (
       <UserForm
         user={data}
-        roles={[]}
+        roles={roles.data}
         onClose={onClose}
         onSave={(values) => onSave(values, data)}
       />
@@ -28,14 +29,14 @@ export function UserEditModal({
   return (
     <Modal title="Edit account" onClose={onClose} closeLabel="Close">
       <div className="space-y-3 p-6">
-        {isPending ? (
+        {isPending || roles.isPending ? (
           <p role="status">Loading account…</p>
         ) : (
           <>
             <p role="alert" className="text-rose-600">
-              {userApiError(error)}
+              {userApiError(error || roles.error)}
             </p>
-            <button className={secondaryButton} onClick={() => void refetch()}>
+            <button className={secondaryButton} onClick={() => { void refetch(); void roles.refetch() }}>
               Try again
             </button>
           </>

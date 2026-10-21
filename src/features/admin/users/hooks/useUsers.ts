@@ -76,6 +76,10 @@ export function useUserMutations() {
       existing?: UserAccount
     }) => saveUserAccount(values, existing),
     onSuccess: invalidate,
+    onError: async () => {
+      // Refresh partially saved details without remounting the authenticated page.
+      await client.invalidateQueries({ queryKey: ['users'] })
+    },
     retry: false,
     gcTime: 0,
   })
