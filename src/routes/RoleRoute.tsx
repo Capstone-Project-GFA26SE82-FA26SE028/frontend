@@ -1,4 +1,11 @@
-// KHUNG SOURCE: chưa triển khai.
-// TODO: Guard kiểm tra vai trò/quyền phía giao diện. Backend vẫn phải kiểm tra quyền; chưa gắn vào router.
-// File hiện chưa được sử dụng trong luồng chạy của ứng dụng.
-export {}
+﻿import { Navigate, Outlet } from 'react-router-dom'
+import { useAppSelector } from '../app/hooks'
+export function RoleRoute({ roles }: { roles: string[] }) {
+  const user = useAppSelector((state) => state.auth.session?.user)
+  if (!user) return <Navigate to="/login" replace />
+  return roles.includes(user.roleId) ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" replace />
+  )
+}

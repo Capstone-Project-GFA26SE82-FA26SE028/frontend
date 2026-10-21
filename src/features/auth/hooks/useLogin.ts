@@ -1,4 +1,13 @@
-// KHUNG SOURCE: chưa triển khai.
-// TODO: Hook điều phối đăng nhập. Chờ authApi và chiến lược cookie/token.
-// File hiện chưa được sử dụng trong luồng chạy của ứng dụng.
-export {}
+﻿import { useMutation } from '@tanstack/react-query'
+import { login } from '../api/authApi'
+import { toast } from 'react-toastify'
+export function useLogin() {
+  return useMutation({
+    mutationFn: login,
+    retry: false,
+    gcTime: 0,
+    onSuccess: () => {
+      toast.success('Signed in successfully', { toastId: 'login-success' })
+    },
+  })
+}
