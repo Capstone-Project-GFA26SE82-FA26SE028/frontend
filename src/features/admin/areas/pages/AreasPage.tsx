@@ -1,168 +1,241 @@
-import { AreaFilters } from '../components/AreaFilters'
-import { useState } from 'react'
-import { useOutletContext } from 'react-router-dom'
-import { useAreas } from '../hooks/useAreas'
-import type { Area } from '../schema'
-import { RestaurantHeading } from '../../components/RestaurantHeading'
-import { AreaForm } from '../components/AreaForm'
 import { Modal } from '../../../../components/Modal/Modal'
 import {
+  PageHeading,
   Panel,
-  Badge,
-  EmptyState,
-  ConfirmAction,
+  Pagination,
   primaryButton,
   secondaryButton,
 } from '../../components/AdminUI'
-import { matches } from '../../utils'
+import { AreaFilters } from '../components/AreaFilters'
+import { AreaTable } from '../components/AreaTable'
+import { AreaForm } from '../components/AreaForm'
+import { AreaDetail } from '../components/AreaDetail'
+import { useAreas } from '../hooks/useAreas'
+import { areaError } from '../api/areaApi'
 export function AreasPage() {
-  const { state, saveArea, deleteArea } = useAreas()
-  const [edit, setEdit] = useState<Area | null>(null)
-  const [remove, setRemove] = useState<Area | null>(null)
-  const [error, setError] = useState('')
-  const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState('')
-  const { query } = useOutletContext<{ query: string }>()
-  const matchingAreas = state.areas.filter(
-    (r) => matches(search, r.code, r.name) && matches(query, r.code, r.name),
-  )
-  const rows = matchingAreas.filter(
-    (r) => !filter || String(r.active) === filter,
-  )
+  const m = useAreas(),
+    { target, detail, mutation } = m
+  const restaurants = m.restaurants.data || []
+  const area = detail.data
   return (
     <>
-      <RestaurantHeading
-        title="Khu vực nhà hàng"
-        description="Tổ chức không gian phục vụ của nhà hàng"
+      <PageHeading
+        title="Restaurant Areas"
+        description="Manage service areas for each restaurant."
         action={
-          <button
-            className={primaryButton}
-            onClick={() =>
-              setEdit({
-                id: crypto.randomUUID(),
-                code: '',
-                name: '',
-                active: true,
-                description: '',
-              })
-            }
-          >
-            + Thêm khu vực
+          <button className={primaryButton} onClick={() => m.open('create')}>
+            + Add area
           </button>
         }
       />
-      <div className="mb-5 grid grid-cols-2 gap-3">
-        <Panel className="p-5">
-          <p className="text-sm text-slate-500">Tổng khu vực</p>
-          <p className="mt-2 text-3xl font-bold text-emerald-800">
-            {state.areas.length}
-          </p>
-        </Panel>
-        <Panel className="p-5">
-          <p className="text-sm text-slate-500">Đang sử dụng</p>
-          <p className="mt-2 text-3xl font-bold text-emerald-800">
-            {state.areas.filter((r) => r.active).length}
-          </p>
-        </Panel>
-      </div>
-      <Panel>
-        <div className="border-b border-slate-100 p-5">
-          <h2 className="text-lg font-semibold">Danh sách khu vực</h2>
-        </div>
-        <AreaFilters
-          search={search}
-          status={filter}
-          total={matchingAreas.length}
-          active={matchingAreas.filter((a) => a.active).length}
-          onSearch={setSearch}
-          onStatus={setFilter}
-        />
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[650px] text-left text-sm">
-            <thead className="bg-slate-50 text-slate-500">
-              <tr>
-                {['Khu vực', 'Mô tả · Số bàn', 'Trạng thái', 'Thao tác'].map(
-                  (h) => (
-                    <th key={h} className="px-5 py-4 font-medium">
-                      {h}
-                    </th>
-                  ),
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.id} className="border-t border-slate-100">
-                  <td className="px-5 py-4">
-                    <p className="font-semibold">{r.name}</p>
-                    <p className="mt-1 text-slate-400">{r.code}</p>
-                  </td>
-                  <td className="px-5 py-4">
-                    {r.description || '—'}
-                    <p className="mt-1 text-slate-400">
-                      {state.tables.filter((t) => t.areaId === r.id).length} bàn
-                    </p>
-                  </td>
-                  <td className="px-5 py-4">
-                    <Badge tone={r.active ? 'green' : 'slate'}>
-                      {r.active ? 'Đang sử dụng' : 'Ngừng sử dụng'}
-                    </Badge>
-                  </td>
-                  <td className="px-5 py-4">
-                    <div className="flex gap-2">
-                      <button
-                        className={secondaryButton}
-                        onClick={() => setEdit(r)}
-                      >
-                        Chỉnh sửa
-                      </button>
-                      <button
-                        className={secondaryButton}
-                        onClick={() => {
-                          setError('')
-                          setRemove(r)
-                        }}
-                      >
-                        Xóa
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {!rows.length && <EmptyState />}
-        <p className="border-t border-slate-100 p-4 text-sm text-slate-500">
-          {rows.length} kết quả
-        </p>
-      </Panel>
-      {edit && (
-        <Modal title="Thông tin khu vực" onClose={() => setEdit(null)}>
-          <AreaForm
-            value={edit}
-            onSave={saveArea}
-            onClose={() => setEdit(null)}
-          />
-        </Modal>
-      )}
-      {remove && (
-        <ConfirmAction
-          title={'Xóa ' + remove.name + '?'}
-          description="Chỉ xóa khi dữ liệu không còn được sử dụng. Thao tác sẽ được ghi vào nhật ký."
-          onClose={() => setRemove(null)}
-          onConfirm={() => {
-            const message = deleteArea(remove.id)
-            if (message) setError(message)
-            else setRemove(null)
-          }}
+      {m.restaurants.isError && (
+        <div
+          role="alert"
+          className="mb-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
         >
-          {error && (
-            <p role="alert" className="text-rose-600">
-              {error}
+          Unable to load restaurant names.{' '}
+          <button
+            className="underline"
+            onClick={() => void m.restaurants.refetch()}
+          >
+            Retry
+          </button>
+        </div>
+      )}
+      <Panel>
+        <AreaFilters
+          search={m.search}
+          onSearch={m.setSearch}
+          status={m.status}
+          onStatus={m.filterStatus}
+          restaurantId={m.restaurantId}
+          onRestaurant={m.filterRestaurant}
+          restaurants={restaurants}
+          onReset={m.reset}
+        />
+        {m.list.isPending ? (
+          <p role="status" className="p-8 text-center text-slate-500">
+            Loading areas...
+          </p>
+        ) : m.list.isError ? (
+          <div className="space-y-3 p-8 text-center">
+            <p role="alert">{areaError(m.list.error)}</p>
+            <button
+              className={secondaryButton}
+              onClick={() => void m.list.refetch()}
+            >
+              Try again
+            </button>
+          </div>
+        ) : (
+          <fieldset
+            className="min-w-0"
+            disabled={m.list.isPlaceholderData}
+            aria-busy={m.list.isFetching}
+          >
+            <AreaTable
+              items={m.list.data.items}
+              restaurants={restaurants}
+              onAction={m.open}
+            />
+            <Pagination
+              locale="en"
+              total={m.list.data.totalCount}
+              page={m.page}
+              size={10}
+              onPage={m.changePage}
+            />
+          </fieldset>
+        )}
+      </Panel>
+      {target && (
+        <Modal
+          size={
+            target.mode === 'create' || target.mode === 'edit'
+              ? 'wide'
+              : 'default'
+          }
+          title={
+            target.mode === 'create'
+              ? 'Add area'
+              : target.mode === 'edit'
+                ? 'Edit area'
+                : target.mode === 'view'
+                  ? 'Area details'
+                  : target.mode === 'delete'
+                    ? 'Delete area'
+                    : area?.isActive
+                      ? 'Deactivate area'
+                      : 'Activate area'
+          }
+          closeLabel="Close"
+          onClose={m.close}
+        >
+          {target.mode === 'create' ? (
+            m.restaurants.isPending ? (
+              <p role="status" className="p-6">
+                Loading restaurants...
+              </p>
+            ) : m.restaurants.isError ? (
+              <p className="p-6">
+                Restaurant list unavailable. Close and retry.
+              </p>
+            ) : restaurants.length === 0 ? (
+              <p className="p-6">Create a restaurant before adding an area.</p>
+            ) : (
+              <AreaForm
+                restaurants={restaurants}
+                restaurantId={m.restaurantId}
+                pending={mutation.isPending}
+                onClose={m.close}
+                onSave={(values) =>
+                  mutation.mutateAsync({ kind: 'save', values })
+                }
+              />
+            )
+          ) : detail.isPending ? (
+            <p role="status" className="p-6">
+              Loading area...
             </p>
+          ) : detail.isError ? (
+            <div className="space-y-3 p-6">
+              <p role="alert">{areaError(detail.error)}</p>
+              <button
+                className={secondaryButton}
+                onClick={() => void detail.refetch()}
+              >
+                Try again
+              </button>
+            </div>
+          ) : (
+            area &&
+            (target.mode === 'view' ? (
+              <AreaDetail
+                area={area}
+                restaurantName={
+                  restaurants.find((r) => r.restaurantId === area.restaurantId)
+                    ?.restaurantName || 'Restaurant unavailable'
+                }
+                onClose={m.close}
+                onEdit={() => m.open('edit', area.areaId)}
+              />
+            ) : target.mode === 'edit' ? (
+              <AreaForm
+                key={area.areaId}
+                area={area}
+                restaurants={restaurants}
+                restaurantId={area.restaurantId}
+                pending={mutation.isPending}
+                onClose={m.close}
+                onSave={(values) =>
+                  mutation.mutateAsync({
+                    kind: 'save',
+                    values,
+                    id: area.areaId,
+                  })
+                }
+              />
+            ) : (
+              <div className="space-y-5 p-6">
+                <p className="break-words text-sm text-slate-600">
+                  {target.mode === 'delete'
+                    ? 'Delete ?' +
+                      area.areaName +
+                      '?? Areas containing tables cannot be deleted.'
+                    : area.isActive
+                      ? 'Deactivate ?' +
+                        area.areaName +
+                        '?? This is blocked while service sessions remain open.'
+                      : 'Activate ?' + area.areaName + '??'}
+                </p>
+                {mutation.isError && (
+                  <p
+                    role="alert"
+                    className="rounded-xl bg-rose-50 p-3 text-sm text-rose-700"
+                  >
+                    {areaError(mutation.error)}
+                  </p>
+                )}
+                <div className="flex justify-end gap-3">
+                  <button
+                    disabled={mutation.isPending}
+                    className={secondaryButton}
+                    onClick={m.close}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    disabled={mutation.isPending}
+                    className={
+                      target.mode === 'delete'
+                        ? 'rounded-xl bg-rose-600 px-5 py-3 text-sm font-semibold text-white disabled:opacity-50'
+                        : primaryButton
+                    }
+                    onClick={() =>
+                      mutation.mutate(
+                        target.mode === 'delete'
+                          ? { kind: 'delete', id: area.areaId }
+                          : {
+                              kind: 'status',
+                              id: area.areaId,
+                              isActive: !area.isActive,
+                            },
+                      )
+                    }
+                  >
+                    {mutation.isPending
+                      ? 'Saving...'
+                      : target.mode === 'delete'
+                        ? 'Delete'
+                        : area.isActive
+                          ? 'Deactivate'
+                          : 'Activate'}
+                  </button>
+                </div>
+              </div>
+            ))
           )}
-        </ConfirmAction>
+        </Modal>
       )}
     </>
   )
