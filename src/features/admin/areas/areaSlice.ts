@@ -1,8 +1,8 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import { areaSchema, type Area } from './schema'
 import { mockAreas } from './data/mockAreas'
-export const areaStorageKey = 'foodhub-admin-areas-v1'
-export const areaStateSchema = areaSchema.array()
+const areaStorageKey = 'foodhub-admin-areas-v1'
+const areaStateSchema = areaSchema.array()
 function load(): Area[] {
   try {
     const own = localStorage.getItem(areaStorageKey)
@@ -23,9 +23,6 @@ function load(): Area[] {
 const slice = createSlice({
   name: 'adminAreas',
   initialState: load(),
-  reducers: {
-    replaceAreas: (_state, action: PayloadAction<Area[]>) => action.payload,
-  },
+  reducers: {},
 })
-export const { replaceAreas } = slice.actions
 export default slice.reducer
