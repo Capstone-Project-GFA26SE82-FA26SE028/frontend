@@ -1,18 +1,20 @@
-export type AuditEntry = {
-  actor?: string
-  targetId?: string
-  entity?:
-    | 'restaurant'
-    | 'user'
-    | 'application'
-    | 'plan'
-    | 'coupon'
-    | 'payment'
-    | 'verification'
-    | 'settings'
-  id: string
-  time: string
-  action: string
-  target: string
-  reason: string
+export type ActivityLog = {
+  auditLogId: string
+  userId: string | null
+  action: string | null
+  entityName: string | null
+  entityId: string | null
+  oldValue: string | null
+  newValue: string | null
+  ipAddress: string | null
+  createdAt: string
+}
+export type ActivityQuery = { page: number; pageSize: number; userId?: string }
+
+export type ActivityUser = {
+  userId: string
+  userName: string
+  fullName: string | null
+  avatarUrl: string | null
+  email: string
 }

@@ -1,7 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { initialUsersState } from './data/mockUsers'
 import type { UsersState, AdminUser } from './types'
-import type { AuditEntry } from '../activity/types'
 export function userRuleError(state: UsersState, user: AdminUser): string {
   if (
     state.users.some(
@@ -30,10 +29,7 @@ const slice = createSlice({
   name: 'admin',
   initialState: initialUsersState,
   reducers: {
-    saveUser(
-      state,
-      { payload }: PayloadAction<{ user: AdminUser; audit: AuditEntry }>,
-    ) {
+    saveUser(state, { payload }: PayloadAction<{ user: AdminUser }>) {
       if (userRuleError(state, payload.user)) return
       const index = state.users.findIndex((u) => u.id === payload.user.id)
       if (index >= 0) state.users[index] = payload.user

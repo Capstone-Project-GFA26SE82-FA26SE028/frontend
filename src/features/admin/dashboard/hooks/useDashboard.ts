@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useAppSelector } from '../../../../app/hooks'
 export function useDashboard() {
   const users = useAppSelector((s) => s.admin.users),
-    audit = useAppSelector((s) => s.admin.audit),
     tables = useAppSelector((s) => s.adminTables),
     areas = useAppSelector((s) => s.adminAreas),
     fees = useAppSelector((s) => s.adminTaxFees),
@@ -38,7 +37,6 @@ export function useDashboard() {
     areas,
     currentFees,
     methods,
-    recent: [...audit].sort((a, b) => b.time.localeCompare(a.time)).slice(0, 5),
     tableStatus: [
       {
         name: 'Đang sử dụng',

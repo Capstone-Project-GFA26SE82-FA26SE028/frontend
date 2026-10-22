@@ -4,19 +4,12 @@ import {
   taxFeeStateSchema,
   replaceTaxFees,
 } from '../../tax-fees/taxFeeSlice'
-import { addSetupAudit } from '../../activity/activitySlice'
-import { audit } from '../../activity/createAudit'
 import type { Fees } from '../schema'
 export function useTaxFees() {
   const fees = useAppSelector((s) => s.adminTaxFees)
   const state = { fees }
   const dispatch = useAppDispatch()
-  function commit(
-    next: typeof state,
-    action: string,
-    target: string,
-    reason: string,
-  ) {
+  function commit(next: typeof state) {
     const parsed = taxFeeStateSchema.safeParse(next.fees)
     if (!parsed.success)
       return parsed.error.issues[0]?.message || 'Dữ liệu không hợp lệ.'
@@ -26,7 +19,6 @@ export function useTaxFees() {
       return 'Không thể lưu trên trình duyệt. Kiểm tra dung lượng lưu trữ.'
     }
     dispatch(replaceTaxFees(parsed.data))
-    dispatch(addSetupAudit(audit(action, target, reason)))
     return ''
   }
   function saveFees(fees: Fees) {
@@ -40,12 +32,10 @@ export function useTaxFees() {
       )
     )
       return 'Đã có cấu hình tại thời điểm này.'
-    return commit(
-      { ...state, fees: [{ ...fees, id: crypto.randomUUID() }, ...state.fees] },
-      'Cấu hình VAT và phí dịch vụ',
-      'Cấu hình tính tiền',
-      JSON.stringify(fees),
-    )
+    return commit({
+      ...state,
+      fees: [{ ...fees, id: crypto.randomUUID() }, ...state.fees],
+    })
   }
   return { state, saveFees }
 }
