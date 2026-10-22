@@ -4,7 +4,6 @@ export function TableAccessPage() {
   const { token } = useParams()
   const tables = useAppSelector((s) => s.adminTables)
   const areas = useAppSelector((s) => s.adminAreas)
-  const profile = useAppSelector((s) => s.adminProfile)
   const table = tables.find(
     (t) =>
       t.token === token &&
@@ -15,7 +14,7 @@ export function TableAccessPage() {
     <main className="flex min-h-dvh items-center justify-center bg-emerald-50 p-5">
       <section className="w-full max-w-md rounded-3xl bg-white p-8 text-center shadow-sm">
         <p className="text-sm font-semibold uppercase tracking-widest text-emerald-700">
-          {profile.name}
+          FoodHub
         </p>
         <h1 className="mt-5 text-2xl font-bold text-slate-800">
           {table ? table.name : 'Mã QR không còn hiệu lực'}

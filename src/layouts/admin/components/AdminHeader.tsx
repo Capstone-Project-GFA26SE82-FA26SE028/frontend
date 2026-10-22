@@ -15,7 +15,7 @@ export function AdminHeader({ onMenu }: { onMenu: () => void }) {
     users: 'User accounts',
     roles: 'Roles & permissions',
     sessions: 'Login sessions',
-    'restaurant-profile': 'Restaurant information',
+    'restaurants': 'Restaurants',
     areas: 'Restaurant areas',
     tables: 'Tables',
     'table-qr': 'Table QR codes',

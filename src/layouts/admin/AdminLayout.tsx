@@ -26,7 +26,7 @@ export function AdminLayout() {
     const page =
       {
         '/admin/sessions': 'Login sessions',
-        '/admin/restaurant-profile': 'Thông tin nhà hàng',
+        '/admin/restaurants': 'Restaurants',
         '/admin/areas': 'Khu vực nhà hàng',
         '/admin/tables': 'Danh sách bàn',
         '/admin/table-qr': 'Mã QR bàn',
@@ -70,7 +70,9 @@ export function AdminLayout() {
           onNavigate={() => setSidebarOpen(false)}
         />
       </aside>
-      <div className={`transition-[padding-left] duration-300 ease-out motion-reduce:transition-none ${collapsed ? 'lg:pl-18' : 'lg:pl-68'}`}>
+      <div
+        className={`transition-[padding-left] duration-300 ease-out motion-reduce:transition-none ${collapsed ? 'lg:pl-18' : 'lg:pl-68'}`}
+      >
         <AdminHeader
           onMenu={() => {
             if (matchMedia('(min-width:1024px)').matches) {
@@ -90,7 +92,13 @@ export function AdminLayout() {
         </main>
         <footer className="mx-5 flex flex-wrap justify-between gap-1 border-t border-slate-200/50 py-3 text-xs text-slate-500">
           <span>FoodHub · Không gian quản trị nhà hàng</span>
-          {!['/admin/users', '/admin/roles', '/admin/sessions', '/admin/activity'].includes(pathname) && (
+          {![
+            '/admin/users',
+            '/admin/roles',
+            '/admin/sessions',
+            '/admin/activity',
+            '/admin/restaurants',
+          ].includes(pathname) && (
             <span>Bản xem trước · Toàn bộ số liệu là dữ liệu mẫu</span>
           )}
         </footer>

@@ -24,8 +24,8 @@ export const adminNavigation: {
     title: 'RESTAURANT MANAGEMENT',
     items: [
       {
-        id: 'restaurant-profile',
-        label: 'Restaurant information',
+        id: 'restaurants',
+        label: 'Restaurants',
         icon: 'store',
       },
       { id: 'areas', label: 'Restaurant areas', icon: 'grid' },
