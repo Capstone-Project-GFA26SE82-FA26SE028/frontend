@@ -1,11 +1,37 @@
-import type { Role } from '../users/types'
+export type SessionStatus = 'active' | 'expired' | 'revoked'
 export type LoginSession = {
-  id: string
-  name: string
+  userSessionId: string
+  userId: string
+  userName: string
   email: string
-  role: Role
-  active: boolean
-  device: string
-  ip: string
-  time: string
+  roleId: string
+  ipAddress: string | null
+  userAgent: string | null
+  deviceType: string | null
+  loggedInAt: string
+  expiresAt: string
+  revokedAt: string | null
+  isCurrent: boolean
+}
+export type SessionRole = { roleId: string; roleName: string }
+export type SessionQuery = {
+  page: number
+  pageSize: number
+  userId?: string
+  search?: string
+  roleId?: string
+  status?: SessionStatus
+  deviceType?: string
+  fromUtc?: string
+  toUtc?: string
+}
+export type SessionCounts = {
+  all: number
+  active: number
+  expired: number
+  revoked: number
+}
+export function sessionStatus(session: LoginSession): SessionStatus {
+  if (session.revokedAt) return 'revoked'
+  return Date.parse(session.expiresAt) <= Date.now() ? 'expired' : 'active'
 }
