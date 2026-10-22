@@ -34,7 +34,7 @@ export function AdminLayout() {
         '/admin/payment-methods': 'Phương thức thanh toán',
         '/admin/users': 'User accounts',
         '/admin/activity': 'Nhật ký hoạt động',
-        '/admin/roles': 'Vai trò & phân quyền',
+        '/admin/roles': 'Roles & permissions',
         '/admin/health': 'Giám sát dịch vụ',
       }[pathname] || 'Tổng quan'
     document.title = `FoodHub · ${page}`
@@ -63,14 +63,14 @@ export function AdminLayout() {
         onKeyDown={(event) => {
           if (event.key === 'Escape') setSidebarOpen(false)
         }}
-        className={`fixed inset-y-0 left-0 z-40 h-dvh w-68 max-w-[calc(100%-3rem)] transition-[transform,visibility] duration-300 ease-out motion-reduce:transition-none lg:visible lg:translate-x-0 ${sidebarOpen ? 'visible translate-x-0' : 'invisible -translate-x-full'} ${collapsed ? 'lg:w-18' : 'lg:w-68'}`}
+        className={`fixed inset-y-0 left-0 z-40 h-dvh w-68 max-w-[calc(100%-3rem)] overflow-x-clip transition-[width,transform,visibility] duration-300 ease-out motion-reduce:transition-none lg:visible lg:translate-x-0 ${sidebarOpen ? 'visible translate-x-0' : 'invisible -translate-x-full'} ${collapsed ? 'lg:w-18' : 'lg:w-68'}`}
       >
         <AdminSidebar
           collapsed={collapsed}
           onNavigate={() => setSidebarOpen(false)}
         />
       </aside>
-      <div className={collapsed ? 'lg:pl-18' : 'lg:pl-68'}>
+      <div className={`transition-[padding-left] duration-300 ease-out motion-reduce:transition-none ${collapsed ? 'lg:pl-18' : 'lg:pl-68'}`}>
         <AdminHeader
           onMenu={() => {
             if (matchMedia('(min-width:1024px)').matches) {
@@ -90,7 +90,7 @@ export function AdminLayout() {
         </main>
         <footer className="mx-5 flex flex-wrap justify-between gap-1 border-t border-slate-200/50 py-3 text-xs text-slate-500">
           <span>FoodHub · Không gian quản trị nhà hàng</span>
-          {pathname !== '/admin/users' && (
+          {!['/admin/users', '/admin/roles'].includes(pathname) && (
             <span>Bản xem trước · Toàn bộ số liệu là dữ liệu mẫu</span>
           )}
         </footer>

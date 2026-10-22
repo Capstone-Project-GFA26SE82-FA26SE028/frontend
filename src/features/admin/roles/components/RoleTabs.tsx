@@ -9,7 +9,7 @@ export function RoleTabs({
   return (
     <div
       role="tablist"
-      aria-label="Vai trò và phân quyền"
+      aria-label="Roles and permissions"
       className="mb-5 flex gap-1 border-b border-slate-200"
     >
       {(['roles', 'assignments'] as const).map((value) => (
@@ -46,7 +46,7 @@ export function RoleTabs({
               : 'border-transparent text-slate-500 hover:text-emerald-700')
           }
         >
-          {value === 'roles' ? 'Danh sách vai trò' : 'Phân quyền'}
+          {value === 'roles' ? 'Roles' : 'Permissions'}
         </button>
       ))}
     </div>

@@ -1,129 +1,196 @@
-import { useState } from 'react'
-import { useAppDispatch, useAppSelector } from '../../../../app/hooks'
-import { roles, roleLabels, type Role } from '../../users/types'
-import { audit } from '../../activity/createAudit'
-import { downloadCsv, matches } from '../../utils'
-import { saveUser, userRuleError } from '../../users/usersSlice'
-import { roleDescriptions } from '../data'
+import { useEffect, useState } from 'react'
+import {
+  keepPreviousData,
+  useMutation,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
+import { toast } from 'react-toastify'
+import { store } from '../../../../app/store'
+import { clearSession } from '../../../auth/api/authApi'
+import {
+  assignRole,
+  getRoles,
+  getRoleUsers,
+  roleApiError,
+} from '../api/roleApi'
+import type { RoleAccount } from '../types'
 import type { RoleTab } from '../components/RoleTabs'
 import type { RoleAssignmentValues } from '../schemas/roleAssignmentSchema'
-export function useRoleManagement(globalQuery: string) {
-  const state = useAppSelector((s) => s.admin)
-  const dispatch = useAppDispatch()
+
+const pageSize = 10
+export function useRoleManagement() {
+  const client = useQueryClient()
   const [tab, setTab] = useState<RoleTab>('roles')
-  const [role, setRole] = useState<Role | 'all'>('all')
+  const [role, setRole] = useState('all')
   const [status, setStatus] = useState('all')
   const [query, setQuery] = useState('')
-  const [selected, setSelected] = useState('')
-  const [page, setPage] = useState(1)
-  const [notice, setNotice] = useState('')
-  const matchingUsers = state.users.filter(
-    (u) =>
-      (role === 'all' || u.role === role) &&
-      matches(
-        query,
-        u.name,
-        u.email,
-        state.restaurants.find((r) => r.id === u.restaurantId)?.name || '',
-      ) &&
-      matches(
-        globalQuery,
-        u.name,
-        u.email,
-        roleLabels[u.role],
-        state.restaurants.find((r) => r.id === u.restaurantId)?.name || '',
-      ),
+  const [search, setSearch] = useState('')
+  const [pagination, setPagination] = useState({ filter: '', page: 1 })
+  const [selectedUser, setSelectedUser] = useState<RoleAccount | null>(null)
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSearch(query.trim()), 300)
+    return () => window.clearTimeout(timer)
+  }, [query])
+  const roles = useQuery({
+    queryKey: ['roles'],
+    queryFn: ({ signal }) => getRoles(signal),
+  })
+  const roleCounts = useQueries({
+    queries: (roles.data || []).map((item) => ({
+      queryKey: ['users', 'role-count', item.roleId],
+      queryFn: async ({ signal }: { signal: AbortSignal }) =>
+        (
+          await getRoleUsers(
+            { page: 1, pageSize: 1, roleId: item.roleId },
+            signal,
+          )
+        ).totalCount,
+    })),
+  })
+  const summary = useQuery({
+    queryKey: ['users', 'role-summary'],
+    queryFn: async ({ signal }) => {
+      const [all, active, admins] = await Promise.all([
+        getRoleUsers({ page: 1, pageSize: 1 }, signal),
+        getRoleUsers({ page: 1, pageSize: 1, isActive: true }, signal),
+        getRoleUsers(
+          { page: 1, pageSize: 1, roleId: 'admin', isActive: true },
+          signal,
+        ),
+      ])
+      return {
+        total: all.totalCount,
+        active: active.totalCount,
+        admins: admins.totalCount,
+      }
+    },
+  })
+  const filter = JSON.stringify({ search, role, status })
+  const page = pagination.filter === filter ? pagination.page : 1
+  const params = {
+    page,
+    pageSize,
+    search: search || undefined,
+    roleId: role === 'all' ? undefined : role,
+    isActive: status === 'all' ? undefined : status === 'active',
+  }
+  const users = useQuery({
+    queryKey: ['users', 'role-assignments', params],
+    queryFn: ({ signal }) => getRoleUsers(params, signal),
+    enabled: tab === 'assignments',
+    placeholderData: keepPreviousData,
+  })
+  const maxPage = Math.max(
+    1,
+    Math.ceil((users.data?.totalCount || 0) / pageSize),
   )
-  const users = matchingUsers.filter(
-    (u) => status === 'all' || u.active === (status === 'active'),
-  )
-  const current = Math.min(page, Math.max(1, Math.ceil(users.length / 6)))
-
-  const selectedUser = state.users.find((u) => u.id === selected)
+  if (users.isSuccess && !users.isPlaceholderData && page > maxPage) {
+    setPagination({ filter, page: maxPage })
+  }
+  const mutation = useMutation({
+    mutationFn: ({ id, roleId }: { id: string; roleId: string }) =>
+      assignRole(id, roleId),
+    retry: false,
+  })
   function closeModal() {
-    setSelected('')
+    if (!mutation.isPending) setSelectedUser(null)
   }
   function changeTab(value: RoleTab) {
     setTab(value)
     closeModal()
   }
-  function changeRole(value: Role | 'all') {
+  function changeRole(value: string) {
     setRole(value)
-    setPage(1)
+    setPagination({ filter: '', page: 1 })
+    closeModal()
+  }
+  function changeStatus(value: string) {
+    setStatus(value)
+    setPagination({ filter: '', page: 1 })
     closeModal()
   }
   function changeQuery(value: string) {
     setQuery(value)
-    setPage(1)
     closeModal()
   }
   function changePage(value: number) {
-    setPage(value)
-    closeModal()
+    setPagination({ filter, page: value })
+    window.scrollTo({
+      top: 0,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'instant'
+        : 'smooth',
+    })
   }
-  function saveAssignment(v: RoleAssignmentValues) {
-    const u = selectedUser
-    if (!u) return 'Không tìm thấy tài khoản.'
-    if (v.role === u.role && v.restaurantId === u.restaurantId)
-      return 'Bạn chưa thay đổi vai trò hoặc nhà hàng.'
-    const updated = {
-      ...u,
-      role: v.role,
-      restaurantId: v.restaurantId,
+  async function saveAssignment(values: RoleAssignmentValues) {
+    if (!selectedUser || mutation.isPending)
+      return 'Unable to update this account.'
+    if (values.role === selectedUser.roleId) return 'Select a different role.'
+    if (!roles.data?.some((item) => item.roleId === values.role))
+      return 'The selected role is no longer available.'
+    try {
+      const updated = await mutation.mutateAsync({
+        id: selectedUser.userId,
+        roleId: values.role,
+      })
+      setSelectedUser(null)
+      if (updated.userId === store.getState().auth.session?.user.userId) {
+        toast.success('Your role was updated. Please sign in again.')
+        clearSession()
+      } else {
+        toast.success('Role updated successfully.')
+        await client.invalidateQueries({ queryKey: ['users'] })
+      }
+      return ''
+    } catch (error) {
+      // Do not restore the auth session here: it would unmount this modal.
+      void client.invalidateQueries({ queryKey: ['users'] })
+      return roleApiError(error)
     }
-    const message = userRuleError(state, updated)
-    if (message) return message
-    dispatch(
-      saveUser({
-        user: updated,
-        audit: audit(
-          'Thay đổi phân công vai trò',
-          u.name,
-          `${roleLabels[u.role]} → ${roleLabels[v.role]}. ${v.reason}`,
-        ),
-      }),
-    )
-    setSelected('')
-    setNotice('Đã lưu phân công và nhật ký thay đổi.')
-    return ''
   }
-  function exportRoles() {
-    downloadCsv(
-      'vai-tro',
-      ['Vai trò', 'Phạm vi dự kiến', 'Nghiệp vụ dự kiến', 'Số tài khoản'],
-      roles.map((r) => [
-        roleLabels[r],
-        roleDescriptions[r].scope,
-        roleDescriptions[r].tasks.join('; '),
-        state.users.filter((u) => u.role === r).length,
-      ]),
-    )
+  const counts = Object.fromEntries(
+    (roles.data || []).map((item, index) => [
+      item.roleId,
+      roleCounts[index]?.isError ? undefined : roleCounts[index]?.data,
+    ]),
+  )
+  const countsFailed = roleCounts.some((item) => item.isError)
+  function retryStatistics() {
+    void summary.refetch()
+    roleCounts.forEach((item) => {
+      void item.refetch()
+    })
   }
   return {
-    status,
-    matchingUsers,
-    changeStatus: (value: string) => {
-      setStatus(value)
-      setPage(1)
-      closeModal()
-    },
-    allUsers: state.users,
-    restaurants: state.restaurants,
+    roles,
     users,
+    summary,
+    counts,
+    countsFailed,
+    retryStatistics,
     tab,
     role,
+    status,
     query,
-    page: current,
-    notice,
-    selected,
+    page,
+    pageSize,
     selectedUser,
     changeTab,
     changeRole,
+    changeStatus,
     changeQuery,
     changePage,
-    selectUser: setSelected,
     closeModal,
     saveAssignment,
-    exportRoles,
+    selectUser: setSelectedUser,
+    viewRoleUsers: (id: string) => {
+      changeRole(id)
+      setStatus('all')
+      setQuery('')
+      setSearch('')
+      changeTab('assignments')
+    },
   }
 }

@@ -1,68 +1,127 @@
-import { useOutletContext } from 'react-router-dom'
-import type { AdminOutletContext } from '../../../../layouts/admin/AdminLayout'
-import { Notice, secondaryButton } from '../../components/AdminUI'
+import { Panel, secondaryButton } from '../../components/AdminUI'
 import { RoleTable } from '../components/RoleTable'
 import { RoleUsersTable } from '../components/RoleUsersTable'
+import { RoleUserFilters } from '../components/RoleUserFilters'
 import { RoleTabs } from '../components/RoleTabs'
 import { RoleSummaryCards } from '../components/RoleSummaryCards'
 import { RoleAssignmentModal } from '../components/RoleAssignmentModal'
 import { useRoleManagement } from '../hooks/useRoleManagement'
+import { roleApiError } from '../api/roleApi'
 
 export function RolesPage() {
-  const { query: globalQuery } = useOutletContext<AdminOutletContext>()
-  const management = useRoleManagement(globalQuery)
+  const management = useRoleManagement()
+  const { roles, users, summary } = management
   return (
     <>
       <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-            Vai trò & phân quyền
+            Roles &amp; permissions
           </h1>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            Tra cứu trách nhiệm của từng vai trò và phân công tài khoản.
+            View system roles and manage account assignments.
           </p>
         </div>
-        <button className={secondaryButton} onClick={management.exportRoles}>
-          Xuất danh sách vai trò
-        </button>
       </header>
-      <RoleSummaryCards users={management.allUsers} />
-      {management.notice && <Notice>{management.notice}</Notice>}
-      <p className="mb-5 text-sm leading-6 text-slate-500">
-        Phạm vi nghiệp vụ dưới đây là dự kiến. Quyền truy cập thực tế sẽ do BE
-        kiểm tra khi tích hợp API.
-      </p>
+      <RoleSummaryCards
+        roleCount={roles.isError ? undefined : roles.data?.length}
+        totals={summary.isError ? undefined : summary.data}
+      />
+      {(summary.isError || management.countsFailed) && (
+        <div
+          role="alert"
+          className="mb-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-800"
+        >
+          Some account statistics could not be loaded.{' '}
+          <button className="underline" onClick={management.retryStatistics}>
+            Try again
+          </button>
+        </div>
+      )}
       <RoleTabs tab={management.tab} onChange={management.changeTab} />
       <div
         role="tabpanel"
         id={'panel-' + management.tab}
         aria-labelledby={'tab-' + management.tab}
       >
-        {management.tab === 'roles' ? (
-          <RoleTable users={management.allUsers} query={globalQuery} />
-        ) : (
-          <RoleUsersTable
-            users={management.users}
-            matchingUsers={management.matchingUsers}
-            status={management.status}
-            onStatus={management.changeStatus}
-            restaurants={management.restaurants}
-            role={management.role}
-            onRole={management.changeRole}
-            query={management.query}
-            onQuery={management.changeQuery}
-            page={management.page}
-            onPage={management.changePage}
-            selected={management.selected}
-            onSelect={management.selectUser}
+        {roles.isPending ? (
+          <p role="status" className="p-8 text-center text-slate-500">
+            Loading roles…
+          </p>
+        ) : roles.isError ? (
+          <Panel>
+            <div className="space-y-3 p-8 text-center">
+              <p role="alert" className="text-rose-600">
+                {roleApiError(roles.error)}
+              </p>
+              <button
+                className={secondaryButton}
+                onClick={() => void roles.refetch()}
+              >
+                Try again
+              </button>
+            </div>
+          </Panel>
+        ) : management.tab === 'roles' ? (
+          <RoleTable
+            roles={roles.data}
+            counts={management.counts}
+            onViewUsers={management.viewRoleUsers}
           />
+        ) : (
+          <Panel>
+            <RoleUserFilters
+              query={management.query}
+              role={management.role}
+              status={management.status}
+              roles={roles.data}
+              onQuery={management.changeQuery}
+              onRole={management.changeRole}
+              onStatus={management.changeStatus}
+            />
+            {users.isPending ? (
+              <p role="status" className="p-8 text-center text-slate-500">
+                Loading accounts…
+              </p>
+            ) : users.isError ? (
+              <div className="space-y-3 p-8 text-center">
+                <p role="alert" className="text-rose-600">
+                  {roleApiError(users.error)}
+                </p>
+                <button
+                  className={secondaryButton}
+                  onClick={() => void users.refetch()}
+                >
+                  Try again
+                </button>
+              </div>
+            ) : (
+              <>
+                {users.isFetching && (
+                  <p role="status" className="sr-only">
+                    Refreshing accounts…
+                  </p>
+                )}
+                <RoleUsersTable
+                  users={users.data?.items || []}
+                  roles={roles.data}
+                  total={users.data?.totalCount || 0}
+                  page={management.page}
+                  pageSize={management.pageSize}
+                  busy={users.isPlaceholderData}
+                  onPage={management.changePage}
+                  onSelect={management.selectUser}
+                />
+              </>
+            )}
+          </Panel>
         )}
       </div>
       {management.selectedUser && (
         <RoleAssignmentModal
-          key={management.selectedUser.id}
+          key={management.selectedUser.userId}
           user={management.selectedUser}
-          restaurants={management.restaurants}
+          roles={roles.data || []}
           onClose={management.closeModal}
           onSave={management.saveAssignment}
         />

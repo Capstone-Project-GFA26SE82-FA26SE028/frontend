@@ -109,7 +109,15 @@ export function UsersPage() {
               size={10}
               total={total}
               page={Math.min(page, maxPage)}
-              onPage={setPage}
+              onPage={(nextPage) => {
+                setPage(nextPage)
+                window.scrollTo({
+                  top: 0,
+                  behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                    ? 'instant'
+                    : 'smooth',
+                })
+              }}
             />
           </>
         )}
