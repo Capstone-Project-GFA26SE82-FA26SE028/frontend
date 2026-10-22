@@ -1,3 +1,4 @@
+import { Icon } from '../../../../components/Icon/Icon'
 import type { UserAccount } from '../types'
 export type UserActionHandlers = {
   onDetail: (user: UserAccount) => void
@@ -13,27 +14,35 @@ export function UserActions({
   return (
     <div className="flex flex-wrap gap-1">
       <button
+        title="View details"
         aria-label={`View ${u.name}`}
         onClick={() => onDetail(u)}
-        className="min-h-10 rounded-lg px-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50"
+        className="flex size-10 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline-2 focus-visible:outline-emerald-600"
       >
-        Details
+        <Icon name="eye" size={19} />
       </button>
       <button
+        title="Edit account"
         aria-label={`Edit ${u.name}`}
         onClick={() => onEdit(u)}
-        className="min-h-10 rounded-lg px-2 text-sm text-slate-600 hover:bg-slate-50"
+        className="flex size-10 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline-2 focus-visible:outline-emerald-600"
       >
-        Edit
+        <Icon name="edit" size={19} />
       </button>
       <button
+        title={u.active ? 'Deactivate account' : 'Activate account'}
         aria-label={`${u.active ? 'Deactivate' : 'Activate'} ${u.name}`}
         onClick={() => {
           onStatus(u)
         }}
-        className="min-h-10 rounded-lg px-2 text-sm text-slate-500 hover:bg-slate-50"
+        className={
+          'flex size-10 items-center justify-center rounded-lg transition-colors focus-visible:outline-2 focus-visible:outline-emerald-600 ' +
+          (u.active
+            ? 'text-rose-400 hover:bg-rose-50 hover:text-rose-600'
+            : 'text-emerald-600 hover:bg-emerald-50')
+        }
       >
-        {u.active ? 'Deactivate' : 'Activate'}
+        <Icon name={u.active ? 'ban' : 'check'} size={19} />
       </button>
     </div>
   )

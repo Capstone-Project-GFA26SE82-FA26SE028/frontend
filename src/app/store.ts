@@ -6,7 +6,6 @@ import adminPaymentMethodsReducer from '../features/admin/payment-methods/paymen
 import adminTaxFeesReducer from '../features/admin/tax-fees/taxFeeSlice'
 import adminAreasReducer from '../features/admin/areas/areaSlice'
 import adminTablesReducer from '../features/admin/tables/tableSlice'
-import adminProfileReducer from '../features/admin/restaurant-profile/profileSlice'
 import adminReducer, { adminStorageKey } from './adminReducer'
 import { configureStore } from '@reduxjs/toolkit'
 import cartReducer from '../features/customer/cart/cartSlice'
@@ -18,9 +17,7 @@ export const store = configureStore({
     customerBilling: customerBillingReducer,
     orders: orderReducer,
     customerSession: customerSessionReducer,
-    admin: adminReducer,
-    adminProfile: adminProfileReducer,
-    adminAreas: adminAreasReducer,
+    admin: adminReducer,    adminAreas: adminAreasReducer,
     adminTables: adminTablesReducer,
     adminTaxFees: adminTaxFeesReducer,
     adminPaymentMethods: adminPaymentMethodsReducer,

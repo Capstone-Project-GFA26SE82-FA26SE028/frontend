@@ -1,7 +1,8 @@
+import { Icon } from '../../../../components/Icon/Icon'
 import { useState } from 'react'
 import { useActivityUser } from '../hooks/useActivity'
 import type { ActivityLog } from '../types'
-import { EmptyState, secondaryButton } from '../../components/AdminUI'
+import { EmptyState } from '../../components/AdminUI'
 export function ActivityTable({
   items,
   onDetail,
@@ -55,11 +56,13 @@ export function ActivityTable({
               </td>
               <td className="p-4">
                 <button
-                  className={secondaryButton}
+                  className="flex size-10 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline-2 focus-visible:outline-emerald-600"
+                  title="View details"
+                  aria-label="View audit log details"
                   aria-haspopup="dialog"
                   onClick={() => onDetail(item)}
                 >
-                  View details
+                  <Icon name="eye" size={19} />
                 </button>
               </td>
             </tr>
