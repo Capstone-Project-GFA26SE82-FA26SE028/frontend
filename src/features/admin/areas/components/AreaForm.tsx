@@ -1,3 +1,4 @@
+import { Icon } from '../../../../components/Icon/Icon'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { areaSchema, type AreaValues } from '../schemas/areaSchema'
@@ -51,7 +52,7 @@ export function AreaForm({
   })
   return (
     <form
-      className="space-y-5 p-6"
+      className="space-y-5 p-5 sm:p-6"
       onSubmit={handleSubmit(async (values) => {
         clearErrors('root')
         try {
@@ -61,40 +62,65 @@ export function AreaForm({
         }
       })}
     >
-      <fieldset disabled={pending || isSubmitting} className="space-y-5">
+      <fieldset
+        disabled={pending || isSubmitting}
+        className="min-w-0 space-y-5"
+      >
         {area && <input type="hidden" {...register('restaurantId')} />}
-        <Field label="Restaurant *" error={errors.restaurantId?.message}>
-          {area ? (
-            <input
-              className={fieldClass + ' bg-slate-50'}
-              readOnly
-              value={
-                restaurants.find((r) => r.restaurantId === area.restaurantId)
-                  ?.restaurantName || 'Restaurant unavailable'
-              }
-            />
-          ) : (
-            <select className={fieldClass} {...register('restaurantId')}>
-              <option value="">Select restaurant</option>
-              {restaurants.map((r) => (
-                <option key={r.restaurantId} value={r.restaurantId}>
-                  {r.restaurantName}
-                </option>
-              ))}
-            </select>
-          )}
-        </Field>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-4 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4 sm:p-5">
+          <div className="flex items-center gap-3">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-700 shadow-sm">
+              <Icon name="grid" size={21} />
+            </span>
+            <div>
+              <h3 className="text-sm font-semibold text-slate-800">
+                {area ? 'Update area' : 'New service area'}
+              </h3>
+              <p className="mt-0.5 text-xs text-slate-500">
+                {area
+                  ? 'Keep your area details up to date.'
+                  : 'Choose a restaurant for this area.'}
+              </p>
+            </div>
+          </div>
+          <Field label="Restaurant *" error={errors.restaurantId?.message}>
+            {area ? (
+              <input
+                className={fieldClass + ' bg-slate-50'}
+                readOnly
+                value={
+                  restaurants.find((r) => r.restaurantId === area.restaurantId)
+                    ?.restaurantName || 'Restaurant unavailable'
+                }
+              />
+            ) : (
+              <select className={fieldClass} {...register('restaurantId')}>
+                <option value="">Select restaurant</option>
+                {restaurants.map((r) => (
+                  <option key={r.restaurantId} value={r.restaurantId}>
+                    {r.restaurantName}
+                  </option>
+                ))}
+              </select>
+            )}
+          </Field>
+        </div>
+        <div className="grid gap-4 rounded-2xl border border-slate-100 bg-slate-50/80 p-4 sm:grid-cols-2 sm:p-5">
           {(
             [
-              ['areaCode', 'Area code *'],
-              ['areaName', 'Area name *'],
-              ['serviceType', 'Service type *'],
-              ['spaceType', 'Space type *'],
+              ['areaCode', 'Area code *', 'e.g. GROUND-01'],
+              ['areaName', 'Area name *', 'e.g. Ground Floor'],
+              ['serviceType', 'Service type *', 'e.g. Buffet'],
+              ['spaceType', 'Space type *', 'e.g. Indoor'],
             ] as const
-          ).map(([key, label]) => (
+          ).map(([key, label, placeholder]) => (
             <Field key={key} label={label} error={errors[key]?.message}>
-              <input className={fieldClass} {...register(key)} />
+              <input
+                className={fieldClass + ' bg-white'}
+                placeholder={placeholder}
+                maxLength={key === 'areaName' ? 100 : 50}
+                {...register(key)}
+              />
             </Field>
           ))}
         </div>
@@ -106,11 +132,18 @@ export function AreaForm({
             {errors.root.message}
           </p>
         )}
-        <div className="flex justify-end gap-3 border-t border-slate-100 pt-4">
-          <button type="button" className={secondaryButton} onClick={onClose}>
+        <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-5">
+          <button
+            type="button"
+            className={secondaryButton + ' justify-center'}
+            onClick={onClose}
+          >
             Cancel
           </button>
-          <button className={primaryButton} disabled={!!area && !isDirty}>
+          <button
+            className={primaryButton + ' justify-center'}
+            disabled={!!area && !isDirty}
+          >
             {pending ? 'Saving...' : area ? 'Save changes' : 'Create area'}
           </button>
         </div>

@@ -1,3 +1,4 @@
+import { Icon } from '../../../../components/Icon/Icon'
 import type { Area } from '../types'
 import { primaryButton, secondaryButton } from '../../components/AdminUI'
 export function AreaDetail({
@@ -12,33 +13,70 @@ export function AreaDetail({
   onClose: () => void
 }) {
   return (
-    <div className="space-y-5 p-6">
-      <div className="rounded-2xl bg-emerald-50 p-5">
-        <h3 className="text-xl font-semibold">{area.areaName}</h3>
-        <p className="mt-1 text-sm text-emerald-700">
-          {area.areaCode} ? {area.isActive ? 'Active' : 'Inactive'}
-        </p>
+    <div className="space-y-5 p-5 sm:p-6">
+      <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-5">
+        <div className="flex items-start gap-4">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-700 shadow-sm">
+            <Icon name="grid" size={24} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <h3 className="break-words text-xl font-bold text-slate-800">
+              {area.areaName}
+            </h3>
+            <p className="mt-1 break-words text-sm text-slate-500">
+              {area.areaCode}
+            </p>
+          </div>
+        </div>
+        <span
+          className={
+            'mt-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ' +
+            (area.isActive
+              ? 'bg-white text-emerald-700'
+              : 'bg-slate-100 text-slate-600')
+          }
+        >
+          <span
+            className={
+              'size-1.5 rounded-full ' +
+              (area.isActive ? 'bg-emerald-500' : 'bg-slate-400')
+            }
+          />
+          {area.isActive ? 'Active' : 'Inactive'}
+        </span>
       </div>
-      <dl className="divide-y divide-slate-100">
+      <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {[
-          ['Restaurant', restaurantName],
-          ['Service type', area.serviceType],
-          ['Space type', area.spaceType],
-        ].map(([label, value]) => (
+          ['Restaurant', restaurantName, 'store'],
+          ['Service type', area.serviceType, 'utensils'],
+          ['Space type', area.spaceType, 'home'],
+        ].map(([label, value, icon], index) => (
           <div
             key={label}
-            className="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-3 text-sm"
+            className={
+              'min-w-0 rounded-2xl border border-slate-100 bg-slate-50/80 p-4 ' +
+              (index === 0 ? 'sm:col-span-2' : '')
+            }
           >
-            <dt className="text-slate-500">{label}</dt>
-            <dd className="break-words text-right font-medium">{value}</dd>
+            <dt className="flex items-center gap-2 text-xs font-medium text-slate-500">
+              <Icon name={icon} size={16} />
+              {label}
+            </dt>
+            <dd className="mt-2 break-words text-sm font-semibold leading-6 text-slate-700">
+              {value}
+            </dd>
           </div>
         ))}
       </dl>
-      <div className="flex justify-end gap-3">
-        <button className={secondaryButton} onClick={onClose}>
+      <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-5">
+        <button
+          className={secondaryButton + ' justify-center'}
+          onClick={onClose}
+        >
           Close
         </button>
-        <button className={primaryButton} onClick={onEdit}>
+        <button className={primaryButton + ' justify-center'} onClick={onEdit}>
+          <Icon name="edit" size={17} />
           Edit area
         </button>
       </div>
