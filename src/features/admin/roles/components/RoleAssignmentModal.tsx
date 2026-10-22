@@ -1,4 +1,7 @@
-﻿import { useForm, useWatch } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
+import { Icon } from '../../../../components/Icon/Icon'
+import { roleColor } from '../roleStyles'
+import { UserAvatar } from '../../users/components/UserAvatar'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   roleAssignmentSchema,
@@ -6,110 +9,135 @@ import {
 } from '../schemas/roleAssignmentSchema'
 import { Modal } from '../../../../components/Modal/Modal'
 import {
-  roles,
-  roleLabels,
-  type AdminUser,
-  type AdminRestaurant,
-} from '../../users/types'
-import {
   Field,
   fieldClass,
   primaryButton,
   secondaryButton,
 } from '../../components/AdminUI'
-import { roleDescriptions } from '../data'
+import type { RoleAccount, SystemRole } from '../types'
 
 export function RoleAssignmentModal({
   user,
-  restaurants,
+  roles,
   onClose,
   onSave,
 }: {
-  user: AdminUser
-  restaurants: AdminRestaurant[]
+  user: RoleAccount
+  roles: SystemRole[]
   onClose: () => void
-  onSave: (value: RoleAssignmentValues) => string
+  onSave: (value: RoleAssignmentValues) => Promise<string>
 }) {
   const {
     register,
     control,
     handleSubmit,
     setError,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<RoleAssignmentValues>({
     resolver: zodResolver(roleAssignmentSchema),
-    defaultValues: {
-      role: user.role,
-      restaurantId: user.restaurantId,
-      reason: '',
-    },
+    defaultValues: { role: user.roleId },
   })
   const role = useWatch({ control, name: 'role' })
+  const close = () => {
+    if (!isSubmitting) onClose()
+  }
   return (
-    <Modal title="Đổi vai trò" onClose={onClose}>
+    <Modal title="Change role" closeLabel="Close" onClose={close}>
       <form
-        className="space-y-4 p-6"
-        onSubmit={handleSubmit((v) => {
-          const message = onSave({
-            ...v,
-            restaurantId: v.role === 'Admin' ? '' : v.restaurantId,
-          })
+        noValidate
+        className="space-y-5 p-5 sm:p-6"
+        onSubmit={handleSubmit(async (values) => {
+          const message = await onSave(values)
           if (message) setError('root', { message })
         })}
       >
-        <div>
-          <h3 className="text-lg font-semibold">{user.name}</h3>
-          <p className="mt-1 break-words text-sm text-slate-500">
-            {user.email}
-          </p>
-        </div>
-        <Field label="Vai trò" error={errors.role?.message}>
-          <select className={fieldClass} {...register('role')}>
-            {roles.map((r) => (
-              <option key={r} value={r}>
-                {roleLabels[r]}
+        <section className="overflow-hidden rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50/80 to-white">
+          <div className="flex items-center gap-4 p-4 sm:p-5">
+            <div className="shrink-0 rounded-full bg-white p-1 shadow-sm ring-1 ring-emerald-100">
+              <UserAvatar
+                src={user.avatarUrl}
+                name={user.fullName || user.userName}
+                large
+              />
+            </div>
+            <div className="min-w-0">
+              <h3 className="break-words text-xl font-semibold tracking-tight text-slate-900">
+                {user.fullName || user.userName}
+              </h3>
+              <p className="mt-1 break-all text-sm text-slate-500">
+                {user.email}
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-emerald-100/80 bg-white/70 px-4 py-3 sm:px-5">
+            <span className="text-sm text-slate-500">Current role</span>
+            <span
+              className={
+                'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ' +
+                roleColor(user.roleId)
+              }
+            >
+              <Icon name="shield" size={14} />
+              {roles.find((item) => item.roleId === user.roleId)?.roleName ||
+                user.roleId}
+            </span>
+          </div>
+        </section>
+        <Field label="New role" error={errors.role?.message}>
+          <select
+            className={`${fieldClass} min-h-12 rounded-xl border-slate-200 font-medium disabled:bg-slate-50`}
+            disabled={isSubmitting}
+            aria-invalid={!!errors.role}
+            {...register('role')}
+          >
+            {!roles.some((item) => item.roleId === user.roleId) && (
+              <option value={user.roleId}>{user.roleId}</option>
+            )}
+            {roles.map((item) => (
+              <option key={item.roleId} value={item.roleId}>
+                {item.roleName}
               </option>
             ))}
           </select>
         </Field>
-        <p className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800">
-          Phạm vi dự kiến: {roleDescriptions[role].scope}. Thay đổi này chỉ cập
-          nhật hồ sơ mẫu.
-        </p>
-        {role !== 'Admin' && (
-          <Field
-            label="Nhà hàng phụ trách"
-            error={errors.restaurantId?.message}
-          >
-            <select className={fieldClass} {...register('restaurantId')}>
-              <option value="">Chọn nhà hàng</option>
-              {restaurants.map((r) => (
-                <option key={r.id} value={r.id}>
-                  {r.name}
-                  {r.active ? '' : ' · Tạm dừng'}
-                </option>
-              ))}
-            </select>
-          </Field>
-        )}
-        <Field label="Lý do thay đổi" error={errors.reason?.message}>
-          <textarea
-            className={fieldClass}
-            rows={3}
-            maxLength={500}
-            {...register('reason')}
+        <div className="flex items-start gap-2.5 rounded-xl bg-slate-50 px-3.5 py-3 text-sm leading-6 text-slate-600">
+          <Icon
+            name="shield"
+            size={18}
+            className="mt-1 shrink-0 text-slate-400"
           />
-        </Field>
+          <div>
+            <p>The account will need to sign in again.</p>
+            {user.roleId === 'admin' && (
+              <p className="mt-1 text-amber-800">
+                At least one active administrator is required.
+              </p>
+            )}
+          </div>
+        </div>
         {errors.root && (
-          <p role="alert" className="text-sm text-rose-600">
+          <p
+            role="alert"
+            className="rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm leading-6 text-rose-700"
+          >
             {errors.root.message}
           </p>
         )}
-        <div className="flex justify-end gap-2">
-          <button type="button" className={secondaryButton} onClick={onClose}>
-            Hủy
+        <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-5">
+          <button
+            type="button"
+            disabled={isSubmitting}
+            className={`${secondaryButton} justify-center`}
+            onClick={close}
+          >
+            Cancel
           </button>
-          <button className={primaryButton}>Lưu phân công</button>
+          <button
+            disabled={isSubmitting || role === user.roleId || !roles.length}
+            className={`${primaryButton} justify-center`}
+          >
+            {isSubmitting ? 'Saving…' : 'Save changes'}
+          </button>
         </div>
       </form>
     </Modal>

@@ -1,13 +1,7 @@
-import { RoleUserFilters } from './RoleUserFilters'
-import { roleColors } from '../data'
+import { roleColor } from '../roleStyles'
+import { UserAvatar } from '../../users/components/UserAvatar'
+import type { RoleAccount, SystemRole } from '../types'
 import {
-  roleLabels,
-  type Role,
-  type AdminUser,
-  type AdminRestaurant,
-} from '../../users/types'
-import {
-  Panel,
   Badge,
   Pagination,
   EmptyState,
@@ -16,103 +10,89 @@ import {
 
 export function RoleUsersTable({
   users,
-  matchingUsers,
-  status,
-  onStatus,
-  restaurants,
-  role,
-  onRole,
-  query,
-  onQuery,
+  roles,
+  total,
   page,
+  pageSize,
+  busy,
   onPage,
-  selected,
   onSelect,
 }: {
-  users: AdminUser[]
-  matchingUsers: AdminUser[]
-  status: string
-  onStatus: (value: string) => void
-  restaurants: AdminRestaurant[]
-  role: Role | 'all'
-  onRole: (role: Role | 'all') => void
-  query: string
-  onQuery: (query: string) => void
+  users: RoleAccount[]
+  roles: SystemRole[]
+  total: number
   page: number
+  pageSize: number
+  busy: boolean
   onPage: (page: number) => void
-  selected: string
-  onSelect: (id: string) => void
+  onSelect: (user: RoleAccount) => void
 }) {
   return (
-    <Panel>
-      <RoleUserFilters
-        query={query}
-        role={role}
-        status={status}
-        matchingUsers={matchingUsers}
-        onQuery={onQuery}
-        onRole={onRole}
-        onStatus={onStatus}
-      />
+    <fieldset disabled={busy} aria-busy={busy} className="min-w-0">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[740px] text-left text-sm">
+        <table className="w-full min-w-[680px] text-left text-sm">
           <thead className="border-y border-slate-200 bg-slate-50 text-slate-600">
             <tr>
-              {[
-                'Tài khoản',
-                'Vai trò',
-                'Nhà hàng / Phạm vi',
-                'Trạng thái',
-                'Thao tác',
-              ].map((h) => (
-                <th
-                  key={h}
-                  scope="col"
-                  className="whitespace-nowrap px-5 py-3.5 font-semibold"
-                >
-                  {h}
-                </th>
-              ))}
+              {['Account', 'Username', 'Role', 'Status', 'Actions'].map(
+                (label) => (
+                  <th
+                    key={label}
+                    scope="col"
+                    className="whitespace-nowrap px-5 py-3.5 font-semibold"
+                  >
+                    {label}
+                  </th>
+                ),
+              )}
             </tr>
           </thead>
           <tbody>
-            {users.slice((page - 1) * 6, page * 6).map((u) => (
+            {users.map((user) => (
               <tr
-                key={u.id}
-                className={`border-t border-slate-100 ${selected === u.id ? 'bg-emerald-50' : 'hover:bg-slate-50'}`}
+                key={user.userId}
+                className="border-t border-slate-100 hover:bg-slate-50"
               >
                 <td className="px-5 py-4">
-                  <p className="font-semibold">{u.name}</p>
-                  <p className="mt-1 text-sm text-slate-500">{u.email}</p>
+                  <div className="flex items-center gap-3">
+                    <UserAvatar
+                      src={user.avatarUrl}
+                      name={user.fullName || user.userName}
+                    />
+                    <div className="min-w-0">
+                      <p className="font-semibold">
+                        {user.fullName || user.userName}
+                      </p>
+                      <p className="mt-1 text-slate-500">{user.email}</p>
+                    </div>
+                  </div>
                 </td>
+                <td className="px-5 py-4 text-slate-600">{user.userName}</td>
                 <td className="px-5 py-4">
                   <span
                     className={
                       'inline-flex whitespace-nowrap rounded-full border px-3 py-1 text-xs font-semibold ' +
-                      roleColors[u.role]
+                      roleColor(user.roleId)
                     }
                   >
-                    {roleLabels[u.role]}
+                    {roles.find((item) => item.roleId === user.roleId)
+                      ?.roleName || user.roleId}
                   </span>
                 </td>
-                <td className="px-5 py-4 text-slate-500">
-                  {u.role === 'Admin'
-                    ? 'Toàn nền tảng'
-                    : restaurants.find((r) => r.id === u.restaurantId)?.name ||
-                      'Chưa phân công'}
-                </td>
                 <td className="px-5 py-4">
-                  <Badge tone={u.active ? 'green' : 'red'}>
-                    {u.active ? 'Hoạt động' : 'Đã khóa'}
+                  <Badge tone={user.isActive ? 'green' : 'red'}>
+                    {user.isActive ? 'Active' : 'Inactive'}
                   </Badge>
                 </td>
                 <td className="px-5 py-4">
                   <button
+                    aria-label={
+                      'Change role for ' + (user.fullName || user.userName)
+                    }
                     aria-haspopup="dialog"
                     className={`${secondaryButton} whitespace-nowrap`}
-                    onClick={() => onSelect(u.id)}
+                    onClick={() => onSelect(user)}
                   >
-                    Đổi vai trò
+                    Change role
                   </button>
                 </td>
               </tr>
@@ -121,9 +101,18 @@ export function RoleUsersTable({
         </table>
       </div>
       {!users.length && (
-        <EmptyState description="Chưa có tài khoản phù hợp với vai trò và từ khóa đã chọn." />
+        <EmptyState
+          title="No accounts found"
+          description="Try changing the search or filters."
+        />
       )}
-      <Pagination total={users.length} page={page} onPage={onPage} />
-    </Panel>
+      <Pagination
+        total={total}
+        page={page}
+        size={pageSize}
+        locale="en"
+        onPage={onPage}
+      />
+    </fieldset>
   )
 }

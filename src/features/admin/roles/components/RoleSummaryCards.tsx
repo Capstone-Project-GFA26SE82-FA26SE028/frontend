@@ -1,33 +1,37 @@
 import { SummaryCards } from '../../components/AdminUI'
-import { roles, type AdminUser } from '../../users/types'
-export function RoleSummaryCards({ users }: { users: AdminUser[] }) {
+export function RoleSummaryCards({
+  roleCount,
+  totals,
+}: {
+  roleCount?: number
+  totals?: { total: number; active: number; admins: number }
+}) {
   return (
     <SummaryCards
       items={[
         {
-          label: 'Vai trò hệ thống',
-          value: roles.length,
+          label: 'System roles',
+          value: roleCount ?? '—',
           icon: 'shield',
-          note: 'Danh mục cố định',
+          note: 'Fixed roles',
         },
         {
-          label: 'Tài khoản',
-          value: users.length,
+          label: 'Accounts',
+          value: totals?.total ?? '—',
           icon: 'users',
-          note: 'Trên toàn nền tảng',
+          note: 'All user accounts',
         },
         {
-          label: 'Admin hoạt động',
-          value: users.filter((u) => u.role === 'Admin' && u.active).length,
+          label: 'Active accounts',
+          value: totals?.active ?? '—',
+          icon: 'users',
+          note: 'Currently enabled',
+        },
+        {
+          label: 'Active administrators',
+          value: totals?.admins ?? '—',
           icon: 'shield',
-          note: 'Luôn giữ ít nhất một tài khoản',
-        },
-        {
-          label: 'Được phân công nhà hàng',
-          value: users.filter((u) => u.role !== 'Admin' && u.restaurantId)
-            .length,
-          icon: 'store',
-          note: 'Bao gồm tài khoản đang khóa',
+          note: 'At least one is required',
         },
       ]}
     />

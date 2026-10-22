@@ -1,86 +1,75 @@
-import { roles, roleLabels, type AdminUser } from '../../users/types'
 import { Panel, EmptyState } from '../../components/AdminUI'
-import { matches } from '../../utils'
-import { roleDescriptions, roleColors } from '../data'
+import { roleColor } from '../roleStyles'
+import type { SystemRole } from '../types'
 
 export function RoleTable({
-  users,
-  query,
+  roles,
+  counts,
+  onViewUsers,
 }: {
-  users: AdminUser[]
-  query: string
+  roles: SystemRole[]
+  counts: Record<string, number | undefined>
+  onViewUsers: (id: string) => void
 }) {
-  const rows = roles.filter((r) =>
-    matches(query, r, roleLabels[r], roleDescriptions[r].scope),
-  )
   return (
     <Panel>
-      <h2 className="p-5 text-lg font-semibold">
-        Danh sách vai trò{' '}
-        <span className="ml-2 text-sm font-normal text-slate-600">
-          {rows.length} vai trò cố định
-        </span>
-      </h2>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[720px] text-left text-sm">
+        <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="border-y border-slate-200 bg-slate-50 text-slate-600">
             <tr>
-              {[
-                'Vai trò',
-                'Phạm vi dự kiến',
-                'Nghiệp vụ dự kiến',
-                'Tài khoản',
-              ].map((h) => (
-                <th key={h} scope="col" className="px-5 py-3.5 font-semibold">
-                  {h}
+              {['Role', 'Description', 'Accounts'].map((label) => (
+                <th
+                  key={label}
+                  scope="col"
+                  className="px-5 py-3.5 font-semibold"
+                >
+                  {label}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => (
+            {roles.map((item) => (
               <tr
-                key={r}
+                key={item.roleId}
                 className="border-t border-slate-100 hover:bg-slate-50"
               >
-                <td className="px-5 py-4">
-                  <p
+                <td className="w-64 px-5 py-4">
+                  <span
                     className={
-                      'inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ' +
-                      roleColors[r]
+                      'inline-flex whitespace-nowrap rounded-full border px-3 py-1 text-xs font-semibold ' +
+                      roleColor(item.roleId)
                     }
                   >
-                    {roleLabels[r]}
-                  </p>
-                  <p className="mt-1 pl-[13px] text-xs text-slate-600">{r}</p>
-                </td>
-                <td className="max-w-56 px-5 py-5 leading-6 text-slate-600">
-                  {roleDescriptions[r].scope}
-                </td>
-                <td className="px-5 py-4">
-                  <ul className="space-y-2 text-slate-600">
-                    {roleDescriptions[r].tasks.map((t) => (
-                      <li key={t} className="flex items-start gap-2 leading-6">
-                        <span
-                          aria-hidden="true"
-                          className="mt-2.5 size-1.5 shrink-0 rounded-full bg-emerald-600"
-                        />
-                        <span>{t}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-                <td className="px-5 py-4 font-semibold text-emerald-700">
-                  <span className="inline-flex min-w-9 items-center justify-center rounded-lg bg-emerald-50 px-2.5 py-1.5">
-                    {users.filter((u) => u.role === r).length}
+                    {item.roleName}
                   </span>
+                  <p className="mt-1 pl-[13px] text-xs text-slate-500">
+                    {item.roleId}
+                  </p>
+                </td>
+                <td className="px-5 py-4 leading-6 text-slate-600">
+                  {item.description || 'No description provided.'}
+                </td>
+                <td className="w-40 px-5 py-4">
+                  <button
+                    aria-label={'View accounts with role ' + item.roleName}
+                    onClick={() => onViewUsers(item.roleId)}
+                    className="inline-flex min-h-10 min-w-12 items-center justify-center rounded-lg bg-emerald-50 px-3 font-semibold text-emerald-700 hover:bg-emerald-100"
+                  >
+                    {counts[item.roleId] ?? '—'}
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {!rows.length && <EmptyState />}
+      {!roles.length && (
+        <EmptyState
+          title="No roles found"
+          description="No system roles are available."
+        />
+      )}
     </Panel>
   )
 }
