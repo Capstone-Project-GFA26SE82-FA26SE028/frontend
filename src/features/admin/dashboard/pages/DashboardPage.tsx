@@ -4,7 +4,6 @@ import { DashboardStats } from '../components/DashboardStats'
 import { StatusChart } from '../components/StatusChart'
 import { DashboardAreas } from '../components/DashboardAreas'
 import { DashboardSettings } from '../components/DashboardSettings'
-import { RecentActivity } from '../components/RecentActivity'
 export function DashboardPage() {
   const data = useDashboard()
   return (
@@ -34,7 +33,6 @@ export function DashboardPage() {
         <DashboardAreas areas={data.areas} tables={data.tables} />
         <DashboardSettings fees={data.currentFees} methods={data.methods} />
       </div>
-      <RecentActivity items={data.recent} />
     </div>
   )
 }

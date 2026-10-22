@@ -90,7 +90,7 @@ export function AdminLayout() {
         </main>
         <footer className="mx-5 flex flex-wrap justify-between gap-1 border-t border-slate-200/50 py-3 text-xs text-slate-500">
           <span>FoodHub · Không gian quản trị nhà hàng</span>
-          {!['/admin/users', '/admin/roles', '/admin/sessions'].includes(pathname) && (
+          {!['/admin/users', '/admin/roles', '/admin/sessions', '/admin/activity'].includes(pathname) && (
             <span>Bản xem trước · Toàn bộ số liệu là dữ liệu mẫu</span>
           )}
         </footer>
