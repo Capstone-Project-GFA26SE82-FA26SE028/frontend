@@ -179,14 +179,14 @@ export function AreasPage() {
               <div className="space-y-5 p-6">
                 <p className="break-words text-sm text-slate-600">
                   {target.mode === 'delete'
-                    ? 'Delete ?' +
+                    ? 'Delete ' +
                       area.areaName +
-                      '?? Areas containing tables cannot be deleted.'
+                      '? Areas containing tables cannot be deleted.'
                     : area.isActive
-                      ? 'Deactivate ?' +
+                      ? 'Deactivate ' +
                         area.areaName +
-                        '?? This is blocked while service sessions remain open.'
-                      : 'Activate ?' + area.areaName + '??'}
+                        '? This is blocked while service sessions remain open.'
+                      : 'Activate ' + area.areaName + '?'}
                 </p>
                 {mutation.isError && (
                   <p
