@@ -1,72 +1,77 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Icon } from '../../../../components/Icon/Icon'
 import {
   phoneEntrySchema,
   type PhoneEntryValues,
 } from '../schemas/phoneEntrySchema'
-
 export function PhoneEntryForm({
   onSubmit,
+  pending = false,
+  error,
 }: {
   onSubmit: (values: PhoneEntryValues) => void
+  pending?: boolean
+  error?: string
 }) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<PhoneEntryValues>({
     resolver: zodResolver(phoneEntrySchema),
     defaultValues: { phone: '' },
   })
-
   return (
     <form
       noValidate
       onSubmit={handleSubmit(onSubmit)}
-      className="mt-6 space-y-5"
+      className="mt-7 space-y-3"
     >
-      <div>
-        <label htmlFor="entry-phone" className="text-sm font-semibold">
-          Số điện thoại của bạn
-        </label>
-        <input
-          {...register('phone')}
-          id="entry-phone"
-          type="tel"
-          inputMode="tel"
-          autoComplete="tel"
-          required
-          placeholder="090 123 4567"
-          className="field mt-2 min-h-14 text-lg"
-          aria-invalid={!!errors.phone}
-          aria-describedby={
-            errors.phone ? 'entry-phone-error' : 'entry-phone-hint'
-          }
-        />
-        {errors.phone ? (
-          <p
-            id="entry-phone-error"
-            role="alert"
-            className="mt-2 text-sm text-red-700"
-          >
-            {errors.phone.message}
-          </p>
-        ) : (
-          <p
-            id="entry-phone-hint"
-            className="mt-2 text-xs leading-5 text-muted"
-          >
-            Nhập số điện thoại để bắt đầu chọn món tại bàn.
-          </p>
-        )}
-      </div>
+      <label className="block text-sm font-semibold" htmlFor="entry-phone">
+        Phone or table code
+      </label>
+      <input
+        {...register('phone')}
+        id="entry-phone"
+        type="text"
+        inputMode="numeric"
+        autoComplete="off"
+        maxLength={14}
+        disabled={pending}
+        placeholder="e.g. 0901234567 or 567"
+        className="field min-h-12"
+        aria-invalid={!!errors.phone}
+        aria-describedby="entry-phone-help"
+      />
+      <details className="text-xs text-slate-500">
+        <summary className="w-fit cursor-pointer py-1 text-emerald-700">
+          Help
+        </summary>
+        <p id="entry-phone-help" className="mt-2 leading-5">
+          First guest? Enter your phone number or choose a 3-digit code. The
+          last 3 digits of your phone become the code. Others at your table
+          should enter that code. Ask your server if you need help.
+        </p>
+      </details>
+      {errors.phone && (
+        <p role="alert" className="text-sm text-red-700">
+          {errors.phone.message}
+        </p>
+      )}
+      {error && (
+        <p
+          role="alert"
+          className="rounded-xl bg-rose-50 p-3 text-sm text-rose-700"
+        >
+          {error}
+        </p>
+      )}
       <button
         type="submit"
-        disabled={isSubmitting}
-        className="btn-primary min-h-14 w-full"
+        disabled={pending}
+        className="btn-primary mt-3 min-h-12 w-full"
       >
-        Tiếp tục vào thực đơn <Icon name="arrow" size={18} />
+        {pending ? 'Joining...' : 'Continue'}
       </button>
     </form>
   )
