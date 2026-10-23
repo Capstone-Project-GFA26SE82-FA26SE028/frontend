@@ -28,7 +28,7 @@ export function AdminLayout() {
         '/admin/sessions': 'Login sessions',
         '/admin/restaurants': 'Restaurants',
         '/admin/areas': 'Restaurant Areas',
-        '/admin/tables': 'Danh sách bàn',
+        '/admin/tables': 'Tables',
         '/admin/table-qr': 'Mã QR bàn',
         '/admin/tax-fees': 'VAT & phí dịch vụ',
         '/admin/payment-methods': 'Phương thức thanh toán',
@@ -99,6 +99,7 @@ export function AdminLayout() {
             '/admin/activity',
             '/admin/restaurants',
             '/admin/areas',
+            '/admin/tables',
           ].includes(pathname) && (
             <span>Bản xem trước · Toàn bộ số liệu là dữ liệu mẫu</span>
           )}

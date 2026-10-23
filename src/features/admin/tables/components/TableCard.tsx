@@ -1,38 +1,30 @@
-import type { RestaurantTable } from '../schema'
+import { Icon } from '../../../../components/Icon/Icon'
+import type { Table, TableMode } from '../types'
 export function TableCard({
   table,
-  onEdit,
-  onDelete,
+  areaName,
+  onAction,
 }: {
-  table: RestaurantTable
-  onEdit: () => void
-  onDelete: () => void
+  table: Table
+  areaName: string
+  onAction: (mode: TableMode, id: string) => void
 }) {
-  const status = !table.active
-    ? 'Ngừng sử dụng'
-    : !table.areaId
-      ? 'Chưa phân khu vực'
-      : table.busy
-        ? 'Đang phục vụ'
-        : 'Bàn trống'
-  const tone =
-    !table.active || !table.areaId
-      ? 'border-slate-200 bg-slate-50 text-slate-500'
-      : table.busy
-        ? 'border-amber-200 bg-amber-50 text-amber-700'
-        : 'border-emerald-200 bg-emerald-50 text-emerald-700'
+  const status = table.isActive ? 'Active' : 'Inactive'
+  const tone = table.isActive
+    ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+    : 'border-slate-200 bg-slate-50 text-slate-500'
   return (
     <article className="group min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white transition-shadow hover:shadow-md">
       <button
-        onClick={onEdit}
-        aria-label={'Chỉnh sửa ' + table.name}
+        onClick={() => onAction('view', table.tableId)}
+        aria-label={'View details ' + table.tableCode}
         className="block w-full rounded-t-2xl p-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-600 sm:p-5"
       >
         <div className="flex items-center justify-between gap-2">
           <span className="truncate text-xs font-semibold tracking-wider text-slate-400">
-            {table.code}
+            {table.tableCode}
           </span>
-          <span className="text-xs text-slate-500">{table.capacity} chỗ</span>
+          <span className="text-xs text-slate-500">{table.capacity} seats</span>
         </div>
         <div
           className={
@@ -82,13 +74,13 @@ export function TableCard({
               />
             )
           })}
-          <span className="text-xl font-bold">{table.code}</span>
+          <span className="max-w-full truncate px-1 text-xl font-bold" title={table.tableCode}>{table.tableCode}</span>
         </div>
         <h3
           className="truncate text-center text-base font-semibold text-slate-800"
-          title={table.name}
+          title={areaName}
         >
-          {table.name}
+          {areaName}
         </h3>
         <p
           className={
@@ -100,20 +92,48 @@ export function TableCard({
           {status}
         </p>
       </button>
-      <div className="flex items-center justify-between border-t border-slate-100 px-3 sm:px-5">
-        <button
-          onClick={onEdit}
-          className="min-h-11 text-xs font-medium text-slate-500 hover:text-emerald-700"
-        >
-          Chỉnh sửa
-        </button>
-        <button
-          onClick={onDelete}
-          aria-label={'Xóa ' + table.name}
-          className="min-h-11 px-2 text-xs text-slate-400 hover:text-rose-600"
-        >
-          Xóa
-        </button>
+      <div className="flex justify-around border-t border-slate-100 px-2 py-1">
+        {(['edit', 'move', 'status', 'delete'] as const).map((mode) => {
+          const label =
+            mode === 'edit'
+              ? 'Edit'
+              : mode === 'move'
+                ? 'Move area'
+                : mode === 'delete'
+                  ? 'Delete'
+                  : table.isActive
+                    ? 'Deactivate'
+                    : 'Activate'
+          return (
+            <button
+              key={mode}
+              title={label}
+              aria-label={label + ' ' + table.tableCode}
+              onClick={() => onAction(mode, table.tableId)}
+              className={
+                'flex size-10 items-center justify-center rounded-lg ' +
+                (mode === 'delete'
+                  ? 'text-rose-400 hover:bg-rose-50'
+                  : 'text-slate-400 hover:bg-emerald-50 hover:text-emerald-700')
+              }
+            >
+              <Icon
+                name={
+                  mode === 'edit'
+                    ? 'edit'
+                    : mode === 'move'
+                      ? 'arrow'
+                      : mode === 'delete'
+                        ? 'trash'
+                        : table.isActive
+                          ? 'ban'
+                          : 'check'
+                }
+                size={18}
+              />
+            </button>
+          )
+        })}
       </div>
     </article>
   )
