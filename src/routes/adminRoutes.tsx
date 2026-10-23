@@ -3,7 +3,6 @@ import { HealthPage } from '../features/admin/health/pages/HealthPage'
 import { ActivityPage } from '../features/admin/activity/pages/ActivityPage'
 import { PaymentMethodsPage } from '../features/admin/payment-methods/pages/PaymentMethodsPage'
 import { TaxFeesPage } from '../features/admin/tax-fees/pages/TaxFeesPage'
-import { TableQrPage } from '../features/admin/table-qr/pages/TableQrPage'
 import { TablesPage } from '../features/admin/tables/pages/TablesPage'
 import { AreasPage } from '../features/admin/areas/pages/AreasPage'
 import { RestaurantsPage } from '../features/admin/restaurants/pages/RestaurantsPage'
@@ -24,7 +23,6 @@ export const adminRoute: RouteObject = {
     { path: 'restaurants', element: <RestaurantsPage /> },
     { path: 'areas', element: <AreasPage /> },
     { path: 'tables', element: <TablesPage /> },
-    { path: 'table-qr', element: <TableQrPage /> },
     { path: 'tax-fees', element: <TaxFeesPage /> },
     { path: 'payment-methods', element: <PaymentMethodsPage /> },
     { path: 'activity', element: <ActivityPage /> },

@@ -10,9 +10,21 @@ export type Table = {
   cleaningStatus: string
 }
 export type TableMode =
+  | 'qr'
   | 'view'
   | 'create'
   | 'edit'
   | 'move'
   | 'status'
   | 'delete'
+
+export type TableQr = {
+  qrId: string
+  tableId: string
+  tableCode: string
+  areaId: string
+  imageUrl: string | null
+  createdAt: string
+  revokedAt: string | null
+  isUsable: boolean
+}

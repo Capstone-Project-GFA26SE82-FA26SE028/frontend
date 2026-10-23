@@ -100,6 +100,11 @@ export function tableError(e: unknown) {
       ? e.message
       : 'Unable to complete the request.'
 }
-export function isTableConflict(e: unknown) {
-  return axios.isAxiosError(e) && e.response?.status === 409
+export function isTableVersionConflict(e: unknown) {
+  if (!axios.isAxiosError(e) || e.response?.status !== 409) return false
+  return [
+    'The table has changed. Reload the data.',
+    'The data has changed. Reload before continuing.',
+    'A concurrent operation was detected. Reload and try again.',
+  ].includes(e.response.data?.message)
 }
