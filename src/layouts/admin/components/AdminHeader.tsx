@@ -18,7 +18,6 @@ export function AdminHeader({ onMenu }: { onMenu: () => void }) {
     'restaurants': 'Restaurants',
     areas: 'Restaurant areas',
     tables: 'Tables',
-    'table-qr': 'Table QR codes',
     'tax-fees': 'VAT & service charges',
     'payment-methods': 'Payment methods',
     activity: 'Activity log',

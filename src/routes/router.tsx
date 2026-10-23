@@ -10,7 +10,6 @@ import { CartPage } from '../features/customer/cart/pages/CartPage'
 import { MenuPage } from '../features/customer/menu/pages/MenuPage'
 import { PhoneEntryPage } from '../features/customer/table-session/pages/PhoneEntryPage'
 import { CustomerSessionGate } from '../features/customer/table-session/components/CustomerSessionGate'
-import { TableAccessPage } from '../features/admin/table-qr/pages/TableAccessPage'
 import { adminRoute } from './adminRoutes'
 import { createBrowserRouter, Link } from 'react-router-dom'
 import { CustomerLayout } from '../layouts/customer/CustomerLayout'
@@ -24,7 +23,6 @@ export const router = createBrowserRouter([
       { element: <RoleRoute roles={['admin']} />, children: [adminRoute] },
     ],
   },
-  { path: '/table-access/:token', element: <TableAccessPage /> },
   { path: '/', element: <PhoneEntryPage /> },
   { path: '/welcome', element: <PhoneEntryPage /> },
   {

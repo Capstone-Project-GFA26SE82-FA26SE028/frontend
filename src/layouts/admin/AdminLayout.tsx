@@ -29,7 +29,6 @@ export function AdminLayout() {
         '/admin/restaurants': 'Restaurants',
         '/admin/areas': 'Restaurant Areas',
         '/admin/tables': 'Tables',
-        '/admin/table-qr': 'Mã QR bàn',
         '/admin/tax-fees': 'VAT & phí dịch vụ',
         '/admin/payment-methods': 'Phương thức thanh toán',
         '/admin/users': 'User accounts',

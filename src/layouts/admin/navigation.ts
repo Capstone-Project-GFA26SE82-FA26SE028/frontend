@@ -34,7 +34,6 @@ export const adminNavigation: {
         label: 'Tables',
         icon: 'utensils',
       },
-      { id: 'table-qr', label: 'Table QR codes', icon: 'grid' },
     ],
   },
   {

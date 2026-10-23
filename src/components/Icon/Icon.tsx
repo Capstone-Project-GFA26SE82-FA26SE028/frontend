@@ -1,4 +1,5 @@
 const paths: Record<string, string> = {
+  qr: 'M3 3h6v6H3V3Zm12 0h6v6h-6V3ZM3 15h6v6H3v-6Zm12 0h3v3h3v3h-6v-6ZM3 12h6m3-9v6m0 3h3m3 0h3M12 15v6',
   trash: 'M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7',
   ban: 'M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0ZM5 5l14 14',
   edit: 'm16 3 5 5M3 21l5-1L21 7a2 2 0 0 0-5-5L3 15v6Z',
