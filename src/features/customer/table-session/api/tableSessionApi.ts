@@ -7,17 +7,17 @@ const client = axios.create({
   timeout: 15000,
 })
 export const tableSessionSchema = z.object({
-  tableSessionId: z.string().uuid(),
-  tableId: z.string().uuid(),
+  tableSessionId: z.guid(),
+  tableId: z.guid(),
   tableCode: z.string(),
-  areaId: z.string().uuid(),
-  restaurantId: z.string().uuid(),
+  areaId: z.guid(),
+  restaurantId: z.guid(),
   status: z.string(),
   openedAt: z.string(),
   isNewSession: z.boolean(),
 })
 const accessSchema = z.object({
-  tableSessionId: z.string().uuid(),
+  tableSessionId: z.guid(),
   expiresAt: z.string().datetime({ offset: true }),
 })
 export type TableSession = z.infer<typeof tableSessionSchema>
