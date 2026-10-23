@@ -1,50 +1,90 @@
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '../../../../app/hooks'
+import { previewRestaurant } from '../data/previewRestaurant'
 import { Icon } from '../../../../components/Icon/Icon'
 import { PhoneEntryForm } from '../components/PhoneEntryForm'
 import { PhoneEntryWelcome } from '../components/PhoneEntryWelcome'
-import { PhoneEntrySupport } from '../components/PhoneEntrySupport'
-import { enterSession } from '../sessionSlice'
-
+import { useTableSession } from '../hooks/useTableSession'
+import { sessionError } from '../api/tableSessionApi'
 export function PhoneEntryPage() {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const { search } = useLocation()
+  const { token, valid, scan, join } = useTableSession()
   return (
-    <main className="min-h-dvh bg-mint sm:px-5 sm:py-8 lg:flex lg:items-center lg:justify-center lg:bg-[radial-gradient(ellipse_at_top_left,#e1ecd8,transparent_65%)] lg:px-10 lg:py-10">
-      <div className="mx-auto flex min-h-dvh w-full max-w-[440px] flex-col overflow-hidden bg-cream sm:min-h-[760px] sm:rounded-[2rem] sm:shadow-xl sm:shadow-brand/10 lg:grid lg:min-h-[660px] lg:max-w-[1120px] lg:grid-cols-[1.05fr_1fr] lg:rounded-[2rem] lg:border lg:border-white/80 lg:shadow-2xl lg:shadow-brand/10">
+    <main
+      lang="en"
+      className="flex min-h-dvh items-center justify-center bg-white md:bg-[#faf9f6] md:p-8"
+    >
+      <div className="flex min-h-dvh w-full flex-col overflow-hidden bg-white md:grid md:min-h-0 md:max-w-5xl md:grid-cols-2 md:rounded-3xl md:border md:border-stone-200 md:shadow-xl md:shadow-emerald-950/5">
         <PhoneEntryWelcome />
-        <section
-          aria-labelledby="phone-entry-title"
-          className="relative -mt-5 flex flex-1 flex-col rounded-t-3xl bg-cream px-6 pt-7 pb-[max(1.5rem,env(safe-area-inset-bottom))] lg:mt-0 lg:justify-center lg:rounded-none lg:px-10 lg:py-10 xl:px-14"
-        >
-          <div className="mx-auto flex w-full max-w-sm flex-1 flex-col lg:flex-initial">
-            <div className="mb-7 hidden size-14 items-center justify-center rounded-2xl border border-brand/10 bg-mint text-brand lg:flex">
-              <Icon name="utensils" size={26} />
+        <section className="relative flex flex-1 flex-col px-6 pt-6 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-10 md:justify-center md:p-10">
+          <div className="mx-auto w-full max-w-sm">
+            <div className="mb-6 flex items-center gap-4">
+              <img
+                src={previewRestaurant.logoUrl}
+                alt="Restaurant logo"
+                width={64}
+                height={64}
+                className="size-16 shrink-0 rounded-2xl border-4 border-white bg-[#123d30] object-cover shadow-sm"
+              />
+              <div className="min-w-0">
+                <h1 className="break-words text-2xl font-bold tracking-tight text-ink">
+                  {previewRestaurant.restaurantName}
+                </h1>
+              </div>
             </div>
-            <div className="mb-5 flex items-center gap-2 text-xs font-semibold text-brand lg:mb-3">
-              <Icon name="utensils" size={17} className="lg:hidden" />
-              Một bước nhỏ trước khi chọn món
-            </div>
-            <h2
-              id="phone-entry-title"
-              className="text-2xl leading-snug font-bold lg:text-[30px]"
-            >
-              Cho Mộc biết số
-              <br />
-              điện thoại nhé
-            </h2>
-            <p className="mt-3 hidden text-sm leading-6 text-muted lg:block">
-              Để bắt đầu gọi món tại bàn, bạn chỉ cần nhập số điện thoại bên
-              dưới.
-            </p>
-            <PhoneEntryForm
-              onSubmit={({ phone }) => {
-                dispatch(enterSession({ phone, qrContext: search }))
-                navigate({ pathname: '/menu', search }, { replace: true })
-              }}
-            />
-            <PhoneEntrySupport />
+            {!valid ? (
+              <p role="alert" className="mt-5 rounded-xl bg-mint p-4 text-sm">
+                {token
+                  ? 'Invalid QR link. Please scan the QR code on your table again.'
+                  : 'Scan the QR code on your table to start ordering.'}
+              </p>
+            ) : scan.isPending ? (
+              <p role="status" className="mt-5">
+                Checking table...
+              </p>
+            ) : scan.isError ? (
+              <div className="mt-5 space-y-3">
+                <p role="alert" className="text-sm text-rose-700">
+                  {sessionError(scan.error)}
+                </p>
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    join.reset()
+                    void scan.refetch()
+                  }}
+                >
+                  Try again
+                </button>
+              </div>
+            ) : scan.data?.status !== 'Open' ? (
+              <p role="alert" className="mt-5">
+                This table is not accepting guests. Please contact staff.
+              </p>
+            ) : (
+              <>
+                <div className="flex items-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-700">
+                    <Icon name="utensils" size={22} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="break-words text-lg font-bold text-ink">
+                      Table {scan.data.tableCode}
+                    </p>
+                    <p className="mt-1 text-xs text-slate-500">
+                      {previewRestaurant.areaName}
+                    </p>
+                  </div>
+                  <span className="flex items-center gap-1.5 text-xs text-emerald-700">
+                    <span className="size-1.5 rounded-full bg-emerald-500" />
+                    Open
+                  </span>
+                </div>
+                <PhoneEntryForm
+                  key={scan.data.tableSessionId}
+                  pending={join.isPending}
+                  error={join.isError ? sessionError(join.error) : undefined}
+                  onSubmit={({ phone }) => join.mutate(phone)}
+                />
+              </>
+            )}
           </div>
         </section>
       </div>
