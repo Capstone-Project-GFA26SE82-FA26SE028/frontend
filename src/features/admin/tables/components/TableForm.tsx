@@ -1,95 +1,197 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { tableSchema, type RestaurantTable } from '../schema'
-import type { Area } from '../../areas/schema'
+import { tableSchema, type TableValues } from '../schemas/tableSchema'
+import type { Table } from '../types'
+import type { Area } from '../../areas/types'
+import type { Restaurant } from '../../restaurants/types'
 import {
   Field,
   fieldClass,
   primaryButton,
   secondaryButton,
 } from '../../components/AdminUI'
+import { tableError } from '../api/tableApi'
 export function TableForm({
-  value,
+  table,
   areas,
+  restaurants,
+  initialRestaurantId,
+  initialAreaId,
+  pending,
   onSave,
   onClose,
 }: {
-  value: RestaurantTable
+  table?: Table
   areas: Area[]
-  onSave: (v: RestaurantTable) => string
+  restaurants: Restaurant[]
+  initialRestaurantId: string
+  initialAreaId: string
+  pending: boolean
+  onSave: (v: TableValues) => Promise<unknown>
   onClose: () => void
 }) {
+  const [restaurantId, setRestaurantId] = useState(
+    table
+      ? areas.find((a) => a.areaId === table.areaId)?.restaurantId || ''
+      : initialRestaurantId,
+  )
   const {
     register,
     handleSubmit,
+    setValue,
     setError,
-    formState: { errors },
-  } = useForm<RestaurantTable>({
+    clearErrors,
+    formState: { errors, isDirty, isSubmitting },
+  } = useForm<TableValues>({
     resolver: zodResolver(tableSchema),
-    defaultValues: value,
+    defaultValues: table
+      ? {
+          areaId: table.areaId,
+          tableCode: table.tableCode,
+          capacity: table.capacity,
+          positionX: table.positionX,
+          positionY: table.positionY,
+          version: table.version,
+        }
+      : {
+          areaId: areas.some((a) => a.areaId === initialAreaId && a.isActive)
+            ? initialAreaId
+            : '',
+          tableCode: '',
+          capacity: 4,
+          positionX: null,
+          positionY: null,
+          version: '',
+        },
   })
   return (
     <form
-      className="space-y-4 p-6"
-      onSubmit={handleSubmit((v) => {
-        const error = onSave(v)
-        if (error) setError('root', { message: error })
-        else onClose()
+      className="space-y-5 p-6"
+      onSubmit={handleSubmit(async (values) => {
+        clearErrors('root')
+        try {
+          await onSave(values)
+        } catch (e) {
+          setError('root', { message: tableError(e) })
+        }
       })}
     >
-      <Field label="Mã bàn" error={errors.code?.message}>
-        <input className={fieldClass} {...register('code')} />
-      </Field>
-      <Field label="Tên bàn" error={errors.name?.message}>
-        <input className={fieldClass} {...register('name')} />
-      </Field>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Sức chứa (khách)" error={errors.capacity?.message}>
-          <input
-            type="number"
-            className={fieldClass}
-            {...register('capacity', { valueAsNumber: true })}
-          />
-        </Field>
-        <Field label="Khu vực">
-          <select className={fieldClass} {...register('areaId')}>
-            <option value="">Chưa phân khu vực</option>
-            {areas.map((a) => (
-              <option key={a.id} value={a.id} disabled={!a.active}>
-                {a.name}
-                {!a.active ? ' (Ngừng sử dụng)' : ''}
-              </option>
-            ))}
-          </select>
-        </Field>
-      </div>
-      <Field label="Ghi chú" error={errors.note?.message}>
-        <textarea className={fieldClass} {...register('note')} />
-      </Field>
-      {value.busy && (
-        <p className="text-sm text-amber-700">
-          Bàn đang phục vụ: không thể chuyển khu vực hoặc ngừng sử dụng.
-        </p>
-      )}
-      <label className="flex items-center gap-3">
-        <input
-          type="checkbox"
-          {...register('active')}
-          className="size-4 accent-emerald-700"
-        />
-        Đang sử dụng
-      </label>
-      {errors.root && (
-        <p role="alert" className="text-rose-600">
-          {errors.root.message}
-        </p>
-      )}
-      <div className="flex justify-end gap-2">
-        <button type="button" onClick={onClose} className={secondaryButton}>
-          Hủy
-        </button>
-        <button className={primaryButton}>Lưu bàn</button>
-      </div>
+      <fieldset
+        disabled={pending || isSubmitting}
+        className="min-w-0 space-y-5"
+      >
+        <div className="grid gap-4 rounded-2xl bg-emerald-50 p-4 sm:grid-cols-2">
+          <Field label="Restaurant *">
+            <select
+              className={fieldClass}
+              required
+              disabled={!!table}
+              value={restaurantId}
+              onChange={(e) => {
+                setRestaurantId(e.target.value)
+                setValue('areaId', '', { shouldDirty: true })
+              }}
+            >
+              <option value="">Select restaurant</option>
+              {restaurants.map((r) => (
+                <option key={r.restaurantId} value={r.restaurantId}>
+                  {r.restaurantName}
+                </option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Area *" error={errors.areaId?.message}>
+            <select className={fieldClass} {...register('areaId')}>
+              <option value="">Select active area</option>
+              {areas
+                .filter(
+                  (a) =>
+                    a.restaurantId === restaurantId &&
+                    (a.isActive || a.areaId === table?.areaId),
+                )
+                .map((a) => (
+                  <option
+                    key={a.areaId}
+                    value={a.areaId}
+                    disabled={!a.isActive}
+                  >
+                    {a.areaName}
+                    {!a.isActive ? ' (Inactive)' : ''}
+                  </option>
+                ))}
+            </select>
+          </Field>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="Table code *" error={errors.tableCode?.message}>
+            <input
+              className={fieldClass}
+              maxLength={50}
+              placeholder="e.g. T01"
+              {...register('tableCode')}
+            />
+          </Field>
+          <Field label="Capacity *" error={errors.capacity?.message}>
+            <input
+              type="number"
+              min={1}
+              max={2147483647}
+              step={1}
+              className={fieldClass}
+              {...register('capacity', { valueAsNumber: true })}
+            />
+          </Field>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          {(['positionX', 'positionY'] as const).map((key) => (
+            <Field
+              key={key}
+              label={
+                key === 'positionX'
+                  ? 'Position X (optional)'
+                  : 'Position Y (optional)'
+              }
+              error={errors[key]?.message}
+            >
+              <input
+                className={fieldClass}
+                type="number"
+                step="0.01"
+                min={-99999999.99}
+                max={99999999.99}
+                {...register(key, {
+                  setValueAs: (v) => (v == null || v === '' ? null : Number(v)),
+                })}
+              />
+            </Field>
+          ))}
+        </div>
+        <input type="hidden" {...register('version')} />
+        {errors.root && (
+          <p
+            role="alert"
+            className="rounded-xl bg-rose-50 p-3 text-sm text-rose-700"
+          >
+            {errors.root.message}
+          </p>
+        )}
+        <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-4">
+          <button
+            type="button"
+            className={secondaryButton + ' justify-center'}
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className={primaryButton + ' justify-center'}
+            disabled={!!table && !isDirty}
+          >
+            {pending ? 'Saving...' : table ? 'Save changes' : 'Create table'}
+          </button>
+        </div>
+      </fieldset>
     </form>
   )
 }
