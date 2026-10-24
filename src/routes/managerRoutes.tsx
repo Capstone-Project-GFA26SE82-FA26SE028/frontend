@@ -8,6 +8,9 @@ import { IngredientsPage } from '../features/manager/ingredient-management/pages
 import { UnitsPage } from '../features/manager/ingredient-management/pages/UnitsPage'
 import { RecipesPage } from '../features/manager/ingredient-management/pages/RecipesPage'
 import { FoodCostPage } from '../features/manager/ingredient-management/pages/FoodCostPage'
+import { StockOverviewPage } from '../features/manager/inventory-monitoring/pages/StockOverviewPage'
+import { StockHistoryPage } from '../features/manager/inventory-monitoring/pages/StockHistoryPage'
+import { StockVariancePage } from '../features/manager/inventory-monitoring/pages/StockVariancePage'
 
 export const managerRoute: RouteObject = {
   path: '/manager',
@@ -22,6 +25,9 @@ export const managerRoute: RouteObject = {
     { path: 'units', element: <UnitsPage /> },
     { path: 'recipes', element: <RecipesPage /> },
     { path: 'food-cost', element: <FoodCostPage /> },
+    { path: 'stock', element: <StockOverviewPage /> },
+    { path: 'stock-history', element: <StockHistoryPage /> },
+    { path: 'stock-variance', element: <StockVariancePage /> },
     {
       path: '*',
       element: (
