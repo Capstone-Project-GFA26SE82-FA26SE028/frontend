@@ -13,6 +13,19 @@ export function LoginPage() {
     if (status === 'checking') void restoreSession()
   }, [status])
   const state = location.state as { from?: string; warning?: string } | null
+  if (session?.user.roleId === 'manager' && status === 'authenticated') {
+    const from = state?.from
+    return (
+      <Navigate
+        to={
+          from && (from === '/manager' || from.startsWith('/manager/'))
+            ? from
+            : '/manager'
+        }
+        replace
+      />
+    )
+  }
   if (session?.user.roleId === 'admin' && status === 'authenticated') {
     const from = state?.from
     const target =
@@ -22,7 +35,10 @@ export function LoginPage() {
     return <Navigate to={target} replace />
   }
   return (
-    <main lang="en" className="flex min-h-dvh items-center justify-center bg-[#faf9f6] p-4 sm:p-8">
+    <main
+      lang="en"
+      className="flex min-h-dvh items-center justify-center bg-[#faf9f6] p-4 sm:p-8"
+    >
       <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-xl shadow-emerald-950/5 md:grid-cols-2">
         <LoginBrandPanel />
         <section className="flex flex-col justify-center p-6 sm:p-10">
@@ -43,8 +59,11 @@ export function LoginPage() {
           )}
           {status === 'authenticated' && session ? (
             <div className="mt-6 space-y-4">
-              <p role="alert" className="rounded-xl bg-amber-50 p-3 text-sm text-amber-800">
-                Your account does not have access to the admin workspace. A workspace for your role is not available yet.
+              <p
+                role="alert"
+                className="rounded-xl bg-amber-50 p-3 text-sm text-amber-800"
+              >
+                A workspace for your role is not available yet.
               </p>
               <LogoutButton />
             </div>
