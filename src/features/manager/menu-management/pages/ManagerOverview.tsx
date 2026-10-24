@@ -157,6 +157,49 @@ export function ManagerOverview() {
           ))}
         </div>
       </div>
+      <div className="mt-8">
+        <PageHeading
+          eyebrow="Management"
+          title="Inventory Monitoring"
+          description="Track stock balances, review receipt lots, and investigate recorded ingredient outflow."
+        />
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              path: 'stock',
+              title: 'Stock overview',
+              description:
+                'Monitor recorded balances and low-stock alerts across ingredients.',
+            },
+            {
+              path: 'stock-history',
+              title: 'Movements & Lots',
+              description:
+                'Inspect stock movements, receipt quantities, and expiry dates.',
+            },
+            {
+              path: 'stock-variance',
+              title: 'Usage & Variance',
+              description:
+                'Review recorded outflow and identify missing data for usage comparisons.',
+            },
+          ].map((card) => (
+            <Panel key={card.path} className="p-6">
+              <h2 className="text-lg font-semibold">{card.title}</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                {card.description}
+              </p>
+              <Link
+                to={`/manager/${card.path}`}
+                className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-emerald-700"
+              >
+                View
+                <Icon name="arrow" size={16} />
+              </Link>
+            </Panel>
+          ))}
+        </div>
+      </div>
     </>
   )
 }
