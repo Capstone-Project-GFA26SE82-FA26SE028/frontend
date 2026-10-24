@@ -1,4 +1,10 @@
-// KHUNG SOURCE: chưa triển khai.
-// TODO: Hook dùng chung để trì hoãn cập nhật giá trị, ví dụ ô tìm kiếm.
-// File hiện chưa được sử dụng trong luồng chạy của ứng dụng.
-export {}
+﻿import { useEffect, useState } from 'react'
+
+export function useDebounce<T>(value: T, delay = 300): T {
+  const [debounced, setDebounced] = useState(value)
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebounced(value), delay)
+    return () => window.clearTimeout(timer)
+  }, [value, delay])
+  return debounced
+}

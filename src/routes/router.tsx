@@ -11,6 +11,7 @@ import { MenuPage } from '../features/customer/menu/pages/MenuPage'
 import { PhoneEntryPage } from '../features/customer/table-session/pages/PhoneEntryPage'
 import { CustomerSessionGate } from '../features/customer/table-session/components/CustomerSessionGate'
 import { adminRoute } from './adminRoutes'
+import { managerRoute } from './managerRoutes'
 import { createBrowserRouter, Link } from 'react-router-dom'
 import { CustomerLayout } from '../layouts/customer/CustomerLayout'
 import { EmptyState } from '../components/EmptyState/EmptyState'
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       { element: <RoleRoute roles={['admin']} />, children: [adminRoute] },
+      { element: <RoleRoute roles={['manager']} />, children: [managerRoute] },
     ],
   },
   { path: '/', element: <PhoneEntryPage /> },

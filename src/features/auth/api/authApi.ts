@@ -33,8 +33,7 @@ function parseResult<T>(data: unknown, schema: z.ZodType<T>): T {
       result: z.unknown(),
     })
     .parse(data)
-  if (!response.isSuccess)
-    throw new Error('Unable to complete your request.')
+  if (!response.isSuccess) throw new Error('Unable to complete your request.')
   return schema.parse(response.result)
 }
 export function authErrorMessage(error: unknown): string {
@@ -49,6 +48,8 @@ export function authErrorMessage(error: unknown): string {
       return 'Access denied. Please contact your administrator.'
     if (error.response.status === 429)
       return 'Too many attempts. Please wait a moment and try again.'
+    if (error.response.status === 404 || error.response.status === 405)
+      return 'The sign-in API was not found. Please check the API connection configuration.'
     return 'Invalid request. Please check your details and try again.'
   }
   if (error instanceof z.ZodError)
@@ -56,7 +57,10 @@ export function authErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : 'Unable to sign in.'
 }
 function saveSession(session: AuthSession) {
-  if (!session.user.isActive) throw new Error('Your account is inactive. Please contact your administrator.')
+  if (!session.user.isActive)
+    throw new Error(
+      'Your account is inactive. Please contact your administrator.',
+    )
   try {
     sessionStorage.setItem(authStorageKey, JSON.stringify(session))
   } catch {
@@ -80,7 +84,9 @@ export async function login(input: LoginInput) {
   const { data } = await authClient.post('/auth/login', input)
   const session = parseResult(data, authSessionSchema)
   if (currentRevision !== revision)
-    throw new Error('This sign-in request is no longer valid. Please try again.')
+    throw new Error(
+      'This sign-in request is no longer valid. Please try again.',
+    )
   saveSession(session)
   return session
 }
