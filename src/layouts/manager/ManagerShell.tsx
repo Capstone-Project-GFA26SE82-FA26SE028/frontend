@@ -20,6 +20,11 @@ const inventoryLinks = [
   { path: 'stock-history', label: 'Movements & Lots', icon: 'clipboard' },
   { path: 'stock-variance', label: 'Usage & Variance', icon: 'activity' },
 ]
+const operationsLinks = [
+  { path: 'table-monitoring', label: 'Table Status', icon: 'utensils' },
+  { path: 'kitchen-monitoring', label: 'Kitchen Progress', icon: 'fire' },
+  { path: 'staff-activity', label: 'Staff Activity', icon: 'users' },
+]
 export function ManagerLayout() {
   const [collapsed, setCollapsed] = useState(false)
   const [open, setOpen] = useState(false)
@@ -28,8 +33,8 @@ export function ManagerLayout() {
   const name = user?.fullName || user?.userName || 'Manager'
   const { pathname } = useLocation()
   const page =
-    [...links, ...ingredientLinks, ...inventoryLinks].find((link) =>
-      pathname.endsWith(`/${link.path}`),
+    [...links, ...ingredientLinks, ...inventoryLinks, ...operationsLinks].find(
+      (link) => pathname.endsWith(`/${link.path}`),
     )?.label || 'Overview'
   useEffect(() => {
     const before = document.title
@@ -158,6 +163,29 @@ export function ManagerLayout() {
               )}
               <div className="space-y-1">
                 {inventoryLinks.map((link) => (
+                  <NavLink
+                    key={link.path}
+                    to={`/manager/${link.path}`}
+                    onClick={() => setOpen(false)}
+                    title={link.label}
+                    className={({ isActive }) =>
+                      `flex min-h-12 items-center gap-3 rounded-xl px-3 text-sm font-medium ${collapsed ? 'justify-center' : ''} ${isActive ? 'bg-white/15 text-lime-200' : 'text-white/75 hover:bg-white/10'}`
+                    }
+                  >
+                    <Icon name={link.icon} />
+                    {!collapsed && link.label}
+                  </NavLink>
+                ))}
+              </div>
+            </div>
+            <div>
+              {!collapsed && (
+                <p className="mb-3 px-3 text-xs font-medium uppercase tracking-wider text-white/55">
+                  Operations Monitoring
+                </p>
+              )}
+              <div className="space-y-1">
+                {operationsLinks.map((link) => (
                   <NavLink
                     key={link.path}
                     to={`/manager/${link.path}`}
