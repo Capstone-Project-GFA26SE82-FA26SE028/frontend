@@ -11,6 +11,9 @@ import { FoodCostPage } from '../features/manager/ingredient-management/pages/Fo
 import { StockOverviewPage } from '../features/manager/inventory-monitoring/pages/StockOverviewPage'
 import { StockHistoryPage } from '../features/manager/inventory-monitoring/pages/StockHistoryPage'
 import { StockVariancePage } from '../features/manager/inventory-monitoring/pages/StockVariancePage'
+import { TableMonitoringPage } from '../features/manager/operations-monitoring/pages/TableMonitoringPage'
+import { KitchenMonitoringPage } from '../features/manager/operations-monitoring/pages/KitchenMonitoringPage'
+import { StaffActivityPage } from '../features/manager/operations-monitoring/pages/StaffActivityPage'
 
 export const managerRoute: RouteObject = {
   path: '/manager',
@@ -28,6 +31,9 @@ export const managerRoute: RouteObject = {
     { path: 'stock', element: <StockOverviewPage /> },
     { path: 'stock-history', element: <StockHistoryPage /> },
     { path: 'stock-variance', element: <StockVariancePage /> },
+    { path: 'table-monitoring', element: <TableMonitoringPage /> },
+    { path: 'kitchen-monitoring', element: <KitchenMonitoringPage /> },
+    { path: 'staff-activity', element: <StaffActivityPage /> },
     {
       path: '*',
       element: (
