@@ -114,6 +114,49 @@ export function ManagerOverview() {
           </Panel>
         ))}
       </div>
+      <div className="mt-8">
+        <PageHeading
+          eyebrow="Management"
+          title="Ingredients & Food Cost"
+          description="Manage ingredients and units, define recipes, and review food-cost readiness."
+        />
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              path: 'ingredients',
+              title: 'Ingredients',
+              description:
+                'Manage raw ingredients, base units, and low-stock thresholds.',
+            },
+            {
+              path: 'recipes',
+              title: 'Recipes & BOM',
+              description:
+                'Set quantities per portion and maintain versioned preparation instructions.',
+            },
+            {
+              path: 'food-cost',
+              title: 'Food Cost',
+              description:
+                'Review active recipes and identify missing ingredient cost information.',
+            },
+          ].map((card) => (
+            <Panel key={card.path} className="p-6">
+              <h2 className="text-lg font-semibold">{card.title}</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                {card.description}
+              </p>
+              <Link
+                to={`/manager/${card.path}`}
+                className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-emerald-700"
+              >
+                Manage
+                <Icon name="arrow" size={16} />
+              </Link>
+            </Panel>
+          ))}
+        </div>
+      </div>
     </>
   )
 }

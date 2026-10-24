@@ -172,6 +172,12 @@ export function ItemsPage() {
                         >
                           Pricing
                         </Link>
+                        <Link
+                          to={`/manager/recipes?itemId=${item.itemId}`}
+                          className={secondaryButton}
+                        >
+                          Recipe
+                        </Link>
                         <button
                           className={secondaryButton}
                           aria-label={`Edit ${item.itemName}`}

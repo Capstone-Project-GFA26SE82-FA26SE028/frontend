@@ -4,6 +4,10 @@ import { ItemsPage } from '../features/manager/menu-management/pages/ItemsPage'
 import { ManagerOverview } from '../features/manager/menu-management/pages/ManagerOverview'
 import { PricesPage } from '../features/manager/menu-management/pages/PricesPage'
 import { ManagerLayout } from '../layouts/ManagerLayout'
+import { IngredientsPage } from '../features/manager/ingredient-management/pages/IngredientsPage'
+import { UnitsPage } from '../features/manager/ingredient-management/pages/UnitsPage'
+import { RecipesPage } from '../features/manager/ingredient-management/pages/RecipesPage'
+import { FoodCostPage } from '../features/manager/ingredient-management/pages/FoodCostPage'
 
 export const managerRoute: RouteObject = {
   path: '/manager',
@@ -14,6 +18,10 @@ export const managerRoute: RouteObject = {
     { path: 'menu/categories', element: <CategoriesPage /> },
     { path: 'menu/items', element: <ItemsPage /> },
     { path: 'menu/prices', element: <PricesPage /> },
+    { path: 'ingredients', element: <IngredientsPage /> },
+    { path: 'units', element: <UnitsPage /> },
+    { path: 'recipes', element: <RecipesPage /> },
+    { path: 'food-cost', element: <FoodCostPage /> },
     {
       path: '*',
       element: (
