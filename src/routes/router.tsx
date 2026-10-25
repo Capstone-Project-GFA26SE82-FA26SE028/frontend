@@ -1,3 +1,5 @@
+import { KitchenLayout } from '../layouts/KitchenLayout'
+import { KitchenPage } from '../features/kitchen/pages/KitchenPage'
 import { LoginPage } from '../features/auth/pages/LoginPage'
 import { ProtectedRoute } from './ProtectedRoute'
 import { RoleRoute } from './RoleRoute'
@@ -21,6 +23,16 @@ export const router = createBrowserRouter([
   {
     element: <ProtectedRoute />,
     children: [
+      {
+        element: <RoleRoute roles={['kitchen']} />,
+        children: [
+          {
+            path: '/kitchen',
+            element: <KitchenLayout />,
+            children: [{ index: true, element: <KitchenPage /> }],
+          },
+        ],
+      },
       { element: <RoleRoute roles={['admin']} />, children: [adminRoute] },
       { element: <RoleRoute roles={['manager']} />, children: [managerRoute] },
     ],
