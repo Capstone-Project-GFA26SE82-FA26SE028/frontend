@@ -5,6 +5,13 @@ the shared staff login, session restoration, bearer interceptor, token refresh,
 and logout. Successful Kitchen sign-in redirects from `/login` to `/kitchen`.
 Other roles retain their existing workspaces.
 
+The sidebar opens the KDS at `/kitchen/kds`; `/kitchen` redirects there. The
+Kitchen shell follows the Manager/Admin FoodHub styling with a dark green
+sidebar, white header, light background, and shared icons. Desktop navigation
+can collapse; mobile navigation uses a drawer with Escape and keyboard focus
+handling. Shell components and navigation live in `layouts/kitchen`, with the
+role route defined in `routes/kitchenRoutes.tsx`.
+
 The KDS reads live Gateway APIs (not manager monitoring preview data):
 
 - Active station selection, with pagination when fetching the station list.

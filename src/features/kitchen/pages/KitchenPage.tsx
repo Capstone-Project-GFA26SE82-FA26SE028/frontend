@@ -1,3 +1,4 @@
+import { Icon } from '../../../components/Icon/Icon'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
@@ -14,22 +15,26 @@ const columns: {
   label: string
   color: string
   dot: string
+  icon: string
 }[] = [
   {
     status: 'Pending',
     label: 'Pending',
+    icon: 'clock',
     color: 'bg-amber-50 text-amber-900',
     dot: 'bg-amber-500',
   },
   {
     status: 'Cooking',
     label: 'Cooking',
+    icon: 'fire',
     color: 'bg-blue-50 text-blue-900',
     dot: 'bg-blue-500',
   },
   {
     status: 'Ready',
     label: 'Ready',
+    icon: 'service',
     color: 'bg-emerald-50 text-emerald-900',
     dot: 'bg-emerald-500',
   },
@@ -98,21 +103,25 @@ export function KitchenPage() {
   const metrics = [
     {
       label: 'Pending',
+      icon: 'clock',
       value: summary.data?.pendingCount,
       color: 'text-amber-700',
     },
     {
       label: 'Cooking',
+      icon: 'fire',
       value: summary.data?.cookingCount,
       color: 'text-blue-700',
     },
     {
       label: 'Awaiting service',
+      icon: 'service',
       value: summary.data?.readyCount,
       color: 'text-brand',
     },
     {
       label: 'Average cooking time',
+      icon: 'chart',
       value: summary.data
         ? `${summary.data.avgCookingTimeMinutes} min`
         : undefined,
@@ -120,11 +129,13 @@ export function KitchenPage() {
     },
   ]
   return (
-    <main className="mx-auto max-w-[1800px] space-y-6 p-4 lg:p-8">
+    <div className="space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">KITCHEN OPERATIONS</p>
-          <h1 className="mt-2 text-3xl font-bold">Kitchen display</h1>
+          <h1 className="mt-1.5 text-2xl font-bold tracking-tight text-[#102c30] sm:text-3xl">
+            Kitchen Display System
+          </h1>
           <p className="mt-2 text-sm text-muted">
             Track orders and update preparation progress at your station.
           </p>
@@ -149,18 +160,32 @@ export function KitchenPage() {
               ))}
             </select>
           </label>
-          <button className="btn-secondary mt-5" onClick={() => void refresh()}>
+          <button
+            className="mt-5 inline-flex h-12 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-600 transition-colors hover:bg-emerald-50"
+            onClick={() => void refresh()}
+          >
+            <Icon name="activity" size={16} />
             Refresh
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {metrics.map((metric) => (
-          <div className="panel p-5" key={metric.label}>
-            <p className="text-sm text-muted">{metric.label}</p>
-            <p className={`mt-2 text-3xl font-bold ${metric.color}`}>
-              {metric.value ?? '—'}
-            </p>
+          <div
+            className="flex min-w-0 flex-col gap-3 rounded-2xl border border-slate-200/60 bg-white p-4 shadow-[0_2px_12px_#173b2c03] sm:flex-row sm:p-5"
+            key={metric.label}
+          >
+            <span
+              className={`flex size-11 shrink-0 items-center justify-center rounded-xl bg-slate-50 ${metric.color}`}
+            >
+              <Icon name={metric.icon} size={23} />
+            </span>
+            <div className="min-w-0">
+              <p className="text-sm text-muted">{metric.label}</p>
+              <p className={`mt-2 text-3xl font-bold ${metric.color}`}>
+                {metric.value ?? '—'}
+              </p>
+            </div>
           </div>
         ))}
       </div>
@@ -202,7 +227,7 @@ export function KitchenPage() {
       {selected && (
         <TaskDetails id={selected} onClose={() => setSelected(null)} />
       )}
-    </main>
+    </div>
   )
 }
 
@@ -222,6 +247,7 @@ function TaskColumn({
   label,
   color,
   dot,
+  icon,
   station,
   now,
   pending,
@@ -237,12 +263,13 @@ function TaskColumn({
   })
   const pages = Math.max(1, Math.ceil((tasks.data?.totalCount ?? 0) / 30))
   return (
-    <section className="min-w-0 rounded-2xl border border-stone-200 bg-stone-100/60 p-3">
+    <section className="min-w-0 rounded-2xl border border-slate-200/70 bg-white/60 p-3">
       <header
         className={`mb-3 flex items-center gap-2 rounded-xl px-4 py-3 ${color}`}
       >
-        <span className={`size-2 rounded-full ${dot}`} />
-        <h2 className="font-bold">{label}</h2>
+        <Icon name={icon} size={18} />
+        <span className={`size-1.5 rounded-full ${dot}`} />
+        <h2 className="text-sm font-bold">{label}</h2>
         <span className="ml-auto rounded-lg bg-white/80 px-2 py-1 text-sm font-bold">
           {tasks.data?.totalCount ?? '—'}
         </span>
@@ -338,7 +365,7 @@ function TaskColumn({
               {status !== 'Ready' && (
                 <button
                   disabled={pending || tasks.isError}
-                  className="btn-primary flex-1 !rounded-xl !px-3"
+                  className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-800"
                   onClick={() =>
                     update(
                       task,
@@ -347,6 +374,10 @@ function TaskColumn({
                     )
                   }
                 >
+                  <Icon
+                    name={status === 'Pending' ? 'fire' : 'check'}
+                    size={16}
+                  />
                   {pending
                     ? 'Updating…'
                     : status === 'Pending'
@@ -355,7 +386,7 @@ function TaskColumn({
                 </button>
               )}
               <button
-                className="btn-secondary !rounded-xl !px-3"
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600 transition-colors hover:bg-emerald-50"
                 onClick={() => onSelect(task.kitchenTaskId)}
               >
                 Details
@@ -364,7 +395,7 @@ function TaskColumn({
                 <button
                   disabled={pending || tasks.isError}
                   title="Increase priority by 10"
-                  className="btn-secondary !rounded-xl !px-3"
+                  className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600 transition-colors hover:bg-emerald-50"
                   onClick={() => update(task, 'priority', task.priority + 10)}
                 >
                   Priority +
@@ -374,7 +405,7 @@ function TaskColumn({
                 <button
                   disabled={pending || tasks.isError}
                   title="Decrease priority by 10"
-                  className="btn-secondary !rounded-xl !px-3"
+                  className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600 transition-colors hover:bg-emerald-50"
                   onClick={() =>
                     update(task, 'priority', Math.max(0, task.priority - 10))
                   }
