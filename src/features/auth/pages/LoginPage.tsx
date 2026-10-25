@@ -13,6 +13,9 @@ export function LoginPage() {
     if (status === 'checking') void restoreSession()
   }, [status])
   const state = location.state as { from?: string; warning?: string } | null
+  if (session?.user.roleId === 'kitchen' && status === 'authenticated') {
+    return <Navigate to="/kitchen" replace />
+  }
   if (session?.user.roleId === 'manager' && status === 'authenticated') {
     const from = state?.from
     return (
