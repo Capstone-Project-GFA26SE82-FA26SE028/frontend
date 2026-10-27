@@ -1,13 +1,13 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
-import { useAppSelector } from '../../app/hooks'
+import { useCustomerCart } from '../../features/customer/cart/hooks/useCustomerCart'
 import { CustomerHeader } from './components/CustomerHeader'
 import { CustomerFooter } from './components/CustomerFooter'
 import { CustomerTableInfo } from './components/CustomerTableInfo'
 export function CustomerLayout() {
-  const count = useAppSelector((s) =>
-    s.cart.items.reduce((n, i) => n + i.quantity, 0),
-  )
+  const { cart } = useCustomerCart()
+  const count =
+    cart.data?.items.reduce((sum, line) => sum + line.quantity, 0) || 0
   const location = useLocation()
   useEffect(() => {
     window.scrollTo(0, 0)

@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useIsMutating } from '@tanstack/react-query'
 import { Modal } from '../../../../components/Modal/Modal'
 import { Icon } from '../../../../components/Icon/Icon'
-import { useAppDispatch } from '../../../../app/hooks'
-import { addItem } from '../../cart/cartSlice'
+import { useCustomerCart } from '../../cart/hooks/useCustomerCart'
+import { cartError } from '../../cart/api/cartApi'
 import { formatCurrency } from '../../../../utils/currency'
 import { getMenuItem, menuError } from '../api/menuApi'
 import { DishImage } from './DishImage'
-import type { Dish, OptionSelection } from '../types/types'
+import type { Dish } from '../types/types'
 export function DishOptionModal({
   itemId,
   sessionId,
@@ -19,6 +19,8 @@ export function DishOptionModal({
   onClose: () => void
   onAdded: () => void
 }) {
+  const pending =
+    useIsMutating({ mutationKey: ['customer-cart-write', sessionId] }) > 0
   const detail = useQuery({
     queryKey: ['customer-menu-detail', sessionId, itemId],
     queryFn: ({ signal }) => getMenuItem(sessionId, itemId, signal),
@@ -27,7 +29,13 @@ export function DishOptionModal({
     refetchOnWindowFocus: false,
   })
   return (
-    <Modal title="Dish details" closeLabel="Close" onClose={onClose}>
+    <Modal
+      title="Dish details"
+      closeLabel="Close"
+      onClose={() => {
+        if (!pending) onClose()
+      }}
+    >
       {detail.isPending ? (
         <p role="status" className="p-8">
           Loading dish...
@@ -74,7 +82,13 @@ function DishOptionsForm({
   const [note, setNote] = useState('')
   const [selected, setSelected] = useState<Record<string, string[]>>({})
   const [error, setError] = useState('')
-  const dispatch = useAppDispatch()
+  const cart = useCustomerCart()
+  const cartProblem = cart.cart.isError
+    ? cart.cart.error
+    : cart.mutation.isError
+      ? cart.mutation.error
+      : null
+  const displayedError = cartProblem ? cartError(cartProblem) : error
   const selectedOptions = dish.optionGroups.flatMap((g) =>
     g.options.filter((o) =>
       (selected[g.optionGroupId] || []).includes(o.optionId),
@@ -88,39 +102,39 @@ function DishOptionsForm({
     return count < g.minSelection || count > g.maxSelection
   })
   const available = dish.canOrder && dish.price !== null
-  function add() {
-    if (!available || refreshing) return
+  async function add() {
+    if (!available || refreshing || cart.pending) return
+    if (cart.table?.tableSessionId !== sessionId) {
+      setError('Your table session changed. Scan your table QR again.')
+      return
+    }
     if (invalidGroup) {
       setError(
         'Please check your choices for ' + invalidGroup.optionGroupName + '.',
       )
       return
     }
-    const optionSelections: OptionSelection[] = dish.optionGroups
-      .map((g) => ({
-        optionGroupId: g.optionGroupId,
-        optionIds: [...(selected[g.optionGroupId] || [])].sort(),
-      }))
-      .filter((g) => g.optionIds.length)
-    dispatch(
-      addItem({
-        id: crypto.randomUUID(),
-        dishId: dish.itemId,
-        name: dish.itemName,
-        quantity,
-        unitPrice,
-        note: note.trim(),
-        image: dish.imageUrl || '',
-        option:
-          selectedOptions.map((o) => o.optionName).join(', ') || 'Standard',
-        tableSessionId: sessionId,
-        priceId: dish.priceId,
-        optionSelections,
-      }),
-    )
-    onAdded()
-    onClose()
+    setError('')
+    try {
+      await cart.save({
+        kind: 'add',
+        line: {
+          itemId: dish.itemId,
+          quantity,
+          note: note.trim() || null,
+          options: selectedOptions.map((option) => ({
+            optionId: option.optionId,
+            quantity: 1,
+          })),
+        },
+      })
+      onAdded()
+      onClose()
+    } catch (error) {
+      setError(cartError(error))
+    }
   }
+
   return (
     <>
       <DishImage
@@ -223,16 +237,29 @@ function DishOptionsForm({
             className="field mt-2 resize-none font-normal"
           />
         </label>
-        {error && (
+        {displayedError && (
           <p role="alert" className="text-sm text-rose-700">
-            {error}
+            {displayedError}
           </p>
+        )}
+        {cartProblem && (
+          <button
+            className="text-sm font-semibold text-brand underline"
+            disabled={cart.pending || cart.cart.isFetching}
+            onClick={() => {
+              void cart.reload().then((ok) => {
+                if (ok) setError('')
+              })
+            }}
+          >
+            Reload cart
+          </button>
         )}
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center rounded-xl border border-stone-200">
             <button
               aria-label="Decrease quantity"
-              disabled={quantity === 1}
+              disabled={quantity === 1 || cart.pending}
               onClick={() => setQuantity((q) => q - 1)}
               className="flex size-12 items-center justify-center"
             >
@@ -241,7 +268,7 @@ function DishOptionsForm({
             <span className="w-6 text-center font-semibold">{quantity}</span>
             <button
               aria-label="Increase quantity"
-              disabled={quantity === 20}
+              disabled={quantity === 20 || cart.pending}
               onClick={() => setQuantity((q) => q + 1)}
               className="flex size-12 items-center justify-center"
             >
@@ -249,13 +276,22 @@ function DishOptionsForm({
             </button>
           </div>
           <button
-            disabled={!available || refreshing}
+            disabled={
+              !available ||
+              refreshing ||
+              cart.pending ||
+              cart.cart.isPending ||
+              cart.cart.isFetching ||
+              !!cartProblem
+            }
             className="btn-primary grow"
-            onClick={add}
+            onClick={() => void add()}
           >
-            {available
-              ? 'Add - ' + formatCurrency(unitPrice * quantity)
-              : 'Unavailable'}
+            {cart.pending
+              ? 'Adding...'
+              : available
+                ? 'Add - ' + formatCurrency(unitPrice * quantity)
+                : 'Unavailable'}
           </button>
         </div>
       </div>

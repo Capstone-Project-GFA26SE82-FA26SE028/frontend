@@ -37,6 +37,7 @@ export function useTableSession() {
       return { table: scan.data, access }
     },
     onSuccess: ({ table, access }) => {
+      client.removeQueries({ queryKey: ['customer-cart'] })
       rememberTable(table)
       dispatch(enterSession(table))
       client.setQueryData(
