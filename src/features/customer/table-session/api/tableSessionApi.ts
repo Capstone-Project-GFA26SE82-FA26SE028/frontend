@@ -1,63 +1,50 @@
 import axios from 'axios'
-import { z } from 'zod'
+import type {
+  TableSession,
+  GuestAccess,
+  ResolvedTableQr,
+  TableSessionResponse,
+} from '../types/types'
 // Guest cookies are independent of employee login and refresh-token interceptors.
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
   withCredentials: true,
   timeout: 15000,
 })
-export const tableSessionSchema = z.object({
-  tableSessionId: z.guid(),
-  tableId: z.guid(),
-  tableCode: z.string(),
-  areaId: z.guid(),
-  restaurantId: z.guid(),
-  status: z.string(),
-  openedAt: z.string(),
-  isNewSession: z.boolean(),
-})
-const accessSchema = z.object({
-  tableSessionId: z.guid(),
-  expiresAt: z.string().datetime({ offset: true }),
-})
-export type TableSession = z.infer<typeof tableSessionSchema>
-function result<T>(data: unknown, schema: z.ZodType<T>) {
-  const value = z
-    .object({
-      isSuccess: z.boolean(),
-      message: z.string().optional(),
-      result: z.unknown(),
-    })
-    .parse(data)
-  if (!value.isSuccess)
-    throw new Error(value.message || 'Unable to access this table.')
-  return schema.parse(value.result)
+function result<T>(data: TableSessionResponse<T>): T {
+  if (!data.isSuccess)
+    throw new Error(data.message || 'Unable to access this table.')
+  return data.result
 }
 export async function resolveTableQr(token: string, signal?: AbortSignal) {
-  const { data } = await client.post('/qr/resolve', { token }, { signal })
-  return result(data, z.object({ tableId: z.guid() }))
+  const { data } = await client.post<TableSessionResponse<ResolvedTableQr>>(
+    '/qr/resolve',
+    { token },
+    { signal },
+  )
+  return result(data)
 }
 export async function scanTable(token: string, signal?: AbortSignal) {
-  const { data } = await client.post(
+  const { data } = await client.post<TableSessionResponse<TableSession>>(
     '/table-sessions/scan',
     { token },
     { signal },
   )
-  return result(data, tableSessionSchema)
+  return result(data)
 }
 export async function joinTable(id: string, phoneOrCode: string) {
-  const { data } = await client.post(
+  const { data } = await client.post<TableSessionResponse<GuestAccess>>(
     '/table-sessions/' + encodeURIComponent(id) + '/guest-access/join',
     { phoneOrCode },
   )
-  return result(data, accessSchema)
+  return result(data)
 }
 export async function getGuestAccess(id: string, signal?: AbortSignal) {
-  const { data } = await client.get(
+  const { data } = await client.get<TableSessionResponse<GuestAccess>>(
     '/table-sessions/' + encodeURIComponent(id) + '/guest-access/me',
     { signal },
   )
-  return result(data, accessSchema)
+  return result(data)
 }
 export function sessionError(error: unknown) {
   if (axios.isAxiosError(error)) {
@@ -68,11 +55,7 @@ export function sessionError(error: unknown) {
       ? error.response.data.message
       : 'Unable to access this table.'
   }
-  return error instanceof z.ZodError
-    ? 'Unexpected server response.'
-    : error instanceof Error
-      ? error.message
-      : 'Unable to access this table.'
+  return error instanceof Error ? error.message : 'Unable to access this table.'
 }
 export function qrToken(hash: string, search: string) {
   const fragment = new URLSearchParams(hash.replace(/^#/, ''))

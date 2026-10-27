@@ -1,6 +1,6 @@
 import { MenuSearch } from './MenuSearch'
 import { CategoryTabs } from './CategoryTabs'
-import type { MenuCategory } from '../types'
+import type { MenuCategory } from '../types/types'
 export function MenuFilters({
   search,
   category,

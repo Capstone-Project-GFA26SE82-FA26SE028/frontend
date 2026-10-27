@@ -32,3 +32,15 @@ export type Dish = {
 }
 export type MenuCategory = { id: string; label: string }
 export type OptionSelection = { optionGroupId: string; optionIds: string[] }
+
+export type MenuResponse<T> = {
+  isSuccess: boolean
+  message?: string | null
+  result: T
+}
+export type MenuPage = {
+  items: Dish[]
+  totalCount: number
+  page: number
+  pageSize: number
+}

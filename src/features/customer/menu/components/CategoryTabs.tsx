@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react'
 import { Icon } from '../../../../components/Icon/Icon'
-import type { MenuCategory } from '../types'
+import type { MenuCategory } from '../types/types'
 export function CategoryTabs({
   categories,
   value,

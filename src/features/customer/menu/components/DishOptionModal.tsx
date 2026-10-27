@@ -7,7 +7,7 @@ import { addItem } from '../../cart/cartSlice'
 import { formatCurrency } from '../../../../utils/currency'
 import { getMenuItem, menuError } from '../api/menuApi'
 import { DishImage } from './DishImage'
-import type { Dish, OptionSelection } from '../types'
+import type { Dish, OptionSelection } from '../types/types'
 export function DishOptionModal({
   itemId,
   sessionId,

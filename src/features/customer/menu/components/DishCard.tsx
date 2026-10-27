@@ -1,7 +1,7 @@
 import { Icon } from '../../../../components/Icon/Icon'
 import { formatCurrency } from '../../../../utils/currency'
 import { DishImage } from './DishImage'
-import type { Dish } from '../types'
+import type { Dish } from '../types/types'
 export function DishCard({
   dish,
   onSelect,
