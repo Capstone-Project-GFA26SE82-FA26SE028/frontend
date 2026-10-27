@@ -1,60 +1,46 @@
-import { useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../../../../app/hooks'
-import { clearCart } from '../../cart/cartSlice'
-import { placeOrder } from '../../order-tracking/orderSlice'
+import { Link, Navigate } from 'react-router-dom'
+import { useCustomerCart } from '../../cart/hooks/useCustomerCart'
+import { CartStatus } from '../../cart/components/CartStatus'
 import { CartSummary } from '../../cart/components/CartSummary'
+import { canReviewCart } from '../../cart/cartHelpers'
 import { CheckoutOrderReview } from '../components/CheckoutOrderReview'
-import { Icon } from '../../../../components/Icon/Icon'
 export function CheckoutPage() {
-  const items = useAppSelector((s) => s.cart.items)
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const submitted = useRef(false)
+  const m = useCustomerCart()
+  const cart = m.cart.data
+  if (cart?.items.length && !canReviewCart(cart))
+    return <Navigate to="/cart" replace />
   return (
     <section className="py-6 pb-12">
-      <p className="eyebrow">Sắp đến một bữa ngon</p>
-      <h1 className="mt-2 text-4xl font-bold">Xác nhận gọi món</h1>
-      {items.length ? (
-        <div className="mt-8 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-          <CheckoutOrderReview items={items} />
-          <CartSummary
-            total={items.reduce((s, i) => s + i.quantity * i.unitPrice, 0)}
-            count={items.reduce((s, i) => s + i.quantity, 0)}
-          >
-            <button
-              className="btn-primary w-full"
-              onClick={() => {
-                if (submitted.current) return
-                submitted.current = true
-                dispatch(
-                  placeOrder({
-                    id: crypto.randomUUID(),
-                    items: items.map((i) => ({ ...i })),
-                    createdAt: new Date().toISOString(),
-                    paymentRequested: false,
-                    method: null,
-                  }),
-                )
-                dispatch(clearCart())
-                navigate('/orders')
-              }}
+      <p className="eyebrow">Selected for your table</p>
+      <h1 className="mt-2 text-4xl font-bold">Review your order</h1>
+      <CartStatus management={m} />
+      {cart &&
+        !m.cart.isError &&
+        (cart.items.length ? (
+          <div className="mt-8 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+            <CheckoutOrderReview cart={cart} tableCode={m.table?.tableCode} />
+            <CartSummary
+              total={cart.quote?.totalAmount ?? null}
+              count={cart.items.reduce((sum, line) => sum + line.quantity, 0)}
+              tableCode={m.table?.tableCode}
             >
-              Xác nhận gọi món <Icon name="check" size={18} />
-            </button>
-            <p className="mt-3 text-xs leading-5 text-muted">
-              Sau khi chọn món, vui lòng xác nhận với nhân viên để bếp chuẩn bị.
-            </p>
-          </CartSummary>
-        </div>
-      ) : (
-        <div className="panel mt-8 p-8">
-          <p>Chưa có món để xác nhận.</p>
-          <Link to="/menu" className="btn-primary mt-5">
-            Chọn món ngay
-          </Link>
-        </div>
-      )}
+              <button className="btn-primary w-full" disabled>
+                Place order
+              </button>
+              <p className="mt-3 text-xs leading-5 text-muted">
+                Online order submission is currently unavailable. Please ask
+                your server to place your order.
+              </p>
+            </CartSummary>
+          </div>
+        ) : (
+          <div className="panel mt-8 p-8">
+            <p>Your cart is empty.</p>
+            <Link to="/menu" className="btn-primary mt-5">
+              Choose dishes
+            </Link>
+          </div>
+        ))}
     </section>
   )
 }

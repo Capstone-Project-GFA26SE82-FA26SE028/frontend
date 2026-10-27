@@ -8,12 +8,10 @@ import adminAreasReducer from '../features/admin/areas/areaSlice'
 import adminTablesReducer from '../features/admin/tables/tableSlice'
 import adminReducer, { adminStorageKey } from './adminReducer'
 import { configureStore } from '@reduxjs/toolkit'
-import cartReducer from '../features/customer/cart/cartSlice'
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    cart: cartReducer,
     customerBilling: customerBillingReducer,
     orders: orderReducer,
     customerSession: customerSessionReducer,
