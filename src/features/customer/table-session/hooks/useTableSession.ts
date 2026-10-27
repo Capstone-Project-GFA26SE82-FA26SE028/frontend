@@ -43,7 +43,14 @@ export function useTableSession() {
         ['customer-guest-access', table.tableSessionId],
         access,
       )
-      navigate('/menu', { replace: true })
+      const fragment = new URLSearchParams({
+        qr: token,
+        table: table.tableCode,
+      })
+      navigate(
+        { pathname: '/menu', hash: '#' + fragment.toString() },
+        { replace: true },
+      )
     },
   })
   return { token, valid, scan, join }

@@ -1,12 +1,11 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { tableSessionSchema, type TableSession } from './api/tableSessionApi'
+import type { TableSession } from './types/types'
 const storageKey = 'foodhub.customer.table-session'
 function restore(): TableSession | null {
   try {
-    const parsed = tableSessionSchema.safeParse(
-      JSON.parse(sessionStorage.getItem(storageKey) || 'null'),
-    )
-    return parsed.success ? parsed.data : null
+    return JSON.parse(
+      sessionStorage.getItem(storageKey) || 'null',
+    ) as TableSession | null
   } catch {
     return null
   }

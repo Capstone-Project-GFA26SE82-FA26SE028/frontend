@@ -1,16 +1,24 @@
 import { Icon } from '../../../../components/Icon/Icon'
-
-type MenuSearchProps = { value: string; onChange: (value: string) => void }
-
-export function MenuSearch({ value, onChange }: MenuSearchProps) {
+export function MenuSearch({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange: (v: string) => void
+}) {
   return (
     <label className="relative block w-full">
-      <span className="sr-only">Tìm món ăn</span>
-      <Icon name="search" className="absolute top-3.5 left-4 text-muted" />
+      <span className="sr-only">Search dishes</span>
+      <Icon
+        name="search"
+        className="pointer-events-none absolute top-3.5 left-4 text-muted"
+      />
       <input
+        type="search"
+        maxLength={255}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Tìm món bạn yêu thích..."
+        placeholder="Search dishes..."
         className="field pl-11"
       />
     </label>
