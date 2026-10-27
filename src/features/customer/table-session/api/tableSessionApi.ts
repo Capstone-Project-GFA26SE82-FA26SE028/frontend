@@ -33,6 +33,10 @@ function result<T>(data: unknown, schema: z.ZodType<T>) {
     throw new Error(value.message || 'Unable to access this table.')
   return schema.parse(value.result)
 }
+export async function resolveTableQr(token: string, signal?: AbortSignal) {
+  const { data } = await client.post('/qr/resolve', { token }, { signal })
+  return result(data, z.object({ tableId: z.guid() }))
+}
 export async function scanTable(token: string, signal?: AbortSignal) {
   const { data } = await client.post(
     '/table-sessions/scan',

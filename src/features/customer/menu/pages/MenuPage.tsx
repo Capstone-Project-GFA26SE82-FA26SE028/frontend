@@ -1,116 +1,98 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Icon } from '../../../../components/Icon/Icon'
-import { dishes } from '../data/menu'
 import { MenuBanner } from '../components/MenuBanner'
 import { MenuFilters } from '../components/MenuFilters'
 import { DishCard } from '../components/DishCard'
 import { DishOptionModal } from '../components/DishOptionModal'
-import type { Dish } from '../types'
+import { useMenu } from '../hooks/useMenu'
+import { menuError } from '../api/menuApi'
 export function MenuPage() {
-  const [category, setCategory] = useState('all')
-  const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState('all')
-  const [sort, setSort] = useState('default')
-  const [selected, setSelected] = useState<Dish | null>(null)
+  const m = useMenu()
+  const [selected, setSelected] = useState<string | null>(null)
   const [notice, setNotice] = useState('')
-  const normalize = (s: string) =>
-    s
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/đ/g, 'd')
-      .toLowerCase()
-  const filtered = useMemo(() => {
-    const list = dishes.filter(
-      (d) =>
-        (category === 'all' || d.category === category) &&
-        normalize(d.name).includes(normalize(search)) &&
-        (filter === 'all' ||
-          (filter === 'vegan'
-            ? d.vegetarian
-            : filter === 'spicy'
-              ? d.spicy
-              : !!d.tag)),
-    )
-    return sort === 'default'
-      ? list
-      : [...list].sort((a, b) =>
-          sort === 'asc' ? a.price - b.price : b.price - a.price,
-        )
-  }, [category, search, filter, sort])
   return (
     <>
-      <MenuBanner image={dishes[0].image} />
+      <MenuBanner />
       <section id="thuc-don" className="scroll-mt-28 pt-8 sm:pt-10">
         <MenuFilters
-          search={search}
-          category={category}
-          filter={filter}
-          sort={sort}
-          onSearchChange={setSearch}
-          onCategoryChange={setCategory}
-          onFilterChange={setFilter}
-          onSortChange={setSort}
+          search={m.search}
+          category={m.category}
+          sort={m.sort}
+          categories={m.categories}
+          onSearchChange={m.setSearch}
+          onCategoryChange={m.setCategory}
+          onSortChange={m.setSort}
         />
-        <p className="sr-only" role="status">
-          {filtered.length} món phù hợp
-        </p>
-        {filtered.length ? (
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-            {filtered.map((d) => (
-              <DishCard key={d.id} dish={d} onSelect={() => setSelected(d)} />
-            ))}
-          </div>
-        ) : (
-          <div className="panel py-16 text-center">
-            <Icon name="search" className="mx-auto text-brand" size={36} />
-            <h3 className="mt-4 text-xl font-bold">
-              Chưa tìm thấy món phù hợp
-            </h3>
-            <p className="mt-2 text-sm text-muted">
-              Thử tên món khác hoặc bỏ bớt bộ lọc nhé.
+        {m.catalogue.isError && m.list.isSuccess && (
+          <p role="alert" className="mb-4 text-sm text-amber-800">
+            Categories could not be loaded.{' '}
+            <button
+              className="underline"
+              onClick={() => void m.catalogue.refetch()}
+            >
+              Try again
+            </button>
+          </p>
+        )}
+        {m.list.isPending ? (
+          <p role="status" className="panel py-12 text-center">
+            Loading menu...
+          </p>
+        ) : m.list.isError ? (
+          <div className="panel space-y-4 p-8 text-center">
+            <p role="alert" className="text-rose-700">
+              {menuError(m.list.error)}
             </p>
             <button
-              className="btn-secondary mt-5"
-              onClick={() => {
-                setSearch('')
-                setCategory('all')
-                setFilter('all')
-              }}
+              className="btn-secondary"
+              onClick={() => void m.list.refetch()}
             >
-              Xóa bộ lọc
+              Try again
             </button>
           </div>
+        ) : (
+          <>
+            <p role="status" className="mb-4 text-sm text-muted">
+              {m.items.length} dishes{m.list.isFetching ? ' - Updating...' : ''}
+            </p>
+            {m.items.length ? (
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+                {m.items.map((d) => (
+                  <DishCard
+                    key={d.itemId}
+                    dish={d}
+                    onSelect={() => setSelected(d.itemId)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="panel py-16 text-center">
+                <Icon name="search" className="mx-auto text-brand" size={36} />
+                <h3 className="mt-4 text-xl font-bold">No dishes found</h3>
+                <p className="mt-2 text-sm text-muted">
+                  Try another name or category.
+                </p>
+                <button
+                  className="btn-secondary mt-5"
+                  onClick={() => {
+                    m.setSearch('')
+                    m.setCategory('')
+                  }}
+                >
+                  Clear filters
+                </button>
+              </div>
+            )}
+          </>
         )}
       </section>
-      <section className="my-10 flex flex-wrap items-center justify-between gap-6 rounded-3xl bg-mint p-6 sm:p-8">
-        <div className="flex items-center gap-4">
-          <span className="hidden rounded-2xl bg-white p-4 text-brand sm:block">
-            <Icon name="spark" size={28} />
-          </span>
-          <div>
-            <p className="eyebrow">Một gợi ý nhỏ từ Mộc</p>
-            <h2 className="mt-2 text-xl font-bold">
-              Thêm chút tươi mát, bữa ăn thêm trọn vẹn.
-            </h2>
-            <p className="mt-2 text-sm text-muted">
-              Một ly cam ép là người bạn đồng hành của món ngon hôm nay.
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={() => setSelected(dishes[6])}
-          className="btn-secondary border-brand/20 text-brand"
-        >
-          Khám phá đồ uống <Icon name="arrow" size={16} />
-        </button>
-      </section>
-      {selected && (
+      {selected && m.sessionId && (
         <DishOptionModal
-          dish={selected}
+          key={m.sessionId + selected}
+          sessionId={m.sessionId}
+          itemId={selected}
           onClose={() => setSelected(null)}
-          onAdded={() =>
-            setNotice('Đã thêm món vào giỏ hàng. Chúc bạn ngon miệng!')
-          }
+          onAdded={() => setNotice('Added to your cart.')}
         />
       )}
       {notice && (
@@ -121,7 +103,7 @@ export function MenuPage() {
           <Icon name="check" />
           <span>{notice}</span>
           <button
-            aria-label="Đóng thông báo"
+            aria-label="Close notification"
             onClick={() => setNotice('')}
             className="ml-auto flex size-11 shrink-0 items-center justify-center"
           >

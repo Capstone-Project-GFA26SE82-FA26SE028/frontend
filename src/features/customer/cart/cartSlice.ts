@@ -6,11 +6,20 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addItem: (state, { payload }: PayloadAction<CartItem>) => {
+      if (
+        payload.tableSessionId &&
+        state.items.some((i) => i.tableSessionId !== payload.tableSessionId)
+      )
+        state.items = []
       const item = state.items.find(
         (i) =>
           i.dishId === payload.dishId &&
           i.note === payload.note &&
-          i.option === payload.option,
+          i.option === payload.option &&
+          i.unitPrice === payload.unitPrice &&
+          i.tableSessionId === payload.tableSessionId &&
+          JSON.stringify(i.optionSelections) ===
+            JSON.stringify(payload.optionSelections),
       )
       if (item) item.quantity += payload.quantity
       else state.items.push(payload)

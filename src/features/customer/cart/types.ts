@@ -6,6 +6,9 @@ export type CartItem = {
   unitPrice: number
   note: string
   image: string
+  tableSessionId?: string
+  priceId?: string | null
+  optionSelections?: { optionGroupId: string; optionIds: string[] }[]
   option: string
 }
 export type CartState = { items: CartItem[] }

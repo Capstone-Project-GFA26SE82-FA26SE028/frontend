@@ -1,5 +1,6 @@
 import { Icon } from '../../../../components/Icon/Icon'
 import { formatCurrency } from '../../../../utils/currency'
+import { DishImage } from './DishImage'
 import type { Dish } from '../types'
 export function DishCard({
   dish,
@@ -8,71 +9,68 @@ export function DishCard({
   dish: Dish
   onSelect: () => void
 }) {
+  const available = dish.canOrder && dish.price !== null
   return (
     <article className="group overflow-hidden rounded-3xl border border-stone-200/80 bg-white transition-shadow hover:shadow-xl hover:shadow-brand/5">
       <button
         onClick={onSelect}
-        className="relative block w-full overflow-hidden text-left"
-        aria-label={`Xem ${dish.name}`}
+        className="relative block w-full text-left"
+        aria-label={'View ' + dish.itemName}
       >
-        <img
-          src={dish.image}
-          alt={dish.name}
-          loading="lazy"
-          width="600"
-          height="420"
-          className={`aspect-[1.48] w-full object-cover transition-transform duration-500 motion-safe:group-hover:scale-105 ${!dish.available ? 'grayscale opacity-60' : ''}`}
+        <DishImage
+          src={dish.imageUrl}
+          name={dish.itemName}
+          className={
+            'aspect-[1.48] w-full ' + (!available ? 'opacity-60 grayscale' : '')
+          }
         />
-        {dish.tag && (
-          <span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-semibold text-brand shadow-sm">
-            {dish.tag}
-          </span>
-        )}
-        {!dish.available && (
+        {!available && (
           <span className="absolute inset-0 flex items-center justify-center">
-            <span className="rounded-full bg-ink/85 px-5 py-2 text-sm text-white">
-              Tạm hết món
+            <span className="rounded-full bg-ink/85 px-4 py-2 text-xs text-white">
+              Unavailable
             </span>
           </span>
         )}
       </button>
       <div className="p-4 sm:p-5">
-        <div className="mb-2 flex items-center gap-2 text-xs text-muted">
-          <Icon name="clock" size={14} />
-          {dish.minutes} phút
-          {dish.vegetarian && (
-            <span className="ml-auto flex items-center gap-1 text-brand">
-              <Icon name="leaf" size={14} />
-              Món chay
-            </span>
-          )}
-          {dish.spicy && (
-            <span className="ml-auto flex items-center gap-1 text-orange-700">
-              <Icon name="fire" size={14} />
-              Cay nhẹ
-            </span>
-          )}
+        <div className="flex items-center justify-between gap-2 text-xs text-muted">
+          <span>{dish.categoryName}</span>
+          {dish.preparationTimeMinutes !== null &&
+            dish.preparationTimeMinutes > 0 && (
+              <span className="flex items-center gap-1">
+                <Icon name="clock" size={14} />
+                {dish.preparationTimeMinutes} min
+              </span>
+            )}
         </div>
         <h3>
           <button
             onClick={onSelect}
             className="min-h-11 text-left text-lg font-bold tracking-tight hover:text-brand"
           >
-            {dish.name}
+            {dish.itemName}
           </button>
         </h3>
-        <p className="mt-1 min-h-10 text-sm leading-relaxed text-muted">
-          {dish.description}
-        </p>
-        <div className="mt-5 flex items-center justify-between">
+        {dish.description && (
+          <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted">
+            {dish.description}
+          </p>
+        )}
+        <div className="mt-5 flex items-center justify-between gap-2">
           <span className="text-lg font-bold text-brand">
-            {formatCurrency(dish.price)}
+            {dish.price === null ? (
+              <span className="text-sm font-normal text-muted">
+                Price unavailable
+              </span>
+            ) : (
+              formatCurrency(dish.price)
+            )}
           </span>
           <button
-            disabled={!dish.available}
+            disabled={!available}
             onClick={onSelect}
-            aria-label={`Thêm ${dish.name}`}
-            className="flex size-11 items-center justify-center rounded-2xl bg-mint text-brand transition-colors hover:bg-brand hover:text-white"
+            aria-label={'Choose ' + dish.itemName}
+            className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-mint text-brand transition-colors hover:bg-brand hover:text-white disabled:opacity-40"
           >
             <Icon name="plus" />
           </button>

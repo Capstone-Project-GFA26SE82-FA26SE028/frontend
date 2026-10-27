@@ -42,7 +42,7 @@ export const router = createBrowserRouter([
       {
         element: <CustomerSessionGate />,
         children: [
-          { path: 'menu', element: <MenuPage /> },
+          { path: 'menu'  , element: <MenuPage /> },
           { path: 'cart', element: <CartPage /> },
           { path: 'checkout', element: <CheckoutPage /> },
           { path: 'orders', element: <OrderTrackingPage /> },

@@ -7,11 +7,20 @@ export function CartItem({ item }: { item: Item }) {
   const dispatch = useAppDispatch()
   return (
     <article className="flex gap-4 border-b border-stone-100 py-5 last:border-0">
-      <img
-        src={item.image}
-        alt={item.name}
-        className="size-20 rounded-2xl object-cover sm:size-24"
-      />
+      {item.image ? (
+        <img
+          src={item.image}
+          alt={item.name}
+          className="size-20 shrink-0 rounded-2xl object-cover sm:size-24"
+        />
+      ) : (
+        <span
+          aria-hidden="true"
+          className="flex size-20 shrink-0 items-center justify-center rounded-2xl bg-mint text-brand/40 sm:size-24"
+        >
+          <Icon name="utensils" size={28} />
+        </span>
+      )}
       <div className="min-w-0 flex-1">
         <h2 className="font-semibold">{item.name}</h2>
         <p className="mt-1 text-xs text-muted">{item.option}</p>
