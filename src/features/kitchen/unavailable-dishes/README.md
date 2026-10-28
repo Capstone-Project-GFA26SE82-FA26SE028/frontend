@@ -1,3 +1,3 @@
 # src/features/kitchen/unavailable-dishes
 
-Thư mục được tạo theo cấu trúc đã thống nhất. Chưa triển khai chức năng.
+`pages/AvailabilityPage.tsx`: tạm hết/tạm dừng/mở lại món, lý do bắt buộc, không thay đổi ticket đã nhận. Xem [Kitchen README](../README.md).

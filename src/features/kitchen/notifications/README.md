@@ -1,3 +1,3 @@
 # src/features/kitchen/notifications
 
-Thư mục được tạo theo cấu trúc đã thống nhất. Chưa triển khai chức năng.
+`pages/NotificationsPage.tsx`: thông báo Ready, mô phỏng lỗi/retry và nhận hủy món Pending. Không gửi push thật khi chưa có backend. Xem [Kitchen README](../README.md).

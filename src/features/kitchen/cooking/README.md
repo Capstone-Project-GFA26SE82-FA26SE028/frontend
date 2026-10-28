@@ -1,3 +1,3 @@
 # src/features/kitchen/cooking
 
-Thư mục được tạo theo cấu trúc đã thống nhất. Chưa triển khai chức năng.
+`pages/CookingPage.tsx`: danh sách Cooking, dùng màn hình hàng đợi chung và chuyển món sang Ready. Xem [Kitchen README](../README.md).
