@@ -1,3 +1,3 @@
 # src/features/kitchen/order-queue
 
-Thư mục được tạo theo cấu trúc đã thống nhất. Chưa triển khai chức năng.
+`pages/QueuePage.tsx`: nhận ticket mô phỏng, chống trùng, tìm kiếm, sắp hàng đợi và bắt đầu Cooking. Dùng lại cho danh sách Cooking/Ready. Xem [Kitchen README](../README.md).

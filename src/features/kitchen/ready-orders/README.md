@@ -1,3 +1,3 @@
 # src/features/kitchen/ready-orders
 
-Thư mục được tạo theo cấu trúc đã thống nhất. Chưa triển khai chức năng.
+`pages/ReadyPage.tsx`: món hoàn thành chờ Waiter phục vụ; Kitchen không tự đánh dấu Served. Xem [Kitchen README](../README.md).

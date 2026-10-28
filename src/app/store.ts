@@ -1,3 +1,4 @@
+import kitchenReducer from '../features/kitchen/shared/kitchenSlice'
 import authReducer from '../features/auth/authSlice'
 import customerBillingReducer from '../features/customer/billing-feedback/billingSlice'
 import customerSessionReducer from '../features/customer/table-session/sessionSlice'
@@ -12,6 +13,7 @@ import { configureStore } from '@reduxjs/toolkit'
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    kitchen: kitchenReducer,
     customerBilling: customerBillingReducer,
     orders: orderReducer,
     customerSession: customerSessionReducer,
