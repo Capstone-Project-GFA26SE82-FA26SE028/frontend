@@ -1,39 +1,85 @@
 import { Link } from 'react-router-dom'
-import { useAppSelector } from '../../../../app/hooks'
 import { Icon } from '../../../../components/Icon/Icon'
 import { OrderTrackingCard } from '../components/OrderTrackingCard'
-import { OrderTrackingActions } from '../components/OrderTrackingActions'
+import { useOrderTracking } from '../hooks/useOrderTracking'
+import { orderTrackingError } from '../api/orderTrackingApi'
+
 export function OrderTrackingPage() {
-  const orders = useAppSelector((s) => s.orders.orders)
+  const { table, orders, query } = useOrderTracking()
   return (
-    <section className="py-6 pb-12">
-      <p className="eyebrow">Từ căn bếp đến bàn ăn</p>
-      <h1 className="mt-2 text-4xl font-bold">Đơn của bạn</h1>
-      <p className="mt-3 text-muted">Từng món ngon đều được chăm chút.</p>
-      {orders.length ? (
-        <div className="mt-8 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-          <div className="space-y-5">
-            {orders.map((order, index) => (
+    <section className="pt-1 pb-8">
+      <div className="grid min-h-11 grid-cols-[64px_minmax(0,1fr)_64px] items-center gap-2">
+        <Link
+          to="/menu"
+          aria-label="Back to menu"
+          title="Back to menu"
+          className="inline-flex size-9 items-center justify-center justify-self-start rounded-lg border border-stone-200/70 bg-white text-muted transition-colors hover:bg-mint hover:text-brand"
+        >
+          <Icon name="chevron" size={20} className="rotate-180" />
+        </Link>
+        <h1 className="text-center text-base font-medium">Your orders</h1>
+        <button
+          className="min-h-9 rounded-lg bg-mint px-2 text-xs text-brand transition-colors hover:bg-brand/10 disabled:opacity-45"
+          aria-label={query.isFetching ? 'Refreshing orders' : 'Refresh'}
+          aria-busy={query.isFetching}
+          disabled={query.isFetching || !table}
+          onClick={() => void query.refetch()}
+        >
+          Refresh
+        </button>
+      </div>
+      {query.isPending && (
+        <p role="status" className="mt-4 text-muted">
+          Loading your orders...
+        </p>
+      )}
+      {query.isError && (
+        <div
+          role="alert"
+          className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900"
+        >
+          <p>{orderTrackingError(query.error)}</p>
+          {orders.length > 0 && (
+            <p className="mt-1">
+              Showing the last loaded orders. Their status may have changed.
+            </p>
+          )}
+        </div>
+      )}
+      {orders.length > 0 ? (
+        <div className="mt-4">
+          <div className="min-w-0 space-y-5">
+            {orders.map((order) => (
               <OrderTrackingCard
-                key={order.id}
+                key={order.orderId}
                 order={order}
-                orderNumber={orders.length - index}
+                tableCode={table?.tableCode}
               />
             ))}
+            {query.hasNextPage && (
+              <button
+                className="btn-secondary w-full"
+                disabled={query.isFetching}
+                onClick={() => void query.fetchNextPage()}
+              >
+                {query.isFetchingNextPage ? 'Loading...' : 'Load older orders'}
+              </button>
+            )}
           </div>
-          <OrderTrackingActions />
         </div>
       ) : (
-        <div className="panel mt-8 py-16 text-center">
-          <Icon name="receipt" size={40} className="mx-auto text-brand" />
-          <h2 className="mt-5 text-xl font-bold">Chưa có đơn nào tại bàn</h2>
-          <p className="mt-2 text-sm text-muted">
-            Những món bạn gọi sẽ được hiển thị ở đây.
-          </p>
-          <Link to="/menu" className="btn-primary mt-6">
-            Khám phá thực đơn
-          </Link>
-        </div>
+        query.isSuccess && (
+          <div className="panel mt-4 px-5 py-14 text-center">
+            <Icon name="receipt" size={36} className="mx-auto text-brand" />
+            <h2 className="mt-5 text-xl font-bold">No orders yet</h2>
+            <p className="mt-2 text-sm text-muted">
+              Your submitted orders will appear here.
+            </p>
+            <Link to="/menu" className="btn-primary mt-6">
+              Explore menu
+            </Link>
+          </div>
+        )
       )}
     </section>
   )

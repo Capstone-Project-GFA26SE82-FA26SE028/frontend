@@ -6,6 +6,7 @@ import { CheckoutOrderReview } from '../components/CheckoutOrderReview'
 import { CheckoutReceipt } from '../components/CheckoutReceipt'
 import { useCheckout } from '../hooks/useCheckout'
 import { checkoutError, isOrderRejected } from '../api/checkoutApi'
+import { Icon } from '../../../../components/Icon/Icon'
 export function CheckoutPage() {
   const [params] = useSearchParams()
   const orderId = params.get('order')
@@ -18,9 +19,19 @@ function CheckoutReview() {
   if (!checkout.attempt && cart?.items.length && !canReviewCart(cart))
     return <Navigate to="/cart" replace />
   return (
-    <section className="py-6 pb-12">
-      <p className="eyebrow">Selected for your table</p>
-      <h1 className="mt-2 text-4xl font-bold">Review your order</h1>
+    <section className="pt-1 pb-8">
+      <div className="grid min-h-11 grid-cols-[64px_minmax(0,1fr)_64px] items-center gap-2">
+        <Link
+          to="/cart"
+          aria-label="Back to cart"
+          title="Back to cart"
+          className="inline-flex size-9 items-center justify-center justify-self-start rounded-lg border border-stone-200/70 bg-white text-muted transition-colors hover:bg-mint hover:text-brand"
+        >
+          <Icon name="chevron" size={20} className="rotate-180" />
+        </Link>
+        <h1 className="text-center text-base font-medium">Review your order</h1>
+        <span aria-hidden="true" />
+      </div>
       <CartStatus management={m} />
       {!checkout.attempt && checkout.localError && (
         <p role="alert" className="mt-4 text-red-600">
@@ -55,7 +66,7 @@ function CheckoutReview() {
       {cart &&
         !m.cart.isError &&
         (cart.items.length && !checkout.attempt ? (
-          <div className="mt-8 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+          <div className="mt-4 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
             <CheckoutOrderReview cart={cart} tableCode={m.table?.tableCode} />
             <CartSummary
               total={cart.quote?.totalAmount ?? null}
@@ -75,7 +86,7 @@ function CheckoutReview() {
             </CartSummary>
           </div>
         ) : !checkout.attempt ? (
-          <div className="panel mt-8 p-8">
+          <div className="panel mt-4 p-8">
             <p>Your cart is empty.</p>
             <Link to="/menu" className="btn-primary mt-5">
               Choose dishes

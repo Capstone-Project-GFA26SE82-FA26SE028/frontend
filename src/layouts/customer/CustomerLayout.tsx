@@ -13,7 +13,7 @@ export function CustomerLayout() {
     window.scrollTo(0, 0)
   }, [location.pathname])
   return (
-    <div className="min-h-dvh">
+    <div className="flex min-h-dvh flex-col">
       <a
         href="#noi-dung"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-white focus:p-4"
@@ -23,7 +23,7 @@ export function CustomerLayout() {
       <CustomerHeader count={count} />
       <main
         id="noi-dung"
-        className="mx-auto max-w-[1440px] px-5 pb-6 sm:px-8 lg:px-12"
+        className="mx-auto w-full max-w-[1440px] flex-1 px-5 pb-6 sm:px-8 lg:px-12"
       >
         <CustomerTableInfo />
         <Outlet />

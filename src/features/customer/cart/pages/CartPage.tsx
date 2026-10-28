@@ -18,20 +18,28 @@ export function CartPage() {
   const disabled =
     m.pending || m.cart.isFetching || m.cart.isError || m.mutation.isError
   return (
-    <section className="py-6 pb-12">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="eyebrow">Selected for your table</p>
-          <h1 className="mt-2 text-4xl font-bold">Your cart</h1>
-        </div>
-        {!!cart?.items.length && (
+    <section className="pt-1 pb-8">
+      <div className="grid min-h-11 grid-cols-[64px_minmax(0,1fr)_64px] items-center gap-2">
+        <Link
+          to="/menu"
+          aria-label="Back to menu"
+          title="Back to menu"
+          className="inline-flex size-9 items-center justify-center justify-self-start rounded-lg border border-stone-200/70 bg-white text-muted transition-colors hover:bg-mint hover:text-brand"
+        >
+          <Icon name="chevron" size={20} className="rotate-180" />
+        </Link>
+        <h1 className="text-center text-base font-medium">Your cart</h1>
+        {cart?.items.length ? (
           <button
-            className="btn-secondary"
+            className="min-h-9 rounded-lg bg-red-50 px-2 text-xs text-red-500 transition-colors hover:bg-red-100 disabled:opacity-45"
+            aria-label="Clear cart"
             disabled={disabled}
             onClick={() => setConfirmClear(true)}
           >
-            Clear cart
+            Clear
           </button>
+        ) : (
+          <span aria-hidden="true" />
         )}
       </div>
       {!confirmClear && <CartStatus management={m} />}
@@ -48,7 +56,7 @@ export function CartPage() {
                   'Some dishes or options are no longer available. Review your cart before continuing.'}
               </p>
             )}
-            <div className="mt-8 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+            <div className="mt-4 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
               <div className="panel px-5 sm:px-7">
                 {cart.items.map((line, index) => (
                   <CartItem
@@ -115,7 +123,7 @@ export function CartPage() {
             </div>
           </>
         ) : (
-          <div className="panel mt-8 px-6 py-12 text-center">
+          <div className="panel mt-4 px-6 py-12 text-center">
             <span className="mx-auto flex size-20 items-center justify-center rounded-full bg-mint text-brand">
               <Icon name="bag" size={36} />
             </span>

@@ -1,71 +1,128 @@
 import { formatCurrency } from '../../../../utils/currency'
-import type { PreviewOrder } from '../types'
+import type { CustomerOrder } from '../types/types'
+import { OrderStatusBadge } from './OrderStatusBadge'
 
-type OrderTrackingCardProps = {
-  order: PreviewOrder
-  orderNumber: number
+const orderSteps = [
+  'Waiting',
+  'Confirmed',
+  'Cooking',
+  'Ready',
+  'Served',
+]
+
+function getCurrentStep(order: CustomerOrder) {
+  if (order.status === 'Cancelled') return -1
+  if (order.status === 'PendingConfirmation') return 0
+  const activeItems = order.items.filter((item) => item.status !== 'Cancelled')
+  if (!activeItems.length) return -1
+  const stepByStatus: Record<string, number> = {
+    PendingConfirmation: 0,
+    Pending: 1,
+    Hold: 1,
+    Cooking: 2,
+    Ready: 3,
+    Served: 4,
+  }
+  // Mixed orders follow the least advanced dish; cancelled dishes are excluded.
+  return Math.min(...activeItems.map((item) => stepByStatus[item.status] ?? -1))
 }
 
 export function OrderTrackingCard({
   order,
-  orderNumber,
-}: OrderTrackingCardProps) {
+  tableCode,
+}: {
+  order: CustomerOrder
+  tableCode?: string
+}) {
+  const progress = getCurrentStep(order)
   return (
-    <article className="panel p-6">
-      <div className="flex flex-wrap justify-between gap-3">
-        <h2 className="text-lg font-bold">Lượt gọi món {orderNumber}</h2>
-        <span className="rounded-full bg-mint px-3 py-1 text-xs font-semibold text-brand">
-          {order.paymentRequested
-            ? 'Chờ xác nhận thanh toán'
-            : 'Chờ xác nhận món'}
-        </span>
+    <article className="panel min-w-0 p-5 sm:p-6">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <h2 className="break-all text-sm font-bold sm:text-base">
+            {order.orderNumber}
+          </h2>
+          <p className="mt-2 text-xs text-muted">
+            {new Date(order.createdAt).toLocaleString('en-GB', {
+              day: '2-digit',
+              month: 'short',
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+            {tableCode ? ' · Table ' + tableCode : ''}
+          </p>
+        </div>
+        <OrderStatusBadge status={order.status} />
       </div>
-      <p className="mt-2 text-xs text-muted">
-        {new Date(order.createdAt).toLocaleTimeString('vi-VN', {
-          hour: '2-digit',
-          minute: '2-digit',
-        })}{' '}
-        · Bàn 08
-      </p>
-      <ol className="my-6 grid grid-cols-4 gap-2">
-        {['Chờ xác nhận', 'Đang nấu', 'Món đã xong', 'Đã phục vụ'].map(
-          (label, i) => (
+      {progress >= 0 && (
+        <ol
+          aria-label="Order progress"
+          className="my-6 grid grid-cols-5 gap-1.5 sm:gap-2"
+        >
+          {orderSteps.map((label, index) => (
             <li
               key={label}
-              className={`text-center text-xs ${i === 0 ? 'font-semibold text-brand' : 'text-muted'}`}
+              aria-current={index === progress ? 'step' : undefined}
+              className={
+                'text-center text-[10px] leading-4 sm:text-xs ' +
+                (index <= progress ? 'font-medium text-brand' : 'text-muted')
+              }
             >
               <div
-                className={`mb-2 h-1.5 rounded-full ${i === 0 ? 'bg-brand' : 'bg-stone-100'}`}
+                className={
+                  'mb-2 h-1.5 rounded-full ' +
+                  (index <= progress ? 'bg-brand' : 'bg-stone-100')
+                }
               />
               {label}
             </li>
-          ),
-        )}
-      </ol>
-      {order.items.map((i) => (
-        <div
-          key={i.id}
-          className="flex items-center gap-3 border-t border-stone-100 py-3"
-        >
-          <img
-            src={i.image}
-            alt={i.name}
-            className="size-14 rounded-xl object-cover"
-          />
-          <div className="flex-1">
-            <p className="text-sm font-semibold">
-              {i.quantity} × {i.name}
-            </p>
-            <p className="mt-1 text-xs text-muted">{i.option}</p>
+          ))}
+        </ol>
+      )}
+      <div className="mt-5 divide-y divide-stone-100 border-y border-stone-100">
+        {order.items.map((item) => (
+          <div key={item.orderItemId} className="flex gap-3 py-4">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-start justify-between gap-3">
+                <p className="min-w-0 break-words text-sm font-semibold">
+                  {item.quantity} x {item.nameSnapshot}
+                </p>
+                <span className="shrink-0 text-sm font-semibold">
+                  {formatCurrency(item.lineTotal)}
+                </span>
+              </div>
+              {item.options.map((option) => (
+                <p key={option.optionId} className="mt-1 text-xs text-muted">
+                  {option.name}
+                  {option.quantity > 1 ? ' x ' + option.quantity : ''}
+                </p>
+              ))}
+              {item.note && (
+                <p className="mt-1 break-words text-xs text-muted">
+                  Note: {item.note}
+                </p>
+              )}
+              <div className="mt-2">
+                <OrderStatusBadge status={item.status} />
+              </div>
+            </div>
           </div>
-          <span className="text-sm font-semibold">
-            {formatCurrency(i.unitPrice * i.quantity)}
-          </span>
-        </div>
-      ))}
-      <p className="mt-3 text-xs leading-5 text-muted">
-        Vui lòng xác nhận lượt gọi món với nhân viên. Bạn có thể gọi thêm món bất cứ lúc nào.
-      </p>
+        ))}
+      </div>
+      <div className="mt-4 flex justify-between gap-3 text-sm font-bold">
+        <span>Order total</span>
+        <span>{formatCurrency(order.totalAmount)}</span>
+      </div>
+      {order.status === 'PendingConfirmation' && (
+        <p className="mt-3 text-xs text-muted">
+          Staff will confirm your order shortly.
+        </p>
+      )}
+      {order.status === 'Confirmed' && progress === 1 && (
+        <p className="mt-3 text-xs text-muted">
+          Your order is confirmed and queued for the kitchen.
+        </p>
+      )}
     </article>
   )
 }

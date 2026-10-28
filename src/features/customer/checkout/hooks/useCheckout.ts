@@ -44,6 +44,9 @@ export function useCheckout() {
       sessionStorage.removeItem(storageKey)
       setAttempt(null)
       void client.invalidateQueries({ queryKey: ['customer-cart', sessionId] })
+      void client.invalidateQueries({
+        queryKey: ['customer-orders', sessionId],
+      })
     },
   })
   async function placeOrder() {

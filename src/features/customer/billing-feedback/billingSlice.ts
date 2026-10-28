@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { previewInvoice } from './data/previewInvoice'
 import { feedbackSchema } from './schemas/feedbackSchema'
 import type { Invoice, InvoiceFeedback } from './types'
-import type { PreviewOrder } from '../order-tracking/types'
+import type { PreviewOrder } from '../payment/previewOrderTypes'
 
 type BillingState = {
   invoices: Invoice[]

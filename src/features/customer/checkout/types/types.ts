@@ -11,19 +11,4 @@ export type CheckoutAttempt = {
   request: CheckoutRequest
 }
 
-export type SubmittedOrder = {
-  orderId: string
-  orderNumber: string
-  tableSessionId: string
-  status: string
-  createdAt: string
-  totalAmount: number
-  items: {
-    orderItemId: string
-    nameSnapshot: string
-    quantity: number
-    lineTotal: number
-    note: string | null
-    options: { optionId: string; name: string; quantity: number }[]
-  }[]
-}
+export type { CustomerOrder as SubmittedOrder } from '../../order-tracking/types/types'

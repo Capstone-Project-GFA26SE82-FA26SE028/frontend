@@ -1,4 +1,4 @@
-// Model minh h?a cho giao di?n, ch?a ph?i contract backend.
+// Legacy payment preview only; real orders use order-tracking/types/types.ts.
 import type { CartItem } from '../cart/types/types'
 export type PreviewOrder = {
   id: string

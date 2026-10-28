@@ -1,17 +1,18 @@
-import { Icon } from '../../../components/Icon/Icon'
-
 export function CustomerFooter() {
   return (
-    <footer className="border-t border-stone-200 pb-28 md:pb-8">
-      <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-5 pt-7 text-xs text-muted sm:px-8 lg:px-12">
-        <div className="flex items-center gap-3">
-          <Icon name="leaf" className="text-brand" />
-          <span>
-            <strong className="text-brand">Mộc.</strong> Một bữa ăn ngon, một
-            khoảng bình yên.
-          </span>
-        </div>
-        <span>Cảm ơn bạn đã chọn Mộc. Chúc bạn ngon miệng!</span>
+    <footer className="shrink-0 border-t border-stone-200/70 pb-24 md:pb-5">
+      <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-1.5 px-5 pt-5 text-center text-xs text-muted sm:flex-row sm:justify-between sm:px-8 lg:px-12">
+        <p>
+          &copy; {new Date().getFullYear()}{' '}
+          <span className="font-semibold text-brand">FoodHub.</span> All rights
+          reserved.
+        </p>
+        <p>
+          Contact:{' '}
+          <a href="mailto:foodhub@gmail.com" className="font-medium text-brand hover:underline">
+            foodhub@gmail.com
+          </a>
+        </p>
       </div>
     </footer>
   )

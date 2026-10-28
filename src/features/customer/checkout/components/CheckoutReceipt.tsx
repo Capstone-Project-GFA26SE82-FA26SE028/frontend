@@ -2,7 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../../../app/hooks'
 import { formatCurrency } from '../../../../utils/currency'
-import { checkoutError, getSubmittedOrder } from '../api/checkoutApi'
+import { getSubmittedOrder } from '../api/checkoutApi'
+import { OrderStatusBadge } from '../../order-tracking/components/OrderStatusBadge'
+import { orderTrackingError } from '../../order-tracking/api/orderTrackingApi'
 
 export function CheckoutReceipt({ orderId }: { orderId: string }) {
   const table = useAppSelector((s) => s.customerSession.table)
@@ -24,7 +26,7 @@ export function CheckoutReceipt({ orderId }: { orderId: string }) {
         {order.isPending && <p className="mt-5 text-muted">Loading order...</p>}
         {order.isError && (
           <div role="alert" className="mt-5">
-            <p>{checkoutError(order.error)}</p>
+            <p>{orderTrackingError(order.error)}</p>
             <button
               className="btn-secondary mt-3"
               onClick={() => void order.refetch()}
@@ -39,13 +41,7 @@ export function CheckoutReceipt({ orderId }: { orderId: string }) {
               {order.data.orderNumber}
             </p>
             <div className="my-6 rounded-2xl bg-mint p-4 text-brand">
-              <strong>
-                {order.data.status === 'PendingConfirmation'
-                  ? 'Waiting for staff confirmation'
-                  : order.data.status === 'Confirmed'
-                    ? 'Order confirmed'
-                    : order.data.status}
-              </strong>
+              <OrderStatusBadge status={order.data.status} />
               <p className="mt-1 text-sm">
                 Your order has been received. Payment is handled separately.
               </p>
@@ -85,6 +81,9 @@ export function CheckoutReceipt({ orderId }: { orderId: string }) {
         )}
         <Link to="/menu" className="btn-primary mt-6 w-full">
           Back to menu
+        </Link>
+        <Link to="/orders" className="btn-secondary mt-3 w-full">
+          Track your orders
         </Link>
       </div>
     </section>
