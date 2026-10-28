@@ -1,5 +1,6 @@
 import axios from 'axios'
 import type { CheckoutAttempt, SubmittedOrder } from '../types/types'
+import { getCustomerOrder } from '../../order-tracking/api/orderTrackingApi'
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
@@ -33,11 +34,7 @@ export async function getSubmittedOrder(
   orderId: string,
   signal?: AbortSignal,
 ) {
-  const { data } = await client.get(
-    path(sessionId) + '/' + encodeURIComponent(orderId),
-    { signal },
-  )
-  return result(data)
+  return getCustomerOrder(sessionId, orderId, signal)
 }
 
 // Only a definitive client rejection allows a new request. Network/5xx failures

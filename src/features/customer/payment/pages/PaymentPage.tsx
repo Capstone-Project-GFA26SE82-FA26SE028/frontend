@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks'
-import { requestPayment } from '../../order-tracking/orderSlice'
+import { requestPayment } from '../previewOrderSlice'
 import { PaymentSummary } from '../components/PaymentSummary'
 import { PaymentMethodSelector } from '../components/PaymentMethodSelector'
 import { PaymentPendingStatus } from '../components/PaymentPendingStatus'
