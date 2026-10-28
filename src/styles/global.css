@@ -102,11 +102,20 @@ dialog[open] {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  *,
+  *:not(.Toastify *),
   *::before,
   *::after {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
+  }
+
+  /* Toastify needs animationend to start its timer and remove closed toasts.
+     Keep entry/exit almost instant, and preserve the hidden progress timer. */
+  .Toastify__toast,
+  .Toastify__toast-icon {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition: none !important;
   }
 }

@@ -13,6 +13,10 @@ export function AppProviders({ children }: PropsWithChildren) {
         <ToastContainer
           position="top-right"
           autoClose={1000}
+          closeButton
+          closeOnClick
+          pauseOnFocusLoss={false}
+          pauseOnHover={false}
           limit={3}
           theme="light"
           hideProgressBar
