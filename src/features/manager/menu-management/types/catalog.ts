@@ -7,6 +7,12 @@ import {
 
 export type Category = z.infer<typeof categorySchema>
 export type Item = z.infer<typeof itemSchema>
+export type ItemViewMode = 'card' | 'list'
+export type ItemCollectionProps = {
+  items: Item[]
+  onEdit: (item: Item) => void
+  onStatus: (item: Item) => void
+}
 export type Price = z.infer<typeof priceSchema>
 export type Page<T> = {
   items: T[]

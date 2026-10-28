@@ -70,3 +70,15 @@ kiểm tra nhóm hoạt động, giá chuẩn và BOM đang hiệu lực. Worksp
 hình cấu hình BOM; quản lý công thức thuộc nhóm nghiệp vụ nguyên liệu/công thức.
 
 Kiểm tra: `npm run build` và `npm run lint` trong thư mục `frontend`.
+
+
+## Item image uploads
+
+Create/edit item forms use a file picker with a preview instead of an image URL field. JPEG, PNG and WebP files up to 2 MiB are uploaded using multipart field `file` to POST /items/images; the existing backend stores the image in Cloudinary and returns imageUrl. Saving uses this URL. Upload failures block saving until the user selects another file or clears the image. Existing images are preserved until replaced or removed from the item. Closing/saving is blocked during an upload; leaving the page cancels its request. Cloudinary credentials remain on the server. No backend changes are needed.
+
+Validation: node --experimental-strip-types --test scripts/manager-item-image.test.mjs (transport, validation and form rendering; no live Cloudinary upload).
+
+
+## Menu item views
+
+Menu items supports Card and List layouts using the same API query, filters and pagination. The toolbar toggle stores the selected layout in localStorage under manager-menu-items-view, defaulting to List. Both layouts share image fallback, availability badges and Pricing/Recipe/Edit/Status actions. Validation: node --experimental-strip-types --test scripts/manager-item-views.test.mjs.

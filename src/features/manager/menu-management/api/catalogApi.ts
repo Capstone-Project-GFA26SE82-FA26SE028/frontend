@@ -54,6 +54,13 @@ export async function writeCatalog(
   const { data } = await axiosClient.request({ method, url: path, data: body })
   result(data, z.unknown())
 }
+
+export async function uploadItemImage(file: File, signal?: AbortSignal) {
+  const form = new FormData()
+  form.append('file', file)
+  const { data } = await axiosClient.post('/items/images', form, { signal })
+  return result(data, z.object({ imageUrl: z.string().url() })).imageUrl
+}
 export async function appliedPrice(
   itemId: string,
   channel: string,
