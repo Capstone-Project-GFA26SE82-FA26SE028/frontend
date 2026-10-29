@@ -18,7 +18,7 @@ export function useIngredientMutation(onSuccess?: () => void) {
         client.invalidateQueries({ queryKey: ['manager-inventory'] }),
         client.invalidateQueries({ queryKey: ['manager-catalog'] }),
       ])
-      toast.success('Changes saved.')
+      toast.success('Đã lưu thay đổi.')
       onSuccess?.()
     },
     onError: (error) => toast.error(catalogError(error)),

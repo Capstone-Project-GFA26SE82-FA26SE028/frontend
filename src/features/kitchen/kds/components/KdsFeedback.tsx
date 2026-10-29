@@ -13,7 +13,7 @@ export function KdsFeedback({
       role="status"
     >
       <span>{message}</span>
-      <button aria-label="Dismiss KDS message" onClick={onDismiss}>
+      <button aria-label="Đóng thông báo bếp" onClick={onDismiss}>
         <Icon name="close" size={17} />
       </button>
     </div>

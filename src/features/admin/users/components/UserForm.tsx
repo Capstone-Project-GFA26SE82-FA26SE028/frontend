@@ -2,8 +2,11 @@ import { useForm, useWatch } from 'react-hook-form'
 import { UserAvatar } from './UserAvatar'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Modal } from '../../../../components/Modal/Modal'
-import { accountFormSchema, type AccountFormValues } from '../schemas/userSchema'
-import { userRoleLabel, type UserAccount, type UserRole } from '../types'
+import {
+  accountFormSchema,
+  type AccountFormValues,
+} from '../schemas/userSchema'
+import { userRoleLabel, type UserAccount, type UserRole } from '../types/types'
 import {
   Field,
   fieldClass,
@@ -48,8 +51,8 @@ export function UserForm({
   }
   return (
     <Modal
-      closeLabel="Close"
-      title={user ? 'Edit account' : 'Add account'}
+      closeLabel="Đóng"
+      title={user ? 'Sửa tài khoản' : 'Thêm tài khoản'}
       onClose={close}
     >
       <form
@@ -63,20 +66,42 @@ export function UserForm({
         <fieldset disabled={isSubmitting} className="space-y-4">
           <div className="flex flex-col items-center gap-2 rounded-2xl bg-slate-50 p-4">
             <UserAvatar src={avatarUrl} name={name} large />
-            <span className="text-xs text-slate-500">Profile photo preview</span>
+            <span className="text-xs text-slate-500">
+              Xem trước ảnh đại diện
+            </span>
           </div>
-          <Field label="Avatar URL (optional)" error={errors.avatarUrl?.message}>
-            <input type="url" className={fieldClass} placeholder="https://example.com/avatar.jpg"
-              {...register('avatarUrl')} aria-invalid={!!errors.avatarUrl} />
+          <Field
+            label="Đường dẫn ảnh đại diện (không bắt buộc)"
+            error={errors.avatarUrl?.message}
+          >
+            <input
+              type="url"
+              className={fieldClass}
+              placeholder="https://example.com/avatar.jpg"
+              {...register('avatarUrl')}
+              aria-invalid={!!errors.avatarUrl}
+            />
           </Field>
-          {avatarUrl && <button type="button" className="text-sm font-medium text-rose-600"
-            onClick={() => setValue('avatarUrl', '', { shouldDirty: true, shouldValidate: true })}>Remove photo</button>}
+          {avatarUrl && (
+            <button
+              type="button"
+              className="text-sm font-medium text-rose-600"
+              onClick={() =>
+                setValue('avatarUrl', '', {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                })
+              }
+            >
+              Xóa ảnh
+            </button>
+          )}
           {(
             [
-              ['userName', 'Username'],
-              ['name', 'Full name'],
+              ['userName', 'Tên đăng nhập'],
+              ['name', 'Họ và tên'],
               ['email', 'Email'],
-              ['phone', 'Phone number (optional)'],
+              ['phone', 'Số điện thoại (không bắt buộc)'],
             ] as const
           ).map(([key, label]) => (
             <Field key={key} label={label} error={errors[key]?.message}>
@@ -102,7 +127,7 @@ export function UserForm({
             </Field>
           ))}
           {!user && (
-            <Field label="Password" error={errors.password?.message}>
+            <Field label="Mật khẩu" error={errors.password?.message}>
               <input
                 type="password"
                 autoComplete="new-password"
@@ -112,16 +137,16 @@ export function UserForm({
               />
             </Field>
           )}
-<Field label="Role" error={errors.role?.message}>
-              <select {...register('role')} className={fieldClass}>
-                <option value="">Select a role</option>
-                {roles.map((role) => (
-                  <option key={role.roleId} value={role.roleId}>
-                    {userRoleLabel(role.roleId)}
-                  </option>
-                ))}
-              </select>
-            </Field>
+          <Field label="Vai trò" error={errors.role?.message}>
+            <select {...register('role')} className={fieldClass}>
+              <option value="">Chọn vai trò</option>
+              {roles.map((role) => (
+                <option key={role.roleId} value={role.roleId}>
+                  {userRoleLabel(role.roleId)}
+                </option>
+              ))}
+            </select>
+          </Field>
         </fieldset>
         {errors.root && (
           <p role="alert" className="text-sm text-rose-600">
@@ -135,17 +160,17 @@ export function UserForm({
             onClick={close}
             className={secondaryButton}
           >
-            Cancel
+            Hủy
           </button>
           <button
             disabled={isSubmitting || !roles.length}
             className={primaryButton}
           >
             {isSubmitting
-              ? 'Saving…'
+              ? 'Đang lưu…'
               : user
-                ? 'Save changes'
-                : 'Create account'}
+                ? 'Lưu thay đổi'
+                : 'Tạo tài khoản'}
           </button>
         </div>
       </form>

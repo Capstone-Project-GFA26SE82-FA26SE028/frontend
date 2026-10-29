@@ -22,21 +22,21 @@ export function CartPage() {
       <div className="grid min-h-11 grid-cols-[64px_minmax(0,1fr)_64px] items-center gap-2">
         <Link
           to="/menu"
-          aria-label="Back to menu"
-          title="Back to menu"
+          aria-label="Quay lại thực đơn"
+          title="Quay lại thực đơn"
           className="inline-flex size-9 items-center justify-center justify-self-start rounded-lg border border-stone-200/70 bg-white text-muted transition-colors hover:bg-mint hover:text-brand"
         >
           <Icon name="chevron" size={20} className="rotate-180" />
         </Link>
-        <h1 className="text-center text-base font-medium">Your cart</h1>
+        <h1 className="text-center text-base font-medium">Các món đang chọn</h1>
         {cart?.items.length ? (
           <button
             className="min-h-9 rounded-lg bg-red-50 px-2 text-xs text-red-500 transition-colors hover:bg-red-100 disabled:opacity-45"
-            aria-label="Clear cart"
+            aria-label="Xóa giỏ"
             disabled={disabled}
             onClick={() => setConfirmClear(true)}
           >
-            Clear
+            Xóa
           </button>
         ) : (
           <span aria-hidden="true" />
@@ -53,7 +53,7 @@ export function CartPage() {
                 className="mt-5 rounded-xl bg-amber-50 p-4 text-sm text-amber-800"
               >
                 {cart.quote.message ||
-                  'Some dishes or options are no longer available. Review your cart before continuing.'}
+                  'Một số món hoặc tùy chọn không còn phục vụ. Vui lòng kiểm tra giỏ hàng trước khi tiếp tục.'}
               </p>
             )}
             <div className="mt-4 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
@@ -101,7 +101,7 @@ export function CartPage() {
                   className="my-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-brand"
                 >
                   <Icon name="plus" size={18} />
-                  Add more dishes
+                  Chọn thêm món
                 </Link>
               </div>
               <CartSummary
@@ -111,12 +111,12 @@ export function CartPage() {
               >
                 {canReviewCart(cart) && !disabled ? (
                   <Link to="/checkout" className="btn-primary w-full">
-                    Review order
+                    Kiểm tra đơn
                     <Icon name="arrow" size={18} />
                   </Link>
                 ) : (
                   <button className="btn-primary w-full" disabled>
-                    Review order
+                    Kiểm tra đơn
                   </button>
                 )}
               </CartSummary>
@@ -127,12 +127,12 @@ export function CartPage() {
             <span className="mx-auto flex size-20 items-center justify-center rounded-full bg-mint text-brand">
               <Icon name="bag" size={36} />
             </span>
-            <h2 className="mt-5 text-2xl font-bold">Your cart is empty</h2>
+            <h2 className="mt-5 text-2xl font-bold">Giỏ hàng đang trống</h2>
             <p className="mt-3 text-sm text-muted">
-              Find something delicious on the menu.
+              Khám phá thực đơn và chọn món bạn yêu thích.
             </p>
             <Link to="/menu" className="btn-primary mt-6">
-              Explore the menu
+              Xem thực đơn
               <Icon name="arrow" size={18} />
             </Link>
           </div>
@@ -143,20 +143,20 @@ export function CartPage() {
           sessionId={cart.tableSessionId}
           editing={editing}
           onClose={() => setEditing(null)}
-          onSaved={() => toast.success('Cart updated.')}
+          onSaved={() => toast.success('Đã cập nhật giỏ hàng.')}
         />
       )}
       {confirmClear && cart && (
         <Modal
-          title="Clear your cart?"
-          closeLabel="Cancel"
+          title="Xóa giỏ hàng?"
+          closeLabel="Hủy"
           onClose={() => {
             if (!m.pending) setConfirmClear(false)
           }}
         >
           <div className="space-y-5 p-6">
             <p className="text-sm text-muted">
-              Remove all selected dishes from this cart?
+              Bạn muốn xóa tất cả món đang chọn trong giỏ hàng?
             </p>
             <CartStatus management={m} />
             <div className="flex justify-end gap-3">
@@ -165,7 +165,7 @@ export function CartPage() {
                 className="btn-secondary"
                 onClick={() => setConfirmClear(false)}
               >
-                Cancel
+                Hủy
               </button>
               <button
                 disabled={disabled}
@@ -177,7 +177,7 @@ export function CartPage() {
                     .catch(() => {})
                 }}
               >
-                {m.pending ? 'Clearing...' : 'Clear cart'}
+                {m.pending ? 'Đang xóa…' : 'Xóa giỏ'}
               </button>
             </div>
           </div>

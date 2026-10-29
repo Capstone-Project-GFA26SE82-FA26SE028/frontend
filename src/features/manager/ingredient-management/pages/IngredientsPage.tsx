@@ -37,13 +37,13 @@ export function IngredientsPage() {
   return (
     <>
       <PageHeading
-        eyebrow="Ingredients & Food Cost"
-        title="Ingredients"
-        description="Manage raw ingredients, base units, and low-stock thresholds."
+        eyebrow="Nguyên liệu và giá vốn"
+        title="Nguyên liệu"
+        description="Quản lý nguyên liệu, đơn vị cơ sở và ngưỡng cảnh báo tồn kho."
         action={
           <button className={primaryButton} onClick={() => setForm({})}>
             <Icon name="plus" size={18} />
-            Add ingredient
+            Thêm nguyên liệu
           </button>
         }
       />
@@ -56,10 +56,10 @@ export function IngredientsPage() {
               setSearch(value)
               setPage(1)
             }}
-            placeholder="Search by ingredient name or code…"
+            placeholder="Tìm theo tên hoặc mã nguyên liệu…"
           />
           <select
-            aria-label="Ingredient status"
+            aria-label="Trạng thái nguyên liệu"
             className={`${fieldClass} sm:w-44`}
             value={status}
             onChange={(event) => {
@@ -67,9 +67,9 @@ export function IngredientsPage() {
               setPage(1)
             }}
           >
-            <option value="">All statuses</option>
-            <option value="true">Active</option>
-            <option value="false">Inactive</option>
+            <option value="">Tất cả trạng thái</option>
+            <option value="true">Đang hoạt động</option>
+            <option value="false">Ngừng hoạt động</option>
           </select>
           <label className="flex min-h-11 items-center gap-2 text-sm">
             <input
@@ -80,13 +80,13 @@ export function IngredientsPage() {
                 setPage(1)
               }}
             />
-            Low stock only
+            Chỉ hiện tồn kho thấp
           </label>
           <button
             className={secondaryButton}
             onClick={() => void list.refetch()}
           >
-            Refresh
+            Làm mới
           </button>
         </div>
         <QueryState
@@ -99,12 +99,12 @@ export function IngredientsPage() {
             <table className={tableClass}>
               <thead className="bg-slate-50/70">
                 <tr>
-                  <th>Ingredient</th>
-                  <th>Base unit</th>
-                  <th>Stock on hand</th>
-                  <th>Alert threshold</th>
-                  <th>Status</th>
-                  <th className="text-right">Actions</th>
+                  <th>Nguyên liệu</th>
+                  <th>Đơn vị cơ sở</th>
+                  <th>Tồn kho</th>
+                  <th>Ngưỡng cảnh báo</th>
+                  <th>Trạng thái</th>
+                  <th className="text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -129,8 +129,8 @@ export function IngredientsPage() {
                           tone={ingredient.stockQuantity <= 0 ? 'red' : 'amber'}
                         >
                           {ingredient.stockQuantity <= 0
-                            ? 'Out of stock'
-                            : 'Low stock'}
+                            ? 'Hết hàng'
+                            : 'Tồn kho thấp'}
                         </Badge>
                       )}
                     </td>
@@ -139,7 +139,9 @@ export function IngredientsPage() {
                     </td>
                     <td>
                       <Badge tone={ingredient.isActive ? 'green' : 'slate'}>
-                        {ingredient.isActive ? 'Active' : 'Inactive'}
+                        {ingredient.isActive
+                          ? 'Đang hoạt động'
+                          : 'Ngừng hoạt động'}
                       </Badge>
                     </td>
                     <td>
@@ -148,7 +150,7 @@ export function IngredientsPage() {
                           className={secondaryButton}
                           to={`/manager/units?ingredientId=${ingredient.ingredientId}`}
                         >
-                          Units
+                          Đơn vị
                         </Link>
                         <button
                           className={secondaryButton}
@@ -161,7 +163,9 @@ export function IngredientsPage() {
                           className={secondaryButton}
                           onClick={() => setTarget(ingredient)}
                         >
-                          {ingredient.isActive ? 'Deactivate' : 'Activate'}
+                          {ingredient.isActive
+                            ? 'Ngừng hoạt động'
+                            : 'Kích hoạt'}
                         </button>
                       </div>
                     </td>
@@ -172,7 +176,7 @@ export function IngredientsPage() {
           </div>
         </QueryState>
         <Pagination
-          locale="en"
+          locale="vi"
           page={page}
           size={10}
           total={list.data?.totalCount || 0}
@@ -181,8 +185,8 @@ export function IngredientsPage() {
       </Panel>
       {form && (
         <Modal
-          closeLabel="Close"
-          title={form.ingredient ? 'Edit ingredient' : 'Add ingredient'}
+          closeLabel="Đóng"
+          title={form.ingredient ? 'Sửa nguyên liệu' : 'Thêm nguyên liệu'}
           onClose={() => setForm(null)}
         >
           <QueryState
@@ -199,10 +203,10 @@ export function IngredientsPage() {
             ) : (
               <div className="space-y-3 p-6">
                 <p className="text-sm text-slate-500">
-                  Create a measurement unit before adding ingredients.
+                  Tạo đơn vị đo trước khi thêm nguyên liệu.
                 </p>
                 <Link to="/manager/units" className={primaryButton}>
-                  Manage units
+                  Quản lý đơn vị
                 </Link>
               </div>
             )}
@@ -211,11 +215,11 @@ export function IngredientsPage() {
       )}
       {target && (
         <ConfirmAction
-          title={`${target.isActive ? 'Deactivate' : 'Activate'} ingredient?`}
-          description={`Update the status of “${target.ingredientName}”? Existing inventory history will be preserved.`}
-          confirmLabel="Confirm"
-          cancelLabel="Cancel"
-          closeLabel="Close"
+          title={`${target.isActive ? 'Ngừng hoạt động' : 'Kích hoạt'} nguyên liệu?`}
+          description={`Cập nhật trạng thái của “${target.ingredientName}”? Lịch sử kho hiện tại được giữ nguyên.`}
+          confirmLabel="Xác nhận"
+          cancelLabel="Hủy"
+          closeLabel="Đóng"
           disabled={mutation.isPending}
           onClose={() => {
             if (!mutation.isPending) setTarget(null)

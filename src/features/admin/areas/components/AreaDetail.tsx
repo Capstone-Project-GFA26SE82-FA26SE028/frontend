@@ -1,5 +1,5 @@
 import { Icon } from '../../../../components/Icon/Icon'
-import type { Area } from '../types'
+import type { Area } from '../types/types'
 import { primaryButton, secondaryButton } from '../../components/AdminUI'
 export function AreaDetail({
   area,
@@ -42,14 +42,14 @@ export function AreaDetail({
               (area.isActive ? 'bg-emerald-500' : 'bg-slate-400')
             }
           />
-          {area.isActive ? 'Active' : 'Inactive'}
+          {area.isActive ? 'Đang hoạt động' : 'Ngừng hoạt động'}
         </span>
       </div>
       <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {[
-          ['Restaurant', restaurantName, 'store'],
-          ['Service type', area.serviceType, 'utensils'],
-          ['Space type', area.spaceType, 'home'],
+          ['Nhà hàng', restaurantName, 'store'],
+          ['Loại phục vụ', area.serviceType, 'utensils'],
+          ['Loại không gian', area.spaceType, 'home'],
         ].map(([label, value, icon], index) => (
           <div
             key={label}
@@ -73,11 +73,11 @@ export function AreaDetail({
           className={secondaryButton + ' justify-center'}
           onClick={onClose}
         >
-          Close
+          Đóng
         </button>
         <button className={primaryButton + ' justify-center'} onClick={onEdit}>
           <Icon name="edit" size={17} />
-          Edit area
+          Sửa khu vực
         </button>
       </div>
     </div>

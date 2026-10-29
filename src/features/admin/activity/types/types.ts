@@ -18,3 +18,15 @@ export type ActivityUser = {
   avatarUrl: string | null
   email: string
 }
+
+export type ActivityResponse<T> = {
+  isSuccess: boolean
+  message?: string | null
+  result: T
+}
+export type ActivityPage = {
+  items: ActivityLog[]
+  totalCount: number
+  page: number
+  pageSize: number
+}

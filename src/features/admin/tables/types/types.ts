@@ -28,3 +28,19 @@ export type TableQr = {
   revokedAt: string | null
   isUsable: boolean
 }
+
+export type TableResponse<T> = {
+  isSuccess: boolean
+  message?: string | null
+  result: T
+}
+export type TablePage = {
+  items: Table[]
+  totalCount: number
+  page: number
+  pageSize: number
+}
+export type TableQrPage = {
+  items: TableQr[]
+  totalCount: number
+}

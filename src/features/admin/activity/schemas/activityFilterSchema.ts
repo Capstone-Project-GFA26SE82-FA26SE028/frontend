@@ -10,7 +10,7 @@ export const activityFilterSchema = z.object({
           value,
         ) &&
           value !== '00000000-0000-0000-0000-000000000000'),
-      'Enter a valid user ID.',
+      'Vui lòng nhập mã người dùng hợp lệ.',
     ),
 })
 export type ActivityFilterValues = z.infer<typeof activityFilterSchema>

@@ -3,7 +3,7 @@ import { secondaryButton } from '../../components/AdminUI'
 import { useUser, useUserRoles } from '../hooks/useUsers'
 import { userApiError } from '../api/userApi'
 import { UserForm } from './UserForm'
-import type { UserAccount } from '../types'
+import type { UserAccount } from '../types/types'
 import type { AccountFormValues } from '../schemas/userSchema'
 
 export function UserEditModal({
@@ -27,17 +27,23 @@ export function UserEditModal({
       />
     )
   return (
-    <Modal title="Edit account" onClose={onClose} closeLabel="Close">
+    <Modal title="Sửa tài khoản" onClose={onClose} closeLabel="Đóng">
       <div className="space-y-3 p-6">
         {isPending || roles.isPending ? (
-          <p role="status">Loading account…</p>
+          <p role="status">Đang tải tài khoản…</p>
         ) : (
           <>
             <p role="alert" className="text-rose-600">
               {userApiError(error || roles.error)}
             </p>
-            <button className={secondaryButton} onClick={() => { void refetch(); void roles.refetch() }}>
-              Try again
+            <button
+              className={secondaryButton}
+              onClick={() => {
+                void refetch()
+                void roles.refetch()
+              }}
+            >
+              Thử lại
             </button>
           </>
         )}

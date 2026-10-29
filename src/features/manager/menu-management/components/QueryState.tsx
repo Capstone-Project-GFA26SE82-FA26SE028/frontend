@@ -18,7 +18,7 @@ export function QueryState({
   if (pending)
     return (
       <p role="status" className="p-12 text-center text-slate-500">
-        Loading…
+        Đang tải…
       </p>
     )
   if (error)
@@ -26,16 +26,16 @@ export function QueryState({
       <div role="alert" className="space-y-4 p-8 text-center">
         <p className="text-sm text-rose-700">{catalogError(error)}</p>
         <button className={secondaryButton} onClick={retry}>
-          Try again
+          Thử lại
         </button>
       </div>
     )
   if (empty)
     return (
       <div className="px-5 py-14 text-center">
-        <h2 className="font-semibold">No results found</h2>
+        <h2 className="font-semibold">Không tìm thấy kết quả</h2>
         <p className="mt-2 text-sm text-slate-500">
-          Add a new record or change the filters to see results.
+          Thêm bản ghi mới hoặc đổi bộ lọc để xem kết quả.
         </p>
       </div>
     )

@@ -1,4 +1,4 @@
-import type { UsersState } from '../types'
+import type { UsersState } from '../types/types'
 
 // Keep account assignments while the account model is awaiting backend integration.
 export const initialUsersState: UsersState = {

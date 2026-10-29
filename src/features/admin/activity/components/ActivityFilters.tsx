@@ -31,7 +31,7 @@ export function ActivityFilters({
       <div className="flex flex-wrap items-start gap-3">
         <div className="min-w-0 basis-full sm:basis-0 sm:flex-1">
           <label className="relative block">
-            <span className="sr-only">User ID</span>
+            <span className="sr-only">Mã người dùng</span>
             <Icon
               name="search"
               size={18}
@@ -41,7 +41,7 @@ export function ActivityFilters({
               {...register('userId')}
               type="search"
               maxLength={64}
-              placeholder="Search by user ID..."
+              placeholder="Tìm theo mã người dùng…"
               className={fieldClass + ' pl-10'}
               aria-invalid={!!errors.userId}
               aria-describedby={
@@ -60,7 +60,7 @@ export function ActivityFilters({
           )}
         </div>
         <button type="submit" className={secondaryButton}>
-          Search
+          Tìm kiếm
         </button>
         <button
           type="button"
@@ -70,7 +70,7 @@ export function ActivityFilters({
             onApply('')
           }}
         >
-          Reset
+          Đặt lại
         </button>
       </div>
     </form>

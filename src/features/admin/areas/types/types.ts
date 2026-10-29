@@ -14,3 +14,15 @@ export type AreaQuery = {
   restaurantId?: string
   isActive?: boolean
 }
+
+export type AreaResponse<T> = {
+  isSuccess: boolean
+  message?: string | null
+  result: T
+}
+export type AreaPage = {
+  items: Area[]
+  totalCount: number
+  page: number
+  pageSize: number
+}

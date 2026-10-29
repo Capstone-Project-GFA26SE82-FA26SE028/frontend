@@ -10,28 +10,28 @@ export function RoleSummaryCards({
     <SummaryCards
       items={[
         {
-          label: 'System roles',
+          label: 'Vai trò hệ thống',
           value: roleCount ?? '—',
           icon: 'shield',
-          note: 'Fixed roles',
+          note: 'Các vai trò cố định',
         },
         {
-          label: 'Accounts',
+          label: 'Tài khoản',
           value: totals?.total ?? '—',
           icon: 'users',
-          note: 'All user accounts',
+          note: 'Tất cả tài khoản người dùng',
         },
         {
-          label: 'Active accounts',
+          label: 'Tài khoản hoạt động',
           value: totals?.active ?? '—',
           icon: 'users',
-          note: 'Currently enabled',
+          note: 'Đang được kích hoạt',
         },
         {
-          label: 'Active administrators',
+          label: 'Quản trị viên hoạt động',
           value: totals?.admins ?? '—',
           icon: 'shield',
-          note: 'At least one is required',
+          note: 'Cần có ít nhất một người',
         },
       ]}
     />

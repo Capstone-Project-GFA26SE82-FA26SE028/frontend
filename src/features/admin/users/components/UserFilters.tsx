@@ -1,5 +1,5 @@
 import { SearchField, fieldClass } from '../../components/AdminUI'
-import { userRoleLabel, type UserRole } from '../types'
+import { userRoleLabel, type UserRole } from '../types/types'
 export function UserFilters({
   query,
   role,
@@ -23,25 +23,25 @@ export function UserFilters({
     <div className="flex flex-col gap-3 p-4 xl:flex-row xl:items-center xl:justify-between">
       <div
         role="group"
-        aria-label="Filter account status"
+        aria-label="Lọc trạng thái tài khoản"
         className="flex shrink-0 gap-2 overflow-x-auto py-1 sm:gap-3"
       >
         {[
           {
             value: 'all',
-            label: 'All',
+            label: 'Tất cả',
             count: counts?.all ?? '—',
             dot: '',
           },
           {
             value: 'active',
-            label: 'Active',
+            label: 'Đang hoạt động',
             count: counts?.active ?? '—',
             dot: 'bg-emerald-500',
           },
           {
             value: 'locked',
-            label: 'Inactive',
+            label: 'Đã vô hiệu hóa',
             count: counts?.locked ?? '—',
             dot: 'bg-rose-500',
           },
@@ -86,17 +86,17 @@ export function UserFilters({
           onChange={(v) => {
             onQuery(v)
           }}
-          placeholder="Search name, email, username…"
+          placeholder="Tìm tên, email, tên đăng nhập…"
         />
         <select
-          aria-label="Filter role"
+          aria-label="Lọc vai trò"
           value={role}
           onChange={(e) => {
             onRole(e.target.value)
           }}
           className={`${fieldClass} sm:w-48`}
         >
-          <option value="all">All roles</option>
+          <option value="all">Tất cả vai trò</option>
           {roles.map((r) => (
             <option key={r.roleId} value={r.roleId}>
               {userRoleLabel(r.roleId)}

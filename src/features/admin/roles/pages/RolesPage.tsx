@@ -16,10 +16,10 @@ export function RolesPage() {
       <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-            Roles &amp; permissions
+            Vai trò và quyền hạn
           </h1>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            View system roles and manage account assignments.
+            Xem vai trò hệ thống và quản lý việc gán vai trò cho tài khoản.
           </p>
         </div>
       </header>
@@ -32,9 +32,9 @@ export function RolesPage() {
           role="alert"
           className="mb-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-800"
         >
-          Some account statistics could not be loaded.{' '}
+          Không thể tải một số thống kê tài khoản.{' '}
           <button className="underline" onClick={management.retryStatistics}>
-            Try again
+            Thử lại
           </button>
         </div>
       )}
@@ -46,7 +46,7 @@ export function RolesPage() {
       >
         {roles.isPending ? (
           <p role="status" className="p-8 text-center text-slate-500">
-            Loading roles…
+            Đang tải vai trò…
           </p>
         ) : roles.isError ? (
           <Panel>
@@ -58,7 +58,7 @@ export function RolesPage() {
                 className={secondaryButton}
                 onClick={() => void roles.refetch()}
               >
-                Try again
+                Thử lại
               </button>
             </div>
           </Panel>
@@ -81,7 +81,7 @@ export function RolesPage() {
             />
             {users.isPending ? (
               <p role="status" className="p-8 text-center text-slate-500">
-                Loading accounts…
+                Đang tải tài khoản…
               </p>
             ) : users.isError ? (
               <div className="space-y-3 p-8 text-center">
@@ -92,14 +92,14 @@ export function RolesPage() {
                   className={secondaryButton}
                   onClick={() => void users.refetch()}
                 >
-                  Try again
+                  Thử lại
                 </button>
               </div>
             ) : (
               <>
                 {users.isFetching && (
                   <p role="status" className="sr-only">
-                    Refreshing accounts…
+                    Đang cập nhật tài khoản…
                   </p>
                 )}
                 <RoleUsersTable

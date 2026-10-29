@@ -11,7 +11,7 @@ export function ItemViewToggle({
   return (
     <div
       role="group"
-      aria-label="Menu item view"
+      aria-label="Cách hiển thị món"
       className="flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1 sm:ml-auto"
     >
       {(['card', 'list'] as const).map((mode) => (
@@ -23,7 +23,7 @@ export function ItemViewToggle({
           className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold transition-colors ${view === mode ? 'bg-emerald-700 text-white shadow-sm' : 'text-slate-600 hover:bg-white hover:text-emerald-800'}`}
         >
           <Icon name={mode === 'card' ? 'grid' : 'menu'} size={18} />
-          {mode === 'card' ? 'Card' : 'List'}
+          {mode === 'card' ? 'Thẻ' : 'Danh sách'}
         </button>
       ))}
     </div>

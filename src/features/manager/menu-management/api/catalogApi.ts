@@ -12,7 +12,7 @@ function result<T>(data: unknown, schema: z.ZodType<T>): T {
     })
     .parse(data)
   if (!envelope.isSuccess)
-    throw new Error(envelope.message || 'Unable to complete the operation.')
+    throw new Error(envelope.message || 'Không thể hoàn tất thao tác.')
   return schema.parse(envelope.result)
 }
 export async function getPage<T>(
@@ -81,17 +81,17 @@ export async function appliedPrice(
 export function catalogError(error: unknown): string {
   if (axios.isAxiosError(error)) {
     if (!error.response)
-      return 'Unable to connect to the server. Please try again.'
+      return 'Không kết nối được máy chủ. Vui lòng thử lại.'
     if (error.response.status === 403)
-      return 'Your account does not have permission to perform this action.'
+      return 'Tài khoản của bạn không có quyền thực hiện thao tác này.'
     return (
       error.response.data?.message ||
-      'Unable to complete the request. Please reload and try again.'
+      'Không thể hoàn tất yêu cầu. Vui lòng tải lại và thử lại.'
     )
   }
   return error instanceof z.ZodError
-    ? 'The server returned an unexpected response.'
+    ? 'Dữ liệu máy chủ trả về không hợp lệ.'
     : error instanceof Error
       ? error.message
-      : 'Something went wrong.'
+      : 'Đã xảy ra lỗi. Vui lòng thử lại.'
 }

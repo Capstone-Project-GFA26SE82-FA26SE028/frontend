@@ -9,9 +9,9 @@ import { toast } from 'react-toastify'
 import { getTables, getTable, updateTable } from '../api/tableApi'
 import { getRestaurants } from '../../restaurants/api/restaurantApi'
 import { getAreas } from '../../areas/api/areaApi'
-import type { Restaurant } from '../../restaurants/types'
-import type { Area } from '../../areas/types'
-import type { TableMode } from '../types'
+import type { Restaurant } from '../../restaurants/types/types'
+import type { Area } from '../../areas/types/types'
+import type { TableMode } from '../types/types'
 export function useTables() {
   const [search, setSearch] = useState(''),
     [term, setTerm] = useState(''),
@@ -84,7 +84,7 @@ export function useTables() {
       if (saved) client.setQueryData(['tables', 'detail', saved.tableId], saved)
       void client.invalidateQueries({ queryKey: ['tables', 'list'] })
       setTarget(null)
-      toast.success('Table updated successfully.')
+      toast.success('Đã cập nhật bàn.')
     },
   })
   return {

@@ -7,7 +7,7 @@ import {
   restaurantSchema,
   type RestaurantValues,
 } from '../schemas/restaurantSchema'
-import type { Restaurant } from '../types'
+import type { Restaurant } from '../types/types'
 import { restaurantError } from '../api/restaurantApi'
 import {
   Field,
@@ -74,12 +74,12 @@ export function RestaurantForm({
         <div className="flex items-start gap-4 sm:gap-6">
           <div
             className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-slate-300 bg-slate-50 text-slate-400 sm:size-24"
-            aria-label="Logo preview"
+            aria-label="Xem trước logo"
           >
             {logo && /^https?:\/\//i.test(logo) && logo !== failed ? (
               <img
                 src={logo}
-                alt="Restaurant logo"
+                alt="Logo nhà hàng"
                 className="size-full object-cover"
                 referrerPolicy="no-referrer"
                 onError={() => setFailed(logo)}
@@ -90,12 +90,12 @@ export function RestaurantForm({
           </div>
           <div className="min-w-0 flex-1">
             <Field
-              label="Restaurant name *"
+              label="Tên nhà hàng *"
               error={errors.restaurantName?.message}
             >
               <input
                 className={fieldClass + ' !rounded-2xl !px-4 !py-3.5'}
-                placeholder="Enter restaurant name"
+                placeholder="Nhập tên nhà hàng"
                 {...register('restaurantName')}
               />
             </Field>
@@ -104,15 +104,19 @@ export function RestaurantForm({
         <div className="grid gap-6 sm:grid-cols-2">
           {(
             [
-              ['hotline', 'Phone *', 'Enter phone number'],
-              ['taxCode', 'Tax code', 'Enter tax code'],
-              ['address', 'Address *', 'Street, district, city'],
+              ['hotline', 'Số điện thoại *', 'Nhập số điện thoại'],
+              ['taxCode', 'Mã số thuế', 'Nhập mã số thuế'],
+              [
+                'address',
+                'Địa chỉ *',
+                'Số nhà, đường, quận/huyện, tỉnh/thành phố',
+              ],
               [
                 'logoUrl',
-                'Logo URL',
+                'Đường dẫn logo',
                 'https://example.com/restaurant-logo.jpg',
               ],
-              ['timeZone', 'Time zone *', 'Asia/Ho_Chi_Minh'],
+              ['timeZone', 'Múi giờ *', 'Asia/Ho_Chi_Minh'],
             ] as const
           ).map(([key, label, placeholder]) => (
             <div
@@ -131,7 +135,7 @@ export function RestaurantForm({
               </Field>
               {key === 'logoUrl' && (
                 <p className="mt-2 text-xs text-slate-400">
-                  Paste an image link to preview your restaurant logo.
+                  Dán đường dẫn ảnh để xem trước logo nhà hàng.
                 </p>
               )}
             </div>
@@ -147,7 +151,7 @@ export function RestaurantForm({
           }
           error={
             errors.openingHours
-              ? 'Enter valid opening and closing times. Closing time must be after opening time on the same day.'
+              ? 'Nhập giờ mở và đóng cửa hợp lệ. Giờ đóng cửa phải sau giờ mở cửa trong cùng ngày.'
               : undefined
           }
         />
@@ -161,7 +165,7 @@ export function RestaurantForm({
         )}
         <div className="flex justify-end gap-3 border-t border-slate-100 pt-4">
           <button type="button" className={secondaryButton} onClick={onCancel}>
-            Cancel
+            Hủy
           </button>
           <button
             type="submit"
@@ -169,10 +173,10 @@ export function RestaurantForm({
             className={primaryButton}
           >
             {pending
-              ? 'Saving...'
+              ? 'Đang lưu…'
               : restaurant
-                ? 'Save changes'
-                : 'Create restaurant'}
+                ? 'Lưu thay đổi'
+                : 'Tạo nhà hàng'}
           </button>
         </div>
       </fieldset>

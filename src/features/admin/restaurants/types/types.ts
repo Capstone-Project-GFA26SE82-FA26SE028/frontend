@@ -13,3 +13,15 @@ export type RestaurantQuery = {
   pageSize: number
   search?: string
 }
+
+export type RestaurantResponse<T> = {
+  isSuccess: boolean
+  message?: string | null
+  result: T
+}
+export type RestaurantPage = {
+  items: Restaurant[]
+  totalCount: number
+  page: number
+  pageSize: number
+}

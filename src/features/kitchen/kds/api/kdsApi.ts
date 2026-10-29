@@ -38,7 +38,7 @@ export function kdsPollInterval(milliseconds: number) {
 async function get<T>(path: string, params?: object, signal?: AbortSignal) {
   const { data } = await axiosClient.get<Envelope<T>>(path, { params, signal })
   if (!data.isSuccess)
-    throw new Error(data.message || 'Unable to load kitchen data.')
+    throw new Error(data.message || 'Không thể tải dữ liệu bếp.')
   return data.result
 }
 
@@ -89,7 +89,7 @@ export const kdsApi = {
       { [action]: value, version: task.version },
     )
     if (!data.isSuccess)
-      throw new Error(data.message || 'Unable to update this item.')
+      throw new Error(data.message || 'Không thể cập nhật món này.')
     return data.result
   },
 }
@@ -97,14 +97,13 @@ export const kdsApi = {
 export function kdsError(error: unknown): string {
   if (axios.isAxiosError(error)) {
     if (error.response?.status === 409)
-      return 'This item has changed. Review the latest data before trying again.'
+      return 'Món này đã thay đổi. Vui lòng kiểm tra dữ liệu mới nhất trước khi thử lại.'
     if (error.response?.status === 403)
-      return 'You do not have permission to perform this action.'
-    if (!error.response)
-      return 'Unable to connect to the server. Please try again.'
+      return 'Bạn không có quyền thực hiện thao tác này.'
+    if (!error.response) return 'Không kết nối được máy chủ. Vui lòng thử lại.'
     return typeof error.response.data?.message === 'string'
       ? error.response.data.message
-      : 'Unable to process your request. Please try again.'
+      : 'Không thể xử lý yêu cầu. Vui lòng thử lại.'
   }
-  return error instanceof Error ? error.message : 'Something went wrong.'
+  return error instanceof Error ? error.message : 'Đã xảy ra lỗi.'
 }

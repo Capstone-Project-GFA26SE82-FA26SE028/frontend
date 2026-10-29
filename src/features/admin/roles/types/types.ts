@@ -21,3 +21,16 @@ export type RoleUserQuery = {
   roleId?: string
   isActive?: boolean
 }
+
+export type RoleResponse<T> = {
+  isSuccess: boolean
+  message?: string | null
+  result: T
+}
+
+export type RoleUserPage = {
+  items: RoleAccount[]
+  totalCount: number
+  page: number
+  pageSize: number
+}

@@ -3,14 +3,14 @@ import { NavLink } from 'react-router-dom'
 export function IngredientTabs() {
   return (
     <nav
-      aria-label="Ingredients and food cost"
+      aria-label="Nguyên liệu và giá vốn"
       className="mb-5 flex gap-1 overflow-x-auto rounded-xl border border-slate-200/70 bg-white p-1"
     >
       {[
-        ['ingredients', 'Ingredients'],
-        ['units', 'Units & Conversions'],
-        ['recipes', 'Recipes & BOM'],
-        ['food-cost', 'Food Cost'],
+        ['ingredients', 'Nguyên liệu'],
+        ['units', 'Đơn vị và quy đổi'],
+        ['recipes', 'Công thức và định mức'],
+        ['food-cost', 'Giá vốn món ăn'],
       ].map(([path, label]) => (
         <NavLink
           key={path}

@@ -45,7 +45,7 @@ export function CustomerSessionGate() {
       <div className="space-y-3 p-8 text-center">
         <p role="alert">{sessionError(resolved.error)}</p>
         <button className="btn-primary" onClick={() => void resolved.refetch()}>
-          Try again
+          Thử lại
         </button>
       </div>
     )
@@ -53,14 +53,14 @@ export function CustomerSessionGate() {
   if (incomingQr && resolved.isPending)
     return (
       <p role="status" className="p-8 text-center">
-        Checking table...
+        Đang kiểm tra bàn…
       </p>
     )
   if (!matchingTable) return <Navigate to={welcome} replace />
   if (access.isPending)
     return (
       <p role="status" className="p-8 text-center">
-        Checking table access...
+        Đang kiểm tra quyền truy cập bàn…
       </p>
     )
   if (access.isError) {
@@ -73,7 +73,7 @@ export function CustomerSessionGate() {
       <div className="space-y-3 p-8 text-center">
         <p role="alert">{sessionError(access.error)}</p>
         <button className="btn-primary" onClick={() => void access.refetch()}>
-          Try again
+          Thử lại
         </button>
       </div>
     )

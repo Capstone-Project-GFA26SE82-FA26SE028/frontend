@@ -37,16 +37,16 @@ export function MenuFilters({
       </div>
       <div className="my-5 flex justify-end">
         <label className="flex items-center gap-2 text-xs text-muted">
-          Sort by
+          Sắp xếp
           <select
-            aria-label="Sort menu"
+            aria-label="Sắp xếp thực đơn"
             value={sort}
             onChange={(e) => onSortChange(e.target.value)}
             className="min-h-11 rounded-lg bg-transparent font-semibold text-ink"
           >
-            <option value="default">Default</option>
-            <option value="asc">Price: low to high</option>
-            <option value="desc">Price: high to low</option>
+            <option value="default">Mặc định</option>
+            <option value="asc">Giá: thấp đến cao</option>
+            <option value="desc">Giá: cao đến thấp</option>
           </select>
         </label>
       </div>

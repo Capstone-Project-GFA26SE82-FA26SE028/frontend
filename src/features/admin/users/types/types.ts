@@ -51,15 +51,38 @@ export type UserAccount = {
   avatarUrl: string | null
 }
 export type UserRole = { roleId: string; roleName: string }
+export type UserResponse<T> = {
+  isSuccess: boolean
+  message?: string | null
+  result: T
+}
+export type UserDto = {
+  userId: string
+  userName: string
+  email: string
+  roleId: string
+  fullName: string | null
+  phoneNumber: string | null
+  avatarUrl: string | null
+  isActive: boolean
+  createdAt: string | null
+  updatedAt: string | null
+}
+export type UserPage = {
+  items: UserDto[]
+  totalCount: number
+  page: number
+  pageSize: number
+}
 export function userRoleLabel(roleId: string) {
   const labels: Record<string, string> = {
-    admin: 'System administrator',
-    manager: 'Restaurant manager',
-    waiter: 'Waiter',
-    cashier: 'Cashier',
-    kitchen: 'Kitchen staff',
-    inventory: 'Inventory manager',
-    supplier: 'Supplier',
+    admin: 'Quản trị viên hệ thống',
+    manager: 'Quản lý nhà hàng',
+    waiter: 'Nhân viên phục vụ',
+    cashier: 'Thu ngân',
+    kitchen: 'Nhân viên bếp',
+    inventory: 'Quản lý kho',
+    supplier: 'Nhà cung cấp',
   }
   return labels[roleId] || roleId
 }

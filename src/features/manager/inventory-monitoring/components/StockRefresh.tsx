@@ -14,17 +14,17 @@ export function StockRefresh({
     <div className="flex flex-wrap items-center justify-between gap-3">
       <p className="text-xs leading-5 text-slate-500">
         {updatedAt
-          ? `Last successful fetch: ${dateLabel(new Date(updatedAt).toISOString())} (UTC+7). `
+          ? `Lần tải thành công gần nhất: ${dateLabel(new Date(updatedAt).toISOString())} (UTC+7). `
           : ''}
-        Checks every 30 seconds while this page is open. This is the fetch time,
-        not the time of the last stock transaction.
+        Kiểm tra mỗi 30 giây khi trang đang mở. Đây là thời điểm tải dữ liệu,
+        không phải thời điểm giao dịch kho gần nhất.
       </p>
       <button
         className={secondaryButton}
         disabled={refreshing}
         onClick={refresh}
       >
-        {refreshing ? 'Refreshing…' : 'Refresh'}
+        {refreshing ? 'Đang làm mới…' : 'Làm mới'}
       </button>
     </div>
   )

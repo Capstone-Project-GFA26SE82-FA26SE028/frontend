@@ -44,9 +44,9 @@ export function PricesPage() {
   return (
     <>
       <PageHeading
-        eyebrow="Menu & Pricing"
-        title="Pricing"
-        description="Set standard prices and configure pricing by channel and time window."
+        eyebrow="Thực đơn và giá bán"
+        title="Giá bán"
+        description="Thiết lập giá tiêu chuẩn và cấu hình giá theo kênh bán, khung giờ."
         action={
           <div className="flex flex-wrap gap-2">
             <button
@@ -54,33 +54,33 @@ export function PricesPage() {
               onClick={() => setPreview(true)}
             >
               <Icon name="eye" size={18} />
-              Check applied price
+              Kiểm tra giá áp dụng
             </button>
             <button
               className={primaryButton}
               onClick={() => setForm({ mode: 'create' })}
             >
               <Icon name="plus" size={18} />
-              Add price
+              Thêm giá
             </button>
           </div>
         }
       />
       <MenuTabs />
       <div className="mb-5 rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">
-        <p className="font-semibold">Pricing priority</p>
+        <p className="font-semibold">Thứ tự ưu tiên giá</p>
         <p className="mt-1">
-          Time window + channel → Time window → Channel → Standard price.
+          Khung giờ + kênh → Khung giờ → Kênh → Giá tiêu chuẩn.
         </p>
         <p className="mt-1 text-emerald-800/80">
-          Standard prices apply to all channels throughout the day. All times
-          below use Vietnam time (UTC+7).
+          Giá tiêu chuẩn áp dụng cho mọi kênh trong cả ngày. Tất cả thời gian
+          bên dưới dùng giờ Việt Nam (UTC+7).
         </p>
       </div>
       <Panel>
         <div className="flex flex-wrap gap-3 border-b border-slate-100 p-4">
           <select
-            aria-label="Filter by item"
+            aria-label="Lọc theo món"
             className={`${fieldClass} sm:w-72`}
             value={itemId}
             onChange={(e) => {
@@ -88,7 +88,7 @@ export function PricesPage() {
               setPage(1)
             }}
           >
-            <option value="">All items</option>
+            <option value="">Tất cả món</option>
             {items.data?.map((item) => (
               <option key={item.itemId} value={item.itemId}>
                 {item.itemName}
@@ -96,7 +96,7 @@ export function PricesPage() {
             ))}
           </select>
           <select
-            aria-label="Filter by channel"
+            aria-label="Lọc theo kênh"
             className={`${fieldClass} sm:w-52`}
             value={channel}
             onChange={(e) => {
@@ -104,7 +104,7 @@ export function PricesPage() {
               setPage(1)
             }}
           >
-            <option value="">All channel configurations</option>
+            <option value="">Tất cả cấu hình kênh</option>
             {Object.entries(channels).map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
@@ -116,7 +116,7 @@ export function PricesPage() {
             onClick={() => void list.refetch()}
           >
             <Icon name="activity" size={16} />
-            Refresh
+            Làm mới
           </button>
         </div>
         <QueryState
@@ -129,12 +129,12 @@ export function PricesPage() {
             <table className={tableClass}>
               <thead className="bg-slate-50/70">
                 <tr>
-                  <th>Item / Sales channel</th>
-                  <th>Pricing</th>
-                  <th>Effective period</th>
-                  <th>Time window</th>
-                  <th>Status</th>
-                  <th className="text-right">Actions</th>
+                  <th>Món / Kênh bán</th>
+                  <th>Giá bán</th>
+                  <th>Thời gian hiệu lực</th>
+                  <th>Khung giờ</th>
+                  <th>Trạng thái</th>
+                  <th className="text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -157,20 +157,28 @@ export function PricesPage() {
                         {formatCurrency(price.amount)}
                       </td>
                       <td className="whitespace-nowrap text-xs leading-6">
-                        <p>From {dateLabel(price.effectiveFrom)}</p>
+                        <p>Từ {dateLabel(price.effectiveFrom)}</p>
                         <p className="text-slate-400">
                           {price.effectiveTo
-                            ? `Until ${dateLabel(price.effectiveTo)}`
-                            : 'No end date'}
+                            ? `Đến ${dateLabel(price.effectiveTo)}`
+                            : 'Không có ngày kết thúc'}
                         </p>
                       </td>
                       <td className="whitespace-nowrap">
                         {price.dailyStart
                           ? `${price.dailyStart.slice(0, 5)} – ${price.dailyEnd?.slice(0, 5)}`
-                          : 'All day'}
+                          : 'Cả ngày'}
                       </td>
                       <td>
-                        <Badge tone={state.tone}>{state.label}</Badge>
+                        <Badge tone={state.tone}>
+                          {
+                            {
+                              Scheduled: 'Đã lên lịch',
+                              Ended: 'Đã kết thúc',
+                              Effective: 'Đang hiệu lực',
+                            }[state.label]
+                          }
+                        </Badge>
                       </td>
                       <td>
                         <div className="flex justify-end gap-2">
@@ -180,11 +188,11 @@ export function PricesPage() {
                                 className={secondaryButton}
                                 onClick={() => setForm({ mode: 'edit', price })}
                               >
-                                Edit
+                                Sửa
                               </button>
                               <button
                                 className={`${secondaryButton} text-rose-600`}
-                                aria-label={`Delete price ${name(price.itemId)}`}
+                                aria-label={`Xóa giá của ${name(price.itemId)}`}
                                 onClick={() => setDeleting(price)}
                               >
                                 <Icon name="trash" size={16} />
@@ -197,11 +205,11 @@ export function PricesPage() {
                                 setForm({ mode: 'replace', price })
                               }
                             >
-                              Replace price
+                              Thay giá
                             </button>
                           ) : (
                             <span className="text-xs text-slate-400">
-                              Saved in history
+                              Đã lưu trong lịch sử
                             </span>
                           )}
                         </div>
@@ -214,7 +222,7 @@ export function PricesPage() {
           </div>
         </QueryState>
         <Pagination
-          locale="en"
+          locale="vi"
           total={list.data?.totalCount || 0}
           page={page}
           size={10}
@@ -223,13 +231,13 @@ export function PricesPage() {
       </Panel>
       {form && (
         <Modal
-          closeLabel="Close"
+          closeLabel="Đóng"
           title={
             form.mode === 'create'
-              ? 'Add price'
+              ? 'Thêm giá'
               : form.mode === 'edit'
-                ? 'Edit scheduled price'
-                : 'Replace current price'
+                ? 'Sửa giá đã lên lịch'
+                : 'Thay giá hiện tại'
           }
           onClose={() => {
             if (!mutation.isPending) setForm(null)
@@ -268,11 +276,11 @@ export function PricesPage() {
       )}
       {deleting && (
         <ConfirmAction
-          confirmLabel="Confirm"
-          cancelLabel="Cancel"
-          closeLabel="Close"
-          title="Delete scheduled price?"
-          description={`Delete the ${formatCurrency(deleting.amount)} price for “${name(deleting.itemId)}”? Only prices that have not taken effect can be deleted.`}
+          confirmLabel="Xác nhận"
+          cancelLabel="Hủy"
+          closeLabel="Đóng"
+          title="Xóa giá đã lên lịch?"
+          description={`Xóa giá ${formatCurrency(deleting.amount)} của “${name(deleting.itemId)}”? Chỉ có thể xóa giá chưa có hiệu lực.`}
           disabled={mutation.isPending}
           onClose={() => {
             if (!mutation.isPending) setDeleting(null)
@@ -287,8 +295,8 @@ export function PricesPage() {
       )}
       {preview && (
         <Modal
-          closeLabel="Close"
-          title="Check applied price"
+          closeLabel="Đóng"
+          title="Kiểm tra giá áp dụng"
           onClose={() => setPreview(false)}
         >
           <QueryState

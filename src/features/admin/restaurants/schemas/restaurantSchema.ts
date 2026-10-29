@@ -1,16 +1,16 @@
 import { z } from 'zod'
 const time = z
   .string()
-  .regex(/^([01][0-9]|2[0-3]):[0-5][0-9]$/, 'Use HH:mm format.')
+  .regex(/^([01][0-9]|2[0-3]):[0-5][0-9]$/, 'Sử dụng định dạng HH:mm.')
 export const restaurantSchema = z
   .object({
     restaurantName: z
       .string()
       .trim()
-      .min(1, 'Enter the restaurant name.')
+      .min(1, 'Vui lòng nhập tên nhà hàng.')
       .max(255),
-    address: z.string().trim().min(1, 'Enter the address.').max(500),
-    hotline: z.string().trim().min(1, 'Enter the hotline.').max(20),
+    address: z.string().trim().min(1, 'Vui lòng nhập địa chỉ.').max(500),
+    hotline: z.string().trim().min(1, 'Vui lòng nhập số điện thoại.').max(20),
     taxCode: z.string().trim().max(50),
     logoUrl: z
       .string()
@@ -18,9 +18,9 @@ export const restaurantSchema = z
       .max(2048)
       .refine(
         (v) => !v || (z.url().safeParse(v).success && /^https?:\/\//i.test(v)),
-        'Enter an HTTP or HTTPS image URL.',
+        'Nhập đường dẫn ảnh HTTP hoặc HTTPS hợp lệ.',
       ),
-    timeZone: z.string().trim().min(1, 'Enter a time zone.').max(100),
+    timeZone: z.string().trim().min(1, 'Vui lòng nhập múi giờ.').max(100),
     openingHours: z
       .array(
         z
@@ -31,7 +31,7 @@ export const restaurantSchema = z
           })
           .refine((v) => v.openAt < v.closeAt, {
             path: ['closeAt'],
-            message: 'Closing time must be after opening time on the same day.',
+            message: 'Giờ đóng cửa phải sau giờ mở cửa trong cùng ngày.',
           }),
       )
       .max(7),
@@ -43,7 +43,7 @@ export const restaurantSchema = z
         ctx.addIssue({
           code: 'custom',
           path: ['openingHours', i, 'dayOfWeek'],
-          message: 'This day is already listed.',
+          message: 'Ngày này đã được chọn.',
         })
       days.add(h.dayOfWeek)
     })

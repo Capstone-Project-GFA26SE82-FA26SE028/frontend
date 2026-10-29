@@ -19,7 +19,7 @@ export function ProtectedRoute() {
   if (status === 'checking')
     return (
       <p role="status" className="p-8 text-center">
-        Checking your session…
+        Đang kiểm tra phiên đăng nhập…
       </p>
     )
   if (status === 'error')
@@ -27,10 +27,10 @@ export function ProtectedRoute() {
       <main className="mx-auto max-w-lg space-y-4 p-8">
         <p role="alert">{error}</p>
         <button className="btn-primary" onClick={() => void restoreSession()}>
-          Try again
+          Thử lại
         </button>
         <button className="btn-secondary" onClick={clearSession}>
-          Back to sign in
+          Quay lại đăng nhập
         </button>
       </main>
     )

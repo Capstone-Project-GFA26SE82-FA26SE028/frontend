@@ -113,11 +113,10 @@ export function RecipeForm({
       }}
     >
       <p className="rounded-xl bg-emerald-50 p-3 text-sm leading-6 text-emerald-800">
-        Quantities are for one portion. Saving creates a new version and
-        preserves historical ingredient usage. Conversion factors are verified
-        and stored by the server.
+        Số lượng tính cho một phần ăn. Khi lưu sẽ tạo phiên bản mới và giữ lịch
+        sử sử dụng nguyên liệu. Hệ số quy đổi được máy chủ kiểm tra và lưu lại.
       </p>
-      <Field label="Effective from (UTC+7) *">
+      <Field label="Có hiệu lực từ (UTC+7) *">
         <input
           name="effectiveFrom"
           type="datetime-local"
@@ -159,9 +158,9 @@ export function RecipeForm({
           ])
         }
       >
-        Add ingredient
+        Thêm nguyên liệu
       </button>
-      <Field label="Preparation instructions">
+      <Field label="Hướng dẫn chế biến">
         <textarea
           name="instructions"
           rows={4}
@@ -170,11 +169,11 @@ export function RecipeForm({
         />
       </Field>
       <div className="space-y-3">
-        <h3 className="font-semibold">Preparation resources</h3>
+        <h3 className="font-semibold">Tài liệu chế biến</h3>
         {media.map((entry, index) => (
           <div key={index} className="flex flex-wrap gap-2">
             <select
-              aria-label={`Resource ${index + 1} type`}
+              aria-label={`Loại tài liệu ${index + 1}`}
               className={`${fieldClass} sm:w-32`}
               value={entry.mediaType}
               onChange={(event) =>
@@ -187,14 +186,14 @@ export function RecipeForm({
                 )
               }
             >
-              <option value="image">Image</option>
+              <option value="image">Hình ảnh</option>
               <option value="video">Video</option>
               {!['image', 'video'].includes(entry.mediaType) && (
                 <option value={entry.mediaType}>{entry.mediaType}</option>
               )}
             </select>
             <input
-              aria-label={`Resource ${index + 1} URL`}
+              aria-label={`Đường dẫn tài liệu ${index + 1}`}
               required
               type="url"
               maxLength={2048}
@@ -216,7 +215,7 @@ export function RecipeForm({
                 setMedia((rows) => rows.filter((_, i) => i !== index))
               }
             >
-              Remove
+              Xóa
             </button>
           </div>
         ))}
@@ -235,7 +234,7 @@ export function RecipeForm({
             ])
           }
         >
-          Add resource
+          Thêm tài liệu
         </button>
       </div>
       {error && (

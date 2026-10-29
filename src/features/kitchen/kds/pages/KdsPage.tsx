@@ -47,8 +47,8 @@ export function KdsPage() {
       />
       <div className="mt-[18px] flex flex-wrap items-center justify-between gap-3 text-sm text-[#475569] [&>span]:flex [&>span]:items-center [&>span]:gap-[7px]">
         <span>
-          <Icon name="shield" size={14} /> Manage individual dishes ·
-          Automatically check ingredients when cooking starts
+          <Icon name="shield" size={14} /> Quản lý từng món · Tự động kiểm tra
+          nguyên liệu khi bắt đầu nấu
         </span>
       </div>
       {m.notice && (

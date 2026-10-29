@@ -20,25 +20,25 @@ export function HistoryFilters({
 }) {
   return (
     <div className="grid gap-3 sm:grid-cols-[2fr_1fr_1fr]">
-      <Field label="Ingredient">
+      <Field label="Nguyên liệu">
         <select
           value={ingredientId}
           onChange={(event) => select(event.target.value)}
           className={fieldClass}
         >
-          <option value="">Select an ingredient</option>
+          <option value="">Chọn nguyên liệu</option>
           {ingredients.map((ingredient) => (
             <option
               key={ingredient.ingredientId}
               value={ingredient.ingredientId}
             >
               {ingredient.ingredientName} ({ingredient.baseUnit})
-              {!ingredient.isActive ? ' · Inactive' : ''}
+              {!ingredient.isActive ? ' · Ngừng hoạt động' : ''}
             </option>
           ))}
         </select>
       </Field>
-      <Field label="From date (UTC+7)">
+      <Field label="Từ ngày (UTC+7)">
         <input
           type="date"
           value={from}
@@ -47,7 +47,7 @@ export function HistoryFilters({
           className={fieldClass}
         />
       </Field>
-      <Field label="Until date (UTC+7)">
+      <Field label="Đến ngày (UTC+7)">
         <input
           type="date"
           value={until}

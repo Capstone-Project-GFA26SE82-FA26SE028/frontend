@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { initialUsersState } from './data/mockUsers'
-import type { UsersState, AdminUser } from './types'
+import type { UsersState, AdminUser } from './types/types'
 export function userRuleError(state: UsersState, user: AdminUser): string {
   if (
     state.users.some(

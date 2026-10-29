@@ -12,8 +12,8 @@ export function CheckoutOrderReview({
   return (
     <div className="panel p-6">
       <div className="mb-5 rounded-2xl bg-mint p-4 text-sm text-brand">
-        <strong>{tableCode ? 'Table ' + tableCode : 'Your table'}</strong>
-        <p className="mt-1">Review your dishes, options and kitchen notes.</p>
+        <strong>{tableCode ? 'Bàn ' + tableCode : 'Bàn của bạn'}</strong>
+        <p className="mt-1">Kiểm tra món, tùy chọn và ghi chú cho bếp.</p>
       </div>
       {cart.items.map((line, index) => {
         const quote = quotedItem(cart, line)
@@ -24,7 +24,7 @@ export function CheckoutOrderReview({
           >
             <div>
               <p className="font-semibold">
-                {line.quantity} x {quote?.name || 'Unavailable dish'}
+                {line.quantity} x {quote?.name || 'Món không còn phục vụ'}
               </p>
               {quote?.options.map((o) => (
                 <p key={o.optionId} className="mt-1 text-xs text-muted">
@@ -39,13 +39,13 @@ export function CheckoutOrderReview({
             <span className="shrink-0 text-sm">
               {quote
                 ? formatCurrency(quotedUnitPrice(quote) * line.quantity)
-                : 'Unavailable'}
+                : 'Không khả dụng'}
             </span>
           </div>
         )
       })}
       <Link to="/cart" className="btn-secondary mt-6">
-        Edit cart
+        Sửa giỏ hàng
       </Link>
     </div>
   )

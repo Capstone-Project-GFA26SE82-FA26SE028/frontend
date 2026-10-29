@@ -33,7 +33,7 @@ export function IngredientForm({
         })
       }}
     >
-      <Field label="Ingredient name *">
+      <Field label="Tên nguyên liệu *">
         <input
           name="name"
           required
@@ -43,7 +43,7 @@ export function IngredientForm({
           className={fieldClass}
         />
       </Field>
-      <Field label="Base unit *">
+      <Field label="Đơn vị cơ sở *">
         <select
           name="unit"
           disabled={Boolean(ingredient)}
@@ -52,7 +52,7 @@ export function IngredientForm({
           className={fieldClass}
         >
           <option value="" disabled>
-            Select a unit
+            Chọn đơn vị
           </option>
           {ingredient &&
             !units.some((unit) => unit.code === ingredient.baseUnit) && (
@@ -66,10 +66,10 @@ export function IngredientForm({
         </select>
       </Field>
       <p className="text-xs leading-5 text-slate-500">
-        The base unit cannot be changed after creation. Stock and recipe
-        quantities use this unit.
+        Không thể đổi đơn vị cơ sở sau khi tạo. Số lượng tồn kho và công thức sử
+        dụng đơn vị này.
       </p>
-      <Field label="Low-stock threshold *">
+      <Field label="Ngưỡng cảnh báo tồn kho *">
         <input
           type="number"
           name="threshold"
@@ -83,8 +83,8 @@ export function IngredientForm({
       </Field>
       {!ingredient && (
         <p className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800">
-          New ingredients start with zero stock. Stock changes are recorded
-          through inventory transactions.
+          Nguyên liệu mới có tồn kho bằng 0. Thay đổi tồn kho được ghi nhận qua
+          các giao dịch kho.
         </p>
       )}
       <MutationError error={mutation.error} />

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { fieldClass, secondaryButton } from '../../components/AdminUI'
 import { Icon } from '../../../../components/Icon/Icon'
-import type { SessionRole, SessionCounts, SessionStatus } from '../types'
+import type { SessionRole, SessionCounts, SessionStatus } from '../types/types'
 export function SessionFilters({
   search,
   status,
@@ -39,22 +39,22 @@ export function SessionFilters({
   const activeFilters = [role, date, device, mine].filter(Boolean).length
   const hasFilters = !!(search || status || activeFilters)
   const tabs = [
-    { value: '', label: 'All', count: counts?.all, color: '' },
+    { value: '', label: 'Tất cả', count: counts?.all, color: '' },
     {
       value: 'active',
-      label: 'Active',
+      label: 'Đang hoạt động',
       count: counts?.active,
       color: 'bg-emerald-500',
     },
     {
       value: 'expired',
-      label: 'Expired',
+      label: 'Đã hết hạn',
       count: counts?.expired,
       color: 'bg-amber-500',
     },
     {
       value: 'revoked',
-      label: 'Revoked',
+      label: 'Đã thu hồi',
       count: counts?.revoked,
       color: 'bg-slate-400',
     },
@@ -64,7 +64,7 @@ export function SessionFilters({
       <div className="flex min-w-0 flex-col gap-3 p-4 xl:flex-row xl:items-center xl:justify-between">
         <div
           role="group"
-          aria-label="Filter session status"
+          aria-label="Lọc trạng thái phiên"
           className="flex min-w-0 gap-2 overflow-x-auto py-1"
         >
           {tabs.map((item) => (
@@ -102,7 +102,7 @@ export function SessionFilters({
         </div>
         <div className="flex min-w-0 items-center gap-2 xl:ml-auto xl:w-[min(45%,460px)]">
           <label className="relative block min-w-0 flex-1">
-            <span className="sr-only">Search username or email</span>
+            <span className="sr-only">Tìm tên đăng nhập hoặc email</span>
             <Icon
               name="search"
               size={18}
@@ -113,7 +113,7 @@ export function SessionFilters({
               maxLength={255}
               value={search}
               onChange={(event) => onSearch(event.target.value)}
-              placeholder="Search username or email…"
+              placeholder="Tìm tên đăng nhập hoặc email…"
               className={`${fieldClass} pl-10`}
             />
           </label>
@@ -127,7 +127,7 @@ export function SessionFilters({
             onClick={() => setMoreFilters(!moreFilters)}
           >
             <Icon name="settings" size={16} />
-            Filters
+            Bộ lọc
             {activeFilters > 0 && (
               <span className="rounded-full bg-emerald-100 px-1.5 text-xs text-emerald-800">
                 {activeFilters}
@@ -140,7 +140,7 @@ export function SessionFilters({
               onClick={onReset}
               className="min-h-11 shrink-0 px-2 text-sm font-medium text-slate-600 hover:text-emerald-700"
             >
-              Reset
+              Đặt lại
             </button>
           )}
         </div>
@@ -151,12 +151,12 @@ export function SessionFilters({
           className="flex flex-wrap items-center gap-3 border-t border-slate-100 bg-slate-50/60 px-4 py-3"
         >
           <select
-            aria-label="Role"
+            aria-label="Vai trò"
             value={role}
             onChange={(event) => onRole(event.target.value)}
             className={`${fieldClass} sm:w-40 sm:shrink-0`}
           >
-            <option value="">All roles</option>
+            <option value="">Tất cả vai trò</option>
             {roles.map((item) => (
               <option key={item.roleId} value={item.roleId}>
                 {item.roleName}
@@ -164,7 +164,7 @@ export function SessionFilters({
             ))}
           </select>
           <input
-            aria-label="Login date"
+            aria-label="Ngày đăng nhập"
             type="date"
             max="9999-12-31"
             value={date}
@@ -172,12 +172,12 @@ export function SessionFilters({
             className={`${fieldClass} sm:w-40 sm:shrink-0`}
           />
           <select
-            aria-label="Device"
+            aria-label="Thiết bị"
             value={device}
             onChange={(event) => onDevice(event.target.value)}
             className={`${fieldClass} sm:w-48`}
           >
-            <option value="">All devices</option>
+            <option value="">Tất cả thiết bị</option>
             {['Desktop', 'Mobile', 'Tablet', 'Unknown'].map((item) => (
               <option key={item} value={item}>
                 {item}
@@ -191,7 +191,7 @@ export function SessionFilters({
               onChange={(event) => onMine(event.target.checked)}
               className="size-4 accent-emerald-700"
             />
-            My sessions
+            Phiên của tôi
           </label>
         </div>
       )}

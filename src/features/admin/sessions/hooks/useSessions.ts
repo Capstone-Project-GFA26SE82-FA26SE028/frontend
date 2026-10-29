@@ -14,7 +14,11 @@ import {
   revokeSession,
   sessionApiError,
 } from '../api/sessionApi'
-import { sessionStatus, type LoginSession, type SessionStatus } from '../types'
+import {
+  sessionStatus,
+  type LoginSession,
+  type SessionStatus,
+} from '../types/types'
 
 const pageSize = 10
 export function useSessions() {
@@ -115,10 +119,10 @@ export function useSessions() {
         target.userSessionId === auth?.sessionId
       setTarget(null)
       if (endsCurrent) {
-        toast.success('Signed out successfully.')
+        toast.success('Đã đăng xuất thành công.')
         clearSession()
       } else {
-        toast.success('Session revoked successfully.')
+        toast.success('Đã thu hồi phiên đăng nhập.')
         await client.invalidateQueries({ queryKey: ['sessions'] })
       }
     } catch (failure) {

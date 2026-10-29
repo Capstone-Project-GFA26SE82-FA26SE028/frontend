@@ -7,13 +7,13 @@ export function CustomerTableInfo() {
     <div className="flex flex-wrap items-center justify-between gap-2 py-5 text-xs">
       <div className="flex items-center gap-2 text-muted">
         <Icon name="pin" size={16} />
-        <span>Your table</span>
+        <span>Bàn của bạn</span>
         <span className="mx-1 text-stone-300">/</span>
-        <strong className="text-brand">Table {table.tableCode}</strong>
+        <strong className="text-brand">Bàn {table.tableCode}</strong>
       </div>
       <span className="flex items-center gap-2 rounded-full bg-mint px-3 py-1.5 text-brand">
         <span className="size-1.5 rounded-full bg-brand" />
-        Dine-in menu
+        Thực đơn tại bàn
       </span>
     </div>
   )

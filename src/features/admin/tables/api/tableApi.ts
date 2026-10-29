@@ -1,29 +1,10 @@
 import axios from 'axios'
-import { z } from 'zod'
 import { axiosClient } from '../../../../api/axiosClient'
-import type { Table } from '../types'
+import type { Table, TableResponse, TablePage } from '../types/types'
 import type { TableValues } from '../schemas/tableSchema'
-const schema: z.ZodType<Table> = z.object({
-  tableId: z.string(),
-  areaId: z.string(),
-  tableCode: z.string(),
-  capacity: z.number(),
-  positionX: z.number().nullable(),
-  positionY: z.number().nullable(),
-  version: z.string(),
-  isActive: z.boolean(),
-  cleaningStatus: z.string(),
-})
-function result<T>(data: unknown, shape: z.ZodType<T>) {
-  const e = z
-    .object({
-      isSuccess: z.boolean(),
-      message: z.string().optional(),
-      result: z.unknown(),
-    })
-    .parse(data)
-  if (!e.isSuccess) throw new Error(e.message || 'Request failed.')
-  return shape.parse(e.result)
+function result<T>(e: TableResponse<T>): T {
+  if (!e.isSuccess) throw new Error(e.message || 'Yêu cầu không thành công.')
+  return e.result
 }
 export async function getTables(
   params: {
@@ -36,22 +17,20 @@ export async function getTables(
   },
   signal?: AbortSignal,
 ) {
-  const { data } = await axiosClient.get('/tables', { params, signal })
-  return result(
-    data,
-    z.object({
-      items: z.array(schema),
-      totalCount: z.number(),
-      page: z.number(),
-      pageSize: z.number(),
-    }),
-  )
-}
-export async function getTable(id: string, signal?: AbortSignal) {
-  const { data } = await axiosClient.get('/tables/' + encodeURIComponent(id), {
+  const { data } = await axiosClient.get<TableResponse<TablePage>>('/tables', {
+    params,
     signal,
   })
-  return result(data, schema)
+  return result(data)
+}
+export async function getTable(id: string, signal?: AbortSignal) {
+  const { data } = await axiosClient.get<TableResponse<Table>>(
+    '/tables/' + encodeURIComponent(id),
+    {
+      signal,
+    },
+  )
+  return result(data)
 }
 export type TableAction =
   | { kind: 'save'; values: TableValues; id?: string }
@@ -61,44 +40,42 @@ export type TableAction =
 export async function updateTable(a: TableAction) {
   if (a.kind === 'save') {
     const { data } = a.id
-      ? await axiosClient.put('/tables/' + encodeURIComponent(a.id), a.values)
-      : await axiosClient.post('/tables', a.values)
-    return result(data, schema)
+      ? await axiosClient.put<TableResponse<Table>>(
+          '/tables/' + encodeURIComponent(a.id),
+          a.values,
+        )
+      : await axiosClient.post<TableResponse<Table>>('/tables', a.values)
+    return result(data)
   }
   const url = '/tables/' + encodeURIComponent(a.id)
   if (a.kind === 'delete') {
-    const { data } = await axiosClient.delete(url, {
+    const { data } = await axiosClient.delete<TableResponse<unknown>>(url, {
       params: { version: a.version },
     })
-    result(data, z.unknown())
+    result(data)
     return null
   }
   const { data } =
     a.kind === 'move'
-      ? await axiosClient.patch(url + '/area', {
+      ? await axiosClient.patch<TableResponse<Table>>(url + '/area', {
           areaId: a.areaId,
           version: a.version,
         })
-      : await axiosClient.patch(url + '/status', {
+      : await axiosClient.patch<TableResponse<Table>>(url + '/status', {
           isActive: a.isActive,
           version: a.version,
         })
-  return result(data, schema)
+  return result(data)
 }
 export function tableError(e: unknown) {
   if (axios.isAxiosError(e)) {
-    if (!e.response) return 'Unable to connect to the server.'
-    if (e.response.status >= 500)
-      return 'The table service is temporarily unavailable.'
+    if (!e.response) return 'Không kết nối được máy chủ.'
+    if (e.response.status >= 500) return 'Dịch vụ bàn đang gián đoạn.'
     return typeof e.response.data?.message === 'string'
       ? e.response.data.message
-      : 'Unable to complete the request.'
+      : 'Không thể hoàn tất yêu cầu.'
   }
-  return e instanceof z.ZodError
-    ? 'Unexpected server response.'
-    : e instanceof Error
-      ? e.message
-      : 'Unable to complete the request.'
+  return e instanceof Error ? e.message : 'Không thể hoàn tất yêu cầu.'
 }
 export function isTableVersionConflict(e: unknown) {
   if (!axios.isAxiosError(e) || e.response?.status !== 409) return false

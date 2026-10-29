@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { tableSchema, type TableValues } from '../schemas/tableSchema'
-import type { Table } from '../types'
-import type { Area } from '../../areas/types'
-import type { Restaurant } from '../../restaurants/types'
+import type { Table } from '../types/types'
+import type { Area } from '../../areas/types/types'
+import type { Restaurant } from '../../restaurants/types/types'
 import {
   Field,
   fieldClass,
@@ -82,7 +82,7 @@ export function TableForm({
         className="min-w-0 space-y-5"
       >
         <div className="grid gap-4 rounded-2xl bg-emerald-50 p-4 sm:grid-cols-2">
-          <Field label="Restaurant *">
+          <Field label="Nhà hàng *">
             <select
               className={fieldClass}
               required
@@ -93,7 +93,7 @@ export function TableForm({
                 setValue('areaId', '', { shouldDirty: true })
               }}
             >
-              <option value="">Select restaurant</option>
+              <option value="">Chọn nhà hàng</option>
               {restaurants.map((r) => (
                 <option key={r.restaurantId} value={r.restaurantId}>
                   {r.restaurantName}
@@ -101,9 +101,9 @@ export function TableForm({
               ))}
             </select>
           </Field>
-          <Field label="Area *" error={errors.areaId?.message}>
+          <Field label="Khu vực *" error={errors.areaId?.message}>
             <select className={fieldClass} {...register('areaId')}>
-              <option value="">Select active area</option>
+              <option value="">Chọn khu vực đang hoạt động</option>
               {areas
                 .filter(
                   (a) =>
@@ -124,15 +124,15 @@ export function TableForm({
           </Field>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Table code *" error={errors.tableCode?.message}>
+          <Field label="Mã bàn *" error={errors.tableCode?.message}>
             <input
               className={fieldClass}
               maxLength={50}
-              placeholder="e.g. T01"
+              placeholder="Ví dụ: B01"
               {...register('tableCode')}
             />
           </Field>
-          <Field label="Capacity *" error={errors.capacity?.message}>
+          <Field label="Sức chứa *" error={errors.capacity?.message}>
             <input
               type="number"
               min={1}
@@ -149,8 +149,8 @@ export function TableForm({
               key={key}
               label={
                 key === 'positionX'
-                  ? 'Position X (optional)'
-                  : 'Position Y (optional)'
+                  ? 'Tọa độ X (không bắt buộc)'
+                  : 'Tọa độ Y (không bắt buộc)'
               }
               error={errors[key]?.message}
             >
@@ -182,13 +182,13 @@ export function TableForm({
             className={secondaryButton + ' justify-center'}
             onClick={onClose}
           >
-            Cancel
+            Hủy
           </button>
           <button
             className={primaryButton + ' justify-center'}
             disabled={!!table && !isDirty}
           >
-            {pending ? 'Saving...' : table ? 'Save changes' : 'Create table'}
+            {pending ? 'Đang lưu…' : table ? 'Lưu thay đổi' : 'Tạo bàn'}
           </button>
         </div>
       </fieldset>

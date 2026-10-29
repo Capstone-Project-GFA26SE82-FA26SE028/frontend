@@ -1,6 +1,6 @@
 import { fieldClass, secondaryButton } from '../../components/AdminUI'
-import type { Area } from '../../areas/types'
-import type { Restaurant } from '../../restaurants/types'
+import type { Area } from '../../areas/types/types'
+import type { Restaurant } from '../../restaurants/types/types'
 export function TableFilters({
   search,
   restaurantId,
@@ -28,11 +28,11 @@ export function TableFilters({
 }) {
   return (
     <div className="mb-5 flex flex-wrap items-center gap-3 rounded-2xl border border-slate-100 bg-white p-4">
-      <div className="flex gap-1" role="group" aria-label="Table status">
+      <div className="flex gap-1" role="group" aria-label="Trạng thái bàn">
         {[
-          ['', 'All'],
-          ['true', 'Active'],
-          ['false', 'Inactive'],
+          ['', 'Tất cả'],
+          ['true', 'Đang hoạt động'],
+          ['false', 'Ngừng hoạt động'],
         ].map(([v, label]) => (
           <button
             key={v}
@@ -51,19 +51,19 @@ export function TableFilters({
       </div>
       <input
         className={fieldClass + ' min-w-0 sm:ml-auto sm:!w-52'}
-        aria-label="Search tables"
-        placeholder="Search table code..."
+        aria-label="Tìm bàn"
+        placeholder="Tìm mã bàn…"
         maxLength={255}
         value={search}
         onChange={(e) => onSearch(e.target.value)}
       />
       <select
-        aria-label="Filter by restaurant"
+        aria-label="Lọc theo nhà hàng"
         className={fieldClass + ' sm:!w-48'}
         value={restaurantId}
         onChange={(e) => onRestaurant(e.target.value)}
       >
-        <option value="">All restaurants</option>
+        <option value="">Tất cả nhà hàng</option>
         {restaurants.map((r) => (
           <option key={r.restaurantId} value={r.restaurantId}>
             {r.restaurantName}
@@ -71,12 +71,12 @@ export function TableFilters({
         ))}
       </select>
       <select
-        aria-label="Filter by area"
+        aria-label="Lọc theo khu vực"
         className={fieldClass + ' sm:!w-44'}
         value={areaId}
         onChange={(e) => onArea(e.target.value)}
       >
-        <option value="">All areas</option>
+        <option value="">Tất cả khu vực</option>
         {areas
           .filter((a) => !restaurantId || a.restaurantId === restaurantId)
           .map((a) => (
@@ -86,7 +86,7 @@ export function TableFilters({
           ))}
       </select>
       <button className={secondaryButton} onClick={onReset}>
-        Reset
+        Đặt lại
       </button>
     </div>
   )

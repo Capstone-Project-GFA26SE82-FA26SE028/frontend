@@ -61,36 +61,36 @@ export function KdsColumn({
             </span>
             <strong>
               {isFiltered
-                ? 'No matching dishes'
+                ? 'Không có món phù hợp'
                 : column.status === 'Pending'
-                  ? 'All dishes accepted'
+                  ? 'Đã xử lý hết món đang chờ'
                   : column.status === 'Hold'
                     ? 'Không có món tạm hoãn'
                     : column.status === 'Cooking'
-                      ? 'Kitchen ready'
-                      : 'No completed dishes yet'}
+                      ? 'Bếp sẵn sàng'
+                      : 'Chưa có món hoàn thành'}
             </strong>
             <p>
               {isFiltered
-                ? 'Try another search or filter.'
+                ? 'Thử tìm kiếm hoặc bộ lọc khác.'
                 : column.status === 'Hold'
                   ? 'Món đang giữ sẽ xuất hiện tại đây.'
                   : column.status === 'Ready'
-                    ? 'Completed dishes will appear here.'
-                    : 'Upcoming dishes will appear here.'}
+                    ? 'Món đã hoàn thành sẽ xuất hiện tại đây.'
+                    : 'Món mới sẽ xuất hiện tại đây.'}
             </p>
           </div>
         )}
       </div>
       <div className="mx-[13px] flex justify-between border-t border-black/[0.025] px-0.5 py-3 text-sm text-[#475569] [&>span:last-child]:text-sm  ">
         <span>
-          {items.length} orders ·{' '}
+          {items.length} đơn ·{' '}
           {items.reduce(
             (n, order) =>
               n + order.lines.reduce((sum, t) => sum + t.quantity, 0),
             0,
           )}{' '}
-          servings
+          phần
         </span>
         <span>{column.title}</span>
       </div>

@@ -25,15 +25,15 @@ export function AdminLayout() {
     const before = document.title
     const page =
       {
-        '/admin/sessions': 'Login sessions',
-        '/admin/restaurants': 'Restaurants',
-        '/admin/areas': 'Restaurant Areas',
-        '/admin/tables': 'Tables',
+        '/admin/sessions': 'Phiên đăng nhập',
+        '/admin/restaurants': 'Nhà hàng',
+        '/admin/areas': 'Khu vực nhà hàng',
+        '/admin/tables': 'Bàn',
         '/admin/tax-fees': 'VAT & phí dịch vụ',
         '/admin/payment-methods': 'Phương thức thanh toán',
-        '/admin/users': 'User accounts',
+        '/admin/users': 'Tài khoản người dùng',
         '/admin/activity': 'Nhật ký hoạt động',
-        '/admin/roles': 'Roles & permissions',
+        '/admin/roles': 'Vai trò và quyền hạn',
         '/admin/health': 'Giám sát dịch vụ',
       }[pathname] || 'Tổng quan'
     document.title = `FoodHub · ${page}`

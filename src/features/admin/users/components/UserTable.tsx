@@ -1,6 +1,6 @@
 import { Badge, EmptyState } from '../../components/AdminUI'
 import { UserAvatar } from './UserAvatar'
-import { userRoleLabel, type UserAccount } from '../types'
+import { userRoleLabel, type UserAccount } from '../types/types'
 import { UserActions, type UserActionHandlers } from './UserActions'
 const roleColors: Record<string, string> = {
   Admin: 'border-blue-200 bg-blue-100 text-blue-900',
@@ -34,7 +34,10 @@ export function UserTable({
   visible: UserAccount[]
 }) {
   return !visible.length ? (
-    <EmptyState title="No users found" description="Try changing your search or filters." />
+    <EmptyState
+      title="Không tìm thấy người dùng"
+      description="Thử thay đổi nội dung tìm kiếm hoặc bộ lọc."
+    />
   ) : (
     <>
       <div className="hidden overflow-x-auto md:block">
@@ -42,11 +45,11 @@ export function UserTable({
           <thead className="border-y border-slate-200 bg-slate-50 text-sm text-slate-600">
             <tr>
               {[
-                'User',
-                'Role',
-                'Username',
-                'Status',
-                'Actions',
+                'Người dùng',
+                'Vai trò',
+                'Tên đăng nhập',
+                'Trạng thái',
+                'Thao tác',
               ].map((h) => (
                 <th key={h} scope="col" className="px-5 py-3.5 font-semibold">
                   {h}
@@ -75,7 +78,7 @@ export function UserTable({
                 <td className="px-5 text-slate-500">{u.userName}</td>
                 <td className="px-5">
                   <Badge tone={u.active ? 'green' : 'red'}>
-                    {u.active ? 'Active' : 'Inactive'}
+                    {u.active ? 'Đang hoạt động' : 'Đã vô hiệu hóa'}
                   </Badge>
                 </td>
                 <td className="px-3">
@@ -105,7 +108,7 @@ export function UserTable({
                 </p>
               </div>
               <Badge tone={u.active ? 'green' : 'red'}>
-                {u.active ? 'Active' : 'Inactive'}
+                {u.active ? 'Đang hoạt động' : 'Đã vô hiệu hóa'}
               </Badge>
             </div>
             <p className="text-sm text-slate-500">

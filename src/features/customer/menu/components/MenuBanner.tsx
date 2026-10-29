@@ -4,18 +4,18 @@ export function MenuBanner() {
     <section className="relative isolate flex items-center justify-between overflow-hidden rounded-3xl bg-brand-dark p-6 text-white sm:p-9">
       <div className="relative z-10">
         <p className="text-xs font-semibold tracking-wider text-lime-200">
-          MADE FOR YOUR TABLE
+          DÀNH CHO BÀN CỦA BẠN
         </p>
         <h1 className="mt-3 text-3xl font-semibold leading-tight sm:text-4xl">
-          Good food.
+          Món ngon.
           <br />
-          Great company.
+          Trọn niềm vui.
         </h1>
         <a
           href="#thuc-don"
           className="mt-5 inline-flex min-h-11 items-center gap-3 rounded-full bg-[#e1edc7] px-5 text-sm font-bold text-brand-dark"
         >
-          Explore the menu
+          Xem thực đơn
           <Icon name="arrow" size={16} />
         </a>
       </div>

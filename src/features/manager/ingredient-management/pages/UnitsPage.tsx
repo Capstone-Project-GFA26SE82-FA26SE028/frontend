@@ -33,12 +33,12 @@ export function UnitsPage() {
   return (
     <>
       <PageHeading
-        eyebrow="Ingredients & Food Cost"
-        title="Units & Conversions"
-        description="Define measurement units and ingredient-specific conversion factors."
+        eyebrow="Nguyên liệu và giá vốn"
+        title="Đơn vị và quy đổi"
+        description="Thiết lập đơn vị đo và hệ số quy đổi riêng cho từng nguyên liệu."
         action={
           <button className={primaryButton} onClick={() => setCreate(true)}>
-            Add unit
+            Thêm đơn vị
           </button>
         }
       />
@@ -46,9 +46,9 @@ export function UnitsPage() {
       <div className="grid gap-5 xl:grid-cols-[1fr_1.5fr]">
         <Panel>
           <div className="border-b border-slate-100 p-4">
-            <h2 className="font-semibold">Measurement units</h2>
+            <h2 className="font-semibold">Đơn vị đo</h2>
             <p className="mt-1 text-sm text-slate-500">
-              Shared units for ingredients and recipes.
+              Đơn vị dùng chung cho nguyên liệu và công thức.
             </p>
           </div>
           <QueryState
@@ -61,8 +61,8 @@ export function UnitsPage() {
               <table className={tableClass}>
                 <thead className="bg-slate-50">
                   <tr>
-                    <th>Code</th>
-                    <th>Name</th>
+                    <th>Mã</th>
+                    <th>Tên</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -79,14 +79,14 @@ export function UnitsPage() {
         </Panel>
         <Panel>
           <div className="space-y-3 border-b border-slate-100 p-4">
-            <h2 className="font-semibold">Ingredient conversions</h2>
+            <h2 className="font-semibold">Quy đổi nguyên liệu</h2>
             <QueryState
               pending={ingredients.isPending}
               error={ingredients.error}
               retry={() => void ingredients.refetch()}
             >
               <select
-                aria-label="Select ingredient for conversions"
+                aria-label="Chọn nguyên liệu để quy đổi"
                 value={ingredientId}
                 className={fieldClass}
                 onChange={(event) =>
@@ -97,11 +97,11 @@ export function UnitsPage() {
                   )
                 }
               >
-                <option value="">Select an ingredient</option>
+                <option value="">Chọn nguyên liệu</option>
                 {ingredients.data?.map((i) => (
                   <option key={i.ingredientId} value={i.ingredientId}>
                     {i.ingredientName} ({i.baseUnit})
-                    {!i.isActive ? ' · Inactive' : ''}
+                    {!i.isActive ? ' · Ngừng hoạt động' : ''}
                   </option>
                 ))}
               </select>
@@ -109,14 +109,14 @@ export function UnitsPage() {
             {selected && (
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-sm text-slate-500">
-                  Base unit: <strong>{selected.baseUnit}</strong>
+                  Đơn vị cơ sở: <strong>{selected.baseUnit}</strong>
                 </p>
                 <button
                   className={primaryButton}
                   disabled={!units.data?.length}
                   onClick={() => setConversion(true)}
                 >
-                  Set conversion
+                  Thiết lập quy đổi
                 </button>
               </div>
             )}
@@ -132,8 +132,8 @@ export function UnitsPage() {
                 <table className={tableClass}>
                   <thead className="bg-slate-50">
                     <tr>
-                      <th>Unit</th>
-                      <th>Conversion</th>
+                      <th>Đơn vị</th>
+                      <th>Quy đổi</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -157,15 +157,15 @@ export function UnitsPage() {
             </QueryState>
           ) : (
             <p className="p-8 text-center text-sm text-slate-500">
-              Choose an ingredient to view its conversion factors.
+              Chọn nguyên liệu để xem hệ số quy đổi.
             </p>
           )}
         </Panel>
       </div>
       {create && (
         <Modal
-          title="Add measurement unit"
-          closeLabel="Close"
+          title="Thêm đơn vị đo"
+          closeLabel="Đóng"
           onClose={() => {
             if (!mutation.isPending) setCreate(false)
           }}
@@ -185,23 +185,23 @@ export function UnitsPage() {
               })
             }}
           >
-            <Field label="Unit code *">
+            <Field label="Mã đơn vị *">
               <input
                 name="code"
                 autoFocus
                 required
                 pattern="[A-Za-z0-9_]+"
                 maxLength={50}
-                placeholder="e.g. kg"
+                placeholder="Ví dụ: kg"
                 className={fieldClass}
               />
             </Field>
-            <Field label="Unit name *">
+            <Field label="Tên đơn vị *">
               <input
                 name="name"
                 required
                 maxLength={100}
-                placeholder="e.g. Kilogram"
+                placeholder="Ví dụ: Kilôgam"
                 className={fieldClass}
               />
             </Field>
@@ -215,8 +215,8 @@ export function UnitsPage() {
       )}
       {conversion && selected && (
         <Modal
-          title="Set unit conversion"
-          closeLabel="Close"
+          title="Thiết lập quy đổi đơn vị"
+          closeLabel="Đóng"
           onClose={() => setConversion(false)}
         >
           <ConversionForm

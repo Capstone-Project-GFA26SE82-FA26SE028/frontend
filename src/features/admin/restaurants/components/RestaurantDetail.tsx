@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Icon } from '../../../../components/Icon/Icon'
-import type { Restaurant } from '../types'
+import type { Restaurant } from '../types/types'
 import { primaryButton, secondaryButton } from '../../components/AdminUI'
-const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+const dayNames = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'CN']
 function formatDays(indices: number[]) {
-  if (indices.length === 7) return 'Every day'
+  if (indices.length === 7) return 'Hằng ngày'
   const parts: string[] = []
   for (let i = 0; i < indices.length; i++) {
     const start = indices[i]
@@ -32,7 +32,7 @@ export function RestaurantDetail({
     const hour = restaurant.openingHours.find(
       (h) => h.dayOfWeek === (index + 1) % 7,
     )
-    const time = hour ? hour.openAt + ' - ' + hour.closeAt : 'Not configured'
+    const time = hour ? hour.openAt + ' - ' + hour.closeAt : 'Chưa thiết lập'
     const group = schedules.find((schedule) => schedule.time === time)
     if (group) group.days.push(index)
     else schedules.push({ days: [index], time })
@@ -58,10 +58,10 @@ export function RestaurantDetail({
       </div>
       <dl className="space-y-4 rounded-2xl bg-slate-50 p-5">
         {[
-          ['Phone', restaurant.hotline],
-          ['Tax code', restaurant.taxCode],
-          ['Time zone', restaurant.timeZone],
-          ['Address', restaurant.address],
+          ['Số điện thoại', restaurant.hotline],
+          ['Mã số thuế', restaurant.taxCode],
+          ['Múi giờ', restaurant.timeZone],
+          ['Địa chỉ', restaurant.address],
         ].map(([label, value]) => (
           <div
             key={label}
@@ -69,7 +69,7 @@ export function RestaurantDetail({
           >
             <dt className="text-slate-500">{label}</dt>
             <dd className="break-words text-right font-medium text-slate-700">
-              {value || 'Not provided'}
+              {value || 'Chưa cung cấp'}
             </dd>
           </div>
         ))}
@@ -77,7 +77,7 @@ export function RestaurantDetail({
       <section className="rounded-2xl bg-slate-50 p-5">
         <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-700">
           <Icon name="clock" size={18} />
-          Opening hours
+          Giờ mở cửa
         </h3>
         <dl className="divide-y divide-slate-200/60 border-t border-slate-200/60">
           {schedules.map((schedule) => (
@@ -96,13 +96,13 @@ export function RestaurantDetail({
       <div className="grid grid-cols-2 gap-3">
         <button className={primaryButton + ' justify-center'} onClick={onEdit}>
           <Icon name="edit" size={18} />
-          Edit
+          Sửa
         </button>
         <button
           className={secondaryButton + ' justify-center bg-slate-50'}
           onClick={onClose}
         >
-          Close
+          Đóng
         </button>
       </div>
     </div>

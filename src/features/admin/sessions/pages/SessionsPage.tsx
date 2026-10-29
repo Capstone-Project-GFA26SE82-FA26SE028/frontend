@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { LoginSession } from '../types'
+import type { LoginSession } from '../types/types'
 import { SessionDetailModal } from '../components/SessionDetailModal'
 import { SessionFilters } from '../components/SessionFilters'
 import { SessionTable } from '../components/SessionTable'
@@ -20,14 +20,14 @@ export function SessionsPage() {
   return (
     <>
       <PageHeading
-        title="Login sessions"
-        description="Review sign-in activity and manage your own sessions."
+        title="Phiên đăng nhập"
+        description="Xem hoạt động đăng nhập và quản lý các phiên của bạn."
         action={
           <button
             className={secondaryButton}
             onClick={() => management.openRevoke('all')}
           >
-            Sign out all my sessions
+            Đăng xuất mọi phiên của tôi
           </button>
         }
       />
@@ -36,7 +36,7 @@ export function SessionsPage() {
           role="alert"
           className="mb-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-800"
         >
-          Some filters or session counts could not be loaded.{' '}
+          Không thể tải một số bộ lọc hoặc số lượng phiên.{' '}
           <button
             className="underline"
             onClick={() => {
@@ -44,7 +44,7 @@ export function SessionsPage() {
               void roles.refetch()
             }}
           >
-            Try again
+            Thử lại
           </button>
         </div>
       )}
@@ -68,7 +68,7 @@ export function SessionsPage() {
         />
         {sessions.isPending ? (
           <p role="status" className="p-8 text-center text-slate-500">
-            Loading sessions…
+            Đang tải phiên đăng nhập…
           </p>
         ) : sessions.isError ? (
           <div className="space-y-3 p-8 text-center">
@@ -79,14 +79,14 @@ export function SessionsPage() {
               className={secondaryButton}
               onClick={() => void sessions.refetch()}
             >
-              Try again
+              Thử lại
             </button>
           </div>
         ) : (
           <>
             {sessions.isFetching && (
               <p role="status" className="sr-only">
-                Refreshing sessions…
+                Đang cập nhật phiên đăng nhập…
               </p>
             )}
             <fieldset
@@ -100,7 +100,7 @@ export function SessionsPage() {
                 onDetail={setDetail}
               />
               <Pagination
-                locale="en"
+                locale="vi"
                 size={management.pageSize}
                 total={management.total}
                 page={management.page}

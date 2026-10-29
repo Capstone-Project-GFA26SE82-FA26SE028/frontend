@@ -5,7 +5,7 @@ import usersReducer, {
 } from '../features/admin/users/usersSlice'
 import { usersStorageSchema } from '../features/admin/users/schemas/userSchema'
 import { initialUsersState } from '../features/admin/users/data/mockUsers'
-import type { UsersState } from '../features/admin/users/types'
+import type { UsersState } from '../features/admin/users/types/types'
 
 // Keep the stored snapshot and selectors compatible while features own their code.
 export const adminStorageKey = 'foodhub-admin-preview-v1'

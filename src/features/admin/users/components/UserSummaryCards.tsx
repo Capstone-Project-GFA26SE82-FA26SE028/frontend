@@ -16,28 +16,28 @@ export function UserSummaryCards({
       <SummaryCards
         items={[
           {
-            label: 'Total users',
+            label: 'Tổng người dùng',
             value: totals?.all ?? '—',
             icon: 'users',
-            note: 'All accounts',
+            note: 'Tất cả tài khoản',
           },
           {
-            label: 'Active accounts',
+            label: 'Tài khoản hoạt động',
             value: totals?.active ?? '—',
             icon: 'check',
-            note: 'Enabled accounts',
+            note: 'Tài khoản đang được kích hoạt',
           },
           {
-            label: 'Inactive accounts',
+            label: 'Tài khoản vô hiệu hóa',
             value: totals?.locked ?? '—',
             icon: 'shield',
-            note: 'Account history retained',
+            note: 'Lịch sử tài khoản được giữ lại',
           },
           {
-            label: 'Administrators',
+            label: 'Quản trị viên',
             value: adminCount ?? '—',
             icon: 'settings',
-            note: 'Active administrators',
+            note: 'Quản trị viên đang hoạt động',
           },
         ]}
       />
@@ -46,9 +46,9 @@ export function UserSummaryCards({
           role="alert"
           className="mb-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-900"
         >
-          Unable to load account statistics.{' '}
+          Không thể tải thống kê tài khoản.{' '}
           <button className="underline" onClick={onRetry}>
-            Try again
+            Thử lại
           </button>
         </div>
       )}

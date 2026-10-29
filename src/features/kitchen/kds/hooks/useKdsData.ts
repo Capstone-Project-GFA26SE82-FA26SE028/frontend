@@ -41,7 +41,7 @@ export function useKdsData(): KdsContextValue {
     : stations.data?.[0]?.kitchenStationId || ''
   const area =
     stations.data?.find((s) => s.kitchenStationId === stationId)
-      ?.kitchenStationName || 'Kitchen'
+      ?.kitchenStationName || 'Bếp'
   const stationTasks = (tasks.data || []).filter(
     (t) => t.kitchenStationId === stationId,
   )
@@ -69,17 +69,15 @@ export function useKdsData(): KdsContextValue {
       if (command.type === 'transition') {
         const task = stationTasks.find((t) => t.kitchenTaskId === command.id)
         if (!task || !task.version)
-          throw new Error('Reload this dish before updating it.')
+          throw new Error('Tải lại món này trước khi cập nhật.')
         await kdsApi.update(task, 'status', command.status)
       } else {
-        throw new Error(
-          'This operation is not available through the current Kitchen API.',
-        )
+        throw new Error('API bếp hiện chưa hỗ trợ thao tác này.')
       }
       // Cancel older polling responses before fetching the committed server state.
       await client.cancelQueries({ queryKey: key })
       await client.invalidateQueries({ queryKey: key })
-      setFeedback({ error: false, text: 'Updated successfully.' })
+      setFeedback({ error: false, text: 'Đã cập nhật thành công.' })
       return true
     } catch (error) {
       setFeedback({ error: true, text: kdsError(error) })

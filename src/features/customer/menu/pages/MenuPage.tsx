@@ -25,18 +25,18 @@ export function MenuPage() {
         />
         {m.catalogue.isError && m.list.isSuccess && (
           <p role="alert" className="mb-4 text-sm text-amber-800">
-            Categories could not be loaded.{' '}
+            Không thể tải danh mục món.{' '}
             <button
               className="underline"
               onClick={() => void m.catalogue.refetch()}
             >
-              Try again
+              Thử lại
             </button>
           </p>
         )}
         {m.list.isPending ? (
           <p role="status" className="panel py-12 text-center">
-            Loading menu...
+            Đang tải thực đơn…
           </p>
         ) : m.list.isError ? (
           <div className="panel space-y-4 p-8 text-center">
@@ -47,13 +47,13 @@ export function MenuPage() {
               className="btn-secondary"
               onClick={() => void m.list.refetch()}
             >
-              Try again
+              Thử lại
             </button>
           </div>
         ) : (
           <>
             <p role="status" className="mb-4 text-sm text-muted">
-              {m.items.length} dishes{m.list.isFetching ? ' - Updating...' : ''}
+              {m.items.length} món{m.list.isFetching ? ' - Đang cập nhật…' : ''}
             </p>
             {m.items.length ? (
               <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
@@ -68,9 +68,9 @@ export function MenuPage() {
             ) : (
               <div className="panel py-16 text-center">
                 <Icon name="search" className="mx-auto text-brand" size={36} />
-                <h3 className="mt-4 text-xl font-bold">No dishes found</h3>
+                <h3 className="mt-4 text-xl font-bold">Không tìm thấy món</h3>
                 <p className="mt-2 text-sm text-muted">
-                  Try another name or category.
+                  Thử tên món hoặc danh mục khác.
                 </p>
                 <button
                   className="btn-secondary mt-5"
@@ -79,7 +79,7 @@ export function MenuPage() {
                     m.setCategory('')
                   }}
                 >
-                  Clear filters
+                  Xóa bộ lọc
                 </button>
               </div>
             )}
@@ -92,7 +92,7 @@ export function MenuPage() {
           sessionId={m.sessionId}
           itemId={selected}
           onClose={() => setSelected(null)}
-          onAdded={() => setNotice('Added to your cart.')}
+          onAdded={() => setNotice('Đã thêm vào giỏ hàng.')}
         />
       )}
       {notice && (
@@ -103,7 +103,7 @@ export function MenuPage() {
           <Icon name="check" />
           <span>{notice}</span>
           <button
-            aria-label="Close notification"
+            aria-label="Đóng thông báo"
             onClick={() => setNotice('')}
             className="ml-auto flex size-11 shrink-0 items-center justify-center"
           >

@@ -26,7 +26,7 @@ export function RecipeIngredientRow({
     <div className="space-y-2 rounded-xl border border-slate-200 p-3">
       <div className="grid items-end gap-3 sm:grid-cols-[2fr_1fr_1fr_auto]">
         <label className="space-y-1 text-sm">
-          <span>Ingredient {index + 1} *</span>
+          <span>Nguyên liệu {index + 1} *</span>
           <select
             required
             className={fieldClass}
@@ -40,7 +40,7 @@ export function RecipeIngredientRow({
             }
           >
             <option value="" disabled>
-              Select ingredient
+              Chọn nguyên liệu
             </option>
             {ingredients
               .filter(
@@ -53,13 +53,13 @@ export function RecipeIngredientRow({
                   value={i.ingredientId}
                 >
                   {i.ingredientName}
-                  {!i.isActive ? ' · Inactive' : ''}
+                  {!i.isActive ? ' · Ngừng hoạt động' : ''}
                 </option>
               ))}
           </select>
         </label>
         <label className="space-y-1 text-sm">
-          <span>Unit *</span>
+          <span>Đơn vị *</span>
           <select
             required
             disabled={!line.ingredientRef || conversions.isPending}
@@ -71,8 +71,8 @@ export function RecipeIngredientRow({
           >
             <option value="" disabled>
               {line.ingredientRef && conversions.isPending
-                ? 'Loading…'
-                : 'Select unit'}
+                ? 'Đang tải…'
+                : 'Chọn đơn vị'}
             </option>
             {allowed.map((unit) => (
               <option key={unit.unitId} value={unit.unitId}>
@@ -82,7 +82,7 @@ export function RecipeIngredientRow({
           </select>
         </label>
         <label className="space-y-1 text-sm">
-          <span>Quantity *</span>
+          <span>Số lượng *</span>
           <input
             required
             type="number"
@@ -98,11 +98,11 @@ export function RecipeIngredientRow({
         </label>
         <button
           type="button"
-          aria-label={`Remove ingredient ${index + 1}`}
+          aria-label={`Xóa nguyên liệu ${index + 1}`}
           className={secondaryButton}
           onClick={remove}
         >
-          Remove
+          Xóa
         </button>
       </div>
       {line.ingredientRef && conversions.isError && (
@@ -113,14 +113,14 @@ export function RecipeIngredientRow({
             className="underline"
             onClick={() => void conversions.refetch()}
           >
-            Retry
+            Thử lại
           </button>
         </p>
       )}
       {line.ingredientRef && conversions.isSuccess && !allowed.length && (
         <p className="text-xs text-amber-700">
-          No usable units. Register the base unit or configure a conversion in
-          Units & Conversions.
+          Chưa có đơn vị phù hợp. Đăng ký đơn vị cơ sở hoặc cấu hình quy đổi
+          trong Đơn vị và quy đổi.
         </p>
       )}
     </div>

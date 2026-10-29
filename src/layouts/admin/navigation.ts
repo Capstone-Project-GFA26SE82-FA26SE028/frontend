@@ -7,55 +7,55 @@ export const adminNavigation: {
   title: string
   items: AdminNavigationItem[]
 }[] = [
-  { title: '', items: [{ id: 'overview', label: 'Overview', icon: 'home' }] },
+  { title: '', items: [{ id: 'overview', label: 'Tổng quan', icon: 'home' }] },
   {
-    title: 'ACCOUNT MANAGEMENT',
+    title: 'QUẢN LÝ TÀI KHOẢN',
     items: [
-      { id: 'users', label: 'User accounts', icon: 'users' },
-      { id: 'roles', label: 'Roles & permissions', icon: 'shield' },
+      { id: 'users', label: 'Tài khoản người dùng', icon: 'users' },
+      { id: 'roles', label: 'Vai trò và quyền hạn', icon: 'shield' },
       {
         id: 'sessions',
-        label: 'Login sessions',
+        label: 'Phiên đăng nhập',
         icon: 'monitor',
       },
     ],
   },
   {
-    title: 'RESTAURANT MANAGEMENT',
+    title: 'QUẢN LÝ NHÀ HÀNG',
     items: [
       {
         id: 'restaurants',
-        label: 'Restaurants',
+        label: 'Nhà hàng',
         icon: 'store',
       },
-      { id: 'areas', label: 'Restaurant areas', icon: 'grid' },
+      { id: 'areas', label: 'Khu vực nhà hàng', icon: 'grid' },
       {
         id: 'tables',
-        label: 'Tables',
+        label: 'Bàn',
         icon: 'utensils',
       },
     ],
   },
   {
-    title: 'CONFIGURATION',
+    title: 'CẤU HÌNH',
     items: [
       {
         id: 'tax-fees',
-        label: 'VAT & service charges',
+        label: 'Thuế VAT và phí dịch vụ',
         icon: 'coin',
       },
       {
         id: 'payment-methods',
-        label: 'Payment methods',
+        label: 'Phương thức thanh toán',
         icon: 'receipt',
       },
     ],
   },
   {
-    title: 'SYSTEM',
+    title: 'HỆ THỐNG',
     items: [
-      { id: 'activity', label: 'Activity log', icon: 'clipboard' },
-      { id: 'health', label: 'System monitoring', icon: 'activity' },
+      { id: 'activity', label: 'Nhật ký hoạt động', icon: 'clipboard' },
+      { id: 'health', label: 'Giám sát hệ thống', icon: 'activity' },
     ],
   },
 ]

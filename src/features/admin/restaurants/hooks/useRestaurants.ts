@@ -55,7 +55,7 @@ export function useRestaurants() {
       client.setQueryData(['restaurants', 'detail', saved.restaurantId], saved)
       void client.invalidateQueries({ queryKey: ['restaurants', 'list'] })
       setTarget(null)
-      toast.success('Restaurant saved successfully.')
+      toast.success('Đã lưu thông tin nhà hàng.')
     },
   })
   function changePage(value: number) {

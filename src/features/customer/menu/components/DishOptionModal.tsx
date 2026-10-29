@@ -30,15 +30,15 @@ export function DishOptionModal({
   })
   return (
     <Modal
-      title="Dish details"
-      closeLabel="Close"
+      title="Chi tiết món"
+      closeLabel="Đóng"
       onClose={() => {
         if (!pending) onClose()
       }}
     >
       {detail.isPending ? (
         <p role="status" className="p-8">
-          Loading dish...
+          Đang tải món…
         </p>
       ) : detail.isError ? (
         <div className="space-y-4 p-6">
@@ -49,7 +49,7 @@ export function DishOptionModal({
             className="btn-secondary"
             onClick={() => void detail.refetch()}
           >
-            Try again
+            Thử lại
           </button>
         </div>
       ) : (
@@ -152,16 +152,14 @@ function DishOptionsForm({
             </p>
           )}
           <p className="mt-3 text-lg font-semibold text-brand">
-            {dish.price === null
-              ? 'Price unavailable'
-              : formatCurrency(dish.price)}
+            {dish.price === null ? 'Chưa có giá' : formatCurrency(dish.price)}
           </p>
           {!available && (
             <p
               role="status"
               className="mt-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-800"
             >
-              {dish.unavailableReason || 'This dish is currently unavailable.'}
+              {dish.unavailableReason || 'Món này hiện không phục vụ.'}
             </p>
           )}
         </div>
@@ -210,13 +208,13 @@ function DishOptionsForm({
                     <span className="flex-1">
                       {o.optionName}
                       {!o.canSelect && (
-                        <span className="ml-2 text-xs">Unavailable</span>
+                        <span className="ml-2 text-xs">Không khả dụng</span>
                       )}
                     </span>
                     <span>
                       {o.extraPrice > 0
                         ? '+' + formatCurrency(o.extraPrice)
-                        : 'Included'}
+                        : 'Đã bao gồm'}
                     </span>
                   </label>
                 )
@@ -225,15 +223,15 @@ function DishOptionsForm({
           </fieldset>
         ))}
         <label className="block text-sm font-semibold" htmlFor="dish-note">
-          Kitchen note{' '}
-          <span className="font-normal text-muted">(optional)</span>
+          Ghi chú cho bếp{' '}
+          <span className="font-normal text-muted">(không bắt buộc)</span>
           <textarea
             id="dish-note"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             maxLength={300}
             rows={2}
-            placeholder="Any preferences?"
+            placeholder="Bạn có yêu cầu gì thêm không?"
             className="field mt-2 resize-none font-normal"
           />
         </label>
@@ -252,13 +250,13 @@ function DishOptionsForm({
               })
             }}
           >
-            Reload cart
+            Tải lại giỏ hàng
           </button>
         )}
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center rounded-xl border border-stone-200">
             <button
-              aria-label="Decrease quantity"
+              aria-label="Giảm số lượng"
               disabled={quantity === 1 || cart.pending}
               onClick={() => setQuantity((q) => q - 1)}
               className="flex size-12 items-center justify-center"
@@ -267,7 +265,7 @@ function DishOptionsForm({
             </button>
             <span className="w-6 text-center font-semibold">{quantity}</span>
             <button
-              aria-label="Increase quantity"
+              aria-label="Tăng số lượng"
               disabled={quantity === 20 || cart.pending}
               onClick={() => setQuantity((q) => q + 1)}
               className="flex size-12 items-center justify-center"
@@ -288,10 +286,10 @@ function DishOptionsForm({
             onClick={() => void add()}
           >
             {cart.pending
-              ? 'Adding...'
+              ? 'Đang thêm…'
               : available
-                ? 'Add - ' + formatCurrency(unitPrice * quantity)
-                : 'Unavailable'}
+                ? 'Thêm món - ' + formatCurrency(unitPrice * quantity)
+                : 'Không khả dụng'}
           </button>
         </div>
       </div>

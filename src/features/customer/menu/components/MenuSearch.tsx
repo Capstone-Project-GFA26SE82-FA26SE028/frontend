@@ -8,7 +8,7 @@ export function MenuSearch({
 }) {
   return (
     <label className="relative block w-full">
-      <span className="sr-only">Search dishes</span>
+      <span className="sr-only">Tìm món</span>
       <Icon
         name="search"
         className="pointer-events-none absolute top-3.5 left-4 text-muted"
@@ -18,7 +18,7 @@ export function MenuSearch({
         maxLength={255}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search dishes..."
+        placeholder="Tìm món ăn…"
         className="field pl-11"
       />
     </label>

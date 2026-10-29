@@ -1,6 +1,6 @@
 import { Panel, EmptyState } from '../../components/AdminUI'
 import { roleColor } from '../roleStyles'
-import type { SystemRole } from '../types'
+import type { SystemRole } from '../types/types'
 
 export function RoleTable({
   roles,
@@ -17,7 +17,7 @@ export function RoleTable({
         <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="border-y border-slate-200 bg-slate-50 text-slate-600">
             <tr>
-              {['Role', 'Description', 'Accounts'].map((label) => (
+              {['Vai trò', 'Mô tả', 'Tài khoản'].map((label) => (
                 <th
                   key={label}
                   scope="col"
@@ -48,11 +48,11 @@ export function RoleTable({
                   </p>
                 </td>
                 <td className="px-5 py-4 leading-6 text-slate-600">
-                  {item.description || 'No description provided.'}
+                  {item.description || 'Chưa có mô tả.'}
                 </td>
                 <td className="w-40 px-5 py-4">
                   <button
-                    aria-label={'View accounts with role ' + item.roleName}
+                    aria-label={'Xem tài khoản có vai trò ' + item.roleName}
                     onClick={() => onViewUsers(item.roleId)}
                     className="inline-flex min-h-10 min-w-12 items-center justify-center rounded-lg bg-emerald-50 px-3 font-semibold text-emerald-700 hover:bg-emerald-100"
                   >
@@ -66,8 +66,8 @@ export function RoleTable({
       </div>
       {!roles.length && (
         <EmptyState
-          title="No roles found"
-          description="No system roles are available."
+          title="Không tìm thấy vai trò"
+          description="Chưa có vai trò hệ thống."
         />
       )}
     </Panel>

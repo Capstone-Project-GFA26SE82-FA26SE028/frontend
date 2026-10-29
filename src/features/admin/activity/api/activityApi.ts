@@ -1,68 +1,51 @@
 import axios from 'axios'
-import { z } from 'zod'
 import { axiosClient } from '../../../../api/axiosClient'
-import type { ActivityLog, ActivityQuery } from '../types'
-const logSchema: z.ZodType<ActivityLog> = z.object({
-  auditLogId: z.string(),
-  userId: z.string().nullable(),
-  action: z.string().nullable(),
-  entityName: z.string().nullable(),
-  entityId: z.string().nullable(),
-  oldValue: z.string().nullable(),
-  newValue: z.string().nullable(),
-  ipAddress: z.string().nullable(),
-  createdAt: z.string().datetime({ offset: true }),
-})
-const pageSchema = z.object({
-  items: z.array(logSchema),
-  totalCount: z.number().int().nonnegative(),
-  page: z.number().int().positive(),
-  pageSize: z.number().int().positive(),
-})
+import type {
+  ActivityQuery,
+  ActivityUser,
+  ActivityResponse,
+  ActivityPage,
+} from '../types/types'
 export async function getActivityLogs(
   params: ActivityQuery,
   signal?: AbortSignal,
 ) {
-  const { data } = await axiosClient.get('/audit-logs', { params, signal })
-  const envelope = z
-    .object({ isSuccess: z.boolean(), result: z.unknown() })
-    .parse(data)
-  if (!envelope.isSuccess) throw new Error('Unable to load activity logs.')
-  return pageSchema.parse(envelope.result)
+  const { data } = await axiosClient.get<ActivityResponse<ActivityPage>>(
+    '/audit-logs',
+    { params, signal },
+  )
+  const envelope = data
+  if (!envelope.isSuccess) throw new Error('Không thể tải nhật ký hoạt động.')
+  return envelope.result
 }
 export function activityApiError(error: unknown): string {
   if (axios.isAxiosError(error)) {
     const status = error.response?.status
-    if (!status) return 'Unable to connect to the server. Please try again.'
-    if (status === 401) return 'Your session has expired. Please sign in again.'
-    if (status === 403)
-      return 'You do not have permission to view activity logs.'
-    if (status === 429) return 'Too many requests. Please try again shortly.'
-    if (status >= 500) return 'The activity service is temporarily unavailable.'
-    return 'Unable to load activity logs. Please check the filter and try again.'
+    if (!status) return 'Không kết nối được máy chủ. Vui lòng thử lại.'
+    if (status === 401)
+      return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.'
+    if (status === 403) return 'Bạn không có quyền xem nhật ký hoạt động.'
+    if (status === 429)
+      return 'Có quá nhiều yêu cầu. Vui lòng thử lại sau ít phút.'
+    if (status >= 500) return 'Dịch vụ nhật ký hoạt động đang gián đoạn.'
+    return 'Không thể tải nhật ký hoạt động. Vui lòng kiểm tra bộ lọc và thử lại.'
   }
-  if (error instanceof z.ZodError)
-    return 'The server returned an unexpected response.'
   return error instanceof Error
     ? error.message
-    : 'Unable to load activity logs.'
+    : 'Không thể tải nhật ký hoạt động.'
 }
 
-const activityUserSchema = z.object({
-  userId: z.string(),
-  userName: z.string(),
-  fullName: z.string().nullable(),
-  avatarUrl: z.string().nullable(),
-  email: z.string(),
-})
 export async function getActivityUser(id: string, signal?: AbortSignal) {
   try {
-    const { data } = await axiosClient.get('/users/' + encodeURIComponent(id), {
-      signal,
-    })
-    const response = z
-      .object({ isSuccess: z.literal(true), result: activityUserSchema })
-      .parse(data)
+    const { data } = await axiosClient.get<ActivityResponse<ActivityUser>>(
+      '/users/' + encodeURIComponent(id),
+      {
+        signal,
+      },
+    )
+    const response = data
+    if (!response.isSuccess)
+      throw new Error('Không thể tải thông tin người dùng.')
     return response.result
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) return null

@@ -52,9 +52,9 @@ export function StockHistoryPage() {
   return (
     <>
       <PageHeading
-        eyebrow="Inventory Monitoring"
-        title="Movements & Lots"
-        description="Review recorded stock transactions and receipt lots for each ingredient."
+        eyebrow="Theo dõi kho"
+        title="Biến động và lô hàng"
+        description="Xem giao dịch kho và các lô nhập của từng nguyên liệu."
       />
       <InventoryTabs />
       <Panel className="mb-5 p-4">
@@ -85,13 +85,13 @@ export function StockHistoryPage() {
           />
         </QueryState>
         <p className="mt-3 text-xs text-slate-400">
-          Date filters apply to movements only. All quantities use the selected
-          ingredient's base unit.
+          Bộ lọc ngày chỉ áp dụng cho biến động kho. Mọi số lượng đều dùng đơn
+          vị cơ sở của nguyên liệu đã chọn.
         </p>
       </Panel>
       {!ingredient ? (
         <Panel className="p-12 text-center text-sm text-slate-500">
-          Select an ingredient to inspect stock movements and lots.
+          Chọn nguyên liệu để xem biến động kho và lô hàng.
         </Panel>
       ) : (
         <>
@@ -102,13 +102,13 @@ export function StockHistoryPage() {
                   {ingredient.ingredientName}
                 </h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  Current stock:{' '}
+                  Tồn kho hiện tại:{' '}
                   {ingredient.stockQuantity.toLocaleString('en-GB')}{' '}
                   {ingredient.baseUnit}
                 </p>
               </div>
               <Badge tone={ingredient.isActive ? 'green' : 'slate'}>
-                {ingredient.isActive ? 'Active' : 'Inactive'}
+                {ingredient.isActive ? 'Đang hoạt động' : 'Ngừng hoạt động'}
               </Badge>
             </div>
             <StockRefresh
@@ -134,7 +134,7 @@ export function StockHistoryPage() {
                 aria-pressed={tab === 'movements'}
                 onClick={() => setTab('movements')}
               >
-                Stock movements
+                Biến động kho
               </button>
               <button
                 className={
@@ -145,13 +145,13 @@ export function StockHistoryPage() {
                 aria-pressed={tab === 'lots'}
                 onClick={() => setTab('lots')}
               >
-                Receipt lots
+                Lô nhập
               </button>
               <Link
                 to={`/manager/stock-variance?ingredientId=${ingredientId}`}
                 className={`${secondaryButton} sm:ml-auto`}
               >
-                Review usage
+                Xem tiêu hao
               </Link>
             </div>
             {tab === 'movements' ? (
@@ -164,28 +164,28 @@ export function StockHistoryPage() {
                   <SummaryCards
                     items={[
                       {
-                        label: 'Recorded inflow',
+                        label: 'Lượng nhập ghi nhận',
                         value: `${totals.incoming.toLocaleString('en-GB')} ${ingredient.baseUnit}`,
                         icon: 'plus',
-                        note: 'Within the selected filters',
+                        note: 'Trong phạm vi bộ lọc đã chọn',
                       },
                       {
-                        label: 'Recorded outflow',
+                        label: 'Lượng xuất ghi nhận',
                         value: `${totals.outgoing.toLocaleString('en-GB')} ${ingredient.baseUnit}`,
                         icon: 'minus',
-                        note: 'Not necessarily kitchen consumption',
+                        note: 'Không chỉ bao gồm tiêu hao của bếp',
                       },
                       {
-                        label: 'Net movement',
+                        label: 'Biến động ròng',
                         value: `${totals.net.toLocaleString('en-GB')} ${ingredient.baseUnit}`,
                         icon: 'activity',
-                        note: 'Not an opening or closing stock balance',
+                        note: 'Không phải tồn đầu kỳ hoặc cuối kỳ',
                       },
                       {
-                        label: 'Transactions',
+                        label: 'Giao dịch',
                         value: filtered.length,
                         icon: 'clipboard',
-                        note: 'Matching the selected filters',
+                        note: 'Phù hợp bộ lọc đã chọn',
                       },
                     ]}
                   />
@@ -193,13 +193,13 @@ export function StockHistoryPage() {
                     <select
                       className={`${fieldClass} sm:w-60`}
                       value={type}
-                      aria-label="Movement type"
+                      aria-label="Loại biến động"
                       onChange={(event) => {
                         setType(event.target.value)
                         setPage(1)
                       }}
                     >
-                      <option value="">All movement types</option>
+                      <option value="">Tất cả loại biến động</option>
                       {[
                         ...new Set(
                           movements.data?.map(
@@ -235,7 +235,7 @@ export function StockHistoryPage() {
                         )
                       }
                     >
-                      Export CSV
+                      Xuất CSV
                     </button>
                   </div>
                 </div>
@@ -254,7 +254,7 @@ export function StockHistoryPage() {
                   />
                 </QueryState>
                 <Pagination
-                  locale="en"
+                  locale="vi"
                   total={filtered.length}
                   page={currentPage}
                   size={10}
@@ -276,7 +276,7 @@ export function StockHistoryPage() {
                   unit={ingredient.baseUnit}
                 />
                 <Pagination
-                  locale="en"
+                  locale="vi"
                   total={lots.data?.length || 0}
                   page={currentLotPage}
                   size={10}

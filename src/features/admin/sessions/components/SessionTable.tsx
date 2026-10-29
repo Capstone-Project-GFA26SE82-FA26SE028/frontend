@@ -1,4 +1,8 @@
-import { sessionStatus, type LoginSession, type SessionRole } from '../types'
+import {
+  sessionStatus,
+  type LoginSession,
+  type SessionRole,
+} from '../types/types'
 import { Badge, EmptyState, secondaryButton } from '../../components/AdminUI'
 
 function formatDate(value: string) {
@@ -28,12 +32,12 @@ export function SessionTable({
           <thead className="border-y border-slate-200 bg-slate-50 text-slate-600">
             <tr>
               {[
-                'Account',
-                'Role',
-                'Device / IP',
-                'Signed in',
-                'Status',
-                'Actions',
+                'Tài khoản',
+                'Vai trò',
+                'Thiết bị / IP',
+                'Đăng nhập lúc',
+                'Trạng thái',
+                'Thao tác',
               ].map((label) => (
                 <th
                   scope="col"
@@ -65,7 +69,7 @@ export function SessionTable({
                   <td className="max-w-64 p-4">
                     <p className="font-medium">{device}</p>
                     <p className="mt-1 text-slate-500">
-                      {session.ipAddress || 'IP unavailable'}
+                      {session.ipAddress || 'Chưa có địa chỉ IP'}
                     </p>
                   </td>
                   <td className="p-4">
@@ -84,25 +88,25 @@ export function SessionTable({
                       }
                     >
                       {status === 'active'
-                        ? 'Active'
+                        ? 'Đang hoạt động'
                         : status === 'expired'
-                          ? 'Expired'
-                          : 'Revoked'}
+                          ? 'Đã hết hạn'
+                          : 'Đã thu hồi'}
                     </Badge>
                   </td>
                   <td className="p-4">
                     <button
                       aria-label={
-                        'View session details for ' +
+                        'Xem chi tiết phiên của ' +
                         session.userName +
-                        ' on ' +
+                        ' trên ' +
                         device
                       }
                       aria-haspopup="dialog"
                       className={`${secondaryButton} whitespace-nowrap`}
                       onClick={() => onDetail(session)}
                     >
-                      View details
+                      Xem chi tiết
                     </button>
                   </td>
                 </tr>
@@ -113,8 +117,8 @@ export function SessionTable({
       </div>
       {!sessions.length && (
         <EmptyState
-          title="No sessions found"
-          description="Try changing the search or filters."
+          title="Không tìm thấy phiên đăng nhập"
+          description="Thử thay đổi nội dung tìm kiếm hoặc bộ lọc."
         />
       )}
     </>

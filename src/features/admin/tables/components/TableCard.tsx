@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { getCurrentQr } from '../api/tableQrApi'
 import { Icon } from '../../../../components/Icon/Icon'
-import type { Table, TableMode } from '../types'
+import type { Table, TableMode } from '../types/types'
 export function TableCard({
   table,
   areaName,
@@ -17,13 +17,13 @@ export function TableCard({
       getCurrentQr(table.tableId, table.tableCode, signal),
   })
   const qrLabel = qr.isError
-    ? 'QR unavailable'
+    ? 'Chưa có thông tin QR'
     : qr.isPending
-      ? 'Checking QR...'
+      ? 'Đang kiểm tra QR…'
       : qr.data
-        ? 'Has QR'
-        : 'No QR'
-  const status = table.isActive ? 'Active' : 'Inactive'
+        ? 'Đã có QR'
+        : 'Chưa có QR'
+  const status = table.isActive ? 'Đang hoạt động' : 'Ngừng hoạt động'
   const tone = table.isActive
     ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
     : 'border-slate-200 bg-slate-50 text-slate-500'
@@ -38,7 +38,7 @@ export function TableCard({
           <span className="truncate text-xs font-semibold tracking-wider text-slate-400">
             {table.tableCode}
           </span>
-          <span className="text-xs text-slate-500">{table.capacity} seats</span>
+          <span className="text-xs text-slate-500">{table.capacity} chỗ</span>
         </div>
         <div
           className={
@@ -134,14 +134,14 @@ export function TableCard({
         {(['edit', 'move', 'status', 'delete'] as const).map((mode) => {
           const label =
             mode === 'edit'
-              ? 'Edit'
+              ? 'Sửa'
               : mode === 'move'
-                ? 'Move area'
+                ? 'Chuyển khu vực'
                 : mode === 'delete'
-                  ? 'Delete'
+                  ? 'Xóa'
                   : table.isActive
-                    ? 'Deactivate'
-                    : 'Activate'
+                    ? 'Ngừng hoạt động'
+                    : 'Kích hoạt'
           return (
             <button
               key={mode}

@@ -1,13 +1,22 @@
 ﻿import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { authSessionSchema, type AuthSession } from './types'
+import type { AuthSession } from './types/types'
 export const authStorageKey = 'foodhub-staff-session-v1'
 function readSession(): AuthSession | null {
   try {
-    const session = authSessionSchema.parse(
-      JSON.parse(sessionStorage.getItem(authStorageKey) || 'null'),
-    )
+    const session = JSON.parse(
+      sessionStorage.getItem(authStorageKey) || 'null',
+    ) as AuthSession | null
     if (
-      session.user.isActive &&
+      session?.user?.isActive &&
+      typeof session.accessToken === 'string' &&
+      !!session.accessToken &&
+      typeof session.refreshToken === 'string' &&
+      !!session.refreshToken &&
+      typeof session.sessionId === 'string' &&
+      !!session.sessionId &&
+      typeof session.user.userId === 'string' &&
+      typeof session.user.roleId === 'string' &&
+      Number.isFinite(Date.parse(session.expiresAt)) &&
       Date.parse(session.sessionExpiresAt) > Date.now()
     )
       return session

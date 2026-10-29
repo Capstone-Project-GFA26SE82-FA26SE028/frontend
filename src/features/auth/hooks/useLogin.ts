@@ -7,7 +7,7 @@ export function useLogin() {
     retry: false,
     gcTime: 0,
     onSuccess: () => {
-      toast.success('Signed in successfully', { toastId: 'login-success' })
+      toast.success('Đăng nhập thành công', { toastId: 'login-success' })
     },
   })
 }

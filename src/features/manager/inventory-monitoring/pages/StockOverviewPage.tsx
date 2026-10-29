@@ -40,9 +40,9 @@ export function StockOverviewPage() {
   return (
     <>
       <PageHeading
-        eyebrow="Inventory Monitoring"
-        title="Stock overview"
-        description="Monitor recorded ingredient stock, low-stock alerts, and inventory history."
+        eyebrow="Theo dõi kho"
+        title="Tổng quan tồn kho"
+        description="Theo dõi tồn kho nguyên liệu, cảnh báo tồn thấp và lịch sử kho."
       />
       <InventoryTabs />
       <QueryState
@@ -53,29 +53,29 @@ export function StockOverviewPage() {
         <SummaryCards
           items={[
             {
-              label: 'Ingredients',
+              label: 'Nguyên liệu',
               value: all.length,
               icon: 'leaf',
-              note: 'All ingredient records',
+              note: 'Tất cả bản ghi nguyên liệu',
             },
             {
-              label: 'In stock',
+              label: 'Còn hàng',
               value: all.filter((i) => stockStatus(i) === 'In stock').length,
               icon: 'box',
-              note: 'Above the alert threshold',
+              note: 'Trên ngưỡng cảnh báo',
             },
             {
-              label: 'Low stock',
+              label: 'Tồn kho thấp',
               value: all.filter((i) => stockStatus(i) === 'Low stock').length,
               icon: 'bell',
-              note: 'Positive stock at or below threshold',
+              note: 'Tồn kho dương, bằng hoặc dưới ngưỡng',
             },
             {
-              label: 'Out of stock',
+              label: 'Hết hàng',
               value: all.filter((i) => stockStatus(i) === 'Out of stock')
                 .length,
               icon: 'ban',
-              note: 'Zero or negative recorded quantity',
+              note: 'Số lượng ghi nhận bằng 0 hoặc âm',
             },
           ]}
         />
@@ -86,9 +86,9 @@ export function StockOverviewPage() {
             refresh={() => void stock.refetch()}
           />
           <p className="mt-3 text-xs leading-5 text-slate-400">
-            Stock is shown in each ingredient's base unit. Reserved quantities
-            and usable stock may differ from the recorded balance. Quantities
-            with different units are not added together.
+            Tồn kho hiển thị theo đơn vị cơ sở của từng nguyên liệu. Lượng giữ
+            chỗ và lượng có thể sử dụng có thể khác số dư ghi nhận. Không cộng
+            chung các số lượng khác đơn vị.
           </p>
         </Panel>
         <Panel>
@@ -99,10 +99,10 @@ export function StockOverviewPage() {
                 setSearch(value)
                 setPage(1)
               }}
-              placeholder="Search ingredient name or code…"
+              placeholder="Tìm tên hoặc mã nguyên liệu…"
             />
             <select
-              aria-label="Stock status"
+              aria-label="Trạng thái tồn kho"
               className={`${fieldClass} sm:w-44`}
               value={status}
               onChange={(event) => {
@@ -110,13 +110,21 @@ export function StockOverviewPage() {
                 setPage(1)
               }}
             >
-              <option value="">All stock statuses</option>
+              <option value="">Tất cả trạng thái tồn</option>
               {['In stock', 'Low stock', 'Out of stock'].map((value) => (
-                <option key={value}>{value}</option>
+                <option key={value} value={value}>
+                  {
+                    {
+                      'In stock': 'Còn hàng',
+                      'Low stock': 'Tồn kho thấp',
+                      'Out of stock': 'Hết hàng',
+                    }[value]
+                  }
+                </option>
               ))}
             </select>
             <select
-              aria-label="Ingredient activity"
+              aria-label="Tình trạng nguyên liệu"
               className={`${fieldClass} sm:w-44`}
               value={active}
               onChange={(event) => {
@@ -124,9 +132,9 @@ export function StockOverviewPage() {
                 setPage(1)
               }}
             >
-              <option value="">All ingredients</option>
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
+              <option value="">Tất cả nguyên liệu</option>
+              <option value="true">Đang hoạt động</option>
+              <option value="false">Ngừng hoạt động</option>
             </select>
           </div>
           <QueryState
@@ -139,12 +147,12 @@ export function StockOverviewPage() {
               <table className={tableClass}>
                 <thead className="bg-slate-50">
                   <tr>
-                    <th>Ingredient</th>
-                    <th>Stock on hand</th>
-                    <th>Alert threshold</th>
-                    <th>Stock status</th>
-                    <th>Activity</th>
-                    <th className="text-right">Details</th>
+                    <th>Nguyên liệu</th>
+                    <th>Tồn kho</th>
+                    <th>Ngưỡng cảnh báo</th>
+                    <th>Trạng thái tồn kho</th>
+                    <th>Hoạt động</th>
+                    <th className="text-right">Chi tiết</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -178,12 +186,20 @@ export function StockOverviewPage() {
                                   : 'red'
                             }
                           >
-                            {stockStatus(ingredient)}
+                            {
+                              {
+                                'In stock': 'Còn hàng',
+                                'Low stock': 'Tồn kho thấp',
+                                'Out of stock': 'Hết hàng',
+                              }[stockStatus(ingredient)]
+                            }
                           </Badge>
                         </td>
                         <td>
                           <Badge tone={ingredient.isActive ? 'green' : 'slate'}>
-                            {ingredient.isActive ? 'Active' : 'Inactive'}
+                            {ingredient.isActive
+                              ? 'Đang hoạt động'
+                              : 'Ngừng hoạt động'}
                           </Badge>
                         </td>
                         <td className="text-right">
@@ -191,7 +207,7 @@ export function StockOverviewPage() {
                             className={secondaryButton}
                             to={`/manager/stock-history?ingredientId=${ingredient.ingredientId}`}
                           >
-                            Movements & lots
+                            Biến động và lô hàng
                           </Link>
                         </td>
                       </tr>
@@ -201,7 +217,7 @@ export function StockOverviewPage() {
             </div>
           </QueryState>
           <Pagination
-            locale="en"
+            locale="vi"
             total={filtered.length}
             size={10}
             page={currentPage}

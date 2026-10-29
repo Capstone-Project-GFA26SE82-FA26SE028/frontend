@@ -14,7 +14,7 @@ import {
   primaryButton,
   secondaryButton,
 } from '../../components/AdminUI'
-import type { RoleAccount, SystemRole } from '../types'
+import type { RoleAccount, SystemRole } from '../types/types'
 
 export function RoleAssignmentModal({
   user,
@@ -42,7 +42,7 @@ export function RoleAssignmentModal({
     if (!isSubmitting) onClose()
   }
   return (
-    <Modal title="Change role" closeLabel="Close" onClose={close}>
+    <Modal title="Đổi vai trò" closeLabel="Đóng" onClose={close}>
       <form
         noValidate
         className="space-y-5 p-5 sm:p-6"
@@ -70,7 +70,7 @@ export function RoleAssignmentModal({
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-between gap-2 border-t border-emerald-100/80 bg-white/70 px-4 py-3 sm:px-5">
-            <span className="text-sm text-slate-500">Current role</span>
+            <span className="text-sm text-slate-500">Vai trò hiện tại</span>
             <span
               className={
                 'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ' +
@@ -83,7 +83,7 @@ export function RoleAssignmentModal({
             </span>
           </div>
         </section>
-        <Field label="New role" error={errors.role?.message}>
+        <Field label="Vai trò mới" error={errors.role?.message}>
           <select
             className={`${fieldClass} min-h-12 rounded-xl border-slate-200 font-medium disabled:bg-slate-50`}
             disabled={isSubmitting}
@@ -107,10 +107,10 @@ export function RoleAssignmentModal({
             className="mt-1 shrink-0 text-slate-400"
           />
           <div>
-            <p>The account will need to sign in again.</p>
+            <p>Tài khoản sẽ cần đăng nhập lại.</p>
             {user.roleId === 'admin' && (
               <p className="mt-1 text-amber-800">
-                At least one active administrator is required.
+                Phải có ít nhất một quản trị viên đang hoạt động.
               </p>
             )}
           </div>
@@ -130,13 +130,13 @@ export function RoleAssignmentModal({
             className={`${secondaryButton} justify-center`}
             onClick={close}
           >
-            Cancel
+            Hủy
           </button>
           <button
             disabled={isSubmitting || role === user.roleId || !roles.length}
             className={`${primaryButton} justify-center`}
           >
-            {isSubmitting ? 'Saving…' : 'Save changes'}
+            {isSubmitting ? 'Đang lưu…' : 'Lưu thay đổi'}
           </button>
         </div>
       </form>

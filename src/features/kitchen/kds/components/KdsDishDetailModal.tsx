@@ -15,8 +15,8 @@ export function KdsDishDetailModal({
 }) {
   return (
     <Modal
-      title={`Order ${ticket.order}`}
-      subtitle={`Dish line ${ticket.id}`}
+      title={`Đơn ${ticket.order}`}
+      subtitle={`Dòng món ${ticket.id}`}
       onClose={onClose}
     >
       <div className="space-y-4 p-6">
@@ -42,21 +42,32 @@ export function KdsDishDetailModal({
           {ticket.quantity} × {dish.name}
         </h3>
         <p className="rounded-xl bg-amber-50 p-4 text-sm text-amber-900">
-          {ticket.note || 'No notes'}
+          {ticket.note || 'Không có ghi chú'}
         </p>
         {ticket.previousNote !== undefined && (
           <p className="text-sm text-slate-500">
-            Before update: {ticket.previousNote}
+            Trước cập nhật: {ticket.previousNote}
           </p>
         )}
         <div className="flex justify-between text-sm">
           <span>{dish.area}</span>
-          <strong>{ticket.status}</strong>
+          <strong>
+            {
+              {
+                Pending: 'Chờ chế biến',
+                Cooking: 'Đang chế biến',
+                Ready: 'Sẵn sàng',
+                Hold: 'Tạm hoãn',
+                Served: 'Đã phục vụ',
+                Cancelled: 'Đã hủy',
+              }[ticket.status]
+            }
+          </strong>
         </div>
         <p className="text-sm text-slate-500">
-          Received {clock(ticket.created)}
-          {ticket.started && ` · Started ${clock(ticket.started)}`}
-          {ticket.finished && ` · Completed ${clock(ticket.finished)}`}
+          Nhận lúc {clock(ticket.created)}
+          {ticket.started && ` · Bắt đầu ${clock(ticket.started)}`}
+          {ticket.finished && ` · Hoàn thành ${clock(ticket.finished)}`}
         </p>
       </div>
     </Modal>

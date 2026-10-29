@@ -40,9 +40,9 @@ export function StockVariancePage() {
   return (
     <>
       <PageHeading
-        eyebrow="Inventory Monitoring"
-        title="Usage & Variance"
-        description="Inspect recorded ingredient outflow and check whether usage can be compared with recipe requirements."
+        eyebrow="Theo dõi kho"
+        title="Tiêu hao và chênh lệch"
+        description="Xem lượng xuất nguyên liệu ghi nhận và khả năng đối chiếu tiêu hao với định mức công thức."
       />
       <InventoryTabs />
       <Panel className="mb-5 p-4">
@@ -72,12 +72,12 @@ export function StockVariancePage() {
         </QueryState>
       </Panel>
       <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
-        <h2 className="font-semibold">Usage variance is not yet available</h2>
+        <h2 className="font-semibold">Chưa có dữ liệu chênh lệch tiêu hao</h2>
         <p className="mt-1">
-          A reliable comparison requires prepared-item quantities, historical
-          recipe versions, stocktakes, and separately identified disposals.
-          These inputs are not available in this report. Recorded stock issues
-          alone do not establish actual consumption or wastage.
+          Để đối chiếu chính xác cần số lượng món đã chế biến, phiên bản công
+          thức lịch sử, kiểm kê và lượng hủy được xác định riêng. Báo cáo chưa
+          có các dữ liệu này. Chỉ dựa vào lượng xuất kho không thể xác định tiêu
+          hao hoặc hao hụt thực tế.
         </p>
         <p className="mt-1">
           Variance = (actual usage − expected usage) / expected usage × 100%,
@@ -87,7 +87,7 @@ export function StockVariancePage() {
       </div>
       {!ingredient ? (
         <Panel className="p-12 text-center text-sm text-slate-500">
-          Select an ingredient to review recorded outflow.
+          Chọn nguyên liệu để xem lượng xuất ghi nhận.
         </Panel>
       ) : (
         <QueryState
@@ -98,28 +98,28 @@ export function StockVariancePage() {
           <SummaryCards
             items={[
               {
-                label: 'Recorded outflow',
+                label: 'Lượng xuất ghi nhận',
                 value: `${totals.outgoing.toLocaleString('en-GB')} ${ingredient.baseUnit}`,
                 icon: 'minus',
-                note: 'All negative movements in the selected period',
+                note: 'Tất cả biến động âm trong kỳ đã chọn',
               },
               {
-                label: 'Expected usage',
-                value: 'Not available',
+                label: 'Tiêu hao dự kiến',
+                value: 'Chưa có dữ liệu',
                 icon: 'clipboard',
-                note: 'Prepared quantities and recipe snapshots required',
+                note: 'Cần số lượng đã chế biến và công thức đã lưu',
               },
               {
-                label: 'Actual usage',
-                value: 'Not available',
+                label: 'Tiêu hao thực tế',
+                value: 'Chưa có dữ liệu',
                 icon: 'box',
-                note: 'Requires reconciled issue and stocktake data',
+                note: 'Cần đối chiếu dữ liệu xuất kho và kiểm kê',
               },
               {
-                label: 'Usage variance',
-                value: 'Not available',
+                label: 'Chênh lệch tiêu hao',
+                value: 'Chưa có dữ liệu',
                 icon: 'chart',
-                note: 'Missing inputs are not treated as zero',
+                note: 'Dữ liệu còn thiếu không được xem là 0',
               },
             ]}
           />
@@ -134,18 +134,18 @@ export function StockVariancePage() {
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-4">
               <div>
                 <h2 className="font-semibold">
-                  Recorded outflow · {ingredient.ingredientName}
+                  Lượng xuất ghi nhận · {ingredient.ingredientName}
                 </h2>
                 <p className="mt-1 text-xs text-slate-500">
-                  Review transaction types and reasons before investigating a
-                  discrepancy.
+                  Kiểm tra loại giao dịch và lý do trước khi xác minh chênh
+                  lệch.
                 </p>
               </div>
               <Link
                 to={`/manager/stock-history?ingredientId=${ingredientId}`}
                 className={secondaryButton}
               >
-                All movements & lots
+                Tất cả biến động và lô hàng
               </Link>
             </div>
             <QueryState
@@ -163,7 +163,7 @@ export function StockVariancePage() {
               />
             </QueryState>
             <Pagination
-              locale="en"
+              locale="vi"
               total={outgoing.length}
               page={currentPage}
               size={10}

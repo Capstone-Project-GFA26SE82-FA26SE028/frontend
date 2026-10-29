@@ -44,13 +44,13 @@ export function ItemsPage() {
   return (
     <>
       <PageHeading
-        eyebrow="Menu & Pricing"
-        title="Menu items"
-        description="Manage menu item details and sales availability."
+        eyebrow="Thực đơn và giá bán"
+        title="Món ăn"
+        description="Quản lý thông tin món ăn và tình trạng bán."
         action={
           <button className={primaryButton} onClick={() => setForm({})}>
             <Icon name="plus" size={18} />
-            Add menu item
+            Thêm món ăn
           </button>
         }
       />
@@ -63,10 +63,10 @@ export function ItemsPage() {
               setSearch(v)
               setPage(1)
             }}
-            placeholder="Search by item name or code…"
+            placeholder="Tìm theo tên hoặc mã món…"
           />
           <select
-            aria-label="Filter by category"
+            aria-label="Lọc theo danh mục"
             value={categoryId}
             onChange={(e) => {
               setCategoryId(e.target.value)
@@ -74,7 +74,7 @@ export function ItemsPage() {
             }}
             className={`${fieldClass} sm:w-44`}
           >
-            <option value="">All categories</option>
+            <option value="">Tất cả danh mục</option>
             {categories.data?.map((c) => (
               <option key={c.categoryId} value={c.categoryId}>
                 {c.categoryName}
@@ -82,7 +82,7 @@ export function ItemsPage() {
             ))}
           </select>
           <select
-            aria-label="Filter by availability"
+            aria-label="Lọc theo tình trạng bán"
             className={`${fieldClass} sm:w-48`}
             value={status}
             onChange={(e) => {
@@ -90,7 +90,7 @@ export function ItemsPage() {
               setPage(1)
             }}
           >
-            <option value="">All statuses</option>
+            <option value="">Tất cả trạng thái</option>
             {Object.entries(availabilityLabels).map(([v, label]) => (
               <option key={v} value={v}>
                 {label}
@@ -100,7 +100,7 @@ export function ItemsPage() {
           <button
             className={secondaryButton}
             onClick={() => void list.refetch()}
-            aria-label="Refresh menu items"
+            aria-label="Làm mới món ăn"
           >
             <Icon name="activity" size={18} />
           </button>
@@ -127,7 +127,7 @@ export function ItemsPage() {
           )}
         </QueryState>
         <Pagination
-          locale="en"
+          locale="vi"
           total={list.data?.totalCount || 0}
           page={page}
           size={10}
@@ -137,8 +137,8 @@ export function ItemsPage() {
       {form && <ItemFormModal item={form.item} onClose={() => setForm(null)} />}
       {target && (
         <Modal
-          closeLabel="Close"
-          title="Update availability"
+          closeLabel="Đóng"
+          title="Cập nhật tình trạng bán"
           onClose={() => {
             if (!mutation.isPending) setTarget(null)
           }}
@@ -158,7 +158,7 @@ export function ItemsPage() {
             }}
           >
             <p className="font-semibold">{target.itemName}</p>
-            <Field label="Availability">
+            <Field label="Tình trạng bán">
               <select
                 name="status"
                 defaultValue={target.availability}
@@ -172,9 +172,9 @@ export function ItemsPage() {
               </select>
             </Field>
             <p className="rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-500">
-              Making an item available requires an active category, a valid
-              standard price, and an effective recipe. Existing orders are
-              unaffected.
+              Để mở bán, món cần thuộc danh mục đang hoạt động, có giá tiêu
+              chuẩn hợp lệ và công thức đang hiệu lực. Các đơn đã tạo không bị
+              ảnh hưởng.
             </p>
             <FormActions
               pending={mutation.isPending}

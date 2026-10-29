@@ -23,13 +23,15 @@ import {
   useMonitoringClock,
   useOperationsTables,
 } from '../hooks/useOperations'
-import {
-  isDelayed,
-  taskLabels,
-  waitingMinutes,
-  withinDays,
-} from '../utils/operations'
+import { isDelayed, waitingMinutes, withinDays } from '../utils/operations'
 import type { KitchenTask } from '../types/operations'
+
+const taskLabels: Record<string, string> = {
+  Pending: 'Đang chờ',
+  Cooking: 'Đang nấu',
+  Ready: 'Đã xong',
+  Cancelled: 'Đã hủy',
+}
 
 export function KitchenMonitoringPage() {
   const tasks = useKitchenTasks()
@@ -49,7 +51,7 @@ export function KitchenMonitoringPage() {
   const tableName = (id: string) =>
     tables.data?.find((table) => table.tableId === id)?.tableCode ||
     id ||
-    'Not assigned'
+    'Chưa phân công'
   const visible = all.filter(
     (task) =>
       matches(
@@ -72,9 +74,9 @@ export function KitchenMonitoringPage() {
   return (
     <>
       <PageHeading
-        eyebrow="Operations Monitoring"
-        title="Kitchen Progress"
-        description="Monitor each kitchen task independently and identify items waiting longer than 15 minutes."
+        eyebrow="Theo dõi vận hành"
+        title="Tiến độ bếp"
+        description="Theo dõi từng tác vụ bếp và xác định các món đang chờ quá 15 phút."
       />
       <OperationsTabs />
       <QueryState
@@ -85,28 +87,28 @@ export function KitchenMonitoringPage() {
         <SummaryCards
           items={[
             {
-              label: 'Waiting',
+              label: 'Đang chờ',
               value: all.filter((task) => task.status === 'Pending').length,
               icon: 'clock',
-              note: 'Tasks waiting for preparation',
+              note: 'Tác vụ đang chờ chế biến',
             },
             {
-              label: 'Cooking',
+              label: 'Đang nấu',
               value: all.filter((task) => task.status === 'Cooking').length,
               icon: 'fire',
-              note: 'Tasks currently being prepared',
+              note: 'Tác vụ đang chế biến',
             },
             {
-              label: 'Ready',
+              label: 'Đã xong',
               value: all.filter((task) => task.status === 'Ready').length,
               icon: 'check',
-              note: 'Completed kitchen tasks',
+              note: 'Tác vụ bếp đã hoàn thành',
             },
             {
-              label: 'Waiting > 15 min',
+              label: 'Chờ > 15 phút',
               value: all.filter((task) => isDelayed(task, now)).length,
               icon: 'bell',
-              note: 'Waiting tasks only; all loaded records',
+              note: 'Chỉ tác vụ đang chờ; trên toàn bộ dữ liệu đã tải',
             },
           ]}
         />
@@ -124,18 +126,18 @@ export function KitchenMonitoringPage() {
                   setSearch(value)
                   setPage(1)
                 }}
-                placeholder="Search order, table, or item…"
+                placeholder="Tìm đơn, bàn hoặc món…"
               />
               <select
                 className={`${fieldClass} sm:w-44`}
-                aria-label="Task status"
+                aria-label="Trạng thái tác vụ"
                 value={status}
                 onChange={(e) => {
                   setStatus(e.target.value)
                   setPage(1)
                 }}
               >
-                <option value="">All statuses</option>
+                <option value="">Tất cả trạng thái</option>
                 {Object.entries(taskLabels).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
@@ -144,14 +146,14 @@ export function KitchenMonitoringPage() {
               </select>
               <select
                 className={`${fieldClass} sm:w-52`}
-                aria-label="Kitchen station"
+                aria-label="Trạm bếp"
                 value={station}
                 onChange={(e) => {
                   setStation(e.target.value)
                   setPage(1)
                 }}
               >
-                <option value="">All stations</option>
+                <option value="">Tất cả trạm</option>
                 {[
                   ...new Map(
                     all.map((task) => [task.stationId, task.stationName]),
@@ -164,7 +166,7 @@ export function KitchenMonitoringPage() {
               </select>
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
-              <Field label="From date (UTC+7)">
+              <Field label="Từ ngày (UTC+7)">
                 <input
                   type="date"
                   max={until || undefined}
@@ -176,7 +178,7 @@ export function KitchenMonitoringPage() {
                   }}
                 />
               </Field>
-              <Field label="Until date (UTC+7)">
+              <Field label="Đến ngày (UTC+7)">
                 <input
                   type="date"
                   min={from || undefined}
@@ -197,23 +199,23 @@ export function KitchenMonitoringPage() {
                     setPage(1)
                   }}
                 />
-                Waiting more than 15 minutes
+                Chờ quá 15 phút
               </label>
             </div>
             {tableId && (
               <div className="flex flex-wrap items-center gap-3 text-sm">
-                <span>Table filter: {tableName(tableId)}</span>
+                <span>Đang lọc bàn: {tableName(tableId)}</span>
                 <button
                   className={secondaryButton}
                   onClick={() => setParams({})}
                 >
-                  Clear table filter
+                  Bỏ lọc bàn
                 </button>
               </div>
             )}
             <p className="text-xs text-slate-500">
-              A ready task does not mean every item in its order is ready.
-              Manager monitoring does not change preparation status.
+              Một tác vụ đã xong không có nghĩa mọi món trong đơn đã xong. Màn
+              hình theo dõi của quản lý không thay đổi trạng thái chế biến.
             </p>
           </div>
           <QueryState
@@ -226,13 +228,13 @@ export function KitchenMonitoringPage() {
               <table className={tableClass}>
                 <thead className="bg-slate-50">
                   <tr>
-                    <th>Order / Table</th>
-                    <th>Item</th>
-                    <th>Station</th>
-                    <th>Task status</th>
-                    <th>Queue wait</th>
-                    <th>Queued at (UTC+7)</th>
-                    <th>Details</th>
+                    <th>Đơn / Bàn</th>
+                    <th>Món</th>
+                    <th>Trạm</th>
+                    <th>Trạng thái tác vụ</th>
+                    <th>Thời gian chờ</th>
+                    <th>Vào hàng chờ lúc (UTC+7)</th>
+                    <th>Chi tiết</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -254,7 +256,7 @@ export function KitchenMonitoringPage() {
                             {task.itemName}
                           </p>
                           <p className="mt-1 text-xs text-slate-500">
-                            Quantity: {task.quantity}
+                            Số lượng: {task.quantity}
                           </p>
                         </td>
                         <td>{task.stationName}</td>
@@ -274,12 +276,12 @@ export function KitchenMonitoringPage() {
                           </Badge>
                           {isDelayed(task, now) && (
                             <p className="mt-2 text-xs font-semibold text-amber-700">
-                              Delayed
+                              Chậm
                             </p>
                           )}
                         </td>
                         <td className="whitespace-nowrap">
-                          {waitingMinutes(task, now)} min
+                          {waitingMinutes(task, now)} phút
                         </td>
                         <td className="whitespace-nowrap text-xs">
                           {dateLabel(task.queuedAt)}
@@ -289,7 +291,7 @@ export function KitchenMonitoringPage() {
                             className={secondaryButton}
                             onClick={() => setSelected(task)}
                           >
-                            View
+                            Xem
                           </button>
                         </td>
                       </tr>
@@ -299,7 +301,7 @@ export function KitchenMonitoringPage() {
             </div>
           </QueryState>
           <Pagination
-            locale="en"
+            locale="vi"
             total={visible.length}
             page={currentPage}
             size={10}
@@ -309,8 +311,8 @@ export function KitchenMonitoringPage() {
       </QueryState>
       {selected && (
         <Modal
-          title="Kitchen task details"
-          closeLabel="Close"
+          title="Chi tiết tác vụ bếp"
+          closeLabel="Đóng"
           onClose={() => setSelected(null)}
         >
           <div className="space-y-4 p-6">
@@ -320,28 +322,27 @@ export function KitchenMonitoringPage() {
                   {detail.itemName} × {detail.quantity}
                 </h2>
                 <p className="text-sm">
-                  Order: {detail.orderNumber} · Table:{' '}
-                  {tableName(detail.tableId)}
+                  Đơn: {detail.orderNumber} · Bàn: {tableName(detail.tableId)}
                 </p>
-                <p className="text-sm">Station: {detail.stationName}</p>
+                <p className="text-sm">Trạm: {detail.stationName}</p>
                 <dl className="space-y-3 text-sm">
                   {[
-                    ['Queued', detail.queuedAt],
-                    ['Cooking started', detail.cookingAt],
-                    ['Ready', detail.readyAt],
+                    ['Vào hàng chờ', detail.queuedAt],
+                    ['Bắt đầu nấu', detail.cookingAt],
+                    ['Đã xong', detail.readyAt],
                   ].map(([label, value]) => (
                     <div key={label} className="flex justify-between gap-3">
                       <dt className="text-slate-500">{label}</dt>
-                      <dd>{value ? dateLabel(value) : 'Not recorded'}</dd>
+                      <dd>{value ? dateLabel(value) : 'Chưa ghi nhận'}</dd>
                     </div>
                   ))}
                 </dl>
                 <p className="break-all text-xs text-slate-400">
-                  Task ID: {detail.taskId}
+                  Mã tác vụ: {detail.taskId}
                 </p>
               </>
             ) : (
-              <p>This task is no longer present in the latest data.</p>
+              <p>Tác vụ này không còn trong dữ liệu mới nhất.</p>
             )}
           </div>
         </Modal>

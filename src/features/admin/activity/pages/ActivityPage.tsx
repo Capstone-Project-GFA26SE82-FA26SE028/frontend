@@ -15,15 +15,15 @@ export function ActivityPage() {
   return (
     <>
       <PageHeading
-        title="Activity logs"
-        description="Review recorded account and sign-in activity."
+        title="Nhật ký hoạt động"
+        description="Xem hoạt động tài khoản và đăng nhập đã ghi nhận."
         action={
           <button
             className={secondaryButton}
             disabled={logs.isFetching}
             onClick={() => void logs.refetch()}
           >
-            Refresh
+            Làm mới
           </button>
         }
       />
@@ -31,7 +31,7 @@ export function ActivityPage() {
         <ActivityFilters userId={activity.userId} onApply={activity.filter} />
         {logs.isPending ? (
           <p role="status" className="p-8 text-center text-slate-500">
-            Loading activity logs?
+            Đang tải nhật ký hoạt động…
           </p>
         ) : logs.isError ? (
           <div className="space-y-3 p-8 text-center">
@@ -42,14 +42,14 @@ export function ActivityPage() {
               className={secondaryButton}
               onClick={() => void logs.refetch()}
             >
-              Try again
+              Thử lại
             </button>
           </div>
         ) : (
           <>
             {logs.isFetching && (
               <p role="status" className="sr-only">
-                Refreshing activity logs?
+                Đang cập nhật nhật ký hoạt động…
               </p>
             )}
             <fieldset
@@ -63,7 +63,7 @@ export function ActivityPage() {
                 onUser={activity.filter}
               />
               <Pagination
-                locale="en"
+                locale="vi"
                 total={activity.total}
                 page={activity.page}
                 size={activity.pageSize}

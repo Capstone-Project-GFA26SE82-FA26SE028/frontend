@@ -15,12 +15,12 @@ export function LogoutButton() {
           await logout()
         } catch {
           warning =
-            'You have signed out of this browser. We could not confirm that your server session was revoked.'
+            'Bạn đã đăng xuất khỏi trình duyệt này. Chưa thể xác nhận phiên đăng nhập trên máy chủ đã kết thúc.'
         }
         navigate('/login', { replace: true, state: { warning } })
       }}
     >
-      {pending ? 'Signing out…' : 'Sign out'}
+      {pending ? 'Đang đăng xuất…' : 'Đăng xuất'}
     </button>
   )
 }

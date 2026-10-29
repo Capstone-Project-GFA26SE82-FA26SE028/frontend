@@ -8,7 +8,7 @@ export function CartStatus({
   if (m.cart.isPending)
     return (
       <p role="status" className="panel mt-6 p-8 text-center">
-        Loading your cart...
+        Đang tải giỏ hàng…
       </p>
     )
   const error = m.cart.isError
@@ -28,7 +28,7 @@ export function CartStatus({
         className="mt-2 font-semibold underline disabled:opacity-40"
         onClick={() => void m.reload()}
       >
-        Reload cart
+        Tải lại giỏ hàng
       </button>
     </div>
   )

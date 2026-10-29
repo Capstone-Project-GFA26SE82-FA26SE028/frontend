@@ -20,11 +20,11 @@ export function AreasPage() {
   return (
     <>
       <PageHeading
-        title="Restaurant Areas"
-        description="Manage service areas for each restaurant."
+        title="Khu vực nhà hàng"
+        description="Quản lý khu vực phục vụ của từng nhà hàng."
         action={
           <button className={primaryButton} onClick={() => m.open('create')}>
-            + Add area
+            + Thêm khu vực
           </button>
         }
       />
@@ -33,12 +33,12 @@ export function AreasPage() {
           role="alert"
           className="mb-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
         >
-          Unable to load restaurant names.{' '}
+          Không thể tải tên nhà hàng.{' '}
           <button
             className="underline"
             onClick={() => void m.restaurants.refetch()}
           >
-            Retry
+            Thử lại
           </button>
         </div>
       )}
@@ -55,7 +55,7 @@ export function AreasPage() {
         />
         {m.list.isPending ? (
           <p role="status" className="p-8 text-center text-slate-500">
-            Loading areas...
+            Đang tải khu vực…
           </p>
         ) : m.list.isError ? (
           <div className="space-y-3 p-8 text-center">
@@ -64,7 +64,7 @@ export function AreasPage() {
               className={secondaryButton}
               onClick={() => void m.list.refetch()}
             >
-              Try again
+              Thử lại
             </button>
           </div>
         ) : (
@@ -79,7 +79,7 @@ export function AreasPage() {
               onAction={m.open}
             />
             <Pagination
-              locale="en"
+              locale="vi"
               total={m.list.data.totalCount}
               page={m.page}
               size={10}
@@ -97,31 +97,31 @@ export function AreasPage() {
           }
           title={
             target.mode === 'create'
-              ? 'Add area'
+              ? 'Thêm khu vực'
               : target.mode === 'edit'
-                ? 'Edit area'
+                ? 'Sửa khu vực'
                 : target.mode === 'view'
-                  ? 'Area details'
+                  ? 'Chi tiết khu vực'
                   : target.mode === 'delete'
-                    ? 'Delete area'
+                    ? 'Xóa khu vực'
                     : area?.isActive
-                      ? 'Deactivate area'
-                      : 'Activate area'
+                      ? 'Ngừng hoạt động khu vực'
+                      : 'Kích hoạt khu vực'
           }
-          closeLabel="Close"
+          closeLabel="Đóng"
           onClose={m.close}
         >
           {target.mode === 'create' ? (
             m.restaurants.isPending ? (
               <p role="status" className="p-6">
-                Loading restaurants...
+                Đang tải nhà hàng…
               </p>
             ) : m.restaurants.isError ? (
               <p className="p-6">
-                Restaurant list unavailable. Close and retry.
+                Chưa tải được danh sách nhà hàng. Vui lòng đóng và thử lại.
               </p>
             ) : restaurants.length === 0 ? (
-              <p className="p-6">Create a restaurant before adding an area.</p>
+              <p className="p-6">Tạo nhà hàng trước khi thêm khu vực.</p>
             ) : (
               <AreaForm
                 restaurants={restaurants}
@@ -135,7 +135,7 @@ export function AreasPage() {
             )
           ) : detail.isPending ? (
             <p role="status" className="p-6">
-              Loading area...
+              Đang tải khu vực…
             </p>
           ) : detail.isError ? (
             <div className="space-y-3 p-6">
@@ -144,7 +144,7 @@ export function AreasPage() {
                 className={secondaryButton}
                 onClick={() => void detail.refetch()}
               >
-                Try again
+                Thử lại
               </button>
             </div>
           ) : (
@@ -154,7 +154,7 @@ export function AreasPage() {
                 area={area}
                 restaurantName={
                   restaurants.find((r) => r.restaurantId === area.restaurantId)
-                    ?.restaurantName || 'Restaurant unavailable'
+                    ?.restaurantName || 'Chưa có thông tin nhà hàng'
                 }
                 onClose={m.close}
                 onEdit={() => m.open('edit', area.areaId)}
@@ -179,14 +179,14 @@ export function AreasPage() {
               <div className="space-y-5 p-6">
                 <p className="break-words text-sm text-slate-600">
                   {target.mode === 'delete'
-                    ? 'Delete ' +
+                    ? 'Xóa ' +
                       area.areaName +
-                      '? Areas containing tables cannot be deleted.'
+                      '? Không thể xóa khu vực còn bàn.'
                     : area.isActive
-                      ? 'Deactivate ' +
+                      ? 'Ngừng hoạt động ' +
                         area.areaName +
-                        '? This is blocked while service sessions remain open.'
-                      : 'Activate ' + area.areaName + '?'}
+                        '? Không thể thực hiện khi còn phiên phục vụ đang mở.'
+                      : 'Kích hoạt ' + area.areaName + '?'}
                 </p>
                 {mutation.isError && (
                   <p
@@ -202,7 +202,7 @@ export function AreasPage() {
                     className={secondaryButton}
                     onClick={m.close}
                   >
-                    Cancel
+                    Hủy
                   </button>
                   <button
                     disabled={mutation.isPending}
@@ -224,12 +224,12 @@ export function AreasPage() {
                     }
                   >
                     {mutation.isPending
-                      ? 'Saving...'
+                      ? 'Đang lưu…'
                       : target.mode === 'delete'
-                        ? 'Delete'
+                        ? 'Xóa'
                         : area.isActive
-                          ? 'Deactivate'
-                          : 'Activate'}
+                          ? 'Ngừng hoạt động'
+                          : 'Kích hoạt'}
                   </button>
                 </div>
               </div>
