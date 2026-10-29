@@ -3,11 +3,11 @@ import type { CustomerOrder } from '../types/types'
 import { OrderStatusBadge } from './OrderStatusBadge'
 
 const orderSteps = [
-  'Waiting',
-  'Confirmed',
-  'Cooking',
-  'Ready',
-  'Served',
+  'Đang đợi',
+  'Đã xác nhận',
+  'Đang nấu',
+  'Món đã xong',
+  'Đã phục vụ',
 ]
 
 function getCurrentStep(order: CustomerOrder) {
@@ -49,14 +49,14 @@ export function OrderTrackingCard({
               hour: '2-digit',
               minute: '2-digit',
             })}
-            {tableCode ? ' · Table ' + tableCode : ''}
+            {tableCode ? ' · Bàn ' + tableCode : ''}
           </p>
         </div>
         <OrderStatusBadge status={order.status} />
       </div>
       {progress >= 0 && (
         <ol
-          aria-label="Order progress"
+          aria-label="Tiến độ đơn gọi món"
           className="my-6 grid grid-cols-5 gap-1.5 sm:gap-2"
         >
           {orderSteps.map((label, index) => (
@@ -99,7 +99,7 @@ export function OrderTrackingCard({
               ))}
               {item.note && (
                 <p className="mt-1 break-words text-xs text-muted">
-                  Note: {item.note}
+                  Ghi chú: {item.note}
                 </p>
               )}
               <div className="mt-2">
@@ -110,17 +110,17 @@ export function OrderTrackingCard({
         ))}
       </div>
       <div className="mt-4 flex justify-between gap-3 text-sm font-bold">
-        <span>Order total</span>
+        <span>Tổng tiền đơn</span>
         <span>{formatCurrency(order.totalAmount)}</span>
       </div>
       {order.status === 'PendingConfirmation' && (
         <p className="mt-3 text-xs text-muted">
-          Staff will confirm your order shortly.
+          Nhân viên sẽ sớm xác nhận đơn gọi món của bạn.
         </p>
       )}
       {order.status === 'Confirmed' && progress === 1 && (
         <p className="mt-3 text-xs text-muted">
-          Your order is confirmed and queued for the kitchen.
+          Đơn đã được xác nhận và đang chờ bếp chế biến.
         </p>
       )}
     </article>

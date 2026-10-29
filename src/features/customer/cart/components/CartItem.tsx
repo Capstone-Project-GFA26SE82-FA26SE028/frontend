@@ -29,11 +29,13 @@ export function CartItem({
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
-          <h2 className="font-semibold">{quote?.name || 'Unavailable dish'}</h2>
+          <h2 className="font-semibold">
+            {quote?.name || 'Món không còn phục vụ'}
+          </h2>
           <div className="flex shrink-0 items-center gap-1">
             <button
               className="flex size-9 items-center justify-center rounded-lg text-brand hover:bg-mint disabled:opacity-40"
-              aria-label={'Edit ' + (quote?.name || 'dish')}
+              aria-label={'Sửa ' + (quote?.name || 'món')}
               disabled={disabled}
               onClick={onEdit}
             >
@@ -41,7 +43,7 @@ export function CartItem({
             </button>
             <button
               className="flex size-9 shrink-0 items-center justify-center rounded-lg text-rose-500 hover:bg-rose-50 disabled:opacity-40"
-              aria-label={'Remove ' + (quote?.name || 'dish')}
+              aria-label={'Xóa ' + (quote?.name || 'món')}
               disabled={disabled}
               onClick={onRemove}
             >
@@ -57,7 +59,7 @@ export function CartItem({
         ))}
         {line.note && (
           <p className="mt-1 break-words text-xs text-muted">
-            Note: {line.note}
+            Ghi chú: {line.note}
           </p>
         )}
         {errors.map((error, i) => (
@@ -69,11 +71,11 @@ export function CartItem({
           <span className="font-semibold text-brand">
             {quote
               ? formatCurrency(quotedUnitPrice(quote) * line.quantity)
-              : 'Price unavailable'}
+              : 'Chưa có giá'}
           </span>
           <div className="flex items-center rounded-xl border border-stone-200">
             <button
-              aria-label={'Decrease quantity ' + (quote?.name || 'dish')}
+              aria-label={'Giảm số lượng ' + (quote?.name || 'món')}
               disabled={disabled}
               onClick={() => onQuantity(line.quantity - 1)}
               className="flex size-11 items-center justify-center disabled:opacity-40"
@@ -82,7 +84,7 @@ export function CartItem({
             </button>
             <span className="w-8 text-center text-sm">{line.quantity}</span>
             <button
-              aria-label={'Increase quantity ' + (quote?.name || 'dish')}
+              aria-label={'Tăng số lượng ' + (quote?.name || 'món')}
               disabled={disabled || line.quantity >= 1000}
               onClick={() => onQuantity(line.quantity + 1)}
               className="flex size-11 items-center justify-center disabled:opacity-40"

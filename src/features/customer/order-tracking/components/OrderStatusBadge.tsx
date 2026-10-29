@@ -1,12 +1,12 @@
 const labels: Record<string, string> = {
-  PendingConfirmation: 'Waiting',
-  Confirmed: 'Confirmed',
-  Pending: 'Queued',
-  Hold: 'On hold',
-  Cooking: 'Cooking',
-  Ready: 'Ready to serve',
-  Served: 'Served',
-  Cancelled: 'Cancelled',
+  PendingConfirmation: 'Đang đợi',
+  Confirmed: 'Đã xác nhận',
+  Pending: 'Chờ chế biến',
+  Hold: 'Tạm hoãn',
+  Cooking: 'Đang nấu',
+  Ready: 'Món đã xong',
+  Served: 'Đã phục vụ',
+  Cancelled: 'Đã hủy',
 }
 
 export function OrderStatusBadge({ status }: { status: string }) {

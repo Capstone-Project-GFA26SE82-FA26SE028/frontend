@@ -13,8 +13,8 @@ export function CustomerNotifications() {
     <>
       <button
         type="button"
-        aria-label="Order updates"
-        title="Order updates"
+        aria-label="Cập nhật đơn gọi món"
+        title="Cập nhật đơn gọi món"
         aria-haspopup="dialog"
         onClick={() => setOpen(true)}
         className="flex size-11 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-white text-brand transition-colors hover:bg-mint"
@@ -22,11 +22,11 @@ export function CustomerNotifications() {
         <Icon name="bell" size={20} />
       </button>
       {open && (
-        <Modal title="Order updates" onClose={() => setOpen(false)}>
+        <Modal title="Cập nhật đơn gọi món" onClose={() => setOpen(false)}>
           <div className="p-6">
             {query.isPending && (
               <p role="status" className="text-sm text-muted">
-                Loading updates...
+                Đang tải cập nhật…
               </p>
             )}
             {query.isError && (
@@ -37,7 +37,7 @@ export function CustomerNotifications() {
                   disabled={query.isFetching}
                   onClick={() => void query.refetch()}
                 >
-                  Reload
+                  Tải lại
                 </button>
               </div>
             )}
@@ -58,7 +58,7 @@ export function CustomerNotifications() {
             )}
             {query.isSuccess && !orders.length && (
               <p className="py-6 text-center text-sm text-muted">
-                No orders yet.
+                Chưa có đơn gọi món.
               </p>
             )}
             <Link
@@ -66,7 +66,7 @@ export function CustomerNotifications() {
               className="btn-primary mt-5 w-full"
               onClick={() => setOpen(false)}
             >
-              View all orders
+              Xem tất cả đơn
             </Link>
           </div>
         </Modal>

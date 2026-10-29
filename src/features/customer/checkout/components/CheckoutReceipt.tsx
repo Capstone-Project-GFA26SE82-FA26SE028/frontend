@@ -20,10 +20,10 @@ export function CheckoutReceipt({ orderId }: { orderId: string }) {
     <section className="mx-auto max-w-2xl py-8">
       <div className="panel p-6 sm:p-8">
         <p className="eyebrow">
-          {table ? 'Table ' + table.tableCode : 'Your table'}
+          {table ? 'Bàn ' + table.tableCode : 'Bàn của bạn'}
         </p>
-        <h1 className="mt-2 text-3xl font-bold">Your order</h1>
-        {order.isPending && <p className="mt-5 text-muted">Loading order...</p>}
+        <h1 className="mt-2 text-3xl font-bold">Đơn gọi món của bạn</h1>
+        {order.isPending && <p className="mt-5 text-muted">Đang tải đơn…</p>}
         {order.isError && (
           <div role="alert" className="mt-5">
             <p>{orderTrackingError(order.error)}</p>
@@ -31,7 +31,7 @@ export function CheckoutReceipt({ orderId }: { orderId: string }) {
               className="btn-secondary mt-3"
               onClick={() => void order.refetch()}
             >
-              Reload order
+              Tải lại đơn
             </button>
           </div>
         )}
@@ -43,7 +43,7 @@ export function CheckoutReceipt({ orderId }: { orderId: string }) {
             <div className="my-6 rounded-2xl bg-mint p-4 text-brand">
               <OrderStatusBadge status={order.data.status} />
               <p className="mt-1 text-sm">
-                Your order has been received. Payment is handled separately.
+                Đã nhận đơn gọi món của bạn. Thanh toán sẽ được thực hiện riêng.
               </p>
             </div>
             {order.data.items.map((item) => (
@@ -74,16 +74,16 @@ export function CheckoutReceipt({ orderId }: { orderId: string }) {
               </div>
             ))}
             <div className="mt-6 flex justify-between font-bold">
-              <span>Order total</span>
+              <span>Tổng tiền đơn</span>
               <span>{formatCurrency(order.data.totalAmount)}</span>
             </div>
           </>
         )}
         <Link to="/menu" className="btn-primary mt-6 w-full">
-          Back to menu
+          Quay lại thực đơn
         </Link>
         <Link to="/orders" className="btn-secondary mt-3 w-full">
-          Track your orders
+          Theo dõi đơn
         </Link>
       </div>
     </section>

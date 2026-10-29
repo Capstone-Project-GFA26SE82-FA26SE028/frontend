@@ -8,7 +8,7 @@ export function PhoneEntryPage() {
   const { token, valid, scan, join } = useTableSession()
   return (
     <main
-      lang="en"
+      lang="vi"
       className="flex min-h-dvh items-center justify-center bg-white md:bg-[#faf9f6] md:p-8"
     >
       <div className="flex min-h-dvh w-full flex-col overflow-hidden bg-white md:grid md:min-h-0 md:max-w-5xl md:grid-cols-2 md:rounded-3xl md:border md:border-stone-200 md:shadow-xl md:shadow-emerald-950/5">
@@ -18,7 +18,7 @@ export function PhoneEntryPage() {
             <div className="mb-6 flex items-center gap-4">
               <img
                 src={previewRestaurant.logoUrl}
-                alt="Restaurant logo"
+                alt="Logo nhà hàng"
                 width={64}
                 height={64}
                 className="size-16 shrink-0 rounded-2xl border-4 border-white bg-[#123d30] object-cover shadow-sm"
@@ -32,12 +32,12 @@ export function PhoneEntryPage() {
             {!valid ? (
               <p role="alert" className="mt-5 rounded-xl bg-mint p-4 text-sm">
                 {token
-                  ? 'Invalid QR link. Please scan the QR code on your table again.'
-                  : 'Scan the QR code on your table to start ordering.'}
+                  ? 'Liên kết QR không hợp lệ. Vui lòng quét lại mã QR trên bàn.'
+                  : 'Quét mã QR trên bàn để bắt đầu gọi món.'}
               </p>
             ) : scan.isPending ? (
               <p role="status" className="mt-5">
-                Checking table...
+                Đang kiểm tra bàn…
               </p>
             ) : scan.isError ? (
               <div className="mt-5 space-y-3">
@@ -51,12 +51,12 @@ export function PhoneEntryPage() {
                     void scan.refetch()
                   }}
                 >
-                  Try again
+                  Thử lại
                 </button>
               </div>
             ) : scan.data?.status !== 'Open' ? (
               <p role="alert" className="mt-5">
-                This table is not accepting guests. Please contact staff.
+                Bàn này hiện không nhận khách. Vui lòng liên hệ nhân viên.
               </p>
             ) : (
               <>
@@ -66,7 +66,7 @@ export function PhoneEntryPage() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="break-words text-lg font-bold text-ink">
-                      Table {scan.data.tableCode}
+                      Bàn {scan.data.tableCode}
                     </p>
                     <p className="mt-1 text-xs text-slate-500">
                       {previewRestaurant.areaName}
@@ -74,7 +74,7 @@ export function PhoneEntryPage() {
                   </div>
                   <span className="flex items-center gap-1.5 text-xs text-emerald-700">
                     <span className="size-1.5 rounded-full bg-emerald-500" />
-                    Open
+                    Đang mở
                   </span>
                 </div>
                 <PhoneEntryForm

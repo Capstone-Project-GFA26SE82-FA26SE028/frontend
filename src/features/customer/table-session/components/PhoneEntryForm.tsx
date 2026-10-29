@@ -28,7 +28,7 @@ export function PhoneEntryForm({
       className="mt-7 space-y-3"
     >
       <label className="block text-sm font-semibold" htmlFor="entry-phone">
-        Phone or table code
+        Số điện thoại hoặc mã bàn
       </label>
       <input
         {...register('phone')}
@@ -38,19 +38,19 @@ export function PhoneEntryForm({
         autoComplete="off"
         maxLength={14}
         disabled={pending}
-        placeholder="e.g. 0901234567 or 567"
+        placeholder="0901234567 hoặc 567"
         className="field min-h-12"
         aria-invalid={!!errors.phone}
         aria-describedby="entry-phone-help"
       />
       <details className="text-xs text-slate-500">
         <summary className="w-fit cursor-pointer py-1 text-emerald-700">
-          Help
+          Hướng dẫn
         </summary>
         <p id="entry-phone-help" className="mt-2 leading-5">
-          First guest? Enter your phone number or choose a 3-digit code. The
-          last 3 digits of your phone become the code. Others at your table
-          should enter that code. Ask your server if you need help.
+          Người vào bàn đầu tiên nhập số điện thoại hoặc chọn mã gồm 3 chữ số.
+          Nếu nhập số điện thoại, 3 số cuối sẽ là mã bàn. Những người cùng bàn
+          nhập mã này để tham gia. Liên hệ nhân viên nếu cần hỗ trợ.
         </p>
       </details>
       {errors.phone && (
@@ -71,7 +71,7 @@ export function PhoneEntryForm({
         disabled={pending}
         className="btn-primary mt-3 min-h-12 w-full"
       >
-        {pending ? 'Joining...' : 'Continue'}
+        {pending ? 'Đang vào bàn…' : 'Tiếp tục'}
       </button>
     </form>
   )

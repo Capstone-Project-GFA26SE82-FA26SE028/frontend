@@ -35,9 +35,9 @@ export function CategoryTabs({
       ref={listRef}
       role="group"
       className="relative flex gap-2 overflow-x-auto py-1 md:flex-wrap md:overflow-visible"
-      aria-label="Dish categories"
+      aria-label="Danh mục món"
     >
-      {[{ id: '', label: 'All dishes' }, ...categories].map((c) => (
+      {[{ id: '', label: 'Tất cả món' }, ...categories].map((c) => (
         <button
           key={c.id}
           onClick={() => onChange(c.id)}

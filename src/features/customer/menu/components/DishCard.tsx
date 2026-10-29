@@ -15,7 +15,7 @@ export function DishCard({
       <button
         onClick={onSelect}
         className="relative block w-full text-left"
-        aria-label={'View ' + dish.itemName}
+        aria-label={'Xem ' + dish.itemName}
       >
         <DishImage
           src={dish.imageUrl}
@@ -27,7 +27,7 @@ export function DishCard({
         {!available && (
           <span className="absolute inset-0 flex items-center justify-center">
             <span className="rounded-full bg-ink/85 px-4 py-2 text-xs text-white">
-              Unavailable
+              Không khả dụng
             </span>
           </span>
         )}
@@ -39,7 +39,7 @@ export function DishCard({
             dish.preparationTimeMinutes > 0 && (
               <span className="flex items-center gap-1">
                 <Icon name="clock" size={14} />
-                {dish.preparationTimeMinutes} min
+                {dish.preparationTimeMinutes} phút
               </span>
             )}
         </div>
@@ -60,7 +60,7 @@ export function DishCard({
           <span className="text-lg font-bold text-brand">
             {dish.price === null ? (
               <span className="text-sm font-normal text-muted">
-                Price unavailable
+                Chưa có giá
               </span>
             ) : (
               formatCurrency(dish.price)
@@ -69,7 +69,7 @@ export function DishCard({
           <button
             disabled={!available}
             onClick={onSelect}
-            aria-label={'Choose ' + dish.itemName}
+            aria-label={'Chọn ' + dish.itemName}
             className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-mint text-brand transition-colors hover:bg-brand hover:text-white disabled:opacity-40"
           >
             <Icon name="plus" />

@@ -23,13 +23,15 @@ function CheckoutReview() {
       <div className="grid min-h-11 grid-cols-[64px_minmax(0,1fr)_64px] items-center gap-2">
         <Link
           to="/cart"
-          aria-label="Back to cart"
-          title="Back to cart"
+          aria-label="Quay lại giỏ hàng"
+          title="Quay lại giỏ hàng"
           className="inline-flex size-9 items-center justify-center justify-self-start rounded-lg border border-stone-200/70 bg-white text-muted transition-colors hover:bg-mint hover:text-brand"
         >
           <Icon name="chevron" size={20} className="rotate-180" />
         </Link>
-        <h1 className="text-center text-base font-medium">Review your order</h1>
+        <h1 className="text-center text-base font-medium">
+          Kiểm tra đơn gọi món
+        </h1>
         <span aria-hidden="true" />
       </div>
       <CartStatus management={m} />
@@ -43,14 +45,14 @@ function CheckoutReview() {
           <p role="status">
             {checkout.mutation.isError
               ? checkoutError(checkout.mutation.error)
-              : 'An order request is saved. Check its result before placing another order.'}
+              : 'Đã lưu một yêu cầu gọi món. Vui lòng kiểm tra kết quả trước khi gửi đơn khác.'}
           </p>
           <button
             className="btn-primary mt-4"
             disabled={m.pending || m.cart.isFetching}
             onClick={() => void checkout.placeOrder()}
           >
-            {m.pending ? 'Submitting...' : 'Check / retry order'}
+            {m.pending ? 'Đang gửi…' : 'Kiểm tra / gửi lại yêu cầu'}
           </button>
           {isOrderRejected(checkout.mutation.error) && (
             <button
@@ -58,7 +60,7 @@ function CheckoutReview() {
               disabled={m.pending}
               onClick={() => void checkout.reviewAgain()}
             >
-              Reload and review cart
+              Tải lại và kiểm tra giỏ hàng
             </button>
           )}
         </div>
@@ -78,18 +80,18 @@ function CheckoutReview() {
                 disabled={m.pending || m.cart.isFetching || m.mutation.isError}
                 onClick={() => void checkout.placeOrder()}
               >
-                Place order
+                Gửi đơn gọi món
               </button>
               <p className="mt-3 text-xs leading-5 text-muted">
-                Your order will be sent to staff for confirmation.
+                Đơn gọi món sẽ được gửi đến nhân viên để xác nhận.
               </p>
             </CartSummary>
           </div>
         ) : !checkout.attempt ? (
           <div className="panel mt-4 p-8">
-            <p>Your cart is empty.</p>
+            <p>Giỏ hàng đang trống.</p>
             <Link to="/menu" className="btn-primary mt-5">
-              Choose dishes
+              Chọn món
             </Link>
           </div>
         ) : null)}
