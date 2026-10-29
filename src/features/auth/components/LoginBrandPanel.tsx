@@ -11,7 +11,7 @@ export function LoginBrandPanel() {
       <div className="hidden flex-1 flex-col items-center justify-center md:flex">
           <img
             src="/images/login-dining.svg"
-            alt="Illustration of a salad plate with cutlery"
+            alt="Minh họa đĩa salad cùng dao và nĩa"
             width={400}
             height={380}
             className="w-full max-w-[380px]"

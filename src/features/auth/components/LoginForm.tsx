@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema } from '../schemas/loginSchema'
 import { useLogin } from '../hooks/useLogin'
 import { authErrorMessage } from '../api/authApi'
-import type { LoginInput } from '../types'
+import type { LoginInput } from '../types/types'
 
 export function LoginForm() {
   const [visible, setVisible] = useState(false)
@@ -32,13 +32,13 @@ export function LoginForm() {
     >
       <div>
         <label htmlFor="login-email" className="text-sm font-semibold">
-          Email or username
+          Email hoặc tên đăng nhập
         </label>
         <input
           id="login-email"
           autoComplete="username"
           className="field mt-2"
-          placeholder="Enter your email or username"
+          placeholder="Nhập email hoặc tên đăng nhập"
           {...register('email')}
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? 'email-error' : undefined}
@@ -55,7 +55,7 @@ export function LoginForm() {
       </div>
       <div>
         <label htmlFor="login-password" className="text-sm font-semibold">
-          Password
+          Mật khẩu
         </label>
         <div className="relative mt-2">
           <input
@@ -63,14 +63,14 @@ export function LoginForm() {
             autoComplete="current-password"
             type={visible ? 'text' : 'password'}
             className="field pr-16"
-            placeholder="Enter your password"
+            placeholder="Nhập mật khẩu"
             {...register('password')}
             aria-invalid={!!errors.password}
             aria-describedby={errors.password ? 'password-error' : undefined}
           />
           <button
             type="button"
-            aria-label={visible ? 'Hide password' : 'Show password'}
+            aria-label={visible ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
             aria-pressed={visible}
             className="absolute inset-y-0 right-2 flex min-w-11 items-center justify-center rounded-lg text-muted transition-colors hover:text-brand focus-visible:outline-2 focus-visible:outline-brand"
             onClick={() => setVisible(!visible)}
@@ -101,11 +101,11 @@ export function LoginForm() {
         disabled={isSubmitting}
         className="btn-primary min-h-12 w-full"
       >
-        {isSubmitting ? 'Signing in…' : 'Sign in'}
+        {isSubmitting ? 'Đang đăng nhập…' : 'Đăng nhập'}
       </button>
       <p className="text-center text-xs leading-5 text-muted">
-        Use the account provided by your restaurant. Contact your administrator
-        if you need help.
+        Sử dụng tài khoản do nhà hàng cung cấp. Liên hệ quản trị viên nếu bạn
+        cần hỗ trợ.
       </p>
     </form>
   )

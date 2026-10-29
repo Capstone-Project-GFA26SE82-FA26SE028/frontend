@@ -1,5 +1,4 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios'
-import { z } from 'zod'
 import { axiosClient } from '../../../api/axiosClient'
 import { store } from '../../../app/store'
 import { queryClient } from '../../../app/queryClient'
@@ -10,12 +9,7 @@ import {
   sessionChecking,
   sessionCheckFailed,
 } from '../authSlice'
-import {
-  authSessionSchema,
-  authUserSchema,
-  type AuthSession,
-  type LoginInput,
-} from '../types'
+import type { AuthResponse, AuthSession, AuthUser, LoginInput } from '../types/types'
 
 // Separate Axios instance prevents login/refresh from triggering a refresh loop.
 const authClient = axios.create({
@@ -25,41 +19,32 @@ const authClient = axios.create({
 let revision = 0
 let refreshTask: Promise<AuthSession> | null = null
 let restoreTask: Promise<void> | null = null
-function parseResult<T>(data: unknown, schema: z.ZodType<T>): T {
-  const response = z
-    .object({
-      isSuccess: z.boolean(),
-      message: z.string().optional(),
-      result: z.unknown(),
-    })
-    .parse(data)
-  if (!response.isSuccess) throw new Error('Unable to complete your request.')
-  return schema.parse(response.result)
+function parseResult<T>(response: AuthResponse<T>): T {
+  if (!response.isSuccess)
+    throw new Error('Không thể hoàn tất yêu cầu. Vui lòng thử lại.')
+  return response.result
 }
 export function authErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
-    if (!error.response)
-      return 'Unable to connect to the server. Please try again.'
+    if (!error.response) return 'Không kết nối được máy chủ. Vui lòng thử lại.'
     if (error.response.status >= 500)
-      return 'The sign-in service is temporarily unavailable. Please try again.'
+      return 'Dịch vụ đăng nhập đang gián đoạn. Vui lòng thử lại.'
     if (error.response.status === 401)
-      return 'Incorrect sign-in details or your session has expired.'
+      return 'Thông tin đăng nhập không đúng hoặc phiên đăng nhập đã hết hạn.'
     if (error.response.status === 403)
-      return 'Access denied. Please contact your administrator.'
+      return 'Bạn không có quyền truy cập. Vui lòng liên hệ quản trị viên.'
     if (error.response.status === 429)
-      return 'Too many attempts. Please wait a moment and try again.'
+      return 'Bạn đã thử quá nhiều lần. Vui lòng đợi một lát rồi thử lại.'
     if (error.response.status === 404 || error.response.status === 405)
-      return 'The sign-in API was not found. Please check the API connection configuration.'
-    return 'Invalid request. Please check your details and try again.'
+      return 'Không tìm thấy API đăng nhập. Vui lòng kiểm tra cấu hình kết nối API.'
+    return 'Yêu cầu không hợp lệ. Vui lòng kiểm tra thông tin và thử lại.'
   }
-  if (error instanceof z.ZodError)
-    return 'The server returned an unexpected response.'
-  return error instanceof Error ? error.message : 'Unable to sign in.'
+  return error instanceof Error ? error.message : 'Không thể đăng nhập.'
 }
 function saveSession(session: AuthSession) {
   if (!session.user.isActive)
     throw new Error(
-      'Your account is inactive. Please contact your administrator.',
+      'Tài khoản đã bị vô hiệu hóa. Vui lòng liên hệ quản trị viên.',
     )
   try {
     sessionStorage.setItem(authStorageKey, JSON.stringify(session))
@@ -81,11 +66,11 @@ export function clearSession() {
 export async function login(input: LoginInput) {
   clearSession()
   const currentRevision = revision
-  const { data } = await authClient.post('/auth/login', input)
-  const session = parseResult(data, authSessionSchema)
+  const { data } = await authClient.post<AuthResponse<AuthSession>>('/auth/login', input)
+  const session = parseResult(data)
   if (currentRevision !== revision)
     throw new Error(
-      'This sign-in request is no longer valid. Please try again.',
+      'Yêu cầu đăng nhập này không còn hiệu lực. Vui lòng thử lại.',
     )
   saveSession(session)
   return session
@@ -97,17 +82,17 @@ export function refreshSession(): Promise<AuthSession> {
   if (!session || Date.parse(session.sessionExpiresAt) <= Date.now()) {
     clearSession()
     return Promise.reject(
-      new Error('Your session has expired. Please sign in again.'),
+      new Error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.'),
     )
   }
   refreshTask = (async () => {
     try {
-      const { data } = await authClient.post('/auth/refresh', {
+      const { data } = await authClient.post<AuthResponse<AuthSession>>('/auth/refresh', {
         refreshToken: session.refreshToken,
       })
-      const next = parseResult(data, authSessionSchema)
+      const next = parseResult(data)
       if (revision !== currentRevision)
-        throw new Error('Your session has changed. Please sign in again.')
+        throw new Error('Phiên đăng nhập đã thay đổi. Vui lòng đăng nhập lại.')
       saveSession(next)
       return next
     } catch (error) {
@@ -168,9 +153,9 @@ export function restoreSession(): Promise<void> {
   store.dispatch(sessionChecking())
   restoreTask = (async () => {
     try {
-      const { data } = await axiosClient.get('/users/me')
+      const { data } = await axiosClient.get<AuthResponse<AuthUser>>('/users/me')
       if (revision !== currentRevision) return
-      const user = parseResult(data, authUserSchema)
+      const user = parseResult(data)
       const session = store.getState().auth.session
       if (!user.isActive) {
         clearSession()
