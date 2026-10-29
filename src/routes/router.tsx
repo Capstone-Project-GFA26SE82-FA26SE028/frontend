@@ -9,11 +9,12 @@ import { OrderTrackingPage } from '../features/customer/order-tracking/pages/Ord
 import { CheckoutPage } from '../features/customer/checkout/pages/CheckoutPage'
 import { CartPage } from '../features/customer/cart/pages/CartPage'
 import { MenuPage } from '../features/customer/menu/pages/MenuPage'
-import { PhoneEntryPage } from '../features/customer/table-session/pages/PhoneEntryPage'
 import { CustomerSessionGate } from '../features/customer/table-session/components/CustomerSessionGate'
 import { adminRoute } from './adminRoutes'
 import { managerRoute } from './managerRoutes'
-import { createBrowserRouter, Link } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
+import { HomePage } from '../pages/HomePage'
+import { NotFoundPage } from '../pages/NotFoundPage'
 import { CustomerLayout } from '../layouts/customer/CustomerLayout'
 import { EmptyState } from '../components/EmptyState/EmptyState'
 
@@ -27,10 +28,9 @@ export const router = createBrowserRouter([
       { element: <RoleRoute roles={['manager']} />, children: [managerRoute] },
     ],
   },
-  { path: '/', element: <PhoneEntryPage /> },
-  { path: '/welcome', element: <PhoneEntryPage /> },
+  { path: '/', element: <HomePage /> },
   {
-    element: <CustomerLayout />,
+    element: <CustomerSessionGate />,
     errorElement: (
       <EmptyState
         title="Không thể mở trang"
@@ -40,9 +40,9 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        element: <CustomerSessionGate />,
+        element: <CustomerLayout />,
         children: [
-          { path: 'menu'  , element: <MenuPage /> },
+          { path: 'menu', element: <MenuPage /> },
           { path: 'cart', element: <CartPage /> },
           { path: 'checkout', element: <CheckoutPage /> },
           { path: 'orders', element: <OrderTrackingPage /> },
@@ -51,17 +51,8 @@ export const router = createBrowserRouter([
           { path: 'bill/:invoiceId', element: <BillingFeedbackPage /> },
         ],
       },
-      { path: 'reservation', element: <ReservationPage /> },
-      {
-        path: '*',
-        element: (
-          <EmptyState
-            title="Không tìm thấy trang"
-            description="Đường dẫn này không tồn tại."
-            action={<Link to="/">Về thực đơn</Link>}
-          />
-        ),
-      },
     ],
   },
+  { path: '/reservation', element: <ReservationPage /> },
+  { path: '*', element: <NotFoundPage /> },
 ])

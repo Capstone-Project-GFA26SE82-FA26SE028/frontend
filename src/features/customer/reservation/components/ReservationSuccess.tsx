@@ -10,9 +10,9 @@ export function ReservationSuccess({ onReset }: ReservationSuccessProps) {
       <span className="mx-auto flex size-16 items-center justify-center rounded-full bg-mint text-brand">
         <Icon name="check" size={30} />
       </span>
-      <h2 className="mt-5 text-2xl font-bold">Thông tin đặt bàn đã sẵn sàng</h2>
+      <h2 className="mt-5 text-2xl font-bold">Đã hoàn tất bản xem trước</h2>
       <p role="status" className="mt-3 text-sm leading-7 text-muted">
-        Bàn của bạn chưa được xác nhận. Vui lòng liên hệ nhà hàng để hoàn tất đặt bàn.
+        Yêu cầu chưa được gửi đến nhà hàng.
       </p>
       <button onClick={onReset} className="btn-secondary mt-6">
         Tạo yêu cầu khác

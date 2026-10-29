@@ -4,8 +4,11 @@ import { PhoneEntryForm } from '../components/PhoneEntryForm'
 import { PhoneEntryWelcome } from '../components/PhoneEntryWelcome'
 import { useTableSession } from '../hooks/useTableSession'
 import { sessionError } from '../api/tableSessionApi'
+import { NotFoundPage } from '../../../../pages/NotFoundPage'
 export function PhoneEntryPage() {
-  const { token, valid, scan, join } = useTableSession()
+  const { valid, scan, join } = useTableSession()
+  if (!valid) return <NotFoundPage />
+
   return (
     <main
       lang="vi"
@@ -29,13 +32,7 @@ export function PhoneEntryPage() {
                 </h1>
               </div>
             </div>
-            {!valid ? (
-              <p role="alert" className="mt-5 rounded-xl bg-mint p-4 text-sm">
-                {token
-                  ? 'Liên kết QR không hợp lệ. Vui lòng quét lại mã QR trên bàn.'
-                  : 'Quét mã QR trên bàn để bắt đầu gọi món.'}
-              </p>
-            ) : scan.isPending ? (
+            {scan.isPending ? (
               <p role="status" className="mt-5">
                 Đang kiểm tra bàn…
               </p>

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { useAppSelector } from '../../../../app/hooks'
 import {
   getGuestAccess,
@@ -8,6 +8,7 @@ import {
   resolveTableQr,
   sessionError,
 } from '../api/tableSessionApi'
+import { PhoneEntryPage } from '../pages/PhoneEntryPage'
 export function CustomerSessionGate() {
   const table = useAppSelector((s) => s.customerSession.table)
   const { search, hash } = useLocation()
@@ -24,7 +25,6 @@ export function CustomerSessionGate() {
     refetchOnWindowFocus: false,
   })
   const matchingTable = !incomingQr || resolved.data?.tableId === table?.tableId
-  const welcome = { pathname: '/welcome', search, hash }
   const access = useQuery({
     queryKey: ['customer-guest-access', table?.tableSessionId],
     queryFn: ({ signal }) => getGuestAccess(table!.tableSessionId, signal),
@@ -34,13 +34,13 @@ export function CustomerSessionGate() {
     refetchInterval: 60000,
   })
   if (!table || (incomingQr && !validQr))
-    return <Navigate to={welcome} replace />
+    return <PhoneEntryPage />
   if (incomingQr && resolved.isError) {
     if (
       axios.isAxiosError(resolved.error) &&
       [400, 403, 404, 409].includes(resolved.error.response?.status || 0)
     )
-      return <Navigate to={welcome} replace />
+      return <PhoneEntryPage />
     return (
       <div className="space-y-3 p-8 text-center">
         <p role="alert">{sessionError(resolved.error)}</p>
@@ -56,7 +56,7 @@ export function CustomerSessionGate() {
         Đang kiểm tra bàn…
       </p>
     )
-  if (!matchingTable) return <Navigate to={welcome} replace />
+  if (!matchingTable) return <PhoneEntryPage />
   if (access.isPending)
     return (
       <p role="status" className="p-8 text-center">
@@ -68,7 +68,7 @@ export function CustomerSessionGate() {
       axios.isAxiosError(access.error) &&
       [401, 403, 404, 409].includes(access.error.response?.status || 0)
     )
-      return <Navigate to={welcome} replace />
+      return <PhoneEntryPage />
     return (
       <div className="space-y-3 p-8 text-center">
         <p role="alert">{sessionError(access.error)}</p>
@@ -79,6 +79,6 @@ export function CustomerSessionGate() {
     )
   }
   if (access.data.tableSessionId !== table.tableSessionId)
-    return <Navigate to={welcome} replace />
+    return <PhoneEntryPage />
   return <Outlet />
 }
