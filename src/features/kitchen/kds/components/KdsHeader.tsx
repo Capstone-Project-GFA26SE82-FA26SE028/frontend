@@ -30,7 +30,7 @@ export function KdsHeader({
             aria-pressed={focus}
           >
             <Icon name={focus ? 'close' : 'monitor'} size={18} />
-            {focus ? 'Exit focus mode' : 'Focus mode'}
+            {focus ? 'Thoát chế độ tập trung' : 'Chế độ tập trung'}
           </button>
         </div>
       </div>

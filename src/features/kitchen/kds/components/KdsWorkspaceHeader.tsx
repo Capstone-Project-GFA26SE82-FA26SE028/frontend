@@ -8,7 +8,7 @@ import { useKds } from '../hooks/useKds'
 export function KdsWorkspaceHeader() {
   const { stations, stationId, setStationId, refresh, pending } = useKds()
   const user = useAppSelector((state) => state.auth.session?.user)
-  const displayName = user?.fullName || user?.userName || 'Kitchen'
+  const displayName = user?.fullName || user?.userName || 'Bếp'
   const [accountOpen, setAccountOpen] = useState(false)
   const accountRef = useRef<HTMLDivElement>(null)
   const accountButtonRef = useRef<HTMLButtonElement>(null)
@@ -37,14 +37,14 @@ export function KdsWorkspaceHeader() {
     <header className="sticky top-0 z-20 flex flex-wrap items-center gap-2 border-b border-slate-100 bg-white px-3 py-2 sm:gap-3 sm:px-5 lg:h-[68px] lg:flex-nowrap lg:py-0">
       <Link
         to="/kitchen"
-        aria-label="FoodHub Kitchen"
+        aria-label="FoodHub - Bếp"
         className="flex size-10 shrink-0 items-center justify-center rounded-lg text-emerald-700 transition-colors hover:bg-emerald-50"
       >
         <Icon name="leaf" size={23} />
       </Link>
       <div className="min-w-0 flex-1">
         <nav
-          aria-label="Breadcrumb"
+          aria-label="Đường dẫn điều hướng"
           className="flex items-center gap-1.5 text-sm leading-5"
         >
           <Link to="/kitchen" className="text-slate-500 hover:text-emerald-700">
@@ -52,22 +52,22 @@ export function KdsWorkspaceHeader() {
           </Link>
           <Icon name="chevron" size={12} className="text-slate-400" />
           <span aria-current="page" className="font-medium text-emerald-700">
-            Kitchen display
+            Màn hình bếp
           </span>
         </nav>
         <p className="truncate text-base font-semibold leading-5 tracking-tight text-[#253754]">
-          Kitchen workspace
+          Không gian làm việc bếp
         </p>
       </div>
       <div className="ml-auto flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:flex-nowrap">
         <select
-          aria-label="Kitchen station"
+          aria-label="Trạm bếp"
           value={stationId}
           disabled={pending || !stations.length}
           onChange={(event) => setStationId(event.target.value)}
           className="min-h-11 min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:max-w-56"
         >
-          {!stations.length && <option value="">No station available</option>}
+          {!stations.length && <option value="">Chưa có trạm bếp</option>}
           {stations.map((station) => (
             <option
               key={station.kitchenStationId}
@@ -79,8 +79,8 @@ export function KdsWorkspaceHeader() {
         </select>
         <button
           type="button"
-          aria-label="Refresh kitchen data"
-          title="Refresh kitchen data"
+          aria-label="Làm mới dữ liệu bếp"
+          title="Làm mới dữ liệu bếp"
           disabled={pending}
           onClick={refresh}
           className="flex size-11 shrink-0 items-center justify-center rounded-xl text-slate-500 transition-colors hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-40"
@@ -98,7 +98,7 @@ export function KdsWorkspaceHeader() {
           <button
             ref={accountButtonRef}
             type="button"
-            aria-label="Open account menu"
+            aria-label="Mở menu tài khoản"
             aria-expanded={accountOpen}
             aria-controls="kitchen-account-dropdown"
             onClick={() => setAccountOpen((open) => !open)}

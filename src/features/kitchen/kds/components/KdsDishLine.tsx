@@ -32,7 +32,7 @@ export function KdsDishLine({
         </span>
         <span
           className={`flex items-center gap-[5px] rounded-[5px] px-1.5 py-1 tabular-nums whitespace-nowrap ${late(ticket) ? 'bg-[#fff0e9] text-[#c17047]' : 'bg-[#f2f5f2] text-[#475569]'}`}
-          title="Time since order received"
+          title="Thời gian từ khi nhận đơn"
         >
           <Icon name="clock" size={13} />
           {elapsed(ticket.created, now)}
@@ -45,7 +45,7 @@ export function KdsDishLine({
         </div>
         <div>
           <h4>{dish.name}</h4>
-          <span>Received {clock(ticket.created)}</span>
+          <span>Nhận lúc {clock(ticket.created)}</span>
         </div>
         <button
           type="button"
@@ -66,21 +66,21 @@ export function KdsDishLine({
         className={`mt-3.5 flex min-h-12 items-start gap-[7px] rounded-[7px] border p-3 text-base leading-[1.6] [&>p]:wrap-anywhere ${ticket.note ? 'border-[#f4ecd9] bg-[#fbf5e9] text-[#854d0e]' : 'border-[#edf1e9] bg-[#f7f9f6] text-[#475569]'}`}
       >
         <Icon name="message" size={15} />
-        <p>{ticket.note || 'No special requests'}</p>
+        <p>{ticket.note || 'Không có yêu cầu đặc biệt'}</p>
       </div>
       {ticket.previousNote !== undefined && (
         <button
           className="mt-[9px] flex items-center gap-[5px] text-sm text-[#475569] [&>span]:size-1 [&>span]:rounded-full [&>span]:bg-[#7ca3b2]"
           onClick={() => onSelect(ticket.id)}
         >
-          <span /> Notes updated <Icon name="chevron" size={12} />
+          <span /> Ghi chú đã cập nhật <Icon name="chevron" size={12} />
         </button>
       )}
       <div className="mt-4 flex items-center gap-[7px]">
         <button
           className="grid h-12 min-h-12 w-12 shrink-0 place-items-center rounded-[7px] border border-[#e1e8df] bg-white text-[#475569] hover:bg-[#f1f5ef] motion-safe:transition-colors motion-safe:duration-150 "
           onClick={() => onSelect(ticket.id)}
-          aria-label={`Details ${ticket.id}`}
+          aria-label={`Chi tiết ${ticket.id}`}
         >
           <Icon name="receipt" size={18} />
         </button>
@@ -90,7 +90,7 @@ export function KdsDishLine({
           </div>
         ) : ticket.status === 'Ready' ? (
           <div className="flex min-h-12 flex-1 items-center justify-center gap-1.5 rounded-[7px] bg-[#edf6ee] p-2 text-sm font-semibold text-[#166534]">
-            <Icon name="check" size={17} /> Awaiting waiter pickup
+            <Icon name="check" size={17} /> Chờ nhân viên phục vụ nhận món
           </div>
         ) : (
           <button
@@ -101,19 +101,19 @@ export function KdsDishLine({
               name={ticket.status === 'Pending' ? 'fire' : 'check'}
               size={17}
             />
-            {ticket.status === 'Pending' ? 'Start cooking' : 'Mark ready'}
+            {ticket.status === 'Pending' ? 'Bắt đầu nấu' : 'Hoàn thành món'}
             <Icon name="arrow" size={16} />
           </button>
         )}
       </div>
       {ticket.status === 'Cooking' && ticket.started && (
         <p className="mt-2 text-center text-sm text-[#475569]">
-          Cooking for {elapsed(ticket.started, now)}
+          Đã nấu được {elapsed(ticket.started, now)}
         </p>
       )}
       {ticket.status === 'Ready' && ticket.finished && (
         <p className="mt-2 text-center text-sm text-[#475569]">
-          Ready at {clock(ticket.finished)}
+          Hoàn thành lúc {clock(ticket.finished)}
         </p>
       )}
     </div>

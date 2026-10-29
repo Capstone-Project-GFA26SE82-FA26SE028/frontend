@@ -1,12 +1,14 @@
 export const clock = (n: number) =>
-  new Date(n).toLocaleTimeString('en-US', {
+  new Date(n).toLocaleTimeString('vi-VN', {
     hour: '2-digit',
     minute: '2-digit',
   })
 export const dateTime = (n: number) =>
-  Number.isFinite(n) ? new Date(n).toLocaleString('en-US') : 'No expiry date'
+  Number.isFinite(n)
+    ? new Date(n).toLocaleString('vi-VN')
+    : 'Chưa có hạn sử dụng'
 export const elapsed = (start: number, now: number) =>
-  `${Math.max(0, Math.floor((now - start) / 60000))} min`
+  `${Math.max(0, Math.floor((now - start) / 60000))} phút`
 const normalize = (s: string) =>
   s
     .normalize('NFD')

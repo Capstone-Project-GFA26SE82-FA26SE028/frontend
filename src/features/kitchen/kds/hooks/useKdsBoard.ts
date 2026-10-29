@@ -49,8 +49,8 @@ export function useKdsBoard() {
     })
     setNotice(
       success
-        ? `${t.order} · ${state.dishes.find((r) => r.id === t.dishId)?.name}: ${t.status === 'Pending' ? 'cooking started' : 'ready for service'}.`
-        : 'Unable to change status. Review the server error and retry.',
+        ? `${t.order} · ${state.dishes.find((r) => r.id === t.dishId)?.name}: ${t.status === 'Pending' ? 'đã bắt đầu nấu' : 'đã sẵn sàng phục vụ'}.`
+        : 'Không thể đổi trạng thái. Vui lòng kiểm tra thông báo lỗi và thử lại.',
     )
   }
   return {

@@ -20,9 +20,9 @@ export function KdsOverview({
           <Icon name={area === 'Bar' ? 'cup' : 'fire'} size={25} />
         </div>
         <div>
-          <span>CURRENT STATION</span>
+          <span>TRẠM HIỆN TẠI</span>
           <strong>{area}</strong>
-          <small>Kitchen staff</small>
+          <small>Nhân viên bếp</small>
         </div>
       </div>
       <div className="grid flex-1 grid-cols-2 items-center gap-5 border-t border-white/20 pt-4 md:grid-cols-4 md:border-t-0 md:border-l md:pt-0 md:pl-6 [&>div]:grid [&>div]:grid-cols-[8px_auto] [&>div]:items-center [&>div]:gap-x-2 [&>div]:gap-y-1 [&_strong]:text-4xl [&_strong]:leading-tight [&_strong]:font-bold [&_strong]:tabular-nums [&_small]:col-start-2 [&_small]:text-sm [&_small]:font-medium [&_small]:text-emerald-50">
@@ -45,10 +45,10 @@ export function KdsOverview({
         <div>
           <strong>
             {active.filter(late).length
-              ? `${active.filter(late).length} dish lines waiting too long`
-              : 'Queue under control'}
+              ? `${active.filter(late).length} dòng món chờ quá lâu`
+              : 'Hàng chờ ổn định'}
           </strong>
-          <span>Alerts after 10 minutes · 10-minute threshold</span>
+          <span>Cảnh báo khi chờ quá 10 phút</span>
         </div>
       </div>
     </div>

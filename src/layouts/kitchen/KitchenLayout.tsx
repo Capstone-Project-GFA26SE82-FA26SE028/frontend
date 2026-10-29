@@ -31,18 +31,18 @@ function KitchenWorkspace() {
     return () => clearTimeout(timer)
   }, [state.feedback, dismissFeedback])
   return (
-    <div lang="en" className="min-h-dvh bg-[#f2f8fa] text-[#253754]">
+    <div lang="vi" className="min-h-dvh bg-[#f2f8fa] text-[#253754]">
       <a
         href="#kitchen-main"
         className="sr-only focus:not-sr-only focus:fixed focus:z-50 focus:bg-white focus:p-4"
       >
-        Skip to kitchen display
+        Đến nội dung màn hình bếp
       </a>
       <KdsWorkspaceHeader />
       <main id="kitchen-main" className="mx-auto max-w-[1920px] p-3 sm:p-6">
         {(loading || pending) && (
           <p role="status" className="mb-3 text-sm text-emerald-800">
-            {pending ? 'Saving…' : 'Loading kitchen data…'}
+            {pending ? 'Đang lưu…' : 'Đang tải dữ liệu bếp…'}
           </p>
         )}
         {errors.length > 0 && (
@@ -57,7 +57,7 @@ function KitchenWorkspace() {
         )}
         {!loading && !errors.length && !stations.length && (
           <p role="status" className="mb-4">
-            No active kitchen station is available.
+            Chưa có trạm bếp đang hoạt động.
           </p>
         )}
         <fieldset className="min-w-0" disabled={pending} aria-busy={pending}>
@@ -70,7 +70,7 @@ function KitchenWorkspace() {
           className={`fixed bottom-4 right-4 z-50 flex max-w-[calc(100vw-2rem)] items-start gap-3 rounded-xl p-4 text-sm text-white shadow-xl sm:max-w-sm ${state.feedback.error ? 'bg-rose-800' : 'bg-slate-900'}`}
         >
           <span>{state.feedback.text}</span>
-          <button aria-label="Dismiss notification" onClick={dismissFeedback}>
+          <button aria-label="Đóng thông báo" onClick={dismissFeedback}>
             <Icon name="close" size={16} />
           </button>
         </div>

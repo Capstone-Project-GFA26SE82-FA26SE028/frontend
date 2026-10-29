@@ -35,11 +35,11 @@ export function KdsOrderCard({
     <article
       key={order.id}
       className={`min-w-0 rounded-[11px] border border-t-[3px] border-[#e2e8e0] bg-white p-4 min-[1600px]:p-5 ${tone.card} ${order.lines.some(late) ? 'shadow-[inset_3px_0_#e11d48]' : 'shadow-[0_3px_8px_#1b412607]'}`}
-      aria-label={`Order ${order.id}`}
+      aria-label={`Đơn ${order.id}`}
     >
       <div className="flex items-center justify-between gap-1 text-sm text-[#475569] md:text-sm [&>span]:flex [&>span]:items-center [&>span]:gap-[5px] [&_i]:size-1 [&_i]:rounded-full [&_i]:bg-[#b0beb1]">
         <span>
-          <i /> ORDER · {order.lines.length} dish lines
+          <i /> ĐƠN · {order.lines.length} dòng món
         </span>
         <span className="flex items-center gap-[5px] rounded-[5px] bg-[#f2f5f2] px-1.5 py-1 text-[#475569] tabular-nums whitespace-nowrap">
           <Icon name="clock" size={13} />
@@ -61,7 +61,7 @@ export function KdsOrderCard({
           active.filter((t) => t.order === order.id && t.status === 'Ready')
             .length
         }
-        /{active.filter((t) => t.order === order.id).length} dishes ready
+        /{active.filter((t) => t.order === order.id).length} món đã xong
       </p>
       {order.lines.map((ticket) => {
         const dish = dishes.find((item) => item.id === ticket.dishId)
