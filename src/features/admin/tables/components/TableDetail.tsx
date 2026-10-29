@@ -1,4 +1,4 @@
-import type { Table } from '../types'
+import type { Table } from '../types/types'
 import { primaryButton, secondaryButton } from '../../components/AdminUI'
 export function TableDetail({
   table,
@@ -18,17 +18,17 @@ export function TableDetail({
       <div className="rounded-2xl bg-emerald-50 p-5">
         <h3 className="break-words text-xl font-bold">{table.tableCode}</h3>
         <p className="mt-2 text-sm text-emerald-700">
-          {table.isActive ? 'Active' : 'Inactive'}
+          {table.isActive ? 'Đang hoạt động' : 'Ngừng hoạt động'}
         </p>
       </div>
       <dl className="divide-y divide-slate-100">
         {[
-          ['Restaurant', restaurantName],
-          ['Area', areaName],
-          ['Capacity', table.capacity + ' seats'],
-          ['Cleaning status', table.cleaningStatus],
-          ['Position X', table.positionX ?? 'Not set'],
-          ['Position Y', table.positionY ?? 'Not set'],
+          ['Nhà hàng', restaurantName],
+          ['Khu vực', areaName],
+          ['Sức chứa', table.capacity + ' seats'],
+          ['Trạng thái vệ sinh', table.cleaningStatus],
+          ['Tọa độ X', table.positionX ?? 'Not set'],
+          ['Tọa độ Y', table.positionY ?? 'Not set'],
         ].map(([label, value]) => (
           <div
             key={label}
@@ -44,10 +44,10 @@ export function TableDetail({
           className={secondaryButton + ' justify-center'}
           onClick={onClose}
         >
-          Close
+          Đóng
         </button>
         <button className={primaryButton + ' justify-center'} onClick={onEdit}>
-          Edit table
+          Sửa bàn
         </button>
       </div>
     </div>

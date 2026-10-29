@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useActivityUser } from '../hooks/useActivity'
 import { Modal } from '../../../../components/Modal/Modal'
 import { secondaryButton } from '../../components/AdminUI'
-import type { ActivityLog } from '../types'
+import type { ActivityLog } from '../types/types'
 function parseSnapshot(value: string | null): Record<string, unknown> {
   if (value === null) return {}
   try {
@@ -18,18 +18,18 @@ function parseSnapshot(value: string | null): Record<string, unknown> {
 }
 function fieldLabel(key: string) {
   const labels: Record<string, string> = {
-    roleid: 'Role',
-    isactive: 'Status',
-    username: 'Username',
-    fullname: 'Full name',
+    roleid: 'Vai trò',
+    isactive: 'Trạng thái',
+    username: 'Tên đăng nhập',
+    fullname: 'Họ và tên',
     email: 'Email',
-    phonenumber: 'Phone',
-    avatarurl: 'Avatar URL',
-    userid: 'User ID',
-    revokedat: 'Revoked at',
-    expiresat: 'Expires at',
-    createdat: 'Created at',
-    updatedat: 'Updated at',
+    phonenumber: 'Số điện thoại',
+    avatarurl: 'Đường dẫn ảnh đại diện',
+    userid: 'Mã người dùng',
+    revokedat: 'Thu hồi lúc',
+    expiresat: 'Hết hạn lúc',
+    createdat: 'Tạo lúc',
+    updatedat: 'Cập nhật lúc',
   }
   return (
     labels[key.toLowerCase()] ||
@@ -37,24 +37,24 @@ function fieldLabel(key: string) {
   )
 }
 function displayValue(key: string, value: unknown) {
-  if (value === undefined) return 'Not recorded'
-  if (value === null) return 'Not set'
-  if (value === '') return 'Empty'
+  if (value === undefined) return 'Chưa ghi nhận'
+  if (value === null) return 'Chưa thiết lập'
+  if (value === '') return 'Trống'
   if (key.toLowerCase() === 'isactive' && typeof value === 'boolean')
-    return value ? 'Active' : 'Inactive'
+    return value ? 'Đang hoạt động' : 'Đã vô hiệu hóa'
   if (key.toLowerCase() === 'roleid' && typeof value === 'string') {
     const roles: Record<string, string> = {
-      admin: 'Administrator',
-      manager: 'Manager',
-      waiter: 'Waiter',
-      cashier: 'Cashier',
-      kitchen: 'Kitchen staff',
-      inventory: 'Inventory staff',
-      supplier: 'Supplier',
+      admin: 'Quản trị viên',
+      manager: 'Quản lý',
+      waiter: 'Nhân viên phục vụ',
+      cashier: 'Thu ngân',
+      kitchen: 'Nhân viên bếp',
+      inventory: 'Nhân viên kho',
+      supplier: 'Nhà cung cấp',
     }
     return roles[value.toLowerCase()] || value
   }
-  if (typeof value === 'boolean') return value ? 'Yes' : 'No'
+  if (typeof value === 'boolean') return value ? 'Có' : 'Không'
   return typeof value === 'object'
     ? JSON.stringify(value, null, 2)
     : String(value)
@@ -83,26 +83,26 @@ export function ActivityDetailModal({
   const fields = [...new Set([...Object.keys(before), ...Object.keys(after)])]
   return (
     <Modal
-      title="Activity details"
-      closeLabel="Close"
+      title="Chi tiết hoạt động"
+      closeLabel="Đóng"
       onClose={onClose}
       size="wide"
     >
       <div className="space-y-5 p-5 sm:p-6">
         <section className="rounded-xl bg-emerald-50 p-4">
           {!log.userId ? (
-            <span className="text-slate-500">Not available</span>
+            <span className="text-slate-500">Chưa có dữ liệu</span>
           ) : user.isPending ? (
-            <span className="text-slate-500">Loading user...</span>
+            <span className="text-slate-500">Đang tải người dùng…</span>
           ) : user.isError ? (
             <button
               className="text-left text-sm text-rose-600 underline"
               onClick={() => void user.refetch()}
             >
-              User unavailable. Retry
+              Không tải được người dùng. Thử lại
             </button>
           ) : !user.data ? (
-            <span className="text-slate-500">Unknown user</span>
+            <span className="text-slate-500">Người dùng chưa xác định</span>
           ) : (
             <div className="flex items-center gap-4">
               <span className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-emerald-100 font-semibold text-emerald-800">
@@ -111,7 +111,10 @@ export function ActivityDetailModal({
                 failedUrl !== user.data.avatarUrl ? (
                   <img
                     src={user.data.avatarUrl}
-                    alt={(user.data.fullName || user.data.userName) + ' avatar'}
+                    alt={
+                      (user.data.fullName || user.data.userName) +
+                      ' - ảnh đại diện'
+                    }
                     referrerPolicy="no-referrer"
                     className="h-full w-full object-cover"
                     onError={() => setFailedUrl(user.data!.avatarUrl)}
@@ -136,13 +139,13 @@ export function ActivityDetailModal({
         </section>
         <dl className="grid gap-3 sm:grid-cols-2">
           {[
-            ['Action', log.action],
-            ['Entity', log.entityName],
-            ['User ID', log.userId],
-            ['IP address', log.ipAddress],
-            ['Created', new Date(log.createdAt).toLocaleString('en-GB')],
-            ['Entity ID', log.entityId],
-            ['Log ID', log.auditLogId],
+            ['Thao tác', log.action],
+            ['Đối tượng', log.entityName],
+            ['Mã người dùng', log.userId],
+            ['Địa chỉ IP', log.ipAddress],
+            ['Ngày tạo', new Date(log.createdAt).toLocaleString('en-GB')],
+            ['Mã đối tượng', log.entityId],
+            ['Mã nhật ký', log.auditLogId],
           ].map(([label, value]) => (
             <div
               key={label}
@@ -156,17 +159,17 @@ export function ActivityDetailModal({
           ))}
         </dl>
         <section>
-          <h3 className="mb-3 text-sm font-semibold">Changes</h3>
+          <h3 className="mb-3 text-sm font-semibold">Thay đổi</h3>
           {!fields.length ? (
             <p className="rounded-xl bg-slate-50 p-4 text-sm text-slate-500">
-              No before or after values were recorded for this activity.
+              Hoạt động này không ghi nhận dữ liệu trước hoặc sau thay đổi.
             </p>
           ) : (
             <div className="overflow-x-auto rounded-xl border border-slate-200">
               <table className="w-full min-w-[440px] table-fixed text-left text-sm">
                 <thead className="bg-slate-50 text-slate-500">
                   <tr>
-                    {['Information', 'Before', 'After'].map((label) => (
+                    {['Thông tin', 'Trước', 'Sau'].map((label) => (
                       <th
                         key={label}
                         scope="col"
@@ -196,7 +199,7 @@ export function ActivityDetailModal({
                           {fieldLabel(key)}
                           {changed && (
                             <span className="mt-1 block text-xs font-normal text-emerald-700">
-                              Changed
+                              Đã thay đổi
                             </span>
                           )}
                         </th>
@@ -223,7 +226,7 @@ export function ActivityDetailModal({
         </section>
         <div className="flex justify-end border-t border-slate-100 pt-4">
           <button className={secondaryButton} onClick={onClose}>
-            Close
+            Đóng
           </button>
         </div>
       </div>

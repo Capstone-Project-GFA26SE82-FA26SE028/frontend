@@ -33,11 +33,11 @@ export function TableQrModal({
     return (
       <Modal
         key="confirm"
-        title="Regenerate QR code?"
+        title="Tạo lại mã QR?"
         subtitle={
-          context.data ? 'Table ' + context.data.table.tableCode : undefined
+          context.data ? 'Bàn ' + context.data.table.tableCode : undefined
         }
-        closeLabel="Cancel"
+        closeLabel="Hủy"
         onClose={() => {
           if (!mutation.isPending) setConfirm(false)
         }}
@@ -47,8 +47,8 @@ export function TableQrModal({
             <Icon name="qr" size={26} />
           </div>
           <p className="text-sm leading-6 text-slate-600">
-            The current QR code will stop working immediately. Download and
-            replace the printed code after generating a new one.
+            Mã QR hiện tại sẽ ngừng hoạt động ngay. Tải về và thay mã đã in sau
+            khi tạo mã mới.
           </p>
           {mutation.isError && (
             <div
@@ -61,7 +61,7 @@ export function TableQrModal({
                 className="font-semibold underline"
                 onClick={() => void reload()}
               >
-                Reload QR
+                Tải lại QR
               </button>
             </div>
           )}
@@ -72,7 +72,7 @@ export function TableQrModal({
               disabled={mutation.isPending}
               onClick={() => setConfirm(false)}
             >
-              Cancel
+              Hủy
             </button>
             <button
               className={primaryButton}
@@ -84,7 +84,7 @@ export function TableQrModal({
               }
               onClick={() => mutation.mutate()}
             >
-              {mutation.isPending ? 'Generating...' : 'Regenerate QR'}
+              {mutation.isPending ? 'Đang tạo…' : 'Tạo lại QR'}
             </button>
           </div>
         </div>
@@ -94,7 +94,7 @@ export function TableQrModal({
   return (
     <Modal
       key="preview"
-      title={context.data ? 'QR - ' + context.data.table.tableCode : 'Table QR'}
+      title={context.data ? 'QR - ' + context.data.table.tableCode : 'QR bàn'}
       subtitle={
         context.data
           ? context.data.restaurant.restaurantName +
@@ -102,21 +102,21 @@ export function TableQrModal({
             context.data.area.areaName
           : undefined
       }
-      closeLabel="Close"
+      closeLabel="Đóng"
       onClose={() => {
         if (!mutation.isPending) onClose()
       }}
     >
       <div className="space-y-5 p-6">
         {context.isPending ? (
-          <p role="status">Loading table QR...</p>
+          <p role="status">Đang tải QR bàn…</p>
         ) : context.isError ? (
           <div className="space-y-3">
             <p role="alert" className="text-sm text-rose-600">
               {qrError(context.error)}
             </p>
             <button className={secondaryButton} onClick={() => void reload()}>
-              Try again
+              Thử lại
             </button>
           </div>
         ) : (
@@ -125,7 +125,7 @@ export function TableQrModal({
               <>
                 <div className="flex min-h-64 items-center justify-center rounded-2xl border border-slate-200 bg-white p-4">
                   {picture.isPending ? (
-                    <p role="status">Loading QR image...</p>
+                    <p role="status">Đang tải ảnh QR…</p>
                   ) : picture.isError ? (
                     <div className="space-y-3 text-center">
                       <p role="alert" className="text-sm text-rose-600">
@@ -135,13 +135,13 @@ export function TableQrModal({
                         className={secondaryButton}
                         onClick={() => void picture.refetch()}
                       >
-                        Retry image
+                        Tải lại ảnh
                       </button>
                     </div>
                   ) : picture.data ? (
                     <img
                       ref={imageRef}
-                      alt={'QR code for table ' + context.data.table.tableCode}
+                      alt={'Mã QR của bàn ' + context.data.table.tableCode}
                       className="aspect-square w-full max-w-64"
                     />
                   ) : null}
@@ -155,10 +155,12 @@ export function TableQrModal({
                         : 'bg-amber-50 text-amber-700')
                     }
                   >
-                    {current.isUsable && allowed ? 'Usable' : 'Unavailable'}
+                    {current.isUsable && allowed
+                      ? 'Có thể sử dụng'
+                      : 'Không khả dụng'}
                   </span>
                   <span className="text-slate-500">
-                    Created{' '}
+                    Ngày tạo{' '}
                     {new Date(current.createdAt).toLocaleString('en-GB')}
                   </span>
                 </div>
@@ -170,16 +172,15 @@ export function TableQrModal({
                   size={40}
                   className="mx-auto text-emerald-600"
                 />
-                <p className="mt-3 font-semibold">No QR code yet</p>
+                <p className="mt-3 font-semibold">Chưa có mã QR</p>
                 <p className="mt-1 text-sm text-slate-500">
-                  Create a QR code for this table.
+                  Tạo mã QR cho bàn này.
                 </p>
               </div>
             )}
             {!allowed && (
               <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-800">
-                The table and its area must be active to create or use a QR
-                code.
+                Bàn và khu vực phải đang hoạt động để tạo hoặc sử dụng mã QR.
               </p>
             )}
             {mutation.isError && (
@@ -193,7 +194,7 @@ export function TableQrModal({
                   className="font-semibold underline"
                   onClick={() => void reload()}
                 >
-                  Reload QR
+                  Tải lại QR
                 </button>
               </div>
             )}
@@ -211,7 +212,7 @@ export function TableQrModal({
                   onClick={download}
                 >
                   <Icon name="download" size={17} />
-                  Download PNG
+                  Tải ảnh PNG
                 </button>
               )}
               <button
@@ -225,10 +226,10 @@ export function TableQrModal({
                 onClick={() => (current ? setConfirm(true) : mutation.mutate())}
               >
                 {mutation.isPending
-                  ? 'Creating...'
+                  ? 'Đang tạo…'
                   : current
-                    ? 'Regenerate'
-                    : 'Create QR'}
+                    ? 'Tạo lại'
+                    : 'Tạo QR'}
               </button>
             </div>
             <div className="flex justify-between border-t border-slate-100 pt-4">
@@ -237,14 +238,14 @@ export function TableQrModal({
                 disabled={mutation.isPending || context.isFetching}
                 onClick={() => void reload()}
               >
-                Refresh
+                Làm mới
               </button>
               <button
                 className={secondaryButton}
                 disabled={mutation.isPending}
                 onClick={onClose}
               >
-                Close
+                Đóng
               </button>
             </div>
           </>

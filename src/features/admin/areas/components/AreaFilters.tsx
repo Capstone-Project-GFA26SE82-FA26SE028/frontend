@@ -1,5 +1,5 @@
 import { fieldClass, secondaryButton } from '../../components/AdminUI'
-import type { Restaurant } from '../../restaurants/types'
+import type { Restaurant } from '../../restaurants/types/types'
 export function AreaFilters({
   search,
   onSearch,
@@ -21,11 +21,11 @@ export function AreaFilters({
 }) {
   return (
     <div className="flex flex-wrap items-center gap-3 p-4">
-      <div className="flex gap-1" role="group" aria-label="Area status">
+      <div className="flex gap-1" role="group" aria-label="Trạng thái khu vực">
         {[
-          ['', 'All'],
-          ['true', 'Active'],
-          ['false', 'Inactive'],
+          ['', 'Tất cả'],
+          ['true', 'Đang hoạt động'],
+          ['false', 'Ngừng hoạt động'],
         ].map(([value, label]) => (
           <button
             key={value}
@@ -43,20 +43,20 @@ export function AreaFilters({
         ))}
       </div>
       <input
-        aria-label="Search areas"
+        aria-label="Tìm khu vực"
         maxLength={255}
-        placeholder="Search code or name..."
+        placeholder="Tìm mã hoặc tên khu vực…"
         className={fieldClass + ' min-w-0 sm:ml-auto sm:!w-64 sm:flex-none'}
         value={search}
         onChange={(e) => onSearch(e.target.value)}
       />
       <select
-        aria-label="Filter by restaurant"
+        aria-label="Lọc theo nhà hàng"
         className={fieldClass + ' sm:!w-56'}
         value={restaurantId}
         onChange={(e) => onRestaurant(e.target.value)}
       >
-        <option value="">All restaurants</option>
+        <option value="">Tất cả nhà hàng</option>
         {restaurants.map((r) => (
           <option key={r.restaurantId} value={r.restaurantId}>
             {r.restaurantName}
@@ -64,7 +64,7 @@ export function AreaFilters({
         ))}
       </select>
       <button className={secondaryButton} onClick={onReset}>
-        Reset
+        Đặt lại
       </button>
     </div>
   )

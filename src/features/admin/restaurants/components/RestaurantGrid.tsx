@@ -1,6 +1,6 @@
 import { RestaurantCard } from './RestaurantCard'
 import { EmptyState } from '../../components/AdminUI'
-import type { Restaurant } from '../types'
+import type { Restaurant } from '../types/types'
 export function RestaurantGrid({
   items,
   onView,
@@ -13,8 +13,8 @@ export function RestaurantGrid({
   if (!items.length)
     return (
       <EmptyState
-        title="No restaurants found"
-        description="Try another name or add your first restaurant."
+        title="Không tìm thấy nhà hàng"
+        description="Thử tên khác hoặc thêm nhà hàng đầu tiên."
       />
     )
   return (

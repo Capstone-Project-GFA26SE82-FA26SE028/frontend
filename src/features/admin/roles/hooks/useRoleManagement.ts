@@ -15,7 +15,7 @@ import {
   getRoleUsers,
   roleApiError,
 } from '../api/roleApi'
-import type { RoleAccount } from '../types'
+import type { RoleAccount } from '../types/types'
 import type { RoleTab } from '../components/RoleTabs'
 import type { RoleAssignmentValues } from '../schemas/roleAssignmentSchema'
 
@@ -137,10 +137,12 @@ export function useRoleManagement() {
       })
       setSelectedUser(null)
       if (updated.userId === store.getState().auth.session?.user.userId) {
-        toast.success('Your role was updated. Please sign in again.')
+        toast.success(
+          'Vai trò của bạn đã được cập nhật. Vui lòng đăng nhập lại.',
+        )
         clearSession()
       } else {
-        toast.success('Role updated successfully.')
+        toast.success('Đã cập nhật vai trò thành công.')
         await client.invalidateQueries({ queryKey: ['users'] })
       }
       return ''

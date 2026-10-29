@@ -58,9 +58,9 @@ export function UsersPage() {
           role="alert"
           className="mb-4 rounded-xl bg-rose-50 p-3 text-sm text-rose-700"
         >
-          Unable to load roles.{' '}
+          Không thể tải danh sách vai trò.{' '}
           <button className="underline" onClick={() => void roles.refetch()}>
-            Try again
+            Thử lại
           </button>
         </div>
       )}
@@ -77,7 +77,7 @@ export function UsersPage() {
         />
         {users.isPending ? (
           <p role="status" className="p-8 text-center text-slate-500">
-            Loading accounts…
+            Đang tải tài khoản…
           </p>
         ) : users.isError ? (
           <div className="space-y-3 p-8 text-center">
@@ -88,14 +88,14 @@ export function UsersPage() {
               className={secondaryButton}
               onClick={() => void users.refetch()}
             >
-              Try again
+              Thử lại
             </button>
           </div>
         ) : (
           <>
             {users.isFetching && (
               <p role="status" className="px-4 py-2 text-sm text-slate-500">
-                Refreshing accounts…
+                Đang cập nhật tài khoản…
               </p>
             )}
             <UserTable
@@ -105,7 +105,7 @@ export function UsersPage() {
               onStatus={openStatus}
             />
             <Pagination
-              locale="en"
+              locale="vi"
               size={10}
               total={total}
               page={Math.min(page, maxPage)}
@@ -113,7 +113,9 @@ export function UsersPage() {
                 setPage(nextPage)
                 window.scrollTo({
                   top: 0,
-                  behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                  behavior: window.matchMedia(
+                    '(prefers-reduced-motion: reduce)',
+                  ).matches
                     ? 'instant'
                     : 'smooth',
                 })

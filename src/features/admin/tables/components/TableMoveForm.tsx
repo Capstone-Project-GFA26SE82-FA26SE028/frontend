@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import type { Area } from '../../areas/types'
-import type { Table } from '../types'
+import type { Area } from '../../areas/types/types'
+import type { Table } from '../types/types'
 import {
   Field,
   fieldClass,
@@ -44,10 +44,11 @@ export function TableMoveForm({
       }}
     >
       <p className="text-sm text-slate-500">
-        Move {table.tableCode} from {current?.areaName || 'Unknown area'} to an
-        active area in the same restaurant.
+        Chuyển {table.tableCode} từ{' '}
+        {current?.areaName || 'Khu vực chưa xác định'} sang một khu vực đang
+        hoạt động trong cùng nhà hàng.
       </p>
-      <Field label="Destination area">
+      <Field label="Khu vực đích">
         <select
           required
           disabled={pending}
@@ -55,7 +56,7 @@ export function TableMoveForm({
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
         >
-          <option value="">Select destination</option>
+          <option value="">Chọn khu vực đích</option>
           {choices.map((a) => (
             <option key={a.areaId} value={a.areaId}>
               {a.areaName}
@@ -65,7 +66,7 @@ export function TableMoveForm({
       </Field>
       {!choices.length && (
         <p className="text-sm text-slate-500">
-          No other active areas available.
+          Không có khu vực đang hoạt động khác.
         </p>
       )}
       {error && (
@@ -80,10 +81,10 @@ export function TableMoveForm({
           className={secondaryButton}
           onClick={onClose}
         >
-          Cancel
+          Hủy
         </button>
         <button disabled={pending || !selected} className={primaryButton}>
-          {pending ? 'Moving...' : 'Move table'}
+          {pending ? 'Đang chuyển…' : 'Chuyển bàn'}
         </button>
       </div>
     </form>

@@ -20,23 +20,23 @@ export function TableModal({
     <Modal
       title={
         target.mode === 'create'
-          ? 'Add table'
+          ? 'Thêm bàn'
           : target.mode === 'edit'
-            ? 'Edit table'
+            ? 'Sửa bàn'
             : target.mode === 'view'
-              ? 'Table details'
+              ? 'Chi tiết bàn'
               : target.mode === 'move'
-                ? 'Move table'
+                ? 'Chuyển bàn'
                 : target.mode === 'delete'
-                  ? 'Delete table'
+                  ? 'Xóa bàn'
                   : table?.isActive
-                    ? 'Deactivate table'
-                    : 'Activate table'
+                    ? 'Ngừng hoạt động bàn'
+                    : 'Kích hoạt bàn'
       }
       size={
         target.mode === 'create' || target.mode === 'edit' ? 'wide' : 'default'
       }
-      closeLabel="Close"
+      closeLabel="Đóng"
       onClose={m.close}
     >
       {target.mode !== 'create' && isTableVersionConflict(mutation.error) && (
@@ -44,36 +44,36 @@ export function TableModal({
           <button
             disabled={detail.isFetching || mutation.isPending}
             className="font-semibold underline disabled:opacity-50"
-            title="Reload the latest data and reset unsaved changes"
+            title="Tải dữ liệu mới nhất và đặt lại các thay đổi chưa lưu"
             onClick={() => void m.reload()}
           >
-            Reload table
+            Tải lại bàn
           </button>
         </div>
       )}
       {target.mode !== 'create' && detail.isPending ? (
         <p role="status" className="p-6">
-          Loading table...
+          Đang tải bàn…
         </p>
       ) : target.mode !== 'create' && detail.isError ? (
         <div className="space-y-3 p-6">
           <p role="alert">{tableError(detail.error)}</p>
           <button className={secondaryButton} onClick={() => void m.reload()}>
-            Try again
+            Thử lại
           </button>
         </div>
       ) : m.options.isPending ? (
         <p role="status" className="p-6">
-          Loading restaurants and areas...
+          Đang tải nhà hàng và khu vực…
         </p>
       ) : m.options.isError ? (
         <div className="p-6">
-          <p role="alert">Unable to load restaurants and areas.</p>
+          <p role="alert">Không thể tải nhà hàng và khu vực.</p>
           <button
             className={secondaryButton}
             onClick={() => void m.options.refetch()}
           >
-            Try again
+            Thử lại
           </button>
         </div>
       ) : target.mode === 'create' ? (
@@ -91,11 +91,11 @@ export function TableModal({
         (target.mode === 'view' ? (
           <TableDetail
             table={table}
-            areaName={currentArea?.areaName || 'Area unavailable'}
+            areaName={currentArea?.areaName || 'Chưa có thông tin khu vực'}
             restaurantName={
               restaurants.find(
                 (r) => r.restaurantId === currentArea?.restaurantId,
-              )?.restaurantName || 'Restaurant unavailable'
+              )?.restaurantName || 'Chưa có thông tin nhà hàng'
             }
             onClose={m.close}
             onEdit={() => m.open('edit', table.tableId)}
@@ -138,10 +138,10 @@ export function TableModal({
           <div className="space-y-5 p-6">
             <p className="break-words text-sm text-slate-600">
               {target.mode === 'delete'
-                ? 'Delete ' +
+                ? 'Xóa ' +
                   table.tableCode +
-                  '? Tables with QR codes, reservations or service history cannot be deleted.'
-                : (table.isActive ? 'Deactivate ' : 'Activate ') +
+                  '? Không thể xóa bàn có mã QR, lịch đặt hoặc lịch sử phục vụ.'
+                : (table.isActive ? 'Ngừng hoạt động ' : 'Kích hoạt ') +
                   table.tableCode +
                   '?'}
             </p>
@@ -159,7 +159,7 @@ export function TableModal({
                 className={secondaryButton}
                 onClick={m.close}
               >
-                Cancel
+                Hủy
               </button>
               <button
                 disabled={mutation.isPending || detail.isFetching}
@@ -186,12 +186,12 @@ export function TableModal({
                 }
               >
                 {mutation.isPending
-                  ? 'Saving...'
+                  ? 'Đang lưu…'
                   : target.mode === 'delete'
-                    ? 'Delete'
+                    ? 'Xóa'
                     : table.isActive
-                      ? 'Deactivate'
-                      : 'Activate'}
+                      ? 'Ngừng hoạt động'
+                      : 'Kích hoạt'}
               </button>
             </div>
           </div>

@@ -1,73 +1,53 @@
 import axios from 'axios'
-import { z } from 'zod'
 import { axiosClient } from '../../../../api/axiosClient'
-import type { LoginSession, SessionQuery, SessionRole } from '../types'
+import type {
+  SessionQuery,
+  SessionRole,
+  SessionResponse,
+  SessionPage,
+} from '../types/types'
 
-const sessionSchema: z.ZodType<LoginSession> = z.object({
-  userSessionId: z.string(),
-  userId: z.string(),
-  userName: z.string(),
-  email: z.string(),
-  roleId: z.string(),
-  ipAddress: z.string().nullable(),
-  userAgent: z.string().nullable(),
-  deviceType: z.string().nullable(),
-  loggedInAt: z.string().datetime({ offset: true }),
-  expiresAt: z.string().datetime({ offset: true }),
-  revokedAt: z.string().datetime({ offset: true }).nullable(),
-  isCurrent: z.boolean(),
-})
-const pageSchema = z.object({
-  items: z.array(sessionSchema),
-  totalCount: z.number().int().nonnegative(),
-  page: z.number().int().positive(),
-  pageSize: z.number().int().positive(),
-})
-function result<T>(data: unknown, schema: z.ZodType<T>): T {
-  const envelope = z
-    .object({ isSuccess: z.boolean(), result: z.unknown() })
-    .parse(data)
-  if (!envelope.isSuccess) throw new Error('Unable to complete the request.')
-  return schema.parse(envelope.result)
+function result<T>(envelope: SessionResponse<T>): T {
+  if (!envelope.isSuccess) throw new Error('Không thể hoàn tất yêu cầu.')
+  return envelope.result
 }
 export async function getSessions(params: SessionQuery, signal?: AbortSignal) {
-  const { data } = await axiosClient.get('/sessions', { params, signal })
-  return result(data, pageSchema)
+  const { data } = await axiosClient.get<SessionResponse<SessionPage>>(
+    '/sessions',
+    { params, signal },
+  )
+  return result(data)
 }
 export async function getSessionRoles(
   signal?: AbortSignal,
 ): Promise<SessionRole[]> {
-  const { data } = await axiosClient.get('/roles', { signal })
-  return result(
-    data,
-    z.array(z.object({ roleId: z.string(), roleName: z.string() })),
+  const { data } = await axiosClient.get<SessionResponse<SessionRole[]>>(
+    '/roles',
+    { signal },
   )
+  return result(data)
 }
 export async function revokeSession(id: string | 'all') {
   const path =
     id === 'all' ? '/sessions/me' : '/sessions/me/' + encodeURIComponent(id)
-  const { data } = await axiosClient.delete(path)
-  const response = z.object({ isSuccess: z.boolean() }).parse(data)
+  const { data } = await axiosClient.delete<SessionResponse<unknown>>(path)
+  const response = data
   if (!response.isSuccess)
-    throw new Error('Unable to revoke the session. Please try again.')
+    throw new Error('Không thể thu hồi phiên. Vui lòng thử lại.')
 }
 export function sessionApiError(error: unknown): string {
   if (axios.isAxiosError(error)) {
     const status = error.response?.status
-    if (!status) return 'Unable to connect to the server. Please try again.'
+    if (!status) return 'Không kết nối được máy chủ. Vui lòng thử lại.'
     if (status >= 500)
-      return 'The session service is temporarily unavailable. Please try again.'
-    if (status === 401) return 'Your session has expired. Please sign in again.'
-    if (status === 403)
-      return 'You do not have permission to access these sessions.'
+      return 'Dịch vụ phiên đăng nhập đang gián đoạn. Vui lòng thử lại.'
+    if (status === 401)
+      return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.'
+    if (status === 403) return 'Bạn không có quyền truy cập các phiên này.'
     if (status === 404)
-      return 'This session no longer exists or does not belong to your account.'
-    if (status === 429) return 'Too many requests. Please wait and try again.'
-    return 'Invalid request. Please check the filters and try again.'
+      return 'Phiên này không còn tồn tại hoặc không thuộc tài khoản của bạn.'
+    if (status === 429) return 'Có quá nhiều yêu cầu. Vui lòng đợi rồi thử lại.'
+    return 'Yêu cầu không hợp lệ. Vui lòng kiểm tra bộ lọc và thử lại.'
   }
-  if (error instanceof z.ZodError)
-    return 'The server returned an unexpected response.'
-  return error instanceof Error
-    ? error.message
-    : 'Unable to complete the request.'
+  return error instanceof Error ? error.message : 'Không thể hoàn tất yêu cầu.'
 }

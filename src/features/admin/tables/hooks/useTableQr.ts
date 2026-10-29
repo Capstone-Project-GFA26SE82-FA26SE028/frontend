@@ -34,13 +34,15 @@ export function useTableQr(tableId: string) {
     retry: false,
     mutationFn: () => issueTableQr(tableId, current?.qrId),
     onSuccess: (qr) => {
-      void client.invalidateQueries({ queryKey: ['table-qr', 'status', tableId] })
+      void client.invalidateQueries({
+        queryKey: ['table-qr', 'status', tableId],
+      })
       client.setQueryData(
         ['table-qr', 'table', tableId],
         (old: typeof context.data) => (old ? { ...old, qr } : old),
       )
       setConfirm(false)
-      toast.success('QR code ready.')
+      toast.success('Mã QR đã sẵn sàng.')
     },
   })
   const allowed =

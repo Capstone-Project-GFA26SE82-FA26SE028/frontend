@@ -1,52 +1,32 @@
 import axios from 'axios'
-import { z } from 'zod'
 import { axiosClient } from '../../../../api/axiosClient'
-import type { Restaurant, RestaurantQuery } from '../types'
+import type {
+  Restaurant,
+  RestaurantQuery,
+  RestaurantResponse,
+  RestaurantPage,
+} from '../types/types'
 import type { RestaurantValues } from '../schemas/restaurantSchema'
-const schema: z.ZodType<Restaurant> = z.object({
-  restaurantId: z.string(),
-  restaurantName: z.string(),
-  address: z.string(),
-  hotline: z.string(),
-  taxCode: z.string().nullable(),
-  logoUrl: z.string().nullable(),
-  timeZone: z.string(),
-  openingHours: z.array(
-    z.object({
-      dayOfWeek: z.number().int().min(0).max(6),
-      openAt: z.string(),
-      closeAt: z.string(),
-    }),
-  ),
-})
-function result<T>(data: unknown, shape: z.ZodType<T>): T {
-  const envelope = z
-    .object({ isSuccess: z.boolean(), result: z.unknown() })
-    .parse(data)
-  if (!envelope.isSuccess) throw new Error('Unable to complete the request.')
-  return shape.parse(envelope.result)
+function result<T>(envelope: RestaurantResponse<T>): T {
+  if (!envelope.isSuccess) throw new Error('Không thể hoàn tất yêu cầu.')
+  return envelope.result
 }
 export async function getRestaurants(
   params: RestaurantQuery,
   signal?: AbortSignal,
 ) {
-  const { data } = await axiosClient.get('/restaurants', { params, signal })
-  return result(
-    data,
-    z.object({
-      items: z.array(schema),
-      totalCount: z.number().int().nonnegative(),
-      page: z.number().int().positive(),
-      pageSize: z.number().int().positive(),
-    }),
+  const { data } = await axiosClient.get<RestaurantResponse<RestaurantPage>>(
+    '/restaurants',
+    { params, signal },
   )
+  return result(data)
 }
 export async function getRestaurant(id: string, signal?: AbortSignal) {
-  const { data } = await axiosClient.get(
+  const { data } = await axiosClient.get<RestaurantResponse<Restaurant>>(
     '/restaurants/' + encodeURIComponent(id),
     { signal },
   )
-  return result(data, schema)
+  return result(data)
 }
 export async function saveRestaurant(values: RestaurantValues, id?: string) {
   const body = {
@@ -55,29 +35,30 @@ export async function saveRestaurant(values: RestaurantValues, id?: string) {
     logoUrl: values.logoUrl || null,
   }
   const { data } = id
-    ? await axiosClient.put('/restaurants/' + encodeURIComponent(id), body)
-    : await axiosClient.post('/restaurants', body)
-  return result(data, schema)
+    ? await axiosClient.put<RestaurantResponse<Restaurant>>(
+        '/restaurants/' + encodeURIComponent(id),
+        body,
+      )
+    : await axiosClient.post<RestaurantResponse<Restaurant>>(
+        '/restaurants',
+        body,
+      )
+  return result(data)
 }
 export function restaurantError(error: unknown): string {
   if (axios.isAxiosError(error)) {
     const status = error.response?.status
-    if (!status) return 'Unable to connect to the server. Please try again.'
-    if (status >= 500)
-      return 'The restaurant service is temporarily unavailable.'
-    if (status === 401) return 'Your session has expired.'
-    if (status === 403)
-      return 'You do not have permission to manage restaurants.'
+    if (!status) return 'Không kết nối được máy chủ. Vui lòng thử lại.'
+    if (status >= 500) return 'Dịch vụ nhà hàng đang gián đoạn.'
+    if (status === 401) return 'Phiên đăng nhập đã hết hạn.'
+    if (status === 403) return 'Bạn không có quyền quản lý nhà hàng.'
     if (status === 404)
-      return 'This restaurant no longer exists. Refresh the list.'
-    if (status === 429) return 'Too many requests. Please try again shortly.'
+      return 'Nhà hàng này không còn tồn tại. Vui lòng làm mới danh sách.'
+    if (status === 429)
+      return 'Có quá nhiều yêu cầu. Vui lòng thử lại sau ít phút.'
     return typeof error.response?.data?.message === 'string'
       ? error.response.data.message
-      : 'Unable to save. Check the details and try again.'
+      : 'Không thể lưu. Vui lòng kiểm tra thông tin và thử lại.'
   }
-  if (error instanceof z.ZodError)
-    return 'The server returned an unexpected response.'
-  return error instanceof Error
-    ? error.message
-    : 'Unable to complete the request.'
+  return error instanceof Error ? error.message : 'Không thể hoàn tất yêu cầu.'
 }

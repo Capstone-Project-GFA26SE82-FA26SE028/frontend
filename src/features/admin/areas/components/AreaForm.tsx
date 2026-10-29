@@ -2,8 +2,8 @@ import { Icon } from '../../../../components/Icon/Icon'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { areaSchema, type AreaValues } from '../schemas/areaSchema'
-import type { Area } from '../types'
-import type { Restaurant } from '../../restaurants/types'
+import type { Area } from '../types/types'
+import type { Restaurant } from '../../restaurants/types/types'
 import {
   Field,
   fieldClass,
@@ -74,28 +74,28 @@ export function AreaForm({
             </span>
             <div>
               <h3 className="text-sm font-semibold text-slate-800">
-                {area ? 'Update area' : 'New service area'}
+                {area ? 'Cập nhật khu vực' : 'Khu vực phục vụ mới'}
               </h3>
               <p className="mt-0.5 text-xs text-slate-500">
                 {area
-                  ? 'Keep your area details up to date.'
-                  : 'Choose a restaurant for this area.'}
+                  ? 'Cập nhật thông tin khu vực.'
+                  : 'Chọn nhà hàng cho khu vực này.'}
               </p>
             </div>
           </div>
-          <Field label="Restaurant *" error={errors.restaurantId?.message}>
+          <Field label="Nhà hàng *" error={errors.restaurantId?.message}>
             {area ? (
               <input
                 className={fieldClass + ' bg-slate-50'}
                 readOnly
                 value={
                   restaurants.find((r) => r.restaurantId === area.restaurantId)
-                    ?.restaurantName || 'Restaurant unavailable'
+                    ?.restaurantName || 'Chưa có thông tin nhà hàng'
                 }
               />
             ) : (
               <select className={fieldClass} {...register('restaurantId')}>
-                <option value="">Select restaurant</option>
+                <option value="">Chọn nhà hàng</option>
                 {restaurants.map((r) => (
                   <option key={r.restaurantId} value={r.restaurantId}>
                     {r.restaurantName}
@@ -108,10 +108,10 @@ export function AreaForm({
         <div className="grid gap-4 rounded-2xl border border-slate-100 bg-slate-50/80 p-4 sm:grid-cols-2 sm:p-5">
           {(
             [
-              ['areaCode', 'Area code *', 'e.g. GROUND-01'],
-              ['areaName', 'Area name *', 'e.g. Ground Floor'],
-              ['serviceType', 'Service type *', 'e.g. Buffet'],
-              ['spaceType', 'Space type *', 'e.g. Indoor'],
+              ['areaCode', 'Mã khu vực *', 'Ví dụ: TANGTRET-01'],
+              ['areaName', 'Tên khu vực *', 'Ví dụ: Tầng trệt'],
+              ['serviceType', 'Loại phục vụ *', 'Ví dụ: Buffet'],
+              ['spaceType', 'Loại không gian *', 'Ví dụ: Trong nhà'],
             ] as const
           ).map(([key, label, placeholder]) => (
             <Field key={key} label={label} error={errors[key]?.message}>
@@ -138,13 +138,13 @@ export function AreaForm({
             className={secondaryButton + ' justify-center'}
             onClick={onClose}
           >
-            Cancel
+            Hủy
           </button>
           <button
             className={primaryButton + ' justify-center'}
             disabled={!!area && !isDirty}
           >
-            {pending ? 'Saving...' : area ? 'Save changes' : 'Create area'}
+            {pending ? 'Đang lưu…' : area ? 'Lưu thay đổi' : 'Tạo khu vực'}
           </button>
         </div>
       </fieldset>

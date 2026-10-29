@@ -1,7 +1,7 @@
 import { Icon } from '../../../../components/Icon/Icon'
 import { useState } from 'react'
 import { useActivityUser } from '../hooks/useActivity'
-import type { ActivityLog } from '../types'
+import type { ActivityLog } from '../types/types'
 import { EmptyState } from '../../components/AdminUI'
 export function ActivityTable({
   items,
@@ -15,17 +15,23 @@ export function ActivityTable({
   if (!items.length)
     return (
       <EmptyState
-        title="No activity found"
-        description="Try clearing the user filter or check again later."
+        title="Không tìm thấy hoạt động"
+        description="Thử xóa bộ lọc người dùng hoặc kiểm tra lại sau."
       />
     )
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[900px] table-fixed text-left text-sm">
-        <caption className="sr-only">Activity logs, newest first</caption>
+        <caption className="sr-only">Nhật ký hoạt động, mới nhất trước</caption>
         <thead className="border-y border-slate-100 bg-slate-50 text-slate-600">
           <tr>
-            {['Time', 'User', 'Action', 'Entity', 'Details'].map((label) => (
+            {[
+              'Thời gian',
+              'Người thực hiện',
+              'Thao tác',
+              'Đối tượng',
+              'Chi tiết',
+            ].map((label) => (
               <th scope="col" key={label} className="px-4 py-3.5 font-semibold">
                 {label}
               </th>
@@ -48,17 +54,17 @@ export function ActivityTable({
               </td>
               <td className="break-words p-4">
                 <span className="inline-block max-w-full rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
-                  {item.action || 'Not available'}
+                  {item.action || 'Chưa có dữ liệu'}
                 </span>
               </td>
               <td className="break-words p-4 text-slate-700">
-                {item.entityName || 'Not available'}
+                {item.entityName || 'Chưa có dữ liệu'}
               </td>
               <td className="p-4">
                 <button
                   className="flex size-10 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline-2 focus-visible:outline-emerald-600"
-                  title="View details"
-                  aria-label="View audit log details"
+                  title="Xem chi tiết"
+                  aria-label="Xem chi tiết nhật ký hoạt động"
                   aria-haspopup="dialog"
                   onClick={() => onDetail(item)}
                 >
@@ -82,19 +88,20 @@ function ActivityUserName({
 }) {
   const [failedUrl, setFailedUrl] = useState<string | null>(null)
   const user = useActivityUser(id)
-  if (!id) return <span className="text-slate-500">Not available</span>
+  if (!id) return <span className="text-slate-500">Chưa có dữ liệu</span>
   if (user.isPending)
-    return <span className="text-slate-500">Loading user...</span>
+    return <span className="text-slate-500">Đang tải người dùng…</span>
   if (user.isError)
     return (
       <button
         className="text-left text-sm text-rose-600 underline"
         onClick={() => void user.refetch()}
       >
-        User unavailable. Retry
+        Không tải được người dùng. Thử lại
       </button>
     )
-  if (!user.data) return <span className="text-slate-500">Unknown user</span>
+  if (!user.data)
+    return <span className="text-slate-500">Người dùng chưa xác định</span>
   const content = (
     <span className="flex items-center gap-3">
       <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-emerald-100 font-semibold text-emerald-800">
@@ -103,7 +110,7 @@ function ActivityUserName({
         failedUrl !== user.data.avatarUrl ? (
           <img
             src={user.data.avatarUrl}
-            alt={(user.data.fullName || user.data.userName) + ' avatar'}
+            alt={(user.data.fullName || user.data.userName) + ' - ảnh đại diện'}
             referrerPolicy="no-referrer"
             className="h-full w-full object-cover"
             onError={() => setFailedUrl(user.data!.avatarUrl)}
@@ -128,7 +135,7 @@ function ActivityUserName({
   return onSelect ? (
     <button
       className="text-left hover:text-emerald-700"
-      title="Filter by this user"
+      title="Lọc theo người dùng này"
       onClick={() => onSelect(id)}
     >
       {content}

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { getActivityLogs, getActivityUser } from '../api/activityApi'
-import type { ActivityLog } from '../types'
+import type { ActivityLog } from '../types/types'
 const pageSize = 10
 export function useActivity() {
   const [userId, setUserId] = useState('')

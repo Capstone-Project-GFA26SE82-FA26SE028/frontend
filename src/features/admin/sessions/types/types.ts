@@ -35,3 +35,15 @@ export function sessionStatus(session: LoginSession): SessionStatus {
   if (session.revokedAt) return 'revoked'
   return Date.parse(session.expiresAt) <= Date.now() ? 'expired' : 'active'
 }
+
+export type SessionResponse<T> = {
+  isSuccess: boolean
+  message?: string | null
+  result: T
+}
+export type SessionPage = {
+  items: LoginSession[]
+  totalCount: number
+  page: number
+  pageSize: number
+}

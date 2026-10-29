@@ -1,8 +1,8 @@
 import { TableCard } from './TableCard'
 import { Icon } from '../../../../components/Icon/Icon'
-import type { Table, TableMode } from '../types'
-import type { Area } from '../../areas/types'
-import type { Restaurant } from '../../restaurants/types'
+import type { Table, TableMode } from '../types/types'
+import type { Area } from '../../areas/types/types'
+import type { Restaurant } from '../../restaurants/types/types'
 export function TablesByArea({
   tables,
   areas,
@@ -30,7 +30,7 @@ export function TablesByArea({
           <h2 className="flex items-center gap-2 text-lg font-bold text-slate-800">
             <Icon name="store" size={21} />
             {restaurants.find((r) => r.restaurantId === restaurantId)
-              ?.restaurantName || 'Restaurant unavailable'}
+              ?.restaurantName || 'Chưa có thông tin nhà hàng'}
           </h2>
           {[...areaGroups].map(([areaId, items]) => {
             const area = areas.find((a) => a.areaId === areaId)
@@ -45,7 +45,7 @@ export function TablesByArea({
                   </span>
                   <div className="min-w-0">
                     <h3 className="break-words font-semibold text-slate-800">
-                      {area?.areaName || 'Area unavailable'}
+                      {area?.areaName || 'Chưa có thông tin khu vực'}
                     </h3>
                     {area && (
                       <p className="text-xs text-slate-500">{area.areaCode}</p>
@@ -57,7 +57,7 @@ export function TablesByArea({
                     <TableCard
                       key={table.tableId}
                       table={table}
-                      areaName={area?.areaName || 'Area unavailable'}
+                      areaName={area?.areaName || 'Chưa có thông tin khu vực'}
                       onAction={onAction}
                     />
                   ))}

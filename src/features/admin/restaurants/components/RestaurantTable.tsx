@@ -1,6 +1,6 @@
 import { Icon } from '../../../../components/Icon/Icon'
 import { useState } from 'react'
-import type { Restaurant } from '../types'
+import type { Restaurant } from '../types/types'
 import { EmptyState } from '../../components/AdminUI'
 export function RestaurantTable({
   items,
@@ -15,8 +15,8 @@ export function RestaurantTable({
   if (!items.length)
     return (
       <EmptyState
-        title="No restaurants found"
-        description="Try another name or add your first restaurant."
+        title="Không tìm thấy nhà hàng"
+        description="Thử tên khác hoặc thêm nhà hàng đầu tiên."
       />
     )
   return (
@@ -24,17 +24,17 @@ export function RestaurantTable({
       <table className="w-full min-w-[1000px] text-left text-sm">
         <thead className="border-y border-slate-100 bg-slate-50 text-slate-500">
           <tr>
-            {['Restaurant', 'Address', 'Hotline', 'Tax code', 'Actions'].map(
-              (label) => (
-                <th
-                  key={label}
-                  scope="col"
-                  className="px-4 py-3.5 font-semibold"
-                >
-                  {label}
-                </th>
-              ),
-            )}
+            {[
+              'Nhà hàng',
+              'Địa chỉ',
+              'Số điện thoại',
+              'Mã số thuế',
+              'Thao tác',
+            ].map((label) => (
+              <th key={label} scope="col" className="px-4 py-3.5 font-semibold">
+                {label}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -74,22 +74,22 @@ export function RestaurantTable({
                 {item.hotline}
               </td>
               <td className="p-4 text-slate-600">
-                {item.taxCode || 'Not provided'}
+                {item.taxCode || 'Chưa cung cấp'}
               </td>
               <td className="p-4">
                 <div className="flex gap-2">
                   <button
                     className="flex size-10 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline-2 focus-visible:outline-emerald-600"
-                    title="View details"
-                aria-label={'View ' + item.restaurantName}
+                    title="Xem chi tiết"
+                    aria-label={'Xem ' + item.restaurantName}
                     onClick={() => onView(item.restaurantId)}
                   >
                     <Icon name="eye" size={19} />
                   </button>
                   <button
                     className="flex size-10 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline-2 focus-visible:outline-emerald-600"
-                    title="Edit restaurant"
-                aria-label={'Edit ' + item.restaurantName}
+                    title="Sửa nhà hàng"
+                    aria-label={'Sửa ' + item.restaurantName}
                     onClick={() => onEdit(item.restaurantId)}
                   >
                     <Icon name="edit" size={19} />

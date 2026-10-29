@@ -20,11 +20,11 @@ export function TablesPage() {
   return (
     <>
       <PageHeading
-        title="Tables"
-        description="Manage tables and seating across your restaurants."
+        title="Bàn"
+        description="Quản lý bàn và chỗ ngồi tại các nhà hàng."
         action={
           <button className={primaryButton} onClick={() => m.open('create')}>
-            + Add table
+            + Thêm bàn
           </button>
         }
       />
@@ -33,12 +33,12 @@ export function TablesPage() {
           className="mb-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
           role="alert"
         >
-          Unable to load restaurants and areas.{' '}
+          Không thể tải nhà hàng và khu vực.{' '}
           <button
             className="underline"
             onClick={() => void m.options.refetch()}
           >
-            Retry
+            Thử lại
           </button>
         </div>
       )}
@@ -57,7 +57,7 @@ export function TablesPage() {
       />
       {m.list.isPending ? (
         <p role="status" className="p-8 text-center">
-          Loading tables...
+          Đang tải danh sách bàn…
         </p>
       ) : m.list.isError ? (
         <div className="space-y-3 p-8 text-center">
@@ -66,7 +66,7 @@ export function TablesPage() {
             className={secondaryButton}
             onClick={() => void m.list.refetch()}
           >
-            Try again
+            Thử lại
           </button>
         </div>
       ) : (
@@ -77,8 +77,8 @@ export function TablesPage() {
         >
           {!m.list.data.items.length ? (
             <EmptyState
-              title="No tables found"
-              description="Change your filters or add a table."
+              title="Không tìm thấy bàn"
+              description="Thay đổi bộ lọc hoặc thêm bàn."
             />
           ) : (
             <TablesByArea
@@ -92,7 +92,7 @@ export function TablesPage() {
           )}
           <div className="mt-5 rounded-xl bg-white">
             <Pagination
-              locale="en"
+              locale="vi"
               total={m.list.data.totalCount}
               page={m.page}
               size={12}

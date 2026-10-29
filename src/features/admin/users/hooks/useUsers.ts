@@ -13,7 +13,7 @@ import {
   setUserStatus,
 } from '../api/userApi'
 import type { AccountFormValues } from '../schemas/userSchema'
-import type { UserAccount, UserQuery } from '../types'
+import type { UserAccount, UserQuery } from '../types/types'
 import { restoreSession } from '../../../auth/api/authApi'
 import { store } from '../../../../app/store'
 
@@ -139,7 +139,7 @@ export function useUserManagement() {
     try {
       await mutations.save.mutateAsync({ values, existing })
       setForm(undefined)
-      toast.success(existing ? 'Account updated.' : 'Account created.')
+      toast.success(existing ? 'Đã cập nhật tài khoản.' : 'Đã tạo tài khoản.')
       return ''
     } catch (error) {
       return userApiError(error)
@@ -147,7 +147,7 @@ export function useUserManagement() {
   }
   function openStatus(user: UserAccount) {
     if (user.id === actorId && user.active) {
-      toast.error('You cannot deactivate your own account.')
+      toast.error('Bạn không thể vô hiệu hóa tài khoản của chính mình.')
       return
     }
     setTarget(user)
@@ -163,7 +163,7 @@ export function useUserManagement() {
         active: !target.active,
       })
       setTarget(null)
-      toast.success('Account status updated.')
+      toast.success('Đã cập nhật trạng thái tài khoản.')
     } catch (error) {
       setStatusError(userApiError(error))
     }

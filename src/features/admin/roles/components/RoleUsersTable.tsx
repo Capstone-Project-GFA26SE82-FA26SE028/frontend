@@ -1,6 +1,6 @@
 import { roleColor } from '../roleStyles'
 import { UserAvatar } from '../../users/components/UserAvatar'
-import type { RoleAccount, SystemRole } from '../types'
+import type { RoleAccount, SystemRole } from '../types/types'
 import {
   Badge,
   Pagination,
@@ -33,17 +33,21 @@ export function RoleUsersTable({
         <table className="w-full min-w-[680px] text-left text-sm">
           <thead className="border-y border-slate-200 bg-slate-50 text-slate-600">
             <tr>
-              {['Account', 'Username', 'Role', 'Status', 'Actions'].map(
-                (label) => (
-                  <th
-                    key={label}
-                    scope="col"
-                    className="whitespace-nowrap px-5 py-3.5 font-semibold"
-                  >
-                    {label}
-                  </th>
-                ),
-              )}
+              {[
+                'Tài khoản',
+                'Tên đăng nhập',
+                'Vai trò',
+                'Trạng thái',
+                'Thao tác',
+              ].map((label) => (
+                <th
+                  key={label}
+                  scope="col"
+                  className="whitespace-nowrap px-5 py-3.5 font-semibold"
+                >
+                  {label}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -80,19 +84,19 @@ export function RoleUsersTable({
                 </td>
                 <td className="px-5 py-4">
                   <Badge tone={user.isActive ? 'green' : 'red'}>
-                    {user.isActive ? 'Active' : 'Inactive'}
+                    {user.isActive ? 'Đang hoạt động' : 'Đã vô hiệu hóa'}
                   </Badge>
                 </td>
                 <td className="px-5 py-4">
                   <button
                     aria-label={
-                      'Change role for ' + (user.fullName || user.userName)
+                      'Đổi vai trò cho ' + (user.fullName || user.userName)
                     }
                     aria-haspopup="dialog"
                     className={`${secondaryButton} whitespace-nowrap`}
                     onClick={() => onSelect(user)}
                   >
-                    Change role
+                    Đổi vai trò
                   </button>
                 </td>
               </tr>
@@ -102,15 +106,15 @@ export function RoleUsersTable({
       </div>
       {!users.length && (
         <EmptyState
-          title="No accounts found"
-          description="Try changing the search or filters."
+          title="Không tìm thấy tài khoản"
+          description="Thử thay đổi nội dung tìm kiếm hoặc bộ lọc."
         />
       )}
       <Pagination
         total={total}
         page={page}
         size={pageSize}
-        locale="en"
+        locale="vi"
         onPage={onPage}
       />
     </fieldset>

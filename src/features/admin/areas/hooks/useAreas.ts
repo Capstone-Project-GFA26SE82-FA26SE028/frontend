@@ -14,7 +14,7 @@ import {
   deleteArea,
 } from '../api/areaApi'
 import { getRestaurants } from '../../restaurants/api/restaurantApi'
-import type { Restaurant } from '../../restaurants/types'
+import type { Restaurant } from '../../restaurants/types/types'
 import type { AreaValues } from '../schemas/areaSchema'
 export function useAreas() {
   const [search, setSearch] = useState(''),
@@ -91,7 +91,7 @@ export function useAreas() {
       if (saved) client.setQueryData(['areas', 'detail', saved.areaId], saved)
       void client.invalidateQueries({ queryKey: ['areas', 'list'] })
       setTarget(null)
-      toast.success('Area updated successfully.')
+      toast.success('Đã cập nhật khu vực.')
     },
   })
   function open(mode: NonNullable<typeof target>['mode'], id?: string) {

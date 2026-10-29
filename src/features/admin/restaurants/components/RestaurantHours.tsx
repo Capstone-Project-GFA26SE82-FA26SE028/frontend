@@ -4,7 +4,7 @@ import type { RestaurantValues } from '../schemas/restaurantSchema'
 type Hours = RestaurantValues['openingHours']
 type Schedule = { days: number[]; openAt: string; closeAt: string }
 const days = [1, 2, 3, 4, 5, 6, 0]
-const labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const labels = ['CN', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7']
 export function RestaurantHours({
   initialHours,
   onChange,
@@ -46,13 +46,13 @@ export function RestaurantHours({
   }
   return (
     <section className="space-y-3 border-t border-slate-100 pt-4">
-      <h3 className="font-semibold">Opening hours</h3>
+      <h3 className="font-semibold">Giờ mở cửa</h3>
       {groups.map((group, index) => (
         <fieldset
           key={index}
           className="min-w-0 space-y-3 rounded-2xl border border-slate-200 p-3"
         >
-          <legend className="sr-only">Schedule {index + 1}</legend>
+          <legend className="sr-only">Lịch {index + 1}</legend>
           <div className="flex flex-wrap items-center gap-1.5">
             {days.map((day) => {
               const selected = group.days.includes(day)
@@ -65,9 +65,7 @@ export function RestaurantHours({
                   type="button"
                   aria-pressed={selected}
                   disabled={taken}
-                  title={
-                    taken ? 'Already used in another schedule' : labels[day]
-                  }
+                  title={taken ? 'Đã chọn trong lịch khác' : labels[day]}
                   onClick={() =>
                     update(
                       groups.map((g, i) =>
@@ -96,16 +94,16 @@ export function RestaurantHours({
             <button
               type="button"
               className="ml-auto px-2 py-2 text-xs text-rose-600 hover:bg-rose-50"
-              aria-label={'Remove schedule ' + (index + 1)}
+              aria-label={'Xóa lịch ' + (index + 1)}
               onClick={() => update(groups.filter((_, i) => i !== index))}
             >
-              Remove
+              Xóa
             </button>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {(['openAt', 'closeAt'] as const).map((key) => (
               <label key={key} className="min-w-0 text-xs text-slate-500">
-                {key === 'openAt' ? 'Opens at' : 'Closes at'}
+                {key === 'openAt' ? 'Giờ mở cửa' : 'Giờ đóng cửa'}
                 <input
                   type="time"
                   required={group.days.length > 0}
@@ -124,7 +122,7 @@ export function RestaurantHours({
           </div>
           {!group.days.length && (
             <p className="text-xs text-slate-500">
-              Select days to include this schedule.
+              Chọn ngày áp dụng cho lịch này.
             </p>
           )}
         </fieldset>
@@ -137,10 +135,11 @@ export function RestaurantHours({
           update([...groups, { days: [], openAt: '09:00', closeAt: '22:00' }])
         }
       >
-        + Add schedule
+        + Thêm lịch
       </button>
       <p className="text-xs text-slate-500">
-        Each day can belong to one schedule. Unselected days are not configured.
+        Mỗi ngày chỉ thuộc một lịch. Những ngày chưa chọn sẽ chưa được thiết
+        lập.
       </p>
       {error && (
         <p role="alert" className="text-sm text-rose-600">

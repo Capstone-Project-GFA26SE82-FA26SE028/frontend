@@ -1,7 +1,7 @@
 import { Icon } from '../../../../components/Icon/Icon'
 import { EmptyState } from '../../components/AdminUI'
-import type { Area } from '../types'
-import type { Restaurant } from '../../restaurants/types'
+import type { Area } from '../types/types'
+import type { Restaurant } from '../../restaurants/types/types'
 export function AreaTable({
   items,
   restaurants,
@@ -14,8 +14,8 @@ export function AreaTable({
   if (!items.length)
     return (
       <EmptyState
-        title="No areas found"
-        description="Change your filters or add an area."
+        title="Không tìm thấy khu vực"
+        description="Thay đổi bộ lọc hoặc thêm khu vực."
       />
     )
   return (
@@ -24,12 +24,12 @@ export function AreaTable({
         <thead className="border-y border-slate-100 bg-slate-50 text-slate-500">
           <tr>
             {[
-              'Area',
-              'Restaurant',
-              'Service type',
-              'Space type',
-              'Status',
-              'Actions',
+              'Khu vực',
+              'Nhà hàng',
+              'Loại phục vụ',
+              'Loại không gian',
+              'Trạng thái',
+              'Thao tác',
             ].map((label) => (
               <th key={label} className="px-4 py-3.5 font-semibold">
                 {label}
@@ -49,7 +49,7 @@ export function AreaTable({
               </td>
               <td className="max-w-56 break-words p-4">
                 {restaurants.find((r) => r.restaurantId === area.restaurantId)
-                  ?.restaurantName || 'Restaurant unavailable'}
+                  ?.restaurantName || 'Chưa có thông tin nhà hàng'}
               </td>
               <td className="max-w-40 break-words p-4">{area.serviceType}</td>
               <td className="max-w-40 break-words p-4">{area.spaceType}</td>
@@ -62,7 +62,7 @@ export function AreaTable({
                       : 'bg-slate-100 text-slate-500')
                   }
                 >
-                  {area.isActive ? 'Active' : 'Inactive'}
+                  {area.isActive ? 'Đang hoạt động' : 'Ngừng hoạt động'}
                 </span>
               </td>
               <td className="p-4">
@@ -72,13 +72,13 @@ export function AreaTable({
                       const label =
                         mode === 'status'
                           ? area.isActive
-                            ? 'Deactivate'
-                            : 'Activate'
+                            ? 'Ngừng hoạt động'
+                            : 'Kích hoạt'
                           : mode === 'view'
-                            ? 'View details'
+                            ? 'Xem chi tiết'
                             : mode === 'edit'
-                              ? 'Edit'
-                              : 'Delete'
+                              ? 'Sửa'
+                              : 'Xóa'
                       return (
                         <button
                           key={mode}

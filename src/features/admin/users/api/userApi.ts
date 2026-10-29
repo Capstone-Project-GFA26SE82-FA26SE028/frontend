@@ -1,40 +1,20 @@
 import axios from 'axios'
-import { z } from 'zod'
 import { axiosClient } from '../../../../api/axiosClient'
-import type { UserAccount, UserQuery, UserRole } from '../types'
+import type {
+  UserAccount,
+  UserQuery,
+  UserRole,
+  UserResponse,
+  UserDto,
+  UserPage,
+} from '../types/types'
 import type { AccountFormValues } from '../schemas/userSchema'
 
-const userSchema = z.object({
-  userId: z.string(),
-  userName: z.string(),
-  email: z.string(),
-  roleId: z.string(),
-  fullName: z.string().nullable(),
-  phoneNumber: z.string().nullable(),
-  avatarUrl: z.string().nullable(),
-  isActive: z.boolean(),
-  createdAt: z.string().nullable(),
-  updatedAt: z.string().nullable(),
-})
-const pageSchema = z.object({
-  items: z.array(userSchema),
-  totalCount: z.number().int().nonnegative(),
-  page: z.number().int().positive(),
-  pageSize: z.number().int().positive(),
-})
-function result<T>(data: unknown, schema: z.ZodType<T>): T {
-  const envelope = z
-    .object({
-      isSuccess: z.boolean(),
-      message: z.string().optional(),
-      result: z.unknown(),
-    })
-    .parse(data)
-  if (!envelope.isSuccess)
-    throw new Error('Unable to complete the request.')
-  return schema.parse(envelope.result)
+function result<T>(envelope: UserResponse<T>): T {
+  if (!envelope.isSuccess) throw new Error('Không thể hoàn tất yêu cầu.')
+  return envelope.result
 }
-function mapUser(user: z.infer<typeof userSchema>): UserAccount {
+function mapUser(user: UserDto): UserAccount {
   return {
     id: user.userId,
     userName: user.userName,
@@ -50,44 +30,55 @@ function mapUser(user: z.infer<typeof userSchema>): UserAccount {
 }
 export function userApiError(error: unknown): string {
   if (axios.isAxiosError(error)) {
-    if (!error.response) return 'Unable to connect to the server. Please try again.'
+    if (!error.response) return 'Không kết nối được máy chủ. Vui lòng thử lại.'
     if (error.response.status >= 500)
-      return 'The account service is temporarily unavailable. Please try again.'
-    if (error.response.status === 401) return 'Your session has expired.'
+      return 'Dịch vụ tài khoản đang gián đoạn. Vui lòng thử lại.'
+    if (error.response.status === 401) return 'Phiên đăng nhập đã hết hạn.'
     if (error.response.status === 403)
-      return 'You do not have permission to manage accounts.'
+      return 'Bạn không có quyền quản lý tài khoản.'
     const data = error.response.data
     const message = typeof data?.message === 'string' ? data.message : ''
-    if (message.includes('Admin hoạt động cuối cùng') || message.includes('last active Admin'))
-      return 'The last active administrator cannot be deactivated or reassigned.'
-    if (message.includes('tự khóa')) return 'You cannot deactivate your own account.'
-    if (message.includes('Role không tồn tại')) return 'The selected role no longer exists.'
-    if (error.response.status === 409) return 'The email or username is already in use. Please choose another.'
-    if (error.response.status === 404) return 'This account no longer exists. Refresh the list and try again.'
-    if (error.response.status === 429) return 'Too many requests. Please wait and try again.'
-    return 'Invalid request. Please check your details.'
+    if (
+      message.includes('Admin hoạt động cuối cùng') ||
+      message.includes('last active Admin')
+    )
+      return 'Không thể vô hiệu hóa hoặc đổi vai trò của quản trị viên đang hoạt động cuối cùng.'
+    if (message.includes('tự khóa'))
+      return 'Bạn không thể vô hiệu hóa tài khoản của chính mình.'
+    if (message.includes('Role không tồn tại'))
+      return 'Vai trò đã chọn không còn tồn tại.'
+    if (error.response.status === 409)
+      return 'Email hoặc tên đăng nhập đã được sử dụng. Vui lòng chọn thông tin khác.'
+    if (error.response.status === 404)
+      return 'Tài khoản này không còn tồn tại. Vui lòng làm mới danh sách và thử lại.'
+    if (error.response.status === 429)
+      return 'Có quá nhiều yêu cầu. Vui lòng đợi rồi thử lại.'
+    return 'Yêu cầu không hợp lệ. Vui lòng kiểm tra thông tin.'
   }
-  if (error instanceof z.ZodError)
-    return 'The server returned an unexpected response.'
-  return error instanceof Error ? error.message : 'Unable to complete the request.'
+  return error instanceof Error ? error.message : 'Không thể hoàn tất yêu cầu.'
 }
 export async function getUsers(params: UserQuery, signal?: AbortSignal) {
-  const { data } = await axiosClient.get('/users', { params, signal })
-  const page = result(data, pageSchema)
+  const { data } = await axiosClient.get<UserResponse<UserPage>>('/users', {
+    params,
+    signal,
+  })
+  const page = result(data)
   return { ...page, items: page.items.map(mapUser) }
 }
 export async function getUser(id: string, signal?: AbortSignal) {
-  const { data } = await axiosClient.get('/users/' + encodeURIComponent(id), {
-    signal,
-  })
-  return mapUser(result(data, userSchema))
+  const { data } = await axiosClient.get<UserResponse<UserDto>>(
+    '/users/' + encodeURIComponent(id),
+    {
+      signal,
+    },
+  )
+  return mapUser(result(data))
 }
 export async function getUserRoles(signal?: AbortSignal): Promise<UserRole[]> {
-  const { data } = await axiosClient.get('/roles', { signal })
-  return result(
-    data,
-    z.array(z.object({ roleId: z.string(), roleName: z.string() })),
-  )
+  const { data } = await axiosClient.get<UserResponse<UserRole[]>>('/roles', {
+    signal,
+  })
+  return result(data)
 }
 export async function saveUserAccount(
   values: AccountFormValues,
@@ -101,34 +92,40 @@ export async function saveUserAccount(
     avatarUrl: values.avatarUrl,
   }
   const { data } = existing
-    ? await axiosClient.put('/users/' + encodeURIComponent(existing.id), body)
-    : await axiosClient.post('/users', {
+    ? await axiosClient.put<UserResponse<UserDto>>(
+        '/users/' + encodeURIComponent(existing.id),
+        body,
+      )
+    : await axiosClient.post<UserResponse<UserDto>>('/users', {
         ...body,
         roleId: values.role,
         password: values.password,
       })
-  const saved = mapUser(result(data, userSchema))
+  const saved = mapUser(result(data))
   if (existing && values.role !== saved.role) {
     try {
       return await setUserRole(existing.id, values.role)
     } catch (error) {
-      throw new Error(`Account details were saved, but the role change was not confirmed. ${userApiError(error)} Refresh the account to check its current role before retrying.`, { cause: error })
+      throw new Error(
+        `Đã lưu thông tin tài khoản. Đổi vai trò chưa được xác nhận: ${userApiError(error)}`,
+        { cause: error },
+      )
     }
   }
   return saved
 }
 export async function setUserStatus(id: string, isActive: boolean) {
-  const { data } = await axiosClient.patch(
+  const { data } = await axiosClient.patch<UserResponse<UserDto>>(
     '/users/' + encodeURIComponent(id) + '/status',
     { isActive },
   )
-  return mapUser(result(data, userSchema))
+  return mapUser(result(data))
 }
 
 export async function setUserRole(id: string, roleId: string) {
-  const { data } = await axiosClient.patch(
+  const { data } = await axiosClient.patch<UserResponse<UserDto>>(
     '/users/' + encodeURIComponent(id) + '/role',
     { roleId },
   )
-  return mapUser(result(data, userSchema))
+  return mapUser(result(data))
 }
