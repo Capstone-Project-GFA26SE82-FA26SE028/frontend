@@ -13,7 +13,7 @@ export function CartSummary({
 }) {
   return (
     <aside className="panel h-fit p-6 lg:sticky lg:top-28">
-      <h2 className="text-xl font-bold">Bữa ăn của bạn</h2>
+      <h2 className="text-xl font-bold">Tóm tắt đơn hàng</h2>
       {tableCode && <p className="mt-2 text-sm text-muted">Bàn {tableCode}</p>}
       <div className="my-6 flex items-center justify-between gap-3 border-y border-dashed border-stone-200 py-5 text-sm">
         <span>

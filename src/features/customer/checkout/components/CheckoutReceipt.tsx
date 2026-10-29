@@ -22,7 +22,7 @@ export function CheckoutReceipt({ orderId }: { orderId: string }) {
         <p className="eyebrow">
           {table ? 'Bàn ' + table.tableCode : 'Bàn của bạn'}
         </p>
-        <h1 className="mt-2 text-3xl font-bold">Đơn gọi món của bạn</h1>
+        <h1 className="mt-2 text-3xl font-bold">Đã gửi yêu cầu gọi món</h1>
         {order.isPending && <p className="mt-5 text-muted">Đang tải đơn…</p>}
         {order.isError && (
           <div role="alert" className="mt-5">
@@ -42,9 +42,11 @@ export function CheckoutReceipt({ orderId }: { orderId: string }) {
             </p>
             <div className="my-6 rounded-2xl bg-mint p-4 text-brand">
               <OrderStatusBadge status={order.data.status} />
-              <p className="mt-1 text-sm">
-                Đã nhận đơn gọi món của bạn. Thanh toán sẽ được thực hiện riêng.
-              </p>
+              {order.data.status === 'PendingConfirmation' && (
+                <p className="mt-1 text-sm">
+                  Vui lòng chờ nhân viên xác nhận.
+                </p>
+              )}
             </div>
             {order.data.items.map((item) => (
               <div

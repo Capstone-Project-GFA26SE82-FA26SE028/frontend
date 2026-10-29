@@ -31,19 +31,15 @@ export function ReservationForm({ onSuccess }: ReservationFormProps) {
 
   return (
     <form noValidate onSubmit={handleSubmit(onSuccess)}>
-      <h2 className="text-xl font-bold lg:text-2xl">Đặt một chỗ thật xinh</h2>
-      <p className="mt-2 text-sm leading-6 text-muted">
-        Để Mộc chuẩn bị chu đáo cho cuộc hẹn của bạn.
+      <h1 className="text-2xl font-semibold tracking-tight text-brand-dark sm:text-3xl">
+        Đặt bàn
+      </h1>
+      <p className="mt-2 text-xs leading-5 text-amber-700">
+        Bản xem trước · Chưa gửi yêu cầu
       </p>
       <div className="mt-6 space-y-5 lg:space-y-4">
-        <div className="flex items-center gap-2 text-xs font-semibold text-brand lg:hidden">
-          <span className="flex size-6 items-center justify-center rounded-full bg-mint text-[11px]">
-            01
-          </span>{' '}
-          Thông tin liên hệ
-        </div>
         <div className="text-sm font-semibold">
-          <label htmlFor="reservation-name">Tên của bạn</label>
+          <label htmlFor="reservation-name">Họ tên</label>
           <input
             id="reservation-name"
             {...register('name')}
@@ -92,12 +88,6 @@ export function ReservationForm({ onSuccess }: ReservationFormProps) {
               {errors.phone.message}
             </span>
           )}
-        </div>
-        <div className="flex items-center gap-2 border-t border-stone-100 pt-5 text-xs font-semibold text-brand lg:hidden">
-          <span className="flex size-6 items-center justify-center rounded-full bg-mint text-[11px]">
-            02
-          </span>{' '}
-          Cuộc hẹn của bạn
         </div>
         <div className="grid grid-cols-1 gap-4 min-[400px]:grid-cols-2 lg:grid-cols-2">
           <div className="text-sm font-semibold">
@@ -176,7 +166,7 @@ export function ReservationForm({ onSuccess }: ReservationFormProps) {
         </div>
         <div className="text-sm font-semibold">
           <label htmlFor="reservation-note">
-            Lời nhắn cho Mộc{' '}
+            Ghi chú{' '}
             <span className="font-normal text-muted">(không bắt buộc)</span>
           </label>
           <textarea
@@ -207,12 +197,8 @@ export function ReservationForm({ onSuccess }: ReservationFormProps) {
           disabled={isSubmitting}
           aria-busy={isSubmitting}
         >
-          Gửi yêu cầu đặt bàn <Icon name="arrow" size={18} />
+          Xem trước <Icon name="arrow" size={18} />
         </button>
-        <p className="rounded-xl bg-mint/60 p-3 text-xs leading-5 text-muted lg:rounded-none lg:bg-transparent lg:p-0">
-          Bàn cần được nhân viên xác nhận. Thời gian giữ bàn tối đa 15 phút sau
-          giờ hẹn.
-        </p>
       </div>
     </form>
   )

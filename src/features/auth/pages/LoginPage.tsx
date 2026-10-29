@@ -45,10 +45,7 @@ export function LoginPage() {
       <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-xl shadow-emerald-950/5 md:grid-cols-2">
         <LoginBrandPanel />
         <section className="flex flex-col justify-center p-6 sm:p-10">
-          <p className="text-xs font-semibold tracking-widest text-brand">
-            CHÀO MỪNG TRỞ LẠI
-          </p>
-          <h2 className="mt-3 text-2xl font-bold">Đăng nhập</h2>
+          <h2 className="text-2xl font-bold">Đăng nhập</h2>
           <p className="mt-3 text-sm text-muted">
             Nhập thông tin tài khoản để tiếp tục.
           </p>
