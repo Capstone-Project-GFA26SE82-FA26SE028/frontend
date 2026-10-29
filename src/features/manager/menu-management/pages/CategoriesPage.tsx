@@ -40,13 +40,13 @@ export function CategoriesPage() {
   return (
     <>
       <PageHeading
-        eyebrow="Menu & Pricing"
-        title="Categories"
-        description="Organize the menu and manage category availability."
+        eyebrow="Thực đơn và giá bán"
+        title="Danh mục"
+        description="Sắp xếp thực đơn và quản lý trạng thái danh mục."
         action={
           <button className={primaryButton} onClick={() => setForm({})}>
             <Icon name="plus" size={18} />
-            Add category
+            Thêm danh mục
           </button>
         }
       />
@@ -59,10 +59,10 @@ export function CategoriesPage() {
               setSearch(v)
               setPage(1)
             }}
-            placeholder="Search by category name or code…"
+            placeholder="Tìm theo tên hoặc mã danh mục…"
           />
           <select
-            aria-label="Category status"
+            aria-label="Trạng thái danh mục"
             className={`${fieldClass} sm:w-52`}
             value={status}
             onChange={(e) => {
@@ -70,14 +70,14 @@ export function CategoriesPage() {
               setPage(1)
             }}
           >
-            <option value="">All statuses</option>
-            <option value="true">Active</option>
-            <option value="false">Inactive</option>
+            <option value="">Tất cả trạng thái</option>
+            <option value="true">Đang hoạt động</option>
+            <option value="false">Ngừng hoạt động</option>
           </select>
           <button
             className={secondaryButton}
             onClick={() => void list.refetch()}
-            aria-label="Refresh categories"
+            aria-label="Làm mới danh mục"
           >
             <Icon name="activity" size={18} />
           </button>
@@ -92,10 +92,10 @@ export function CategoriesPage() {
             <table className={tableClass}>
               <thead className="bg-slate-50/70">
                 <tr>
-                  <th>Category code</th>
-                  <th>Category name</th>
-                  <th>Status</th>
-                  <th className="text-right">Actions</th>
+                  <th>Mã danh mục</th>
+                  <th>Tên danh mục</th>
+                  <th>Trạng thái</th>
+                  <th className="text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -108,7 +108,9 @@ export function CategoriesPage() {
                     <td className="font-semibold">{category.categoryName}</td>
                     <td>
                       <Badge tone={category.isActive ? 'green' : 'slate'}>
-                        {category.isActive ? 'Active' : 'Inactive'}
+                        {category.isActive
+                          ? 'Đang hoạt động'
+                          : 'Ngừng hoạt động'}
                       </Badge>
                     </td>
                     <td>
@@ -116,7 +118,7 @@ export function CategoriesPage() {
                         <button
                           className={secondaryButton}
                           onClick={() => setForm({ category })}
-                          aria-label={`Edit ${category.categoryName}`}
+                          aria-label={`Sửa ${category.categoryName}`}
                         >
                           <Icon name="edit" size={16} />
                         </button>
@@ -126,14 +128,14 @@ export function CategoriesPage() {
                             setTarget({ category, action: 'status' })
                           }
                         >
-                          {category.isActive ? 'Deactivate' : 'Activate'}
+                          {category.isActive ? 'Ngừng hoạt động' : 'Kích hoạt'}
                         </button>
                         <button
                           className={`${secondaryButton} text-rose-600`}
                           onClick={() =>
                             setTarget({ category, action: 'delete' })
                           }
-                          aria-label={`Delete ${category.categoryName}`}
+                          aria-label={`Xóa ${category.categoryName}`}
                         >
                           <Icon name="trash" size={16} />
                         </button>
@@ -146,7 +148,7 @@ export function CategoriesPage() {
           </div>
         </QueryState>
         <Pagination
-          locale="en"
+          locale="vi"
           total={list.data?.totalCount || 0}
           page={page}
           size={10}
@@ -155,8 +157,8 @@ export function CategoriesPage() {
       </Panel>
       {form && (
         <Modal
-          closeLabel="Close"
-          title={form.category ? 'Edit category' : 'Add category'}
+          closeLabel="Đóng"
+          title={form.category ? 'Sửa danh mục' : 'Thêm danh mục'}
           onClose={() => {
             if (!mutation.isPending) setForm(null)
           }}
@@ -175,7 +177,7 @@ export function CategoriesPage() {
               })
             }}
           >
-            <Field label="Category name *">
+            <Field label="Tên danh mục *">
               <input
                 name="name"
                 autoFocus
@@ -183,7 +185,7 @@ export function CategoriesPage() {
                 maxLength={255}
                 defaultValue={form.category?.categoryName}
                 className={fieldClass}
-                placeholder="e.g. Main courses"
+                placeholder="Ví dụ: Món chính"
               />
             </Field>
             <FormActions
@@ -195,18 +197,18 @@ export function CategoriesPage() {
       )}
       {target && (
         <ConfirmAction
-          confirmLabel="Confirm"
-          cancelLabel="Cancel"
-          closeLabel="Close"
+          confirmLabel="Xác nhận"
+          cancelLabel="Hủy"
+          closeLabel="Đóng"
           title={
             target.action === 'delete'
-              ? 'Delete category?'
-              : 'Change category status?'
+              ? 'Xóa danh mục?'
+              : 'Đổi trạng thái danh mục?'
           }
           description={
             target.action === 'delete'
-              ? `Delete category “${target.category.categoryName}”? Only categories with no associated items can be deleted.`
-              : `${target.category.isActive ? 'Deactivate' : 'Activate'} category “${target.category.categoryName}”? Categories with items still offered for sale cannot be deactivated.`
+              ? `Xóa danh mục “${target.category.categoryName}”? Chỉ có thể xóa danh mục chưa có món liên kết.`
+              : `${target.category.isActive ? 'Ngừng hoạt động' : 'Kích hoạt'} danh mục “${target.category.categoryName}”? Không thể ngừng hoạt động danh mục còn món đang mở bán.`
           }
           disabled={mutation.isPending}
           onClose={() => {

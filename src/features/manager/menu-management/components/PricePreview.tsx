@@ -32,7 +32,7 @@ export function PricePreview({
         })
       }}
     >
-      <Field label="Menu item *">
+      <Field label="Món ăn *">
         <select
           name="item"
           defaultValue={defaultItemId}
@@ -40,7 +40,7 @@ export function PricePreview({
           className={fieldClass}
         >
           <option value="" disabled>
-            Select an item
+            Chọn món
           </option>
           {items.map((i) => (
             <option key={i.itemId} value={i.itemId}>
@@ -49,7 +49,7 @@ export function PricePreview({
           ))}
         </select>
       </Field>
-      <Field label="Sales channel">
+      <Field label="Kênh bán">
         <select name="channel" className={fieldClass}>
           {Object.entries(channels)
             .filter(([v]) => v !== 'AllChannels')
@@ -60,7 +60,7 @@ export function PricePreview({
             ))}
         </select>
       </Field>
-      <Field label="Date and time (UTC+7) *">
+      <Field label="Ngày giờ (UTC+7) *">
         <input
           name="at"
           type="datetime-local"
@@ -76,17 +76,17 @@ export function PricePreview({
       )}
       {lookup.data && (
         <div role="status" className="rounded-xl bg-emerald-50 p-4">
-          <p className="text-sm text-emerald-800">Applied price</p>
+          <p className="text-sm text-emerald-800">Giá áp dụng</p>
           <p className="mt-2 text-3xl font-bold text-emerald-900">
             {formatCurrency(lookup.data.amount)}
           </p>
           <p className="mt-2 text-xs text-emerald-700">
-            Price source:{' '}
+            Nguồn giá:{' '}
             {channels[lookup.data.priceChannel] || lookup.data.priceChannel}
           </p>
           {!lookup.data.hasValidStandardPrice && (
             <p className="mt-2 text-sm text-amber-800">
-              This item does not have a valid standard price.
+              Món này chưa có giá tiêu chuẩn hợp lệ.
             </p>
           )}
         </div>
@@ -96,7 +96,7 @@ export function PricePreview({
         className={primaryButton}
         disabled={lookup.isPending || !items.length}
       >
-        {lookup.isPending ? 'Checking…' : 'Check price'}
+        {lookup.isPending ? 'Đang kiểm tra…' : 'Kiểm tra giá'}
       </button>
     </form>
   )

@@ -36,13 +36,13 @@ export function ConversionForm({
         }}
       >
         <p className="text-sm text-slate-500">
-          For <strong>{ingredient.ingredientName}</strong>, base unit:{' '}
+          Cho <strong>{ingredient.ingredientName}</strong>, đơn vị cơ sở:{' '}
           <strong>{ingredient.baseUnit}</strong>.
         </p>
-        <Field label="Purchase / recipe unit *">
+        <Field label="Đơn vị mua hàng / công thức *">
           <select name="unit" required defaultValue="" className={fieldClass}>
             <option value="" disabled>
-              Select a unit
+              Chọn đơn vị
             </option>
             {units.map((unit) => (
               <option key={unit.unitId} value={unit.unitId}>
@@ -52,7 +52,7 @@ export function ConversionForm({
           </select>
         </Field>
         <Field
-          label={`Base units (${ingredient.baseUnit}) per selected unit *`}
+          label={`Số đơn vị cơ sở (${ingredient.baseUnit}) trên mỗi đơn vị đã chọn *`}
         >
           <input
             name="factor"
@@ -62,13 +62,13 @@ export function ConversionForm({
             max="999999999999.999999"
             required
             className={fieldClass}
-            placeholder="e.g. 1000"
+            placeholder="Ví dụ: 1000"
           />
         </Field>
         <p className="rounded-xl bg-emerald-50 p-3 text-sm leading-6 text-emerald-800">
-          Example: if the base unit is g, set kg to 1000. The base unit itself
-          must have a factor of 1. Existing receipt and recipe snapshots are
-          preserved.
+          Ví dụ: nếu đơn vị cơ sở là g, đặt hệ số kg là 1000. Đơn vị cơ sở phải
+          có hệ số 1. Dữ liệu đã lưu trên phiếu nhập và công thức được giữ
+          nguyên.
         </p>
         <MutationError error={mutation.error} />
         <FormActions

@@ -66,7 +66,7 @@ export function PriceForm({
         })
       }}
     >
-      <Field label="Menu item *">
+      <Field label="Món ăn *">
         <select
           name="item"
           required
@@ -75,7 +75,7 @@ export function PriceForm({
           className={fieldClass}
         >
           <option value="" disabled>
-            Select an item
+            Chọn món
           </option>
           {items.map((i) => (
             <option key={i.itemId} value={i.itemId}>
@@ -85,7 +85,7 @@ export function PriceForm({
         </select>
       </Field>
       {!replace && (
-        <Field label="Sales channel *">
+        <Field label="Kênh bán *">
           <select
             name="channel"
             defaultValue={price?.channel || 'AllChannels'}
@@ -99,7 +99,7 @@ export function PriceForm({
           </select>
         </Field>
       )}
-      <Field label="Price (VND) *">
+      <Field label="Giá (VNĐ) *">
         <input
           name="amount"
           type="number"
@@ -113,12 +113,11 @@ export function PriceForm({
       </Field>
       {replace ? (
         <p className="rounded-xl bg-amber-50 p-3 text-sm leading-6 text-amber-800">
-          The new price takes effect immediately for the same channel and time
-          window. Previous prices remain in history, and existing orders keep
-          their original prices.
+          Giá mới có hiệu lực ngay với cùng kênh bán và khung giờ. Giá cũ được
+          lưu trong lịch sử, các đơn đã tạo giữ nguyên giá ban đầu.
         </p>
       ) : (
-        <Field label="Effective from (UTC+7) *">
+        <Field label="Có hiệu lực từ (UTC+7) *">
           <input
             name="start"
             type="datetime-local"
@@ -130,7 +129,7 @@ export function PriceForm({
           />
         </Field>
       )}
-      <Field label="Effective until (UTC+7)">
+      <Field label="Có hiệu lực đến (UTC+7)">
         <input
           name="end"
           type="datetime-local"
@@ -141,7 +140,7 @@ export function PriceForm({
       {!replace && (
         <>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Start time">
+            <Field label="Giờ bắt đầu">
               <input
                 name="dailyStart"
                 type="time"
@@ -149,7 +148,7 @@ export function PriceForm({
                 className={fieldClass}
               />
             </Field>
-            <Field label="End time">
+            <Field label="Giờ kết thúc">
               <input
                 name="dailyEnd"
                 type="time"
@@ -159,8 +158,8 @@ export function PriceForm({
             </Field>
           </div>
           <p className="text-xs leading-5 text-slate-500">
-            Leave both times empty for all-day pricing. Select all channels and
-            all day to create a standard price.
+            Để trống cả hai giờ để áp dụng cả ngày. Chọn tất cả kênh và cả ngày
+            để tạo giá tiêu chuẩn.
           </p>
         </>
       )}

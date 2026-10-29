@@ -20,10 +20,10 @@ import { withinDays } from '../utils/operations'
 import type { StaffActivity } from '../types/operations'
 
 const labels: Record<string, string> = {
-  OPEN_TABLE: 'Table opened',
-  MERGE_TABLE: 'Tables merged',
-  CANCEL_ITEM: 'Item cancelled',
-  MANUAL_DISCOUNT: 'Manual discount',
+  OPEN_TABLE: 'Mở bàn',
+  MERGE_TABLE: 'Gộp bàn',
+  CANCEL_ITEM: 'Hủy món',
+  MANUAL_DISCOUNT: 'Giảm giá thủ công',
 }
 export function StaffActivityPage() {
   const activity = useStaffActivity()
@@ -53,17 +53,17 @@ export function StaffActivityPage() {
   return (
     <>
       <PageHeading
-        eyebrow="Operations Monitoring"
-        title="Staff Activity"
-        description="Preview staff operations, reasons, and before/after details in a read-only activity log."
+        eyebrow="Theo dõi vận hành"
+        title="Hoạt động nhân viên"
+        description="Xem trước thao tác nhân viên, lý do và dữ liệu trước/sau trong nhật ký chỉ đọc."
       />
       <OperationsTabs />
       <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
-        <h2 className="font-semibold">Operational activity preview</h2>
+        <h2 className="font-semibold">Xem trước hoạt động vận hành</h2>
         <p className="mt-1">
-          The examples below demonstrate table opening/merging, item
-          cancellation, and manual discount review. They are sample records, not
-          staff actions from your restaurant.
+          Các ví dụ dưới đây minh họa mở bàn, gộp bàn, hủy món và giảm giá thủ
+          công. Đây là dữ liệu mẫu, không phải thao tác thực tế tại nhà hàng của
+          bạn.
         </p>
       </div>
       <QueryState
@@ -85,18 +85,18 @@ export function StaffActivityPage() {
                   setSearch(value)
                   setPage(1)
                 }}
-                placeholder="Search employee, table, order, or action…"
+                placeholder="Tìm nhân viên, bàn, đơn hoặc thao tác…"
               />
               <select
                 className={`${fieldClass} sm:w-60`}
-                aria-label="Activity type"
+                aria-label="Loại hoạt động"
                 value={action}
                 onChange={(e) => {
                   setAction(e.target.value)
                   setPage(1)
                 }}
               >
-                <option value="">All operation types</option>
+                <option value="">Tất cả loại thao tác</option>
                 {Object.entries(labels).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
@@ -105,7 +105,7 @@ export function StaffActivityPage() {
               </select>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
-              <Field label="From date (UTC+7)">
+              <Field label="Từ ngày (UTC+7)">
                 <input
                   type="date"
                   max={until || undefined}
@@ -117,7 +117,7 @@ export function StaffActivityPage() {
                   className={fieldClass}
                 />
               </Field>
-              <Field label="Until date (UTC+7)">
+              <Field label="Đến ngày (UTC+7)">
                 <input
                   type="date"
                   min={from || undefined}
@@ -141,10 +141,10 @@ export function StaffActivityPage() {
               <table className={tableClass}>
                 <thead className="bg-slate-50">
                   <tr>
-                    <th>Recorded at (UTC+7)</th>
-                    <th>Employee / Table / Order</th>
-                    <th>Action</th>
-                    <th>Details</th>
+                    <th>Ghi nhận lúc (UTC+7)</th>
+                    <th>Nhân viên / Bàn / Đơn</th>
+                    <th>Thao tác</th>
+                    <th>Chi tiết</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -158,7 +158,7 @@ export function StaffActivityPage() {
                         <td className="break-all text-sm">
                           {record.employeeName ||
                             record.userId ||
-                            'Not recorded'}
+                            'Chưa ghi nhận'}
                           <p className="mt-1 text-xs text-slate-400">
                             {record.tableCode} · {record.orderNumber}
                           </p>
@@ -166,14 +166,14 @@ export function StaffActivityPage() {
                         <td>
                           {labels[record.action || ''] ||
                             record.action ||
-                            'Unknown'}
+                            'Chưa xác định'}
                         </td>
                         <td className="break-all text-xs text-slate-400">
                           <button
                             className={secondaryButton}
                             onClick={() => setSelected(record)}
                           >
-                            View details
+                            Xem chi tiết
                           </button>
                         </td>
                       </tr>
@@ -183,7 +183,7 @@ export function StaffActivityPage() {
             </div>
           </QueryState>
           <Pagination
-            locale="en"
+            locale="vi"
             total={visible.length}
             page={currentPage}
             size={10}
@@ -193,8 +193,8 @@ export function StaffActivityPage() {
       </QueryState>
       {selected && (
         <Modal
-          title="Activity details · Sample record"
-          closeLabel="Close"
+          title="Chi tiết hoạt động · Dữ liệu mẫu"
+          closeLabel="Đóng"
           onClose={() => setSelected(null)}
         >
           <div className="space-y-4 p-6">
@@ -208,21 +208,21 @@ export function StaffActivityPage() {
               {selected.tableCode} · {selected.orderNumber}
             </p>
             <div>
-              <h3 className="text-sm font-semibold">Reason</h3>
+              <h3 className="text-sm font-semibold">Lý do</h3>
               <p className="mt-1 text-sm text-slate-500">
-                {selected.reason || 'Not recorded'}
+                {selected.reason || 'Chưa ghi nhận'}
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-semibold">Before</h3>
+              <h3 className="text-sm font-semibold">Trước</h3>
               <p className="mt-1 rounded-xl bg-slate-50 p-3 text-sm">
-                {selected.beforeValue || 'Not recorded'}
+                {selected.beforeValue || 'Chưa ghi nhận'}
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-semibold">After</h3>
+              <h3 className="text-sm font-semibold">Sau</h3>
               <p className="mt-1 rounded-xl bg-emerald-50 p-3 text-sm">
-                {selected.afterValue || 'Not recorded'}
+                {selected.afterValue || 'Chưa ghi nhận'}
               </p>
             </div>
           </div>

@@ -7,18 +7,18 @@ export function OperationsTabs() {
         role="status"
         className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900"
       >
-        <strong>Preview · Sample data.</strong> This section demonstrates the
-        interface only. It is not connected to live tables, kitchen tasks, or
-        staff activity. No backend data is changed.
+        <strong>Xem trước · Dữ liệu mẫu.</strong> Phần này chỉ minh họa giao
+        diện, chưa kết nối dữ liệu bàn, tác vụ bếp hay hoạt động nhân viên thực
+        tế. Dữ liệu backend không bị thay đổi.
       </div>
       <nav
-        aria-label="Operations monitoring"
+        aria-label="Theo dõi vận hành"
         className="mb-5 flex gap-1 overflow-x-auto rounded-xl border border-slate-200/70 bg-white p-1"
       >
         {[
-          ['table-monitoring', 'Table Status'],
-          ['kitchen-monitoring', 'Kitchen Progress'],
-          ['staff-activity', 'Staff Activity'],
+          ['table-monitoring', 'Trạng thái bàn'],
+          ['kitchen-monitoring', 'Tiến độ bếp'],
+          ['staff-activity', 'Hoạt động nhân viên'],
         ].map(([path, label]) => (
           <NavLink
             key={path}

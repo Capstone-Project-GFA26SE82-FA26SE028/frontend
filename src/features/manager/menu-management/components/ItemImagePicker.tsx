@@ -24,14 +24,14 @@ export function ItemImagePicker({
         htmlFor={id}
         className="block text-sm font-semibold text-slate-700"
       >
-        Item image
+        Ảnh món ăn
       </label>
       <div className="flex flex-wrap items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
         <div className="flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white text-emerald-700">
           {imageUrl ? (
             <img
               src={imageUrl}
-              alt="Menu item preview"
+              alt="Xem trước món ăn"
               className="size-full object-cover"
             />
           ) : (
@@ -54,7 +54,7 @@ export function ItemImagePicker({
             }}
           />
           <p id={`${id}-hint`} className="text-sm text-slate-500">
-            JPEG, PNG or WebP · Maximum 2 MB
+            JPEG, PNG hoặc WebP · Tối đa 2 MB
           </p>
           {(imageUrl || error) && (
             <button
@@ -63,14 +63,14 @@ export function ItemImagePicker({
               onClick={onRemove}
               className="text-sm font-semibold text-rose-700 hover:underline disabled:opacity-50"
             >
-              {imageUrl ? 'Remove image' : 'Clear selection'}
+              {imageUrl ? 'Xóa ảnh' : 'Bỏ chọn'}
             </button>
           )}
         </div>
       </div>
       {pending && (
         <p role="status" className="text-sm text-emerald-700">
-          Uploading image…
+          Đang tải ảnh lên…
         </p>
       )}
       {error && (

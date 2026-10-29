@@ -7,13 +7,13 @@ import { ItemStatusBadge } from './ItemStatusBadge'
 export function ItemList({ items, onEdit, onStatus }: ItemCollectionProps) {
   return (
     <div className="overflow-x-auto">
-      <table className={tableClass} aria-label="Menu items list view">
+      <table className={tableClass} aria-label="Món ăn dạng danh sách">
         <thead className="bg-slate-50/70">
           <tr>
-            <th>Menu items</th>
-            <th>Categories</th>
-            <th>Availability</th>
-            <th className="text-right">Actions</th>
+            <th>Món ăn</th>
+            <th>Danh mục</th>
+            <th>Tình trạng bán</th>
+            <th className="text-right">Thao tác</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">

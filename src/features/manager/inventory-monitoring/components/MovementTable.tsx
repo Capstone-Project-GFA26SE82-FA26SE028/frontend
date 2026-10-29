@@ -15,11 +15,11 @@ export function MovementTable({
       <table className={tableClass}>
         <thead className="bg-slate-50">
           <tr>
-            <th>Recorded at (UTC+7)</th>
-            <th>Type</th>
-            <th>Quantity change</th>
-            <th>Performed by</th>
-            <th>Reason</th>
+            <th>Ghi nhận lúc (UTC+7)</th>
+            <th>Loại</th>
+            <th>Biến động số lượng</th>
+            <th>Người thực hiện</th>
+            <th>Lý do</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
@@ -38,7 +38,7 @@ export function MovementTable({
                 {movement.quantityChange.toLocaleString('en-GB')} {unit}
               </td>
               <td className="max-w-48 break-all text-xs text-slate-500">
-                {movement.performedByRef || 'Not recorded'}
+                {movement.performedByRef || 'Chưa ghi nhận'}
               </td>
               <td className="min-w-44 text-slate-500">
                 {movement.reason || '—'}

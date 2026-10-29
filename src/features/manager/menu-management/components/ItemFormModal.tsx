@@ -22,8 +22,8 @@ export function ItemFormModal({
 
   return (
     <Modal
-      closeLabel="Close"
-      title={item ? 'Edit menu item' : 'Add menu item'}
+      closeLabel="Đóng"
+      title={item ? 'Sửa món ăn' : 'Thêm món ăn'}
       onClose={() => {
         if (!pending) onClose()
       }}
@@ -48,7 +48,7 @@ export function ItemFormModal({
         }}
       >
         <fieldset className="min-w-0 space-y-4" disabled={mutation.isPending}>
-          <Field label="Item name *">
+          <Field label="Tên món *">
             <input
               name="name"
               required
@@ -63,7 +63,7 @@ export function ItemFormModal({
             error={categories.error}
             retry={() => void categories.refetch()}
           >
-            <Field label="Category *">
+            <Field label="Danh mục *">
               <select
                 name="category"
                 required
@@ -71,7 +71,7 @@ export function ItemFormModal({
                 className={fieldClass}
               >
                 <option value="" disabled>
-                  Select a category
+                  Chọn danh mục
                 </option>
                 {categories.data
                   ?.filter(
@@ -85,13 +85,13 @@ export function ItemFormModal({
                       value={category.categoryId}
                     >
                       {category.categoryName}
-                      {!category.isActive ? ' (inactive)' : ''}
+                      {!category.isActive ? ' (ngừng hoạt động)' : ''}
                     </option>
                   ))}
               </select>
             </Field>
           </QueryState>
-          <Field label="Description">
+          <Field label="Mô tả">
             <textarea
               name="description"
               maxLength={2000}
@@ -110,8 +110,8 @@ export function ItemFormModal({
         </fieldset>
         {!item && (
           <p className="rounded-xl bg-amber-50 p-3 text-sm leading-6 text-amber-800">
-            New items are created as inactive. A valid standard price and an
-            effective recipe are required before making an item available.
+            Món mới được tạo ở trạng thái ngừng bán. Cần có giá tiêu chuẩn hợp
+            lệ và công thức đang hiệu lực trước khi mở bán.
           </p>
         )}
         <FormActions

@@ -3,13 +3,13 @@ import { NavLink } from 'react-router-dom'
 export function MenuTabs() {
   return (
     <nav
-      aria-label="Menu & Pricing"
+      aria-label="Thực đơn và giá bán"
       className="mb-5 flex gap-1 overflow-x-auto rounded-xl border border-slate-200/70 bg-white p-1"
     >
       {[
-        ['categories', 'Categories'],
-        ['items', 'Menu items'],
-        ['prices', 'Pricing'],
+        ['categories', 'Danh mục'],
+        ['items', 'Món ăn'],
+        ['prices', 'Giá bán'],
       ].map(([path, label]) => (
         <NavLink
           key={path}

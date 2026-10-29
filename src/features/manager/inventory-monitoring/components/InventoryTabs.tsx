@@ -3,13 +3,13 @@ import { NavLink } from 'react-router-dom'
 export function InventoryTabs() {
   return (
     <nav
-      aria-label="Inventory monitoring"
+      aria-label="Theo dõi kho"
       className="mb-5 flex gap-1 overflow-x-auto rounded-xl border border-slate-200/70 bg-white p-1"
     >
       {[
-        ['stock', 'Stock overview'],
-        ['stock-history', 'Movements & Lots'],
-        ['stock-variance', 'Usage & Variance'],
+        ['stock', 'Tổng quan tồn kho'],
+        ['stock-history', 'Biến động và lô hàng'],
+        ['stock-variance', 'Tiêu hao và chênh lệch'],
       ].map(([path, label]) => (
         <NavLink
           key={path}

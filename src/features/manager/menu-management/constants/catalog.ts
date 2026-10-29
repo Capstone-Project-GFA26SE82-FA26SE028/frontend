@@ -1,9 +1,9 @@
 export const availabilityLabels = {
-  Available: 'Available',
-  OutOfStock: 'Out of stock',
-  Inactive: 'Inactive',
+  Available: 'Đang bán',
+  OutOfStock: 'Hết hàng',
+  Inactive: 'Ngừng hoạt động',
 }
 export const channels: Record<string, string> = {
-  AllChannels: 'All channels',
-  DineIn: 'Dine-in',
+  AllChannels: 'Tất cả kênh',
+  DineIn: 'Ăn tại chỗ',
 }

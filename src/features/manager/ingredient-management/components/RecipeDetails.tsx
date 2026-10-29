@@ -18,27 +18,33 @@ export function RecipeDetails({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold">
-            Recipe version {recipe.version}
+            Phiên bản công thức {recipe.version}
           </h2>
           <p className="mt-1 text-xs leading-6 text-slate-500">
-            From {dateLabel(recipe.effectiveFrom)}
+            Từ {dateLabel(recipe.effectiveFrom)}
             {recipe.effectiveTo
-              ? ` · Until ${dateLabel(recipe.effectiveTo)}`
+              ? ` · Đến ${dateLabel(recipe.effectiveTo)}`
               : ' · No end date'}{' '}
             (UTC+7)
           </p>
         </div>
         <Badge tone={recipeStatus(recipe) === 'Active' ? 'green' : 'slate'}>
-          {recipeStatus(recipe)}
+          {
+            {
+              Active: 'Đang hiệu lực',
+              Scheduled: 'Đã lên lịch',
+              Ended: 'Đã kết thúc',
+            }[recipeStatus(recipe)]
+          }
         </Badge>
       </div>
       <div className="overflow-x-auto">
         <table className={tableClass}>
           <thead className="bg-slate-50">
             <tr>
-              <th>Ingredient</th>
-              <th>Quantity / portion</th>
-              <th>Base quantity snapshot</th>
+              <th>Nguyên liệu</th>
+              <th>Số lượng / phần</th>
+              <th>Số lượng cơ sở đã lưu</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -69,7 +75,7 @@ export function RecipeDetails({
       </div>
       {recipe.instructions && (
         <div>
-          <h3 className="text-sm font-semibold">Preparation instructions</h3>
+          <h3 className="text-sm font-semibold">Hướng dẫn chế biến</h3>
           <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-500">
             {recipe.instructions}
           </p>
@@ -77,7 +83,7 @@ export function RecipeDetails({
       )}
       {recipe.media.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold">Preparation resources</h3>
+          <h3 className="text-sm font-semibold">Tài liệu chế biến</h3>
           <ul className="mt-2 space-y-2">
             {[...recipe.media]
               .sort((a, b) => a.displayOrder - b.displayOrder)

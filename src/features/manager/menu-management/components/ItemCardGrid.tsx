@@ -6,7 +6,7 @@ import { ItemStatusBadge } from './ItemStatusBadge'
 export function ItemCardGrid({ items, onEdit, onStatus }: ItemCollectionProps) {
   return (
     <ul
-      aria-label="Menu items card view"
+      aria-label="Món ăn dạng thẻ"
       className="grid grid-cols-1 gap-5 p-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
     >
       {items.map((item) => (

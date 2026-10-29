@@ -22,30 +22,30 @@ export function ItemActions({
         to={`/manager/menu/prices?itemId=${item.itemId}`}
         className={secondaryButton}
       >
-        Pricing
+        Giá bán
       </Link>
       <Link
         to={`/manager/recipes?itemId=${item.itemId}`}
         className={secondaryButton}
       >
-        Recipe
+        Công thức
       </Link>
       <button
         type="button"
         className={secondaryButton}
-        aria-label={`Edit ${item.itemName}`}
+        aria-label={`Sửa ${item.itemName}`}
         onClick={() => onEdit(item)}
       >
         <Icon name="edit" size={16} />
-        {!compact && 'Edit'}
+        {!compact && 'Sửa'}
       </button>
       <button
         type="button"
         className={secondaryButton}
-        aria-label={`Update availability for ${item.itemName}`}
+        aria-label={`Cập nhật tình trạng bán của ${item.itemName}`}
         onClick={() => onStatus(item)}
       >
-        Status
+        Trạng thái
       </button>
     </div>
   )

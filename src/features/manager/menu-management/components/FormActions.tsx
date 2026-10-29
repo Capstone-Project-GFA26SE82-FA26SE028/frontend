@@ -17,14 +17,14 @@ export function FormActions({
         className={secondaryButton}
         onClick={close}
       >
-        Cancel
+        Hủy
       </button>
       <button
         type="submit"
         disabled={pending || submitDisabled}
         className="inline-flex min-h-11 items-center rounded-xl bg-emerald-700 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-40"
       >
-        {pending ? 'Saving…' : 'Save changes'}
+        {pending ? 'Đang lưu…' : 'Lưu thay đổi'}
       </button>
     </div>
   )

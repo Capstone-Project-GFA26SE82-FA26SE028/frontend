@@ -35,16 +35,16 @@ export function RecipesPage() {
   return (
     <>
       <PageHeading
-        eyebrow="Ingredients & Food Cost"
-        title="Recipes & BOM"
-        description="Define ingredient quantities per portion and keep a version history of each recipe."
+        eyebrow="Nguyên liệu và giá vốn"
+        title="Công thức và định mức"
+        description="Thiết lập định mức nguyên liệu cho mỗi phần ăn và lưu lịch sử phiên bản công thức."
         action={
           <button
             className={primaryButton}
             disabled={!itemId || !recipes.isSuccess}
             onClick={() => setCreate(true)}
           >
-            Create recipe version
+            Tạo phiên bản công thức
           </button>
         }
       />
@@ -56,7 +56,7 @@ export function RecipesPage() {
           retry={() => void items.refetch()}
         >
           <label className="block space-y-2 text-sm font-medium">
-            Menu item
+            Món ăn
             <select
               value={itemId}
               className={fieldClass}
@@ -67,7 +67,7 @@ export function RecipesPage() {
                 setVersionId('')
               }}
             >
-              <option value="">Select a menu item</option>
+              <option value="">Chọn món ăn</option>
               {items.data?.map((item) => (
                 <option key={item.itemId} value={item.itemId}>
                   {item.itemName}
@@ -79,7 +79,7 @@ export function RecipesPage() {
       </Panel>
       {!itemId ? (
         <Panel className="p-12 text-center text-sm text-slate-500">
-          Select a menu item to view its recipe history.
+          Chọn món ăn để xem lịch sử công thức.
         </Panel>
       ) : (
         <QueryState
@@ -89,19 +89,19 @@ export function RecipesPage() {
         >
           {!sorted.length ? (
             <Panel className="space-y-3 p-10 text-center">
-              <h2 className="font-semibold">No recipe yet</h2>
+              <h2 className="font-semibold">Chưa có công thức</h2>
               <p className="text-sm text-slate-500">
-                Create the first recipe version to define ingredients for one
-                portion.
+                Tạo phiên bản công thức đầu tiên để thiết lập nguyên liệu cho
+                một phần ăn.
               </p>
               <button className={primaryButton} onClick={() => setCreate(true)}>
-                Create first recipe
+                Tạo công thức đầu tiên
               </button>
             </Panel>
           ) : (
             <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
               <Panel className="p-4">
-                <h2 className="mb-3 font-semibold">Version history</h2>
+                <h2 className="mb-3 font-semibold">Lịch sử phiên bản</h2>
                 <div className="space-y-2">
                   {sorted.map((recipe) => (
                     <button
@@ -111,7 +111,7 @@ export function RecipesPage() {
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <span className="font-semibold">
-                          Version {recipe.version}
+                          Phiên bản {recipe.version}
                         </span>
                         <Badge
                           tone={
@@ -120,7 +120,13 @@ export function RecipesPage() {
                               : 'slate'
                           }
                         >
-                          {recipeStatus(recipe)}
+                          {
+                            {
+                              Active: 'Đang hiệu lực',
+                              Scheduled: 'Đã lên lịch',
+                              Ended: 'Đã kết thúc',
+                            }[recipeStatus(recipe)]
+                          }
                         </Badge>
                       </div>
                       <p className="mt-2 text-xs text-slate-500">
@@ -152,13 +158,13 @@ export function RecipesPage() {
                     className={secondaryButton}
                     onClick={() => setCreate(true)}
                   >
-                    Use this version as a template
+                    Dùng phiên bản này làm mẫu
                   </button>
                   <Link
                     className={secondaryButton}
                     to={`/manager/food-cost?itemId=${itemId}`}
                   >
-                    View food cost
+                    Xem giá vốn
                   </Link>
                 </div>
               </Panel>
@@ -168,9 +174,9 @@ export function RecipesPage() {
       )}
       {create && itemId && (
         <Modal
-          title="Create recipe version"
+          title="Tạo phiên bản công thức"
           size="wide"
-          closeLabel="Close"
+          closeLabel="Đóng"
           onClose={() => setCreate(false)}
         >
           <QueryState

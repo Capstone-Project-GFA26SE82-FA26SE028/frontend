@@ -12,7 +12,7 @@ export function useCatalogMutation(onSuccess?: () => void) {
     }) => writeCatalog(input.method, input.path, input.body),
     onSuccess: async () => {
       await client.invalidateQueries({ queryKey: ['manager-catalog'] })
-      toast.success('Changes saved.')
+      toast.success('Đã lưu thay đổi.')
       onSuccess?.()
     },
     onError: (error) => toast.error(catalogError(error)),

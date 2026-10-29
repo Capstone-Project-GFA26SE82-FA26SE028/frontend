@@ -45,9 +45,9 @@ export function TableMonitoringPage() {
   return (
     <>
       <PageHeading
-        eyebrow="Operations Monitoring"
-        title="Table Status"
-        description="View active tables by area and inspect their open service sessions."
+        eyebrow="Theo dõi vận hành"
+        title="Trạng thái bàn"
+        description="Xem bàn đang hoạt động theo khu vực và các phiên phục vụ đang mở."
       />
       <OperationsTabs />
       <QueryState
@@ -58,28 +58,28 @@ export function TableMonitoringPage() {
         <SummaryCards
           items={[
             {
-              label: 'Active tables',
+              label: 'Bàn đang hoạt động',
               value: all.length,
               icon: 'utensils',
-              note: 'Active tables in active areas',
+              note: 'Bàn hoạt động thuộc khu vực đang hoạt động',
             },
             {
-              label: 'Serving',
+              label: 'Đang phục vụ',
               value: all.filter((t) => t.openSessionIds.length).length,
               icon: 'service',
-              note: 'At least one open session',
+              note: 'Có ít nhất một phiên đang mở',
             },
             {
-              label: 'No open session',
+              label: 'Không có phiên mở',
               value: all.filter((t) => !t.openSessionIds.length).length,
               icon: 'grid',
-              note: 'Check cleaning status before seating',
+              note: 'Kiểm tra vệ sinh trước khi xếp khách',
             },
             {
-              label: 'Areas',
+              label: 'Khu vực',
               value: new Set(all.map((t) => t.areaId)).size,
               icon: 'store',
-              note: 'Available in the monitoring data',
+              note: 'Có trong dữ liệu theo dõi',
             },
           ]}
         />
@@ -93,10 +93,10 @@ export function TableMonitoringPage() {
             <SearchField
               value={search}
               onChange={setSearch}
-              placeholder="Search table or area…"
+              placeholder="Tìm bàn hoặc khu vực…"
             />
             <select
-              aria-label="Restaurant"
+              aria-label="Nhà hàng"
               className={`${fieldClass} sm:w-60`}
               value={restaurant}
               onChange={(e) => {
@@ -104,20 +104,20 @@ export function TableMonitoringPage() {
                 setArea('')
               }}
             >
-              <option value="">All restaurants</option>
+              <option value="">Tất cả nhà hàng</option>
               {[...new Set(all.map((t) => t.restaurantId))].map((id, index) => (
                 <option key={id} value={id}>
-                  Restaurant {index + 1} · {id.slice(-8)}
+                  Nhà hàng {index + 1} · {id.slice(-8)}
                 </option>
               ))}
             </select>
             <select
-              aria-label="Area"
+              aria-label="Khu vực"
               className={`${fieldClass} sm:w-44`}
               value={area}
               onChange={(e) => setArea(e.target.value)}
             >
-              <option value="">All areas</option>
+              <option value="">Tất cả khu vực</option>
               {areas.map(([id, name]) => (
                 <option key={id} value={id}>
                   {name}
@@ -125,19 +125,19 @@ export function TableMonitoringPage() {
               ))}
             </select>
             <select
-              aria-label="Table status"
+              aria-label="Trạng thái bàn"
               className={`${fieldClass} sm:w-48`}
               value={status}
               onChange={(e) => setStatus(e.target.value)}
             >
-              <option value="">All statuses</option>
-              <option value="serving">Serving</option>
-              <option value="vacant">No open session</option>
+              <option value="">Tất cả trạng thái</option>
+              <option value="serving">Đang phục vụ</option>
+              <option value="vacant">Không có phiên mở</option>
             </select>
           </div>
           <p className="mt-3 text-xs leading-5 text-slate-500">
-            Serving status is based on open sessions. Payment status is not
-            available in this view and is not inferred from table occupancy.
+            Trạng thái phục vụ dựa trên phiên đang mở. Màn hình này chưa có
+            trạng thái thanh toán và không suy luận từ việc bàn có khách.
           </p>
         </Panel>
         <QueryState
@@ -169,18 +169,18 @@ export function TableMonitoringPage() {
                               }
                             >
                               {table.openSessionIds.length
-                                ? 'Serving'
-                                : 'No open session'}
+                                ? 'Đang phục vụ'
+                                : 'Không có phiên mở'}
                             </Badge>
                           </div>
                           <p className="mt-4 text-xl font-bold">
                             {table.tableCode}
                           </p>
                           <p className="mt-2 text-xs text-slate-500">
-                            Cleaning: {table.cleaningStatus}
+                            Vệ sinh: {table.cleaningStatus}
                           </p>
                           <p className="mt-1 text-xs text-slate-400">
-                            {table.openSessionIds.length} open session(s)
+                            {table.openSessionIds.length} phiên đang mở
                           </p>
                         </button>
                       ))}
@@ -193,21 +193,21 @@ export function TableMonitoringPage() {
       {selected && (
         <Modal
           title={`Table ${selected.tableCode}`}
-          closeLabel="Close"
+          closeLabel="Đóng"
           onClose={() => setSelected(null)}
         >
           <div className="space-y-4 p-6">
             {!detail ? (
               <p className="text-sm text-slate-500">
-                This table is no longer present in the latest monitoring data.
+                Bàn này không còn trong dữ liệu theo dõi mới nhất.
               </p>
             ) : (
               <>
                 <p>
-                  Area: <strong>{detail.areaName}</strong>
+                  Khu vực: <strong>{detail.areaName}</strong>
                 </p>
-                <p className="text-sm">Cleaning: {detail.cleaningStatus}</p>
-                <h3 className="font-semibold">Open service sessions</h3>
+                <p className="text-sm">Vệ sinh: {detail.cleaningStatus}</p>
+                <h3 className="font-semibold">Phiên phục vụ đang mở</h3>
                 {detail.openSessionIds.length ? (
                   detail.openSessionIds.map((id) => (
                     <p
@@ -218,16 +218,18 @@ export function TableMonitoringPage() {
                     </p>
                   ))
                 ) : (
-                  <p className="text-sm text-slate-500">No open sessions.</p>
+                  <p className="text-sm text-slate-500">
+                    Không có phiên đang mở.
+                  </p>
                 )}
                 <p className="text-sm text-slate-500">
-                  Payment details: Not available.
+                  Thông tin thanh toán: Chưa có.
                 </p>
                 <Link
                   className={secondaryButton}
                   to={`/manager/kitchen-monitoring?tableId=${detail.tableId}`}
                 >
-                  View kitchen progress
+                  Xem tiến độ bếp
                 </Link>
               </>
             )}
