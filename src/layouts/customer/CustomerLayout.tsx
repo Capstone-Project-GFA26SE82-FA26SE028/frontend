@@ -4,7 +4,10 @@ import { useCustomerCart } from '../../features/customer/cart/hooks/useCustomerC
 import { CustomerHeader } from './components/CustomerHeader'
 import { CustomerFooter } from './components/CustomerFooter'
 import { CustomerTableInfo } from './components/CustomerTableInfo'
+import { useAppSelector } from '../../app/hooks'
+import { CustomerChat } from '../../features/customer/chat/components/CustomerChat'
 export function CustomerLayout() {
+  const sessionId = useAppSelector((s) => s.customerSession.table?.tableSessionId)
   const { cart } = useCustomerCart()
   const count =
     cart.data?.items.reduce((sum, line) => sum + line.quantity, 0) || 0
@@ -29,6 +32,7 @@ export function CustomerLayout() {
         <Outlet />
       </main>
       <CustomerFooter />
+      {sessionId && <CustomerChat key={sessionId} sessionId={sessionId} />}
     </div>
   )
 }
