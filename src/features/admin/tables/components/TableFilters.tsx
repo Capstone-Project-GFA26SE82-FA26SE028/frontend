@@ -1,4 +1,3 @@
-import { fieldClass, secondaryButton } from '../../components/AdminUI'
 import type { Area } from '../../areas/types/types'
 import type { Restaurant } from '../../restaurants/types/types'
 export function TableFilters({
@@ -50,7 +49,7 @@ export function TableFilters({
         ))}
       </div>
       <input
-        className={fieldClass + ' min-w-0 sm:ml-auto sm:!w-52'}
+        className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 min-w-0 sm:ml-auto sm:!w-52"
         aria-label="Tìm bàn"
         placeholder="Tìm mã bàn…"
         maxLength={255}
@@ -59,7 +58,7 @@ export function TableFilters({
       />
       <select
         aria-label="Lọc theo nhà hàng"
-        className={fieldClass + ' sm:!w-48'}
+        className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:!w-48"
         value={restaurantId}
         onChange={(e) => onRestaurant(e.target.value)}
       >
@@ -72,7 +71,7 @@ export function TableFilters({
       </select>
       <select
         aria-label="Lọc theo khu vực"
-        className={fieldClass + ' sm:!w-44'}
+        className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:!w-44"
         value={areaId}
         onChange={(e) => onArea(e.target.value)}
       >
@@ -85,7 +84,10 @@ export function TableFilters({
             </option>
           ))}
       </select>
-      <button className={secondaryButton} onClick={onReset}>
+      <button
+        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+        onClick={onReset}
+      >
         Đặt lại
       </button>
     </div>

@@ -1,5 +1,5 @@
 import { Modal } from '../../../../components/Modal/Modal'
-import { secondaryButton } from '../../components/AdminUI'
+
 import type { LoginSession } from '../types/types'
 
 export function SessionRevokeModal({
@@ -51,7 +51,7 @@ export function SessionRevokeModal({
         <div className="flex justify-end gap-3 border-t border-slate-100 pt-4">
           <button
             disabled={pending}
-            className={secondaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
             onClick={onClose}
           >
             Hủy

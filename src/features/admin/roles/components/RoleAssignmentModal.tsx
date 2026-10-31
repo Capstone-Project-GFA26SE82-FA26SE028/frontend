@@ -8,12 +8,8 @@ import {
   type RoleAssignmentValues,
 } from '../schemas/roleAssignmentSchema'
 import { Modal } from '../../../../components/Modal/Modal'
-import {
-  Field,
-  fieldClass,
-  primaryButton,
-  secondaryButton,
-} from '../../components/AdminUI'
+
+import { Field } from '../../../../components/Field/Field'
 import type { RoleAccount, SystemRole } from '../types/types'
 
 export function RoleAssignmentModal({
@@ -82,7 +78,7 @@ export function RoleAssignmentModal({
         </section>
         <Field label="Vai trò mới" error={errors.role?.message}>
           <select
-            className={`${fieldClass} min-h-12 rounded-xl border-slate-200 font-medium disabled:bg-slate-50`}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 min-h-12 rounded-xl border-slate-200 font-medium disabled:bg-slate-50"
             disabled={isSubmitting}
             aria-invalid={!!errors.role}
             {...register('role')}
@@ -124,14 +120,14 @@ export function RoleAssignmentModal({
           <button
             type="button"
             disabled={isSubmitting}
-            className={`${secondaryButton} justify-center`}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 justify-center"
             onClick={close}
           >
             Hủy
           </button>
           <button
             disabled={isSubmitting || role === user.roleId || !roles.length}
-            className={`${primaryButton} justify-center`}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40 justify-center"
           >
             {isSubmitting ? 'Đang lưu…' : 'Lưu thay đổi'}
           </button>

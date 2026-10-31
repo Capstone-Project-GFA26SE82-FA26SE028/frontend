@@ -1,5 +1,5 @@
 import { Modal } from '../../../../components/Modal/Modal'
-import { primaryButton, secondaryButton } from '../../components/AdminUI'
+
 import { tableError, isTableVersionConflict } from '../api/tableApi'
 import type { useTables } from '../hooks/useTables'
 import { TableForm } from './TableForm'
@@ -58,7 +58,10 @@ export function TableModal({
       ) : target.mode !== 'create' && detail.isError ? (
         <div className="space-y-3 p-6">
           <p role="alert">{tableError(detail.error)}</p>
-          <button className={secondaryButton} onClick={() => void m.reload()}>
+          <button
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+            onClick={() => void m.reload()}
+          >
             Thử lại
           </button>
         </div>
@@ -70,7 +73,7 @@ export function TableModal({
         <div className="p-6">
           <p role="alert">Không thể tải nhà hàng và khu vực.</p>
           <button
-            className={secondaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
             onClick={() => void m.options.refetch()}
           >
             Thử lại
@@ -156,7 +159,7 @@ export function TableModal({
             <div className="flex justify-end gap-3">
               <button
                 disabled={mutation.isPending}
-                className={secondaryButton}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                 onClick={m.close}
               >
                 Hủy
@@ -166,7 +169,7 @@ export function TableModal({
                 className={
                   target.mode === 'delete'
                     ? 'rounded-xl bg-rose-600 px-5 py-3 text-sm font-semibold text-white disabled:opacity-50'
-                    : primaryButton
+                    : 'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40'
                 }
                 onClick={() =>
                   mutation.mutate(

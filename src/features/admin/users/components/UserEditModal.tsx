@@ -1,5 +1,5 @@
 import { Modal } from '../../../../components/Modal/Modal'
-import { secondaryButton } from '../../components/AdminUI'
+
 import { useUser, useUserRoles } from '../hooks/useUsers'
 import { userApiError } from '../api/userApi'
 import { UserForm } from './UserForm'
@@ -37,7 +37,7 @@ export function UserEditModal({
               {userApiError(error || roles.error)}
             </p>
             <button
-              className={secondaryButton}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
               onClick={() => {
                 void refetch()
                 void roles.refetch()

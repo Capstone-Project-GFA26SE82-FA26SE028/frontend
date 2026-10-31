@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+
+import { SummaryCards } from '../../../../components/SummaryCards/SummaryCards'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import {
-  fieldClass,
-  PageHeading,
   Pagination,
-  secondaryButton,
-  SummaryCards,
-} from '../../../admin/components/AdminUI'
+  PAGE_SIZE,
+} from '../../../../components/Pagination/Pagination'
 import { Badge } from '../../../../components/Badge/Badge'
 import { Panel } from '../../../../components/Panel/Panel'
 import { downloadCsv } from '../../../admin/utils'
@@ -38,11 +38,11 @@ export function StockHistoryPage() {
   const totals = movementTotals(filtered)
   const currentPage = Math.min(
     page,
-    Math.max(1, Math.ceil(filtered.length / 10)),
+    Math.max(1, Math.ceil(filtered.length / PAGE_SIZE)),
   )
   const currentLotPage = Math.min(
     lotPage,
-    Math.max(1, Math.ceil((lots.data?.length || 0) / 10)),
+    Math.max(1, Math.ceil((lots.data?.length || 0) / PAGE_SIZE)),
   )
   const refresh = () => {
     void stock.refetch()
@@ -129,7 +129,7 @@ export function StockHistoryPage() {
                 className={
                   tab === 'movements'
                     ? 'min-h-11 rounded-xl bg-emerald-50 px-4 font-semibold text-emerald-800'
-                    : secondaryButton
+                    : 'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40'
                 }
                 aria-pressed={tab === 'movements'}
                 onClick={() => setTab('movements')}
@@ -140,7 +140,7 @@ export function StockHistoryPage() {
                 className={
                   tab === 'lots'
                     ? 'min-h-11 rounded-xl bg-emerald-50 px-4 font-semibold text-emerald-800'
-                    : secondaryButton
+                    : 'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40'
                 }
                 aria-pressed={tab === 'lots'}
                 onClick={() => setTab('lots')}
@@ -149,7 +149,7 @@ export function StockHistoryPage() {
               </button>
               <Link
                 to={`/manager/stock-variance?ingredientId=${ingredientId}`}
-                className={`${secondaryButton} sm:ml-auto`}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 sm:ml-auto"
               >
                 Xem tiêu hao
               </Link>
@@ -191,7 +191,7 @@ export function StockHistoryPage() {
                   />
                   <div className="flex flex-wrap gap-3">
                     <select
-                      className={`${fieldClass} sm:w-60`}
+                      className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-60"
                       value={type}
                       aria-label="Loại biến động"
                       onChange={(event) => {
@@ -211,7 +211,7 @@ export function StockHistoryPage() {
                       ))}
                     </select>
                     <button
-                      className={secondaryButton}
+                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                       disabled={!filtered.length}
                       onClick={() =>
                         downloadCsv(
@@ -247,8 +247,8 @@ export function StockHistoryPage() {
                 >
                   <MovementTable
                     movements={filtered.slice(
-                      (currentPage - 1) * 10,
-                      currentPage * 10,
+                      (currentPage - 1) * PAGE_SIZE,
+                      currentPage * PAGE_SIZE,
                     )}
                     unit={ingredient.baseUnit}
                   />
@@ -257,7 +257,6 @@ export function StockHistoryPage() {
                   locale="vi"
                   total={filtered.length}
                   page={currentPage}
-                  size={10}
                   onPage={setPage}
                 />
               </QueryState>
@@ -270,8 +269,8 @@ export function StockHistoryPage() {
               >
                 <LotTable
                   lots={(lots.data || []).slice(
-                    (currentLotPage - 1) * 10,
-                    currentLotPage * 10,
+                    (currentLotPage - 1) * PAGE_SIZE,
+                    currentLotPage * PAGE_SIZE,
                   )}
                   unit={ingredient.baseUnit}
                 />
@@ -279,7 +278,6 @@ export function StockHistoryPage() {
                   locale="vi"
                   total={lots.data?.length || 0}
                   page={currentLotPage}
-                  size={10}
                   onPage={setLotPage}
                 />
               </QueryState>

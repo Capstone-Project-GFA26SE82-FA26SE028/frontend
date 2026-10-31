@@ -1,16 +1,28 @@
+import { Icon } from '../../../../components/Icon/Icon'
 import { CurrentFees } from '../components/CurrentFees'
 import { TaxFeesForm } from '../components/TaxFeesForm'
 import { FeeHistoryTable } from '../components/FeeHistoryTable'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { feeSchema, type Fees } from '../schemas/taxFeeSchema'
 import { useTaxFees } from '../hooks/useTaxFees'
-import { PageHeading, Notice, secondaryButton } from '../../components/AdminUI'
+
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import { taxFeeError } from '../api/taxFeeApi'
 export function TaxFeesPage() {
-  const { list, current, fees, now, save } = useTaxFees()
-  const [notice, setNotice] = useState('')
+  const {
+    list,
+    effective,
+    current,
+    fees,
+    now,
+    save,
+    page,
+    setPage,
+    total,
+    refresh,
+  } = useTaxFees()
   const initialized = useRef(false)
   const {
     register,
@@ -29,7 +41,7 @@ export function TaxFeesPage() {
     },
   })
   useEffect(() => {
-    if (!list.isSuccess || initialized.current) return
+    if (!effective.isSuccess || initialized.current) return
     initialized.current = true
     reset({
       vat: current?.vat ?? 0,
@@ -38,7 +50,7 @@ export function TaxFeesPage() {
       applyAt: 'now',
       effectiveAt: '',
     })
-  }, [list.isSuccess, current, reset])
+  }, [effective.isSuccess, current, reset])
   const applyAt = useWatch({ control, name: 'applyAt' })
   return (
     <>
@@ -48,24 +60,34 @@ export function TaxFeesPage() {
         action={
           <button
             type="button"
-            className={secondaryButton}
-            disabled={list.isFetching}
-            onClick={() => void list.refetch()}
+            disabled={list.isFetching || effective.isFetching}
+            onClick={() => void refresh()}
+            title="Tải lại"
+            aria-label="Tải lại"
+            aria-busy={list.isFetching || effective.isFetching}
+            className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-colors hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-40"
           >
-            {list.isFetching ? 'Đang tải…' : 'Tải lại'}
+            <Icon
+              name="refresh"
+              size={18}
+              className={
+                list.isFetching || effective.isFetching
+                  ? 'animate-spin motion-reduce:animate-none'
+                  : ''
+              }
+            />
           </button>
         }
       />
-      {notice && <Notice>{notice}</Notice>}
-      {list.isError && (
+      {effective.isError && (
         <div
           role="alert"
           className="mb-5 rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
         >
-          {taxFeeError(list.error)}
+          {taxFeeError(effective.error)}
         </div>
       )}
-      {list.isPending ? (
+      {effective.isPending ? (
         <p role="status" className="py-8 text-center text-slate-500">
           Đang tải cấu hình…
         </p>
@@ -78,13 +100,11 @@ export function TaxFeesPage() {
           errors={errors}
           applyAt={applyAt || 'now'}
           busy={save.isPending}
-          disabled={list.isPending || list.isError}
+          disabled={effective.isPending || effective.isError}
           onSubmit={handleSubmit(async (values) => {
             if (save.isPending) return
-            setNotice('')
             try {
               await save.mutateAsync(values)
-              setNotice('Đã lưu cấu hình VAT và phí dịch vụ.')
             } catch {
               /* The API error is displayed below the form. */
             }
@@ -99,7 +119,24 @@ export function TaxFeesPage() {
           {taxFeeError(save.error)}
         </div>
       )}
-      <FeeHistoryTable fees={fees} currentId={current?.id} now={now} />
+      {list.isError && (
+        <div
+          role="alert"
+          className="mt-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
+        >
+          {taxFeeError(list.error)}
+        </div>
+      )}
+      <FeeHistoryTable
+        fees={fees}
+        currentId={current?.id}
+        now={now}
+        page={page}
+        total={total}
+        onPage={setPage}
+        busy={list.isFetching}
+        currentReady={effective.isSuccess}
+      />
     </>
   )
 }

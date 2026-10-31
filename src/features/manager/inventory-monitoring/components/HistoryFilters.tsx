@@ -1,4 +1,4 @@
-import { Field, fieldClass } from '../../../admin/components/AdminUI'
+import { Field } from '../../../../components/Field/Field'
 import type { Ingredient } from '../../ingredient-management/types/ingredient'
 
 export function HistoryFilters({
@@ -24,7 +24,7 @@ export function HistoryFilters({
         <select
           value={ingredientId}
           onChange={(event) => select(event.target.value)}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         >
           <option value="">Chọn nguyên liệu</option>
           {ingredients.map((ingredient) => (
@@ -44,7 +44,7 @@ export function HistoryFilters({
           value={from}
           max={until || undefined}
           onChange={(event) => setFrom(event.target.value)}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         />
       </Field>
       <Field label="Đến ngày (UTC+7)">
@@ -53,7 +53,7 @@ export function HistoryFilters({
           value={until}
           min={from || undefined}
           onChange={(event) => setUntil(event.target.value)}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         />
       </Field>
       {from && until && from > until && (

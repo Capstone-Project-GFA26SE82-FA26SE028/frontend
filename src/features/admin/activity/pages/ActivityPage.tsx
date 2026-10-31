@@ -1,8 +1,6 @@
-import {
-  PageHeading,
-  Pagination,
-  secondaryButton,
-} from '../../components/AdminUI'
+import { Icon } from '../../../../components/Icon/Icon'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
+import { Pagination } from '../../../../components/Pagination/Pagination'
 import { Panel } from '../../../../components/Panel/Panel'
 import { useActivity } from '../hooks/useActivity'
 import { activityApiError } from '../api/activityApi'
@@ -19,11 +17,21 @@ export function ActivityPage() {
         description="Xem hoạt động tài khoản và đăng nhập đã ghi nhận."
         action={
           <button
-            className={secondaryButton}
             disabled={logs.isFetching}
             onClick={() => void logs.refetch()}
+            type="button"
+            title="Làm mới"
+            aria-label="Làm mới"
+            aria-busy={logs.isFetching}
+            className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-colors hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-40"
           >
-            Làm mới
+            <Icon
+              name="refresh"
+              size={18}
+              className={
+                logs.isFetching ? 'animate-spin motion-reduce:animate-none' : ''
+              }
+            />
           </button>
         }
       />
@@ -39,7 +47,7 @@ export function ActivityPage() {
               {activityApiError(logs.error)}
             </p>
             <button
-              className={secondaryButton}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
               onClick={() => void logs.refetch()}
             >
               Thử lại

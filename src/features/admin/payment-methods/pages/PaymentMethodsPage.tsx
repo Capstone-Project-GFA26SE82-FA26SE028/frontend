@@ -3,24 +3,23 @@ import { PayOSConnection } from '../components/PayOSConnection'
 import { PaymentSettingsActions } from '../components/PaymentSettingsActions'
 import { useState } from 'react'
 import { usePaymentMethods } from '../hooks/usePaymentMethods'
-import { RestaurantHeading } from '../../components/RestaurantHeading'
-import { Notice } from '../../components/AdminUI'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
+import { toast } from 'react-toastify'
 export function PaymentMethodsPage() {
   const { state, saveMethods } = usePaymentMethods()
   const [draft, setDraft] = useState(state.methods)
   const [error, setError] = useState('')
-  const [notice, setNotice] = useState('')
   const dirty =
     draft.cash !== state.methods.cash ||
     draft.payos !== state.methods.payos ||
     draft.demoConnected !== state.methods.demoConnected
   return (
     <>
-      <RestaurantHeading
+      <PageHeading
+        eyebrow="Quản trị nhà hàng"
         title="Phương thức thanh toán"
-        description="Lựa chọn cách thanh toán tại nhà hàng"
+        description="Lựa chọn cách thanh toán tại nhà hàng · Bản mẫu lưu trên trình duyệt."
       />
-      {notice && <Notice>{notice}</Notice>}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-lg font-semibold text-slate-900">
           Phương thức tại nhà hàng
@@ -56,7 +55,6 @@ export function PaymentMethodsPage() {
             enabled={draft[m.key]}
             onChange={(enabled) => {
               setDraft({ ...draft, [m.key]: enabled })
-              setNotice('')
               setError('')
             }}
           />
@@ -82,13 +80,11 @@ export function PaymentMethodsPage() {
         onCancel={() => {
           setDraft(state.methods)
           setError('')
-          setNotice('')
         }}
         onSave={() => {
-          setNotice('')
           const e = saveMethods(draft)
           setError(e)
-          if (!e) setNotice('Đã lưu phương thức thanh toán mẫu.')
+          if (!e) toast.success('Đã lưu phương thức thanh toán mẫu.')
         }}
       />
     </>

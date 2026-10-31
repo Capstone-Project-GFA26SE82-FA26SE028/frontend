@@ -1,4 +1,5 @@
 const paths: Record<string, string> = {
+  refresh: 'M20 15a8 8 0 1 1-2.3-8.7L20.5 9',
   qr: 'M3 3h6v6H3V3Zm12 0h6v6h-6V3ZM3 15h6v6H3v-6Zm12 0h3v3h3v3h-6v-6ZM3 12h6m3-9v6m0 3h3m3 0h3M12 15v6',
   trash: 'M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7',
   ban: 'M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0ZM5 5l14 14',
@@ -73,12 +74,15 @@ export function Icon({
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.65"
+      strokeWidth={name === 'refresh' ? 2 : 1.65}
       strokeLinecap="round"
       strokeLinejoin="round"
       className={`shrink-0 ${className}`}
     >
       <path d={paths[name] || paths.leaf} />
+      {name === 'refresh' && (
+        <path d="M15.5 10H21V4.5Z" fill="currentColor" strokeWidth={1} />
+      )}
     </svg>
   )
 }

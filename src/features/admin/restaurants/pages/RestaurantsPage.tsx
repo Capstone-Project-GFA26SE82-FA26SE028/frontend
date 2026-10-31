@@ -2,13 +2,9 @@ import { useState } from 'react'
 import { RestaurantGrid } from '../components/RestaurantGrid'
 import { Icon } from '../../../../components/Icon/Icon'
 import { Modal } from '../../../../components/Modal/Modal'
-import {
-  PageHeading,
-  Pagination,
-  primaryButton,
-  secondaryButton,
-  fieldClass,
-} from '../../components/AdminUI'
+
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
+import { Pagination } from '../../../../components/Pagination/Pagination'
 import { useRestaurants } from '../hooks/useRestaurants'
 import { restaurantError } from '../api/restaurantApi'
 import { RestaurantTable } from '../components/RestaurantTable'
@@ -28,7 +24,7 @@ export function RestaurantsPage() {
         description="Quản lý thông tin nhà hàng và giờ mở cửa."
         action={
           <button
-            className={primaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
             onClick={() => management.setTarget({ mode: 'create' })}
           >
             <Icon name="plus" size={18} />
@@ -58,11 +54,11 @@ export function RestaurantsPage() {
                 value={management.search}
                 onChange={(e) => management.setSearch(e.target.value)}
                 placeholder="Tìm tên nhà hàng…"
-                className={fieldClass + ' pl-10'}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 pl-10"
               />
             </label>
             <button
-              className={secondaryButton}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
               onClick={() => management.setSearch('')}
             >
               Đặt lại
@@ -101,7 +97,7 @@ export function RestaurantsPage() {
               {restaurantError(list.error)}
             </p>
             <button
-              className={secondaryButton}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
               onClick={() => void list.refetch()}
             >
               Thử lại
@@ -175,7 +171,7 @@ export function RestaurantsPage() {
                 {restaurantError(detail.error)}
               </p>
               <button
-                className={secondaryButton}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                 onClick={() => void detail.refetch()}
               >
                 Thử lại

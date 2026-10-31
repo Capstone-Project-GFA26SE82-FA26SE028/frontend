@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from '../../../../components/Pagination/Pagination'
 import { useState, useEffect } from 'react'
 import {
   useQuery,
@@ -53,7 +54,7 @@ export function useAreas() {
       getAreas(
         {
           page,
-          pageSize: 10,
+          pageSize: PAGE_SIZE,
           search: term || undefined,
           restaurantId: restaurantId || undefined,
           isActive: status === '' ? undefined : status === 'true',
@@ -65,9 +66,9 @@ export function useAreas() {
   if (
     list.isSuccess &&
     !list.isPlaceholderData &&
-    page > Math.max(1, Math.ceil(list.data.totalCount / 10))
+    page > Math.max(1, Math.ceil(list.data.totalCount / PAGE_SIZE))
   )
-    setPage(Math.max(1, Math.ceil(list.data.totalCount / 10)))
+    setPage(Math.max(1, Math.ceil(list.data.totalCount / PAGE_SIZE)))
   const detail = useQuery({
     queryKey: ['areas', 'detail', target?.id],
     queryFn: ({ signal }) => getArea(target!.id!, signal),

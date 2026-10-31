@@ -3,15 +3,10 @@ import { Link } from 'react-router-dom'
 import { Icon } from '../../../../components/Icon/Icon'
 import { Modal } from '../../../../components/Modal/Modal'
 import { useDebounce } from '../../../../hooks/useDebounce'
-import {
-  ConfirmAction,
-  PageHeading,
-  Pagination,
-  SearchField,
-  fieldClass,
-  primaryButton,
-  secondaryButton,
-} from '../../../admin/components/AdminUI'
+
+import { SearchField } from '../../../../components/SearchField/SearchField'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
+import { Pagination } from '../../../../components/Pagination/Pagination'
 import { Badge } from '../../../../components/Badge/Badge'
 import { Panel } from '../../../../components/Panel/Panel'
 import { QueryState } from '../../menu-management/components/QueryState'
@@ -41,7 +36,10 @@ export function IngredientsPage() {
         title="Nguyên liệu"
         description="Quản lý nguyên liệu, đơn vị cơ sở và ngưỡng cảnh báo tồn kho."
         action={
-          <button className={primaryButton} onClick={() => setForm({})}>
+          <button
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+            onClick={() => setForm({})}
+          >
             <Icon name="plus" size={18} />
             Thêm nguyên liệu
           </button>
@@ -60,7 +58,7 @@ export function IngredientsPage() {
           />
           <select
             aria-label="Trạng thái nguyên liệu"
-            className={`${fieldClass} sm:w-44`}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-44"
             value={status}
             onChange={(event) => {
               setStatus(event.target.value)
@@ -83,7 +81,7 @@ export function IngredientsPage() {
             Chỉ hiện tồn kho thấp
           </label>
           <button
-            className={secondaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
             onClick={() => void list.refetch()}
           >
             Làm mới
@@ -147,20 +145,20 @@ export function IngredientsPage() {
                     <td>
                       <div className="flex justify-end gap-2">
                         <Link
-                          className={secondaryButton}
+                          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                           to={`/manager/units?ingredientId=${ingredient.ingredientId}`}
                         >
                           Đơn vị
                         </Link>
                         <button
-                          className={secondaryButton}
+                          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                           onClick={() => setForm({ ingredient })}
                           aria-label={`Edit ${ingredient.ingredientName}`}
                         >
                           <Icon name="edit" size={16} />
                         </button>
                         <button
-                          className={secondaryButton}
+                          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                           onClick={() => setTarget(ingredient)}
                         >
                           {ingredient.isActive
@@ -178,7 +176,6 @@ export function IngredientsPage() {
         <Pagination
           locale="vi"
           page={page}
-          size={10}
           total={list.data?.totalCount || 0}
           onPage={setPage}
         />
@@ -205,7 +202,10 @@ export function IngredientsPage() {
                 <p className="text-sm text-slate-500">
                   Tạo đơn vị đo trước khi thêm nguyên liệu.
                 </p>
-                <Link to="/manager/units" className={primaryButton}>
+                <Link
+                  to="/manager/units"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+                >
                   Quản lý đơn vị
                 </Link>
               </div>
@@ -214,24 +214,40 @@ export function IngredientsPage() {
         </Modal>
       )}
       {target && (
-        <ConfirmAction
+        <Modal
           title={`${target.isActive ? 'Ngừng hoạt động' : 'Kích hoạt'} nguyên liệu?`}
-          description={`Cập nhật trạng thái của “${target.ingredientName}”? Lịch sử kho hiện tại được giữ nguyên.`}
-          confirmLabel="Xác nhận"
-          cancelLabel="Hủy"
-          closeLabel="Đóng"
-          disabled={mutation.isPending}
           onClose={() => {
             if (!mutation.isPending) setTarget(null)
           }}
-          onConfirm={() =>
-            mutation.mutate({
-              method: 'patch',
-              path: `/ingredients/${target.ingredientId}/status`,
-              body: { isActive: !target.isActive },
-            })
-          }
-        />
+          closeLabel={'Đóng'}
+        >
+          <div className="space-y-5 p-6">
+            <p className="text-sm leading-6 text-slate-600">{`Cập nhật trạng thái của “${target.ingredientName}”? Lịch sử kho hiện tại được giữ nguyên.`}</p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  if (!mutation.isPending) setTarget(null)
+                }}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+              >
+                {'Hủy'}
+              </button>
+              <button
+                disabled={mutation.isPending}
+                onClick={() =>
+                  mutation.mutate({
+                    method: 'patch',
+                    path: `/ingredients/${target.ingredientId}/status`,
+                    body: { isActive: !target.isActive },
+                  })
+                }
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+              >
+                {'Xác nhận'}
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </>
   )

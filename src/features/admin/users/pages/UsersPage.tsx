@@ -1,12 +1,13 @@
-import { secondaryButton, Pagination } from '../../components/AdminUI'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
+import { Icon } from '../../../../components/Icon/Icon'
+import { Pagination } from '../../../../components/Pagination/Pagination'
 import { Panel } from '../../../../components/Panel/Panel'
 import { UserFilters } from '../components/UserFilters'
 import { UserTable } from '../components/UserTable'
 import { UserDetailModal } from '../components/UserDetailModal'
-import { UserStatusModal } from '../components/UserStatusModal'
+import { UserActivationModal } from '../components/UserActivationModal'
 import { UserForm } from '../components/UserForm'
 import { UserEditModal } from '../components/UserEditModal'
-import { UserPageHeader } from '../components/UserPageHeader'
 import { UserSummaryCards } from '../components/UserSummaryCards'
 import { useUserManagement } from '../hooks/useUsers'
 import { userApiError } from '../api/userApi'
@@ -44,9 +45,19 @@ export function UsersPage() {
   } = useUserManagement()
   return (
     <>
-      <UserPageHeader
-        canCreate={!!roles.data?.length && !roles.isError}
-        onCreate={() => setForm(null)}
+      <PageHeading
+        title="Tài khoản người dùng"
+        description="Quản lý thông tin tài khoản, vai trò và quyền truy cập."
+        action={
+          <button
+            disabled={!roles.data?.length || roles.isError}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+            onClick={() => setForm(null)}
+          >
+            <Icon name="plus" size={18} />
+            Thêm tài khoản
+          </button>
+        }
       />
       <UserSummaryCards
         totals={totals.isError ? undefined : totals.data}
@@ -86,7 +97,7 @@ export function UsersPage() {
               {userApiError(users.error)}
             </p>
             <button
-              className={secondaryButton}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
               onClick={() => void users.refetch()}
             >
               Thử lại
@@ -107,7 +118,6 @@ export function UsersPage() {
             />
             <Pagination
               locale="vi"
-              size={10}
               total={total}
               page={Math.min(page, maxPage)}
               onPage={(nextPage) => {
@@ -141,7 +151,7 @@ export function UsersPage() {
         />
       )}
       {target && (
-        <UserStatusModal
+        <UserActivationModal
           user={target}
           error={statusError}
           pending={statusPending}

@@ -1,5 +1,5 @@
 import { RestaurantCard } from './RestaurantCard'
-import { EmptyState } from '../../components/AdminUI'
+import { EmptyState } from '../../../../components/EmptyState/EmptyState'
 import type { Restaurant } from '../types/types'
 export function RestaurantGrid({
   items,

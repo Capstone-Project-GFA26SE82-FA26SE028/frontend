@@ -1,4 +1,3 @@
-import { fieldClass, secondaryButton } from '../../../admin/components/AdminUI'
 import { catalogError } from '../../menu-management/api/catalogApi'
 import { useConversions } from '../hooks/useUnits'
 import type { Ingredient, RecipeLine, Unit } from '../types/ingredient'
@@ -29,7 +28,7 @@ export function RecipeIngredientRow({
           <span>Nguyên liệu {index + 1} *</span>
           <select
             required
-            className={fieldClass}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
             value={line.ingredientRef}
             onChange={(event) =>
               update({
@@ -63,7 +62,7 @@ export function RecipeIngredientRow({
           <select
             required
             disabled={!line.ingredientRef || conversions.isPending}
-            className={fieldClass}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
             value={line.unitRef}
             onChange={(event) =>
               update({ ...line, unitRef: event.target.value })
@@ -93,13 +92,13 @@ export function RecipeIngredientRow({
             onChange={(event) =>
               update({ ...line, quantity: event.target.value })
             }
-            className={fieldClass}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           />
         </label>
         <button
           type="button"
           aria-label={`Xóa nguyên liệu ${index + 1}`}
-          className={secondaryButton}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
           onClick={remove}
         >
           Xóa

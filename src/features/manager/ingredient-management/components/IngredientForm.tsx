@@ -1,4 +1,4 @@
-import { Field, fieldClass } from '../../../admin/components/AdminUI'
+import { Field } from '../../../../components/Field/Field'
 import { FormActions } from '../../menu-management/components/FormActions'
 import { useIngredientMutation } from '../hooks/useIngredientMutation'
 import type { Ingredient, Unit } from '../types/ingredient'
@@ -40,7 +40,7 @@ export function IngredientForm({
           autoFocus
           maxLength={255}
           defaultValue={ingredient?.ingredientName}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         />
       </Field>
       <Field label="Đơn vị cơ sở *">
@@ -49,7 +49,7 @@ export function IngredientForm({
           disabled={Boolean(ingredient)}
           required
           defaultValue={ingredient?.baseUnit || ''}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         >
           <option value="" disabled>
             Chọn đơn vị
@@ -78,7 +78,7 @@ export function IngredientForm({
           step="0.000001"
           max="999999999999.999999"
           defaultValue={ingredient?.lowStockThreshold ?? 0}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         />
       </Field>
       {!ingredient && (

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Icon } from '../../../../components/Icon/Icon'
 import type { Restaurant } from '../types/types'
-import { primaryButton, secondaryButton } from '../../components/AdminUI'
+
 const dayNames = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'CN']
 function formatDays(indices: number[]) {
   if (indices.length === 7) return 'Hằng ngày'
@@ -94,12 +94,15 @@ export function RestaurantDetail({
         </dl>
       </section>
       <div className="grid grid-cols-2 gap-3">
-        <button className={primaryButton + ' justify-center'} onClick={onEdit}>
+        <button
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40 justify-center"
+          onClick={onEdit}
+        >
           <Icon name="edit" size={18} />
           Sửa
         </button>
         <button
-          className={secondaryButton + ' justify-center bg-slate-50'}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 justify-center bg-slate-50"
           onClick={onClose}
         >
           Đóng

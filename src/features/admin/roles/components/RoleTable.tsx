@@ -1,4 +1,4 @@
-import { EmptyState } from '../../components/AdminUI'
+import { EmptyState } from '../../../../components/EmptyState/EmptyState'
 import { Panel } from '../../../../components/Panel/Panel'
 import { RoleBadge } from './RoleBadge'
 import type { SystemRole } from '../types/types'

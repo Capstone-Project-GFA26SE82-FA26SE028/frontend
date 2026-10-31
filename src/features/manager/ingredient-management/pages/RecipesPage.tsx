@@ -1,12 +1,8 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Modal } from '../../../../components/Modal/Modal'
-import {
-  fieldClass,
-  PageHeading,
-  primaryButton,
-  secondaryButton,
-} from '../../../admin/components/AdminUI'
+
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import { Badge } from '../../../../components/Badge/Badge'
 import { Panel } from '../../../../components/Panel/Panel'
 import { QueryState } from '../../menu-management/components/QueryState'
@@ -40,7 +36,7 @@ export function RecipesPage() {
         description="Thiết lập định mức nguyên liệu cho mỗi phần ăn và lưu lịch sử phiên bản công thức."
         action={
           <button
-            className={primaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
             disabled={!itemId || !recipes.isSuccess}
             onClick={() => setCreate(true)}
           >
@@ -59,7 +55,7 @@ export function RecipesPage() {
             Món ăn
             <select
               value={itemId}
-              className={fieldClass}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               onChange={(event) => {
                 setParams(
                   event.target.value ? { itemId: event.target.value } : {},
@@ -94,7 +90,10 @@ export function RecipesPage() {
                 Tạo phiên bản công thức đầu tiên để thiết lập nguyên liệu cho
                 một phần ăn.
               </p>
-              <button className={primaryButton} onClick={() => setCreate(true)}>
+              <button
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+                onClick={() => setCreate(true)}
+              >
                 Tạo công thức đầu tiên
               </button>
             </Panel>
@@ -155,13 +154,13 @@ export function RecipesPage() {
                 </QueryState>
                 <div className="mt-5 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
                   <button
-                    className={secondaryButton}
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                     onClick={() => setCreate(true)}
                   >
                     Dùng phiên bản này làm mẫu
                   </button>
                   <Link
-                    className={secondaryButton}
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                     to={`/manager/food-cost?itemId=${itemId}`}
                   >
                     Xem giá vốn

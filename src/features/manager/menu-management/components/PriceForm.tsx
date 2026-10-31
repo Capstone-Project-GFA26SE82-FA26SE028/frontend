@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Field, fieldClass } from '../../../admin/components/AdminUI'
+
+import { Field } from '../../../../components/Field/Field'
 import { channels } from '../constants/catalog'
 import type { Item, PriceFormTarget, PriceInput } from '../types/catalog'
 import { localInput, toUtc } from '../utils/price'
@@ -72,7 +73,7 @@ export function PriceForm({
           required
           disabled={target.mode !== 'create'}
           defaultValue={price?.itemId || defaultItemId}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         >
           <option value="" disabled>
             Chọn món
@@ -89,7 +90,7 @@ export function PriceForm({
           <select
             name="channel"
             defaultValue={price?.channel || 'AllChannels'}
-            className={fieldClass}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           >
             {Object.entries(channels).map(([v, label]) => (
               <option key={v} value={v}>
@@ -108,7 +109,7 @@ export function PriceForm({
           max="9999999999999999.99"
           required
           defaultValue={price?.amount}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         />
       </Field>
       {replace ? (
@@ -125,7 +126,7 @@ export function PriceForm({
             defaultValue={localInput(
               price?.effectiveFrom || new Date().toISOString(),
             )}
-            className={fieldClass}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           />
         </Field>
       )}
@@ -134,7 +135,7 @@ export function PriceForm({
           name="end"
           type="datetime-local"
           defaultValue={price?.effectiveTo ? localInput(price.effectiveTo) : ''}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         />
       </Field>
       {!replace && (
@@ -145,7 +146,7 @@ export function PriceForm({
                 name="dailyStart"
                 type="time"
                 defaultValue={price?.dailyStart?.slice(0, 5) || ''}
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </Field>
             <Field label="Giờ kết thúc">
@@ -153,7 +154,7 @@ export function PriceForm({
                 name="dailyEnd"
                 type="time"
                 defaultValue={price?.dailyEnd?.slice(0, 5) || ''}
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </Field>
           </div>

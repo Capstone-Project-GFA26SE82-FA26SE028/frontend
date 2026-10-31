@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { fieldClass, secondaryButton } from '../../components/AdminUI'
+
 import { Icon } from '../../../../components/Icon/Icon'
 import type { SessionRole, SessionCounts, SessionStatus } from '../types/types'
 export function SessionFilters({
@@ -114,14 +114,12 @@ export function SessionFilters({
               value={search}
               onChange={(event) => onSearch(event.target.value)}
               placeholder="Tìm tên đăng nhập hoặc email…"
-              className={`${fieldClass} pl-10`}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 pl-10"
             />
           </label>
           <button
             type="button"
-            className={
-              secondaryButton + ' inline-flex shrink-0 items-center gap-2'
-            }
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 inline-flex shrink-0 items-center gap-2"
             aria-expanded={moreFilters}
             aria-controls="session-more-filters"
             onClick={() => setMoreFilters(!moreFilters)}
@@ -154,7 +152,7 @@ export function SessionFilters({
             aria-label="Vai trò"
             value={role}
             onChange={(event) => onRole(event.target.value)}
-            className={`${fieldClass} sm:w-40 sm:shrink-0`}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-40 sm:shrink-0"
           >
             <option value="">Tất cả vai trò</option>
             {roles.map((item) => (
@@ -169,13 +167,13 @@ export function SessionFilters({
             max="9999-12-31"
             value={date}
             onChange={(event) => onDate(event.target.value)}
-            className={`${fieldClass} sm:w-40 sm:shrink-0`}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-40 sm:shrink-0"
           />
           <select
             aria-label="Thiết bị"
             value={device}
             onChange={(event) => onDevice(event.target.value)}
-            className={`${fieldClass} sm:w-48`}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-48"
           >
             <option value="">Tất cả thiết bị</option>
             {['Desktop', 'Mobile', 'Tablet', 'Unknown'].map((item) => (

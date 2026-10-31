@@ -1,4 +1,3 @@
-import { primaryButton, secondaryButton } from '../../components/AdminUI'
 export function PaymentSettingsActions({
   dirty,
   onCancel,
@@ -16,10 +15,17 @@ export function PaymentSettingsActions({
       >
         {dirty ? 'Có thay đổi chưa lưu' : 'Cấu hình đã được lưu'}
       </p>
-      <button className={secondaryButton} onClick={onCancel}>
+      <button
+        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+        onClick={onCancel}
+      >
         Hủy thay đổi
       </button>
-      <button disabled={!dirty} className={primaryButton} onClick={onSave}>
+      <button
+        disabled={!dirty}
+        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+        onClick={onSave}
+      >
         Lưu thay đổi
       </button>
     </div>

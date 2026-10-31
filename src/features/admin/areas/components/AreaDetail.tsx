@@ -1,6 +1,6 @@
 import { Icon } from '../../../../components/Icon/Icon'
 import type { Area } from '../types/types'
-import { primaryButton, secondaryButton } from '../../components/AdminUI'
+
 export function AreaDetail({
   area,
   restaurantName,
@@ -70,12 +70,15 @@ export function AreaDetail({
       </dl>
       <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-5">
         <button
-          className={secondaryButton + ' justify-center'}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 justify-center"
           onClick={onClose}
         >
           Đóng
         </button>
-        <button className={primaryButton + ' justify-center'} onClick={onEdit}>
+        <button
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40 justify-center"
+          onClick={onEdit}
+        >
           <Icon name="edit" size={17} />
           Sửa khu vực
         </button>
