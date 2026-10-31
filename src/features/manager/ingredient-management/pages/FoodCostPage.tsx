@@ -1,9 +1,6 @@
 import { Link, useSearchParams } from 'react-router-dom'
-import {
-  fieldClass,
-  PageHeading,
-  secondaryButton,
-} from '../../../admin/components/AdminUI'
+
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import { Panel } from '../../../../components/Panel/Panel'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { tableClass } from '../../menu-management/constants/styles'
@@ -45,7 +42,7 @@ export function FoodCostPage() {
                   event.target.value ? { itemId: event.target.value } : {},
                 )
               }
-              className={fieldClass}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
             >
               <option value="">Chọn món ăn</option>
               {items.data?.map((item) => (
@@ -156,7 +153,7 @@ export function FoodCostPage() {
           )}
           <Link
             to={`/manager/recipes?itemId=${itemId}`}
-            className={`${secondaryButton} mt-5`}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 mt-5"
           >
             Quản lý công thức
           </Link>

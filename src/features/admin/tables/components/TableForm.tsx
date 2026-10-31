@@ -5,12 +5,8 @@ import { tableSchema, type TableValues } from '../schemas/tableSchema'
 import type { Table } from '../types/types'
 import type { Area } from '../../areas/types/types'
 import type { Restaurant } from '../../restaurants/types/types'
-import {
-  Field,
-  fieldClass,
-  primaryButton,
-  secondaryButton,
-} from '../../components/AdminUI'
+
+import { Field } from '../../../../components/Field/Field'
 import { tableError } from '../api/tableApi'
 export function TableForm({
   table,
@@ -84,7 +80,7 @@ export function TableForm({
         <div className="grid gap-4 rounded-2xl bg-emerald-50 p-4 sm:grid-cols-2">
           <Field label="Nhà hàng *">
             <select
-              className={fieldClass}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               required
               disabled={!!table}
               value={restaurantId}
@@ -102,7 +98,10 @@ export function TableForm({
             </select>
           </Field>
           <Field label="Khu vực *" error={errors.areaId?.message}>
-            <select className={fieldClass} {...register('areaId')}>
+            <select
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+              {...register('areaId')}
+            >
               <option value="">Chọn khu vực đang hoạt động</option>
               {areas
                 .filter(
@@ -126,7 +125,7 @@ export function TableForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Mã bàn *" error={errors.tableCode?.message}>
             <input
-              className={fieldClass}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               maxLength={50}
               placeholder="Ví dụ: B01"
               {...register('tableCode')}
@@ -138,7 +137,7 @@ export function TableForm({
               min={1}
               max={2147483647}
               step={1}
-              className={fieldClass}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               {...register('capacity', { valueAsNumber: true })}
             />
           </Field>
@@ -155,7 +154,7 @@ export function TableForm({
               error={errors[key]?.message}
             >
               <input
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 type="number"
                 step="0.01"
                 min={-99999999.99}
@@ -179,13 +178,13 @@ export function TableForm({
         <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-4">
           <button
             type="button"
-            className={secondaryButton + ' justify-center'}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 justify-center"
             onClick={onClose}
           >
             Hủy
           </button>
           <button
-            className={primaryButton + ' justify-center'}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40 justify-center"
             disabled={!!table && !isDirty}
           >
             {pending ? 'Đang lưu…' : table ? 'Lưu thay đổi' : 'Tạo bàn'}

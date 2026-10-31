@@ -44,3 +44,11 @@ export type TableQrPage = {
   items: TableQr[]
   totalCount: number
 }
+export type TableQuery = {
+  page: number
+  pageSize: number
+  search?: string
+  restaurantId?: string
+  areaId?: string
+  isActive?: boolean
+}

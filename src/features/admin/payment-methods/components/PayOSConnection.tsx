@@ -1,4 +1,3 @@
-import { secondaryButton } from '../../components/AdminUI'
 import { Badge } from '../../../../components/Badge/Badge'
 import { Panel } from '../../../../components/Panel/Panel'
 export function PayOSConnection({
@@ -28,7 +27,11 @@ export function PayOSConnection({
               quản lý.
             </p>
           </div>
-          <button type="button" className={secondaryButton} onClick={onToggle}>
+          <button
+            type="button"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+            onClick={onToggle}
+          >
             {connected ? 'Ngắt kết nối mẫu' : 'Thiết lập kết nối mẫu'}
           </button>
         </div>

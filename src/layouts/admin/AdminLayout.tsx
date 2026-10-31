@@ -70,7 +70,7 @@ export function AdminLayout() {
         />
       </aside>
       <div
-        className={`transition-[padding-left] duration-300 ease-out motion-reduce:transition-none ${collapsed ? 'lg:pl-18' : 'lg:pl-68'}`}
+        className={`flex min-h-dvh flex-col transition-[padding-left] duration-300 ease-out motion-reduce:transition-none ${collapsed ? 'lg:pl-18' : 'lg:pl-68'}`}
       >
         <AdminHeader
           onMenu={() => {
@@ -85,7 +85,7 @@ export function AdminLayout() {
         />
         <main
           id="admin-main"
-          className="mx-auto max-w-[1760px] px-3 py-4 sm:px-5"
+          className="mx-auto flex w-full max-w-[1760px] flex-1 flex-col px-3 py-4 sm:px-5"
         >
           <Outlet context={{ query, setQuery } satisfies AdminOutletContext} />
         </main>

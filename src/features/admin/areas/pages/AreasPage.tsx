@@ -1,10 +1,7 @@
 import { Modal } from '../../../../components/Modal/Modal'
-import {
-  PageHeading,
-  Pagination,
-  primaryButton,
-  secondaryButton,
-} from '../../components/AdminUI'
+
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
+import { Pagination } from '../../../../components/Pagination/Pagination'
 import { Panel } from '../../../../components/Panel/Panel'
 import { AreaFilters } from '../components/AreaFilters'
 import { AreaTable } from '../components/AreaTable'
@@ -23,7 +20,10 @@ export function AreasPage() {
         title="Khu vực nhà hàng"
         description="Quản lý khu vực phục vụ của từng nhà hàng."
         action={
-          <button className={primaryButton} onClick={() => m.open('create')}>
+          <button
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+            onClick={() => m.open('create')}
+          >
             + Thêm khu vực
           </button>
         }
@@ -61,7 +61,7 @@ export function AreasPage() {
           <div className="space-y-3 p-8 text-center">
             <p role="alert">{areaError(m.list.error)}</p>
             <button
-              className={secondaryButton}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
               onClick={() => void m.list.refetch()}
             >
               Thử lại
@@ -82,7 +82,6 @@ export function AreasPage() {
               locale="vi"
               total={m.list.data.totalCount}
               page={m.page}
-              size={10}
               onPage={m.changePage}
             />
           </fieldset>
@@ -141,7 +140,7 @@ export function AreasPage() {
             <div className="space-y-3 p-6">
               <p role="alert">{areaError(detail.error)}</p>
               <button
-                className={secondaryButton}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                 onClick={() => void detail.refetch()}
               >
                 Thử lại
@@ -199,7 +198,7 @@ export function AreasPage() {
                 <div className="flex justify-end gap-3">
                   <button
                     disabled={mutation.isPending}
-                    className={secondaryButton}
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                     onClick={m.close}
                   >
                     Hủy
@@ -209,7 +208,7 @@ export function AreasPage() {
                     className={
                       target.mode === 'delete'
                         ? 'rounded-xl bg-rose-600 px-5 py-3 text-sm font-semibold text-white disabled:opacity-50'
-                        : primaryButton
+                        : 'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40'
                     }
                     onClick={() =>
                       mutation.mutate(

@@ -1,5 +1,5 @@
 import { Icon } from '../../../../components/Icon/Icon'
-import { secondaryButton } from '../../components/AdminUI'
+
 import { Badge } from '../../../../components/Badge/Badge'
 import { Panel } from '../../../../components/Panel/Panel'
 import type { serviceSamples } from '../data'
@@ -46,7 +46,10 @@ export function ServiceCard({
               : `${service.response} ms`}
           </p>
         </div>
-        <button className={secondaryButton} onClick={onDetail}>
+        <button
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+          onClick={onDetail}
+        >
           Chi tiết
         </button>
       </div>

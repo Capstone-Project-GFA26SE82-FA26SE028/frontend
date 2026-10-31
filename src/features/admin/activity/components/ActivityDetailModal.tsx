@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useActivityUser } from '../hooks/useActivity'
 import { Modal } from '../../../../components/Modal/Modal'
-import { secondaryButton } from '../../components/AdminUI'
+
 import type { ActivityLog } from '../types/types'
 function parseSnapshot(value: string | null): Record<string, unknown> {
   if (value === null) return {}
@@ -225,7 +225,10 @@ export function ActivityDetailModal({
           )}
         </section>
         <div className="flex justify-end border-t border-slate-100 pt-4">
-          <button className={secondaryButton} onClick={onClose}>
+          <button
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+            onClick={onClose}
+          >
             Đóng
           </button>
         </div>

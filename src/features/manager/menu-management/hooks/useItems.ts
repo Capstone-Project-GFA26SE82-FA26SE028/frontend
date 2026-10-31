@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from '../../../../components/Pagination/Pagination'
 import { useQuery } from '@tanstack/react-query'
 import { getPage } from '../api/catalogApi'
 import { itemSchema } from '../schemas/catalogSchema'
@@ -16,7 +17,7 @@ export function useItems(
         itemSchema,
         {
           page,
-          pageSize: 10,
+          pageSize: PAGE_SIZE,
           search: query || undefined,
           categoryId: categoryId || undefined,
           availability: status || undefined,

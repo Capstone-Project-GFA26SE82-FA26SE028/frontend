@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from '../../../../components/Pagination/Pagination'
 import { useEffect, useState } from 'react'
 import {
   keepPreviousData,
@@ -20,7 +21,7 @@ import {
   type SessionStatus,
 } from '../types/types'
 
-const pageSize = 10
+const pageSize = PAGE_SIZE
 export function useSessions() {
   const auth = useAppSelector((state) => state.auth.session)
   const actorId = auth?.user.userId

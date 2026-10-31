@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Icon } from '../../../../components/Icon/Icon'
-import { fieldClass, secondaryButton } from '../../components/AdminUI'
+
 import {
   activityFilterSchema,
   type ActivityFilterValues,
@@ -42,7 +42,7 @@ export function ActivityFilters({
               type="search"
               maxLength={64}
               placeholder="Tìm theo mã người dùng…"
-              className={fieldClass + ' pl-10'}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 pl-10"
               aria-invalid={!!errors.userId}
               aria-describedby={
                 errors.userId ? 'activity-user-error' : undefined
@@ -59,12 +59,15 @@ export function ActivityFilters({
             </p>
           )}
         </div>
-        <button type="submit" className={secondaryButton}>
+        <button
+          type="submit"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+        >
           Tìm kiếm
         </button>
         <button
           type="button"
-          className={secondaryButton}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
           onClick={() => {
             reset({ userId: '' })
             onApply('')

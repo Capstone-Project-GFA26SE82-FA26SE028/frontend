@@ -1,9 +1,6 @@
 import { useState } from 'react'
-import {
-  Field,
-  fieldClass,
-  secondaryButton,
-} from '../../../admin/components/AdminUI'
+
+import { Field } from '../../../../components/Field/Field'
 import { FormActions } from '../../menu-management/components/FormActions'
 import { localInput, toUtc } from '../../menu-management/utils/price'
 import { useIngredientMutation } from '../hooks/useIngredientMutation'
@@ -122,7 +119,7 @@ export function RecipeForm({
           type="datetime-local"
           required
           defaultValue={start}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         />
       </Field>
       {lines.map((line, index) => (
@@ -145,7 +142,7 @@ export function RecipeForm({
       <button
         type="button"
         disabled={lines.length >= 100}
-        className={secondaryButton}
+        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
         onClick={() =>
           setLines((rows) => [
             ...rows,
@@ -165,7 +162,7 @@ export function RecipeForm({
           name="instructions"
           rows={4}
           defaultValue={source?.instructions || ''}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         />
       </Field>
       <div className="space-y-3">
@@ -174,7 +171,7 @@ export function RecipeForm({
           <div key={index} className="flex flex-wrap gap-2">
             <select
               aria-label={`Loại tài liệu ${index + 1}`}
-              className={`${fieldClass} sm:w-32`}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-32"
               value={entry.mediaType}
               onChange={(event) =>
                 setMedia((rows) =>
@@ -198,7 +195,7 @@ export function RecipeForm({
               type="url"
               maxLength={2048}
               placeholder="https://…"
-              className={`${fieldClass} min-w-0 flex-1`}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 min-w-0 flex-1"
               value={entry.url}
               onChange={(event) =>
                 setMedia((rows) =>
@@ -210,7 +207,7 @@ export function RecipeForm({
             />
             <button
               type="button"
-              className={secondaryButton}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
               onClick={() =>
                 setMedia((rows) => rows.filter((_, i) => i !== index))
               }
@@ -221,7 +218,7 @@ export function RecipeForm({
         ))}
         <button
           type="button"
-          className={secondaryButton}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
           onClick={() =>
             setMedia((rows) => [
               ...rows,

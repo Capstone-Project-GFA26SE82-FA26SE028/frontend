@@ -1,5 +1,6 @@
 import { Modal } from '../../../../components/Modal/Modal'
-import { Field, fieldClass } from '../../../admin/components/AdminUI'
+
+import { Field } from '../../../../components/Field/Field'
 import { useCatalogMutation } from '../hooks/useCatalogMutation'
 import { useCategoryChoices } from '../hooks/useCategoryChoices'
 import { useItemImageUpload } from '../hooks/useItemImageUpload'
@@ -55,7 +56,7 @@ export function ItemFormModal({
               autoFocus
               maxLength={255}
               defaultValue={item?.itemName}
-              className={fieldClass}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
             />
           </Field>
           <QueryState
@@ -68,7 +69,7 @@ export function ItemFormModal({
                 name="category"
                 required
                 defaultValue={item?.categoryId || ''}
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               >
                 <option value="" disabled>
                   Chọn danh mục
@@ -97,7 +98,7 @@ export function ItemFormModal({
               maxLength={2000}
               rows={3}
               defaultValue={item?.description || ''}
-              className={fieldClass}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
             />
           </Field>
           <ItemImagePicker

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Modal } from '../../../../components/Modal/Modal'
 import { Icon } from '../../../../components/Icon/Icon'
-import { primaryButton, secondaryButton } from '../../components/AdminUI'
+
 import { useTableQr } from '../hooks/useTableQr'
 import { qrError } from '../api/tableQrApi'
 export function TableQrModal({
@@ -68,14 +68,14 @@ export function TableQrModal({
           <div className="flex justify-end gap-3 border-t border-slate-100 pt-5">
             <button
               autoFocus
-              className={secondaryButton}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
               disabled={mutation.isPending}
               onClick={() => setConfirm(false)}
             >
               Hủy
             </button>
             <button
-              className={primaryButton}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
               disabled={
                 !allowed ||
                 mutation.isPending ||
@@ -115,7 +115,10 @@ export function TableQrModal({
             <p role="alert" className="text-sm text-rose-600">
               {qrError(context.error)}
             </p>
-            <button className={secondaryButton} onClick={() => void reload()}>
+            <button
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+              onClick={() => void reload()}
+            >
               Thử lại
             </button>
           </div>
@@ -132,7 +135,7 @@ export function TableQrModal({
                         {qrError(picture.error)}
                       </p>
                       <button
-                        className={secondaryButton}
+                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                         onClick={() => void picture.refetch()}
                       >
                         Tải lại ảnh
@@ -202,7 +205,7 @@ export function TableQrModal({
             <div className="flex flex-wrap justify-center gap-2">
               {current && (
                 <button
-                  className={primaryButton}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
                   disabled={
                     !picture.data ||
                     picture.isError ||
@@ -216,7 +219,11 @@ export function TableQrModal({
                 </button>
               )}
               <button
-                className={current ? secondaryButton : primaryButton}
+                className={
+                  current
+                    ? 'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40'
+                    : 'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40'
+                }
                 disabled={
                   !allowed ||
                   mutation.isPending ||
@@ -234,14 +241,14 @@ export function TableQrModal({
             </div>
             <div className="flex justify-between border-t border-slate-100 pt-4">
               <button
-                className={secondaryButton}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                 disabled={mutation.isPending || context.isFetching}
                 onClick={() => void reload()}
               >
                 Làm mới
               </button>
               <button
-                className={secondaryButton}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                 disabled={mutation.isPending}
                 onClick={onClose}
               >

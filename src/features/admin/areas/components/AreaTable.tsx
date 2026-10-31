@@ -1,5 +1,5 @@
 import { Icon } from '../../../../components/Icon/Icon'
-import { EmptyState } from '../../components/AdminUI'
+import { EmptyState } from '../../../../components/EmptyState/EmptyState'
 import type { Area } from '../types/types'
 import type { Restaurant } from '../../restaurants/types/types'
 export function AreaTable({

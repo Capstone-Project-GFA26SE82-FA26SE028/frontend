@@ -1,5 +1,5 @@
-import { secondaryButton } from '../../components/AdminUI'
 import { Panel } from '../../../../components/Panel/Panel'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import { RoleTable } from '../components/RoleTable'
 import { RoleUsersTable } from '../components/RoleUsersTable'
 import { RoleUserFilters } from '../components/RoleUserFilters'
@@ -14,16 +14,10 @@ export function RolesPage() {
   const { roles, users, summary } = management
   return (
     <>
-      <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-            Vai trò và quyền hạn
-          </h1>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            Xem vai trò hệ thống và quản lý việc gán vai trò cho tài khoản.
-          </p>
-        </div>
-      </header>
+      <PageHeading
+        title="Vai trò và quyền hạn"
+        description="Xem vai trò hệ thống và quản lý việc gán vai trò cho tài khoản."
+      />
       <RoleSummaryCards
         roleCount={roles.isError ? undefined : roles.data?.length}
         totals={summary.isError ? undefined : summary.data}
@@ -56,7 +50,7 @@ export function RolesPage() {
                 {roleApiError(roles.error)}
               </p>
               <button
-                className={secondaryButton}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                 onClick={() => void roles.refetch()}
               >
                 Thử lại
@@ -90,7 +84,7 @@ export function RolesPage() {
                   {roleApiError(users.error)}
                 </p>
                 <button
-                  className={secondaryButton}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                   onClick={() => void users.refetch()}
                 >
                   Thử lại

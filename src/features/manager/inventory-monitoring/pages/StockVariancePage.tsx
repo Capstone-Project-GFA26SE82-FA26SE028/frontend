@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+
+import { SummaryCards } from '../../../../components/SummaryCards/SummaryCards'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import {
-  PageHeading,
   Pagination,
-  secondaryButton,
-  SummaryCards,
-} from '../../../admin/components/AdminUI'
+  PAGE_SIZE,
+} from '../../../../components/Pagination/Pagination'
 import { Panel } from '../../../../components/Panel/Panel'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { HistoryFilters } from '../components/HistoryFilters'
@@ -31,7 +32,7 @@ export function StockVariancePage() {
   const totals = movementTotals(filtered)
   const currentPage = Math.min(
     page,
-    Math.max(1, Math.ceil(outgoing.length / 10)),
+    Math.max(1, Math.ceil(outgoing.length / PAGE_SIZE)),
   )
   const refresh = () => {
     void stock.refetch()
@@ -143,7 +144,7 @@ export function StockVariancePage() {
               </div>
               <Link
                 to={`/manager/stock-history?ingredientId=${ingredientId}`}
-                className={secondaryButton}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
               >
                 Tất cả biến động và lô hàng
               </Link>
@@ -156,8 +157,8 @@ export function StockVariancePage() {
             >
               <MovementTable
                 movements={outgoing.slice(
-                  (currentPage - 1) * 10,
-                  currentPage * 10,
+                  (currentPage - 1) * PAGE_SIZE,
+                  currentPage * PAGE_SIZE,
                 )}
                 unit={ingredient.baseUnit}
               />
@@ -166,7 +167,6 @@ export function StockVariancePage() {
               locale="vi"
               total={outgoing.length}
               page={currentPage}
-              size={10}
               onPage={setPage}
             />
           </Panel>

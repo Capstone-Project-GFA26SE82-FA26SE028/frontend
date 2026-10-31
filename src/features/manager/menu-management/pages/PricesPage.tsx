@@ -3,14 +3,9 @@ import { useSearchParams } from 'react-router-dom'
 import { Icon } from '../../../../components/Icon/Icon'
 import { Modal } from '../../../../components/Modal/Modal'
 import { formatCurrency } from '../../../../utils/currency'
-import {
-  ConfirmAction,
-  fieldClass,
-  PageHeading,
-  Pagination,
-  primaryButton,
-  secondaryButton,
-} from '../../../admin/components/AdminUI'
+
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
+import { Pagination } from '../../../../components/Pagination/Pagination'
 import { Badge } from '../../../../components/Badge/Badge'
 import { Panel } from '../../../../components/Panel/Panel'
 import { MenuTabs } from '../components/MenuTabs'
@@ -50,14 +45,14 @@ export function PricesPage() {
         action={
           <div className="flex flex-wrap gap-2">
             <button
-              className={secondaryButton}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
               onClick={() => setPreview(true)}
             >
               <Icon name="eye" size={18} />
               Kiểm tra giá áp dụng
             </button>
             <button
-              className={primaryButton}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
               onClick={() => setForm({ mode: 'create' })}
             >
               <Icon name="plus" size={18} />
@@ -81,7 +76,7 @@ export function PricesPage() {
         <div className="flex flex-wrap gap-3 border-b border-slate-100 p-4">
           <select
             aria-label="Lọc theo món"
-            className={`${fieldClass} sm:w-72`}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-72"
             value={itemId}
             onChange={(e) => {
               setParams(e.target.value ? { itemId: e.target.value } : {})
@@ -97,7 +92,7 @@ export function PricesPage() {
           </select>
           <select
             aria-label="Lọc theo kênh"
-            className={`${fieldClass} sm:w-52`}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-52"
             value={channel}
             onChange={(e) => {
               setChannel(e.target.value)
@@ -112,7 +107,7 @@ export function PricesPage() {
             ))}
           </select>
           <button
-            className={`${secondaryButton} sm:ml-auto`}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 sm:ml-auto"
             onClick={() => void list.refetch()}
           >
             <Icon name="activity" size={16} />
@@ -185,13 +180,13 @@ export function PricesPage() {
                           {state.label === 'Scheduled' ? (
                             <>
                               <button
-                                className={secondaryButton}
+                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                                 onClick={() => setForm({ mode: 'edit', price })}
                               >
                                 Sửa
                               </button>
                               <button
-                                className={`${secondaryButton} text-rose-600`}
+                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 text-rose-600"
                                 aria-label={`Xóa giá của ${name(price.itemId)}`}
                                 onClick={() => setDeleting(price)}
                               >
@@ -200,7 +195,7 @@ export function PricesPage() {
                             </>
                           ) : state.label !== 'Ended' ? (
                             <button
-                              className={secondaryButton}
+                              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                               onClick={() =>
                                 setForm({ mode: 'replace', price })
                               }
@@ -225,7 +220,6 @@ export function PricesPage() {
           locale="vi"
           total={list.data?.totalCount || 0}
           page={page}
-          size={10}
           onPage={setPage}
         />
       </Panel>
@@ -275,23 +269,39 @@ export function PricesPage() {
         </Modal>
       )}
       {deleting && (
-        <ConfirmAction
-          confirmLabel="Xác nhận"
-          cancelLabel="Hủy"
-          closeLabel="Đóng"
-          title="Xóa giá đã lên lịch?"
-          description={`Xóa giá ${formatCurrency(deleting.amount)} của “${name(deleting.itemId)}”? Chỉ có thể xóa giá chưa có hiệu lực.`}
-          disabled={mutation.isPending}
+        <Modal
+          title={'Xóa giá đã lên lịch?'}
           onClose={() => {
             if (!mutation.isPending) setDeleting(null)
           }}
-          onConfirm={() =>
-            mutation.mutate({
-              method: 'delete',
-              path: `/prices/${deleting.priceId}`,
-            })
-          }
-        />
+          closeLabel={'Đóng'}
+        >
+          <div className="space-y-5 p-6">
+            <p className="text-sm leading-6 text-slate-600">{`Xóa giá ${formatCurrency(deleting.amount)} của “${name(deleting.itemId)}”? Chỉ có thể xóa giá chưa có hiệu lực.`}</p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  if (!mutation.isPending) setDeleting(null)
+                }}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+              >
+                {'Hủy'}
+              </button>
+              <button
+                disabled={mutation.isPending}
+                onClick={() =>
+                  mutation.mutate({
+                    method: 'delete',
+                    path: `/prices/${deleting.priceId}`,
+                  })
+                }
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+              >
+                {'Xác nhận'}
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
       {preview && (
         <Modal

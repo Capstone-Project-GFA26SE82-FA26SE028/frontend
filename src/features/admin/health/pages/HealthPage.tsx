@@ -2,14 +2,11 @@ import { useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import type { AdminOutletContext } from '../../../../layouts/admin/AdminLayout'
 import { Modal } from '../../../../components/Modal/Modal'
-import {
-  PageHeading,
-  SummaryCards,
-  Field,
-  fieldClass,
-  EmptyState,
-  secondaryButton,
-} from '../../components/AdminUI'
+
+import { EmptyState } from '../../../../components/EmptyState/EmptyState'
+import { SummaryCards } from '../../../../components/SummaryCards/SummaryCards'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
+import { Field } from '../../../../components/Field/Field'
 import { Panel } from '../../../../components/Panel/Panel'
 import { matches, downloadCsv } from '../../utils'
 import { scenarioLabels, serviceSamples, type HealthScenario } from '../data'
@@ -36,7 +33,7 @@ export function HealthPage() {
         action={
           <button
             disabled={!rows.length}
-            className={secondaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
             onClick={() =>
               downloadCsv(
                 'giam-sat-mau',
@@ -69,7 +66,7 @@ export function HealthPage() {
             <select
               value={scenario}
               onChange={(e) => setScenario(e.target.value as HealthScenario)}
-              className={fieldClass}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
             >
               {Object.entries(scenarioLabels).map(([k, v]) => (
                 <option key={k} value={k}>
@@ -80,7 +77,7 @@ export function HealthPage() {
           </Field>
           <Field label="Lọc trạng thái">
             <select
-              className={fieldClass}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
             >

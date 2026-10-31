@@ -1,11 +1,9 @@
 import { RoleBadge } from './RoleBadge'
 import { UserAvatar } from '../../users/components/UserAvatar'
 import type { RoleAccount, SystemRole } from '../types/types'
-import {
-  Pagination,
-  EmptyState,
-  secondaryButton,
-} from '../../components/AdminUI'
+
+import { EmptyState } from '../../../../components/EmptyState/EmptyState'
+import { Pagination } from '../../../../components/Pagination/Pagination'
 import { Badge } from '../../../../components/Badge/Badge'
 
 export function RoleUsersTable({
@@ -91,7 +89,7 @@ export function RoleUsersTable({
                       'Đổi vai trò cho ' + (user.fullName || user.userName)
                     }
                     aria-haspopup="dialog"
-                    className={`${secondaryButton} whitespace-nowrap`}
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 whitespace-nowrap"
                     onClick={() => onSelect(user)}
                   >
                     Đổi vai trò

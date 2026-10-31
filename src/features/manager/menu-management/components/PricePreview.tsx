@@ -1,9 +1,6 @@
 import { formatCurrency } from '../../../../utils/currency'
-import {
-  Field,
-  fieldClass,
-  primaryButton,
-} from '../../../admin/components/AdminUI'
+
+import { Field } from '../../../../components/Field/Field'
 import { catalogError } from '../api/catalogApi'
 import { channels } from '../constants/catalog'
 import { usePricePreview } from '../hooks/usePricePreview'
@@ -37,7 +34,7 @@ export function PricePreview({
           name="item"
           defaultValue={defaultItemId}
           required
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         >
           <option value="" disabled>
             Chọn món
@@ -50,7 +47,10 @@ export function PricePreview({
         </select>
       </Field>
       <Field label="Kênh bán">
-        <select name="channel" className={fieldClass}>
+        <select
+          name="channel"
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+        >
           {Object.entries(channels)
             .filter(([v]) => v !== 'AllChannels')
             .map(([v, label]) => (
@@ -66,7 +66,7 @@ export function PricePreview({
           type="datetime-local"
           required
           defaultValue={localInput(new Date().toISOString())}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         />
       </Field>
       {lookup.isError && (
@@ -93,7 +93,7 @@ export function PricePreview({
       )}
       <button
         type="submit"
-        className={primaryButton}
+        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
         disabled={lookup.isPending || !items.length}
       >
         {lookup.isPending ? 'Đang kiểm tra…' : 'Kiểm tra giá'}

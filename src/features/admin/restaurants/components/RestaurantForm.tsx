@@ -9,12 +9,8 @@ import {
 } from '../schemas/restaurantSchema'
 import type { Restaurant } from '../types/types'
 import { restaurantError } from '../api/restaurantApi'
-import {
-  Field,
-  fieldClass,
-  primaryButton,
-  secondaryButton,
-} from '../../components/AdminUI'
+
+import { Field } from '../../../../components/Field/Field'
 export function RestaurantForm({
   restaurant,
   onSave,
@@ -94,7 +90,7 @@ export function RestaurantForm({
               error={errors.restaurantName?.message}
             >
               <input
-                className={fieldClass + ' !rounded-2xl !px-4 !py-3.5'}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 !rounded-2xl !px-4 !py-3.5"
                 placeholder="Nhập tên nhà hàng"
                 {...register('restaurantName')}
               />
@@ -127,7 +123,7 @@ export function RestaurantForm({
             >
               <Field label={label} error={errors[key]?.message}>
                 <input
-                  className={fieldClass + ' !rounded-2xl !px-4 !py-3.5'}
+                  className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 !rounded-2xl !px-4 !py-3.5"
                   type={key === 'hotline' ? 'tel' : 'text'}
                   placeholder={placeholder}
                   {...register(key)}
@@ -164,13 +160,17 @@ export function RestaurantForm({
           </p>
         )}
         <div className="flex justify-end gap-3 border-t border-slate-100 pt-4">
-          <button type="button" className={secondaryButton} onClick={onCancel}>
+          <button
+            type="button"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+            onClick={onCancel}
+          >
             Hủy
           </button>
           <button
             type="submit"
             disabled={!!restaurant && !isDirty}
-            className={primaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
           >
             {pending
               ? 'Đang lưu…'
