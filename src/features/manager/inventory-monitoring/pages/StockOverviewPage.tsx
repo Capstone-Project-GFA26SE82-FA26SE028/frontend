@@ -2,15 +2,15 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDebounce } from '../../../../hooks/useDebounce'
 import {
-  Badge,
   fieldClass,
   PageHeading,
   Pagination,
-  Panel,
   SearchField,
   secondaryButton,
   SummaryCards,
 } from '../../../admin/components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
+import { Panel } from '../../../../components/Panel/Panel'
 import { matches } from '../../../admin/utils'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { tableClass } from '../../menu-management/constants/styles'

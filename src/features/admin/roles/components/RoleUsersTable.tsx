@@ -1,12 +1,12 @@
-import { roleColor } from '../roleStyles'
+import { RoleBadge } from './RoleBadge'
 import { UserAvatar } from '../../users/components/UserAvatar'
 import type { RoleAccount, SystemRole } from '../types/types'
 import {
-  Badge,
   Pagination,
   EmptyState,
   secondaryButton,
 } from '../../components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
 
 export function RoleUsersTable({
   users,
@@ -72,15 +72,13 @@ export function RoleUsersTable({
                 </td>
                 <td className="px-5 py-4 text-slate-600">{user.userName}</td>
                 <td className="px-5 py-4">
-                  <span
-                    className={
-                      'inline-flex whitespace-nowrap rounded-full border px-3 py-1 text-xs font-semibold ' +
-                      roleColor(user.roleId)
+                  <RoleBadge
+                    id={user.roleId}
+                    name={
+                      roles.find((item) => item.roleId === user.roleId)
+                        ?.roleName || user.roleId
                     }
-                  >
-                    {roles.find((item) => item.roleId === user.roleId)
-                      ?.roleName || user.roleId}
-                  </span>
+                  />
                 </td>
                 <td className="px-5 py-4">
                   <Badge tone={user.isActive ? 'green' : 'red'}>

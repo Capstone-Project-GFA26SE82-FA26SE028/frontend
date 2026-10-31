@@ -4,16 +4,16 @@ import { Icon } from '../../../../components/Icon/Icon'
 import { Modal } from '../../../../components/Modal/Modal'
 import { useDebounce } from '../../../../hooks/useDebounce'
 import {
-  Badge,
   ConfirmAction,
   PageHeading,
   Pagination,
-  Panel,
   SearchField,
   fieldClass,
   primaryButton,
   secondaryButton,
 } from '../../../admin/components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
+import { Panel } from '../../../../components/Panel/Panel'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { tableClass } from '../../menu-management/constants/styles'
 import { IngredientForm } from '../components/IngredientForm'

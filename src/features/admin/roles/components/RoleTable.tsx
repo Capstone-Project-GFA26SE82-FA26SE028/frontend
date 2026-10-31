@@ -1,5 +1,6 @@
-import { Panel, EmptyState } from '../../components/AdminUI'
-import { roleColor } from '../roleStyles'
+import { EmptyState } from '../../components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
+import { RoleBadge } from './RoleBadge'
 import type { SystemRole } from '../types/types'
 
 export function RoleTable({
@@ -35,14 +36,7 @@ export function RoleTable({
                 className="border-t border-slate-100 hover:bg-slate-50"
               >
                 <td className="w-64 px-5 py-4">
-                  <span
-                    className={
-                      'inline-flex whitespace-nowrap rounded-full border px-3 py-1 text-xs font-semibold ' +
-                      roleColor(item.roleId)
-                    }
-                  >
-                    {item.roleName}
-                  </span>
+                  <RoleBadge id={item.roleId} name={item.roleName} />
                   <p className="mt-1 pl-[13px] text-xs text-slate-500">
                     {item.roleId}
                   </p>

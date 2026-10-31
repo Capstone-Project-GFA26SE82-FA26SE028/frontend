@@ -1,29 +1,22 @@
 import { CurrentFees } from '../components/CurrentFees'
 import { TaxFeesForm } from '../components/TaxFeesForm'
-import { InvoicePreview } from '../components/InvoicePreview'
 import { FeeHistoryTable } from '../components/FeeHistoryTable'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { feeSchema, type Fees } from '../schema'
+import { feeSchema, type Fees } from '../schemas/taxFeeSchema'
 import { useTaxFees } from '../hooks/useTaxFees'
-import { RestaurantHeading } from '../../components/RestaurantHeading'
-import { Notice } from '../../components/AdminUI'
+import { PageHeading, Notice, secondaryButton } from '../../components/AdminUI'
+import { taxFeeError } from '../api/taxFeeApi'
 export function TaxFeesPage() {
-  const { state, saveFees } = useTaxFees()
+  const { list, current, fees, now, save } = useTaxFees()
   const [notice, setNotice] = useState('')
-  const now = new Date()
-  const current = [...state.fees]
-    .sort((a, b) => Date.parse(b.effectiveAt) - Date.parse(a.effectiveAt))
-    .find((f) => Date.parse(f.effectiveAt) <= now.getTime())
-  const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-    .toISOString()
-    .slice(0, 16)
+  const initialized = useRef(false)
   const {
     register,
     handleSubmit,
-    setError,
     control,
+    reset,
     formState: { errors },
   } = useForm<Fees>({
     resolver: zodResolver(feeSchema),
@@ -31,40 +24,82 @@ export function TaxFeesPage() {
       vat: current?.vat || 0,
       service: current?.service || 0,
       serviceEnabled: current?.serviceEnabled || false,
-      effectiveAt: local,
+      applyAt: 'now',
+      effectiveAt: '',
     },
   })
-  const draft = useWatch({ control })
+  useEffect(() => {
+    if (!list.isSuccess || initialized.current) return
+    initialized.current = true
+    reset({
+      vat: current?.vat ?? 0,
+      service: current?.service ?? 0,
+      serviceEnabled: current?.serviceEnabled ?? false,
+      applyAt: 'now',
+      effectiveAt: '',
+    })
+  }, [list.isSuccess, current, reset])
+  const applyAt = useWatch({ control, name: 'applyAt' })
   return (
     <>
-      <RestaurantHeading
+      <PageHeading
         title="VAT & phí dịch vụ"
-        description="Quản lý mức thu và thời điểm áp dụng"
+        description="Áp dụng chung cho tất cả nhà hàng."
+        action={
+          <button
+            type="button"
+            className={secondaryButton}
+            disabled={list.isFetching}
+            onClick={() => void list.refetch()}
+          >
+            {list.isFetching ? 'Đang tải…' : 'Tải lại'}
+          </button>
+        }
       />
       {notice && <Notice>{notice}</Notice>}
-      <CurrentFees current={current} />
-      <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_360px]">
+      {list.isError && (
+        <div
+          role="alert"
+          className="mb-5 rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
+        >
+          {taxFeeError(list.error)}
+        </div>
+      )}
+      {list.isPending ? (
+        <p role="status" className="py-8 text-center text-slate-500">
+          Đang tải cấu hình…
+        </p>
+      ) : (
+        <CurrentFees current={current} />
+      )}
+      <div>
         <TaxFeesForm
           register={register}
           errors={errors}
-          onSubmit={handleSubmit((v) => {
+          applyAt={applyAt || 'now'}
+          busy={save.isPending}
+          disabled={list.isPending || list.isError}
+          onSubmit={handleSubmit(async (values) => {
+            if (save.isPending) return
             setNotice('')
-            const e = saveFees(v)
-            if (e) setError('root', { message: e })
-            else
-              setNotice(
-                'Đã lưu cấu hình và thời điểm hiệu lực. Hóa đơn cũ không thay đổi.',
-              )
+            try {
+              await save.mutateAsync(values)
+              setNotice('Đã lưu cấu hình VAT và phí dịch vụ.')
+            } catch {
+              /* The API error is displayed below the form. */
+            }
           })}
         />
-
-        <InvoicePreview draft={draft} />
       </div>
-      <FeeHistoryTable
-        fees={state.fees}
-        currentId={current?.id}
-        now={now.getTime()}
-      />
+      {save.isError && (
+        <div
+          role="alert"
+          className="mt-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
+        >
+          {taxFeeError(save.error)}
+        </div>
+      )}
+      <FeeHistoryTable fees={fees} currentId={current?.id} now={now} />
     </>
   )
 }

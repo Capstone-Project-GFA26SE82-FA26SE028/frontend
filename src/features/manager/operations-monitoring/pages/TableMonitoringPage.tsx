@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom'
 import { Modal } from '../../../../components/Modal/Modal'
 import { Icon } from '../../../../components/Icon/Icon'
 import {
-  Badge,
   fieldClass,
   PageHeading,
-  Panel,
   SearchField,
   secondaryButton,
   SummaryCards,
 } from '../../../admin/components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
+import { Panel } from '../../../../components/Panel/Panel'
 import { matches } from '../../../admin/utils'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { OperationsTabs } from '../components/OperationsTabs'

@@ -1,6 +1,6 @@
 import { useForm, useWatch } from 'react-hook-form'
 import { Icon } from '../../../../components/Icon/Icon'
-import { roleColor } from '../roleStyles'
+import { RoleBadge } from './RoleBadge'
 import { UserAvatar } from '../../users/components/UserAvatar'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -71,16 +71,13 @@ export function RoleAssignmentModal({
           </div>
           <div className="flex flex-wrap items-center justify-between gap-2 border-t border-emerald-100/80 bg-white/70 px-4 py-3 sm:px-5">
             <span className="text-sm text-slate-500">Vai trò hiện tại</span>
-            <span
-              className={
-                'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ' +
-                roleColor(user.roleId)
+            <RoleBadge
+              id={user.roleId}
+              name={
+                roles.find((item) => item.roleId === user.roleId)?.roleName ||
+                user.roleId
               }
-            >
-              <Icon name="shield" size={14} />
-              {roles.find((item) => item.roleId === user.roleId)?.roleName ||
-                user.roleId}
-            </span>
+            />
           </div>
         </section>
         <Field label="Vai trò mới" error={errors.role?.message}>

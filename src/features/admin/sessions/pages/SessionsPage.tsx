@@ -7,11 +7,11 @@ import { SessionRevokeModal } from '../components/SessionRevokeModal'
 import { useSessions } from '../hooks/useSessions'
 import { sessionApiError } from '../api/sessionApi'
 import {
-  Panel,
   PageHeading,
   Pagination,
   secondaryButton,
 } from '../../components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
 
 export function SessionsPage() {
   const [detail, setDetail] = useState<LoginSession | null>(null)

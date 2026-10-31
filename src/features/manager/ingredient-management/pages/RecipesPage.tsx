@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Modal } from '../../../../components/Modal/Modal'
 import {
-  Badge,
   fieldClass,
   PageHeading,
-  Panel,
   primaryButton,
   secondaryButton,
 } from '../../../admin/components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
+import { Panel } from '../../../../components/Panel/Panel'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { useItemChoices } from '../../menu-management/hooks/useItemChoices'
 import { dateLabel } from '../../menu-management/utils/price'

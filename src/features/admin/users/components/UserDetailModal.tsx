@@ -1,6 +1,7 @@
 ﻿import { Modal } from '../../../../components/Modal/Modal'
 import { Icon } from '../../../../components/Icon/Icon'
-import { Badge, secondaryButton } from '../../components/AdminUI'
+import { secondaryButton } from '../../components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
 import { userRoleLabel } from '../types/types'
 import { useUser } from '../hooks/useUsers'
 import { userApiError } from '../api/userApi'

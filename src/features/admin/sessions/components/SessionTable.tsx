@@ -3,7 +3,8 @@ import {
   type LoginSession,
   type SessionRole,
 } from '../types/types'
-import { Badge, EmptyState, secondaryButton } from '../../components/AdminUI'
+import { EmptyState, secondaryButton } from '../../components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
 
 function formatDate(value: string) {
   return new Date(value).toLocaleString('en-GB', {

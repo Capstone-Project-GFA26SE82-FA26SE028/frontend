@@ -3,10 +3,10 @@ import { Link, useSearchParams } from 'react-router-dom'
 import {
   PageHeading,
   Pagination,
-  Panel,
   secondaryButton,
   SummaryCards,
 } from '../../../admin/components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { HistoryFilters } from '../components/HistoryFilters'
 import { InventoryTabs } from '../components/InventoryTabs'

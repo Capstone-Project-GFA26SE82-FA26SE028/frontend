@@ -2,16 +2,16 @@ import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Modal } from '../../../../components/Modal/Modal'
 import {
-  Badge,
   Field,
   fieldClass,
   PageHeading,
   Pagination,
-  Panel,
   SearchField,
   secondaryButton,
   SummaryCards,
 } from '../../../admin/components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
+import { Panel } from '../../../../components/Panel/Panel'
 import { matches } from '../../../admin/utils'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { tableClass } from '../../menu-management/constants/styles'

@@ -1,5 +1,7 @@
 import { Icon } from '../../../../components/Icon/Icon'
-import { Badge, Panel, secondaryButton } from '../../components/AdminUI'
+import { secondaryButton } from '../../components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
+import { Panel } from '../../../../components/Panel/Panel'
 import type { serviceSamples } from '../data'
 
 export function ServiceCard({

@@ -3,17 +3,17 @@ import { Icon } from '../../../../components/Icon/Icon'
 import { Modal } from '../../../../components/Modal/Modal'
 import { useDebounce } from '../../../../hooks/useDebounce'
 import {
-  Badge,
   ConfirmAction,
   Field,
   fieldClass,
   PageHeading,
   Pagination,
-  Panel,
   primaryButton,
   SearchField,
   secondaryButton,
 } from '../../../admin/components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
+import { Panel } from '../../../../components/Panel/Panel'
 import { FormActions } from '../components/FormActions'
 import { MenuTabs } from '../components/MenuTabs'
 import { QueryState } from '../components/QueryState'

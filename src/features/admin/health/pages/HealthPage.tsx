@@ -5,12 +5,12 @@ import { Modal } from '../../../../components/Modal/Modal'
 import {
   PageHeading,
   SummaryCards,
-  Panel,
   Field,
   fieldClass,
   EmptyState,
   secondaryButton,
 } from '../../components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
 import { matches, downloadCsv } from '../../utils'
 import { scenarioLabels, serviceSamples, type HealthScenario } from '../data'
 import { ServiceCard } from '../components/ServiceCard'

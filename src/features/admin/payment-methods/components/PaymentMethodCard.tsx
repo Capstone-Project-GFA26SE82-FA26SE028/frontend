@@ -1,4 +1,5 @@
-import { Panel, Badge } from '../../components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
+import { Panel } from '../../../../components/Panel/Panel'
 export function PaymentMethodCard({
   name,
   symbol,

@@ -1,11 +1,8 @@
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../../../app/hooks'
 import { Icon } from '../../../../components/Icon/Icon'
-import {
-  PageHeading,
-  Panel,
-  SummaryCards,
-} from '../../../admin/components/AdminUI'
+import { PageHeading, SummaryCards } from '../../../admin/components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
 import { QueryState } from '../components/QueryState'
 import { useManagerOverview } from '../hooks/useManagerOverview'
 

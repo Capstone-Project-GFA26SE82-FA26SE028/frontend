@@ -1,30 +1,9 @@
-import { Badge, EmptyState } from '../../components/AdminUI'
+import { EmptyState } from '../../components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
 import { UserAvatar } from './UserAvatar'
 import { userRoleLabel, type UserAccount } from '../types/types'
 import { UserActions, type UserActionHandlers } from './UserActions'
-const roleColors: Record<string, string> = {
-  Admin: 'border-blue-200 bg-blue-100 text-blue-900',
-  Manager: 'border-violet-200 bg-violet-100 text-violet-900',
-  Waiter: 'border-cyan-200 bg-cyan-100 text-cyan-900',
-  Cashier: 'border-emerald-200 bg-emerald-100 text-emerald-900',
-  Kitchen: 'border-orange-200 bg-orange-100 text-orange-900',
-  Inventory: 'border-amber-200 bg-amber-100 text-amber-900',
-  Supplier: 'border-slate-300 bg-slate-200 text-slate-800',
-}
-function renderRole(role: string) {
-  return (
-    <span
-      className={
-        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-xs font-semibold ' +
-        (roleColors[role.charAt(0).toUpperCase() + role.slice(1)] ||
-          roleColors.Supplier)
-      }
-    >
-      <span aria-hidden="true" className="size-1.5 rounded-full bg-current" />
-      {userRoleLabel(role)}
-    </span>
-  )
-}
+import { RoleBadge } from '../../roles/components/RoleBadge'
 export function UserTable({
   visible,
   onDetail,
@@ -74,7 +53,9 @@ export function UserTable({
                     </div>
                   </div>
                 </td>
-                <td className="px-5">{renderRole(u.role)}</td>
+                <td className="px-5">
+                  <RoleBadge id={u.role} name={userRoleLabel(u.role)} />
+                </td>
                 <td className="px-5 text-slate-500">{u.userName}</td>
                 <td className="px-5">
                   <Badge tone={u.active ? 'green' : 'red'}>
@@ -112,7 +93,7 @@ export function UserTable({
               </Badge>
             </div>
             <p className="text-sm text-slate-500">
-              {renderRole(u.role)} · {u.userName}
+              <RoleBadge id={u.role} name={userRoleLabel(u.role)} /> · {u.userName}
             </p>
             <UserActions
               user={u}
