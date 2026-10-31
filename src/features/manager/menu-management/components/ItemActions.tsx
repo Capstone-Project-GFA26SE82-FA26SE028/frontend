@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Icon } from '../../../../components/Icon/Icon'
-import { secondaryButton } from '../../../admin/components/AdminUI'
+
 import type { ItemCollectionProps, Item } from '../types/catalog'
 
 type Props = Pick<ItemCollectionProps, 'onEdit' | 'onStatus'> & {
@@ -20,19 +20,19 @@ export function ItemActions({
     >
       <Link
         to={`/manager/menu/prices?itemId=${item.itemId}`}
-        className={secondaryButton}
+        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
       >
         Giá bán
       </Link>
       <Link
         to={`/manager/recipes?itemId=${item.itemId}`}
-        className={secondaryButton}
+        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
       >
         Công thức
       </Link>
       <button
         type="button"
-        className={secondaryButton}
+        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
         aria-label={`Sửa ${item.itemName}`}
         onClick={() => onEdit(item)}
       >
@@ -41,7 +41,7 @@ export function ItemActions({
       </button>
       <button
         type="button"
-        className={secondaryButton}
+        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
         aria-label={`Cập nhật tình trạng bán của ${item.itemName}`}
         onClick={() => onStatus(item)}
       >

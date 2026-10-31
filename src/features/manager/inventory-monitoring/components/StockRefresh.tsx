@@ -1,4 +1,3 @@
-import { secondaryButton } from '../../../admin/components/AdminUI'
 import { dateLabel } from '../../menu-management/utils/price'
 
 export function StockRefresh({
@@ -20,7 +19,7 @@ export function StockRefresh({
         không phải thời điểm giao dịch kho gần nhất.
       </p>
       <button
-        className={secondaryButton}
+        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
         disabled={refreshing}
         onClick={refresh}
       >

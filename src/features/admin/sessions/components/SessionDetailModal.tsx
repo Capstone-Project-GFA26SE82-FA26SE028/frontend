@@ -1,5 +1,5 @@
 import { Modal } from '../../../../components/Modal/Modal'
-import { secondaryButton } from '../../components/AdminUI'
+
 import { Badge } from '../../../../components/Badge/Badge'
 import {
   sessionStatus,
@@ -107,7 +107,7 @@ export function SessionDetailModal({
         </details>
         <div className="flex flex-wrap justify-end gap-3 border-t border-slate-100 pt-5">
           <button
-            className={`${secondaryButton} flex-1 sm:flex-none sm:min-w-24`}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 flex-1 sm:flex-none sm:min-w-24"
             onClick={onClose}
           >
             Đóng

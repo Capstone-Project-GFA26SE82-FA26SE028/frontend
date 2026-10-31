@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDebounce } from '../../../../hooks/useDebounce'
+
+import { SearchField } from '../../../../components/SearchField/SearchField'
+import { SummaryCards } from '../../../../components/SummaryCards/SummaryCards'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import {
-  fieldClass,
-  PageHeading,
   Pagination,
-  SearchField,
-  secondaryButton,
-  SummaryCards,
-} from '../../../admin/components/AdminUI'
+  PAGE_SIZE,
+} from '../../../../components/Pagination/Pagination'
 import { Badge } from '../../../../components/Badge/Badge'
 import { Panel } from '../../../../components/Panel/Panel'
 import { matches } from '../../../admin/utils'
@@ -35,7 +35,7 @@ export function StockOverviewPage() {
   )
   const currentPage = Math.min(
     page,
-    Math.max(1, Math.ceil(filtered.length / 10)),
+    Math.max(1, Math.ceil(filtered.length / PAGE_SIZE)),
   )
   return (
     <>
@@ -103,7 +103,7 @@ export function StockOverviewPage() {
             />
             <select
               aria-label="Trạng thái tồn kho"
-              className={`${fieldClass} sm:w-44`}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-44"
               value={status}
               onChange={(event) => {
                 setStatus(event.target.value)
@@ -125,7 +125,7 @@ export function StockOverviewPage() {
             </select>
             <select
               aria-label="Tình trạng nguyên liệu"
-              className={`${fieldClass} sm:w-44`}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-44"
               value={active}
               onChange={(event) => {
                 setActive(event.target.value)
@@ -157,7 +157,10 @@ export function StockOverviewPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {filtered
-                    .slice((currentPage - 1) * 10, currentPage * 10)
+                    .slice(
+                      (currentPage - 1) * PAGE_SIZE,
+                      currentPage * PAGE_SIZE,
+                    )
                     .map((ingredient) => (
                       <tr key={ingredient.ingredientId}>
                         <td>
@@ -204,7 +207,7 @@ export function StockOverviewPage() {
                         </td>
                         <td className="text-right">
                           <Link
-                            className={secondaryButton}
+                            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                             to={`/manager/stock-history?ingredientId=${ingredient.ingredientId}`}
                           >
                             Biến động và lô hàng
@@ -219,7 +222,6 @@ export function StockOverviewPage() {
           <Pagination
             locale="vi"
             total={filtered.length}
-            size={10}
             page={currentPage}
             onPage={setPage}
           />

@@ -1,4 +1,4 @@
-import { SearchField, fieldClass } from '../../components/AdminUI'
+import { SearchField } from '../../../../components/SearchField/SearchField'
 import type { SystemRole } from '../types/types'
 export function RoleUserFilters({
   query,
@@ -64,7 +64,7 @@ export function RoleUserFilters({
           aria-label="Lọc theo vai trò"
           value={role}
           onChange={(event) => onRole(event.target.value)}
-          className={`${fieldClass} sm:w-48`}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-48"
         >
           <option value="all">Tất cả vai trò</option>
           {roles.map((item) => (

@@ -1,4 +1,3 @@
-import { fieldClass, secondaryButton } from '../../components/AdminUI'
 import type { Restaurant } from '../../restaurants/types/types'
 export function AreaFilters({
   search,
@@ -46,13 +45,13 @@ export function AreaFilters({
         aria-label="Tìm khu vực"
         maxLength={255}
         placeholder="Tìm mã hoặc tên khu vực…"
-        className={fieldClass + ' min-w-0 sm:ml-auto sm:!w-64 sm:flex-none'}
+        className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 min-w-0 sm:ml-auto sm:!w-64 sm:flex-none"
         value={search}
         onChange={(e) => onSearch(e.target.value)}
       />
       <select
         aria-label="Lọc theo nhà hàng"
-        className={fieldClass + ' sm:!w-56'}
+        className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:!w-56"
         value={restaurantId}
         onChange={(e) => onRestaurant(e.target.value)}
       >
@@ -63,7 +62,10 @@ export function AreaFilters({
           </option>
         ))}
       </select>
-      <button className={secondaryButton} onClick={onReset}>
+      <button
+        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+        onClick={onReset}
+      >
         Đặt lại
       </button>
     </div>

@@ -3,7 +3,8 @@ import {
   type LoginSession,
   type SessionRole,
 } from '../types/types'
-import { EmptyState, secondaryButton } from '../../components/AdminUI'
+
+import { EmptyState } from '../../../../components/EmptyState/EmptyState'
 import { Badge } from '../../../../components/Badge/Badge'
 
 function formatDate(value: string) {
@@ -104,7 +105,7 @@ export function SessionTable({
                         device
                       }
                       aria-haspopup="dialog"
-                      className={`${secondaryButton} whitespace-nowrap`}
+                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 whitespace-nowrap"
                       onClick={() => onDetail(session)}
                     >
                       Xem chi tiết

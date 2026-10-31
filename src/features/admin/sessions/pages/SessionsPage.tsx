@@ -6,11 +6,9 @@ import { SessionTable } from '../components/SessionTable'
 import { SessionRevokeModal } from '../components/SessionRevokeModal'
 import { useSessions } from '../hooks/useSessions'
 import { sessionApiError } from '../api/sessionApi'
-import {
-  PageHeading,
-  Pagination,
-  secondaryButton,
-} from '../../components/AdminUI'
+
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
+import { Pagination } from '../../../../components/Pagination/Pagination'
 import { Panel } from '../../../../components/Panel/Panel'
 
 export function SessionsPage() {
@@ -24,7 +22,7 @@ export function SessionsPage() {
         description="Xem hoạt động đăng nhập và quản lý các phiên của bạn."
         action={
           <button
-            className={secondaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
             onClick={() => management.openRevoke('all')}
           >
             Đăng xuất mọi phiên của tôi
@@ -76,7 +74,7 @@ export function SessionsPage() {
               {sessionApiError(sessions.error)}
             </p>
             <button
-              className={secondaryButton}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
               onClick={() => void sessions.refetch()}
             >
               Thử lại

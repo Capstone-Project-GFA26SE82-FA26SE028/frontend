@@ -1,4 +1,4 @@
-import { SearchField, fieldClass } from '../../components/AdminUI'
+import { SearchField } from '../../../../components/SearchField/SearchField'
 import { userRoleLabel, type UserRole } from '../types/types'
 export function UserFilters({
   query,
@@ -94,7 +94,7 @@ export function UserFilters({
           onChange={(e) => {
             onRole(e.target.value)
           }}
-          className={`${fieldClass} sm:w-48`}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-48"
         >
           <option value="all">Tất cả vai trò</option>
           {roles.map((r) => (

@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from '../../../../components/Pagination/Pagination'
 import { useEffect, useState } from 'react'
 import {
   keepPreviousData,
@@ -19,7 +20,7 @@ import type { RoleAccount } from '../types/types'
 import type { RoleTab } from '../components/RoleTabs'
 import type { RoleAssignmentValues } from '../schemas/roleAssignmentSchema'
 
-const pageSize = 10
+const pageSize = PAGE_SIZE
 export function useRoleManagement() {
   const client = useQueryClient()
   const [tab, setTab] = useState<RoleTab>('roles')

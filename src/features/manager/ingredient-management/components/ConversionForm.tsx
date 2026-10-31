@@ -1,4 +1,4 @@
-import { Field, fieldClass } from '../../../admin/components/AdminUI'
+import { Field } from '../../../../components/Field/Field'
 import { FormActions } from '../../menu-management/components/FormActions'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { useIngredientMutation } from '../hooks/useIngredientMutation'
@@ -40,7 +40,12 @@ export function ConversionForm({
           <strong>{ingredient.baseUnit}</strong>.
         </p>
         <Field label="Đơn vị mua hàng / công thức *">
-          <select name="unit" required defaultValue="" className={fieldClass}>
+          <select
+            name="unit"
+            required
+            defaultValue=""
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+          >
             <option value="" disabled>
               Chọn đơn vị
             </option>
@@ -61,7 +66,7 @@ export function ConversionForm({
             step="0.000001"
             max="999999999999.999999"
             required
-            className={fieldClass}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
             placeholder="Ví dụ: 1000"
           />
         </Field>

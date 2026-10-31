@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { secondaryButton } from '../../../admin/components/AdminUI'
+
 import { catalogError } from '../api/catalogApi'
 
 export function QueryState({
@@ -25,7 +25,10 @@ export function QueryState({
     return (
       <div role="alert" className="space-y-4 p-8 text-center">
         <p className="text-sm text-rose-700">{catalogError(error)}</p>
-        <button className={secondaryButton} onClick={retry}>
+        <button
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+          onClick={retry}
+        >
           Thử lại
         </button>
       </div>

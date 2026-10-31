@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Modal } from '../../../../components/Modal/Modal'
+
+import { SearchField } from '../../../../components/SearchField/SearchField'
+import { SummaryCards } from '../../../../components/SummaryCards/SummaryCards'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import {
-  Field,
-  fieldClass,
-  PageHeading,
   Pagination,
-  SearchField,
-  secondaryButton,
-  SummaryCards,
-} from '../../../admin/components/AdminUI'
+  PAGE_SIZE,
+} from '../../../../components/Pagination/Pagination'
+import { Field } from '../../../../components/Field/Field'
 import { Badge } from '../../../../components/Badge/Badge'
 import { Panel } from '../../../../components/Panel/Panel'
 import { matches } from '../../../admin/utils'
@@ -68,7 +68,7 @@ export function KitchenMonitoringPage() {
   )
   const currentPage = Math.min(
     page,
-    Math.max(1, Math.ceil(visible.length / 10)),
+    Math.max(1, Math.ceil(visible.length / PAGE_SIZE)),
   )
   const detail = all.find((task) => task.taskId === selected?.taskId)
   return (
@@ -129,7 +129,7 @@ export function KitchenMonitoringPage() {
                 placeholder="Tìm đơn, bàn hoặc món…"
               />
               <select
-                className={`${fieldClass} sm:w-44`}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-44"
                 aria-label="Trạng thái tác vụ"
                 value={status}
                 onChange={(e) => {
@@ -145,7 +145,7 @@ export function KitchenMonitoringPage() {
                 ))}
               </select>
               <select
-                className={`${fieldClass} sm:w-52`}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-52"
                 aria-label="Trạm bếp"
                 value={station}
                 onChange={(e) => {
@@ -170,7 +170,7 @@ export function KitchenMonitoringPage() {
                 <input
                   type="date"
                   max={until || undefined}
-                  className={fieldClass}
+                  className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                   value={from}
                   onChange={(e) => {
                     setFrom(e.target.value)
@@ -182,7 +182,7 @@ export function KitchenMonitoringPage() {
                 <input
                   type="date"
                   min={from || undefined}
-                  className={fieldClass}
+                  className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                   value={until}
                   onChange={(e) => {
                     setUntil(e.target.value)
@@ -206,7 +206,7 @@ export function KitchenMonitoringPage() {
               <div className="flex flex-wrap items-center gap-3 text-sm">
                 <span>Đang lọc bàn: {tableName(tableId)}</span>
                 <button
-                  className={secondaryButton}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                   onClick={() => setParams({})}
                 >
                   Bỏ lọc bàn
@@ -239,7 +239,10 @@ export function KitchenMonitoringPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {visible
-                    .slice((currentPage - 1) * 10, currentPage * 10)
+                    .slice(
+                      (currentPage - 1) * PAGE_SIZE,
+                      currentPage * PAGE_SIZE,
+                    )
                     .map((task) => (
                       <tr
                         key={task.taskId}
@@ -288,7 +291,7 @@ export function KitchenMonitoringPage() {
                         </td>
                         <td>
                           <button
-                            className={secondaryButton}
+                            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                             onClick={() => setSelected(task)}
                           >
                             Xem
@@ -304,7 +307,6 @@ export function KitchenMonitoringPage() {
             locale="vi"
             total={visible.length}
             page={currentPage}
-            size={10}
             onPage={setPage}
           />
         </Panel>

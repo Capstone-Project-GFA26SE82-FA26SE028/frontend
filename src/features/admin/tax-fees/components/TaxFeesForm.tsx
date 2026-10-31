@@ -1,7 +1,8 @@
 import type { UseFormRegister, FieldErrors } from 'react-hook-form'
 import type { FormEventHandler } from 'react'
 import type { Fees } from '../schemas/taxFeeSchema'
-import { Field, fieldClass, primaryButton } from '../../components/AdminUI'
+
+import { Field } from '../../../../components/Field/Field'
 import { Panel } from '../../../../components/Panel/Panel'
 export function TaxFeesForm({
   register,
@@ -36,7 +37,7 @@ export function TaxFeesForm({
                 min="0"
                 max="100"
                 {...register('vat', { valueAsNumber: true })}
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </Field>
             <Field label="Phí dịch vụ (%)" error={errors.service?.message}>
@@ -46,7 +47,7 @@ export function TaxFeesForm({
                 min="0"
                 max="100"
                 {...register('service', { valueAsNumber: true })}
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </Field>
           </div>
@@ -63,7 +64,10 @@ export function TaxFeesForm({
             </span>
           </label>
           <Field label="Áp dụng">
-            <select {...register('applyAt')} className={fieldClass}>
+            <select
+              {...register('applyAt')}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+            >
               <option value="now">Áp dụng ngay</option>
               <option value="scheduled">Hẹn thời gian</option>
             </select>
@@ -76,7 +80,7 @@ export function TaxFeesForm({
               <input
                 type="datetime-local"
                 {...register('effectiveAt')}
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </Field>
           )}
@@ -89,7 +93,7 @@ export function TaxFeesForm({
             <p className="text-xs text-slate-400">Lưu thành phiên bản mới.</p>
             <button
               type="submit"
-              className={primaryButton + ' w-full sm:w-auto'}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40 w-full sm:w-auto"
             >
               {busy ? 'Đang lưu…' : 'Lưu cấu hình'}
             </button>

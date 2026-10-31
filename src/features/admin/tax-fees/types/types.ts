@@ -21,6 +21,11 @@ export type TaxFeePage = {
   pageSize: number
 }
 
+export type TaxFeeQuery = {
+  page: number
+  pageSize: number
+}
+
 export type TaxFeeResponse<T> = {
   isSuccess: boolean
   message?: string | null

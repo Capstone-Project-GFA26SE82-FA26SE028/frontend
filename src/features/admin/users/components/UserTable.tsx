@@ -1,4 +1,4 @@
-import { EmptyState } from '../../components/AdminUI'
+import { EmptyState } from '../../../../components/EmptyState/EmptyState'
 import { Badge } from '../../../../components/Badge/Badge'
 import { UserAvatar } from './UserAvatar'
 import { userRoleLabel, type UserAccount } from '../types/types'
@@ -93,7 +93,8 @@ export function UserTable({
               </Badge>
             </div>
             <p className="text-sm text-slate-500">
-              <RoleBadge id={u.role} name={userRoleLabel(u.role)} /> · {u.userName}
+              <RoleBadge id={u.role} name={userRoleLabel(u.role)} /> ·{' '}
+              {u.userName}
             </p>
             <UserActions
               user={u}

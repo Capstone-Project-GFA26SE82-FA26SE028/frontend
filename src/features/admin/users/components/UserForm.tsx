@@ -7,12 +7,8 @@ import {
   type AccountFormValues,
 } from '../schemas/userSchema'
 import { userRoleLabel, type UserAccount, type UserRole } from '../types/types'
-import {
-  Field,
-  fieldClass,
-  primaryButton,
-  secondaryButton,
-} from '../../components/AdminUI'
+
+import { Field } from '../../../../components/Field/Field'
 
 export function UserForm({
   user,
@@ -76,7 +72,7 @@ export function UserForm({
           >
             <input
               type="url"
-              className={fieldClass}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               placeholder="https://example.com/avatar.jpg"
               {...register('avatarUrl')}
               aria-invalid={!!errors.avatarUrl}
@@ -106,7 +102,7 @@ export function UserForm({
           ).map(([key, label]) => (
             <Field key={key} label={label} error={errors[key]?.message}>
               <input
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 {...register(key)}
                 inputMode={key === 'phone' ? 'tel' : undefined}
                 placeholder={key === 'phone' ? '0901234567' : undefined}
@@ -131,14 +127,17 @@ export function UserForm({
               <input
                 type="password"
                 autoComplete="new-password"
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 {...register('password')}
                 aria-invalid={!!errors.password}
               />
             </Field>
           )}
           <Field label="Vai trò" error={errors.role?.message}>
-            <select {...register('role')} className={fieldClass}>
+            <select
+              {...register('role')}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+            >
               <option value="">Chọn vai trò</option>
               {roles.map((role) => (
                 <option key={role.roleId} value={role.roleId}>
@@ -158,13 +157,13 @@ export function UserForm({
             type="button"
             disabled={isSubmitting}
             onClick={close}
-            className={secondaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
           >
             Hủy
           </button>
           <button
             disabled={isSubmitting || !roles.length}
-            className={primaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
           >
             {isSubmitting
               ? 'Đang lưu…'

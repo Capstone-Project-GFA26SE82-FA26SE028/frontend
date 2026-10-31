@@ -1,8 +1,9 @@
+import { PAGE_SIZE } from '../../../../components/Pagination/Pagination'
 import { useState } from 'react'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { getActivityLogs, getActivityUser } from '../api/activityApi'
 import type { ActivityLog } from '../types/types'
-const pageSize = 10
+const pageSize = PAGE_SIZE
 export function useActivity() {
   const [userId, setUserId] = useState('')
   const [page, setPage] = useState(1)

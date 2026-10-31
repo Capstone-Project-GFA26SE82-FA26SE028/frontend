@@ -1,28 +1,44 @@
 import axios from 'axios'
 import { axiosClient } from '../../../../api/axiosClient'
-import type { Table, TableResponse, TablePage } from '../types/types'
+import type {
+  Table,
+  TableResponse,
+  TablePage,
+  TableQuery,
+} from '../types/types'
 import type { TableValues } from '../schemas/tableSchema'
 function result<T>(e: TableResponse<T>): T {
   if (!e.isSuccess) throw new Error(e.message || 'Yêu cầu không thành công.')
   return e.result
 }
-export async function getTables(
-  params: {
-    page: number
-    pageSize: number
-    search?: string
-    restaurantId?: string
-    areaId?: string
-    isActive?: boolean
-  },
-  signal?: AbortSignal,
-) {
+export async function getTables(params: TableQuery, signal?: AbortSignal) {
   const { data } = await axiosClient.get<TableResponse<TablePage>>('/tables', {
     params,
     signal,
   })
   return result(data)
 }
+// Tải đủ bàn cho sơ đồ theo khu vực; backend vẫn trả từng trang.
+export async function getAllTables(
+  params: Omit<TableQuery, 'page' | 'pageSize'>,
+  signal?: AbortSignal,
+) {
+  const tables = new Map<string, Table>()
+  for (let page = 1; ; page++) {
+    const batch = await getTables({ ...params, page, pageSize: 100 }, signal)
+    batch.items.forEach((table) => tables.set(table.tableId, table))
+    if (batch.page * batch.pageSize >= batch.totalCount) {
+      if (tables.size < batch.totalCount) {
+        throw new Error('Chưa tải đủ danh sách bàn. Vui lòng thử lại.')
+      }
+      return { items: [...tables.values()], totalCount: tables.size }
+    }
+    if (!batch.items.length) {
+      throw new Error('Chưa tải đủ danh sách bàn. Vui lòng thử lại.')
+    }
+  }
+}
+
 export async function getTable(id: string, signal?: AbortSignal) {
   const { data } = await axiosClient.get<TableResponse<Table>>(
     '/tables/' + encodeURIComponent(id),

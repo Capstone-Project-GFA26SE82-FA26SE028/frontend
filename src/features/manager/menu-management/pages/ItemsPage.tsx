@@ -2,15 +2,11 @@ import { useState } from 'react'
 import { Icon } from '../../../../components/Icon/Icon'
 import { Modal } from '../../../../components/Modal/Modal'
 import { useDebounce } from '../../../../hooks/useDebounce'
-import {
-  Field,
-  fieldClass,
-  PageHeading,
-  Pagination,
-  primaryButton,
-  SearchField,
-  secondaryButton,
-} from '../../../admin/components/AdminUI'
+
+import { SearchField } from '../../../../components/SearchField/SearchField'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
+import { Pagination } from '../../../../components/Pagination/Pagination'
+import { Field } from '../../../../components/Field/Field'
 import { Panel } from '../../../../components/Panel/Panel'
 import { FormActions } from '../components/FormActions'
 import { ItemFormModal } from '../components/ItemFormModal'
@@ -48,7 +44,10 @@ export function ItemsPage() {
         title="Món ăn"
         description="Quản lý thông tin món ăn và tình trạng bán."
         action={
-          <button className={primaryButton} onClick={() => setForm({})}>
+          <button
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+            onClick={() => setForm({})}
+          >
             <Icon name="plus" size={18} />
             Thêm món ăn
           </button>
@@ -72,7 +71,7 @@ export function ItemsPage() {
               setCategoryId(e.target.value)
               setPage(1)
             }}
-            className={`${fieldClass} sm:w-44`}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-44"
           >
             <option value="">Tất cả danh mục</option>
             {categories.data?.map((c) => (
@@ -83,7 +82,7 @@ export function ItemsPage() {
           </select>
           <select
             aria-label="Lọc theo tình trạng bán"
-            className={`${fieldClass} sm:w-48`}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-48"
             value={status}
             onChange={(e) => {
               setStatus(e.target.value)
@@ -98,7 +97,7 @@ export function ItemsPage() {
             ))}
           </select>
           <button
-            className={secondaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
             onClick={() => void list.refetch()}
             aria-label="Làm mới món ăn"
           >
@@ -130,7 +129,6 @@ export function ItemsPage() {
           locale="vi"
           total={list.data?.totalCount || 0}
           page={page}
-          size={10}
           onPage={setPage}
         />
       </Panel>
@@ -162,7 +160,7 @@ export function ItemsPage() {
               <select
                 name="status"
                 defaultValue={target.availability}
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               >
                 {Object.entries(availabilityLabels).map(([v, label]) => (
                   <option key={v} value={v}>

@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from '../../../../components/Pagination/Pagination'
 import { useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -108,7 +109,7 @@ export function useUserManagement() {
   const setPage = (value: number) => setPagination({ filter, page: value })
   const params = {
     page,
-    pageSize: 10,
+    pageSize: PAGE_SIZE,
     search: search || undefined,
     roleId: role === 'all' ? undefined : role,
     isActive: status === 'all' ? undefined : status === 'active',

@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from '../../../../components/Pagination/Pagination'
 import { useQuery } from '@tanstack/react-query'
 import { getChoices, getPage } from '../../menu-management/api/catalogApi'
 import { ingredientSchema } from '../schemas/ingredientSchema'
@@ -23,7 +24,7 @@ export function useIngredients(
         ingredientSchema,
         {
           page,
-          pageSize: 10,
+          pageSize: PAGE_SIZE,
           search: search || undefined,
           isActive: status || undefined,
           lowStockOnly,

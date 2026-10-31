@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { fieldClass } from '../../components/AdminUI'
+
 import type { RestaurantValues } from '../schemas/restaurantSchema'
 type Hours = RestaurantValues['openingHours']
 type Schedule = { days: number[]; openAt: string; closeAt: string }
@@ -107,7 +107,7 @@ export function RestaurantHours({
                 <input
                   type="time"
                   required={group.days.length > 0}
-                  className={fieldClass + ' mt-1'}
+                  className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 mt-1"
                   value={group[key]}
                   onChange={(e) =>
                     update(

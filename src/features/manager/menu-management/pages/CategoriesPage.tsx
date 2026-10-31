@@ -2,16 +2,11 @@ import { useState } from 'react'
 import { Icon } from '../../../../components/Icon/Icon'
 import { Modal } from '../../../../components/Modal/Modal'
 import { useDebounce } from '../../../../hooks/useDebounce'
-import {
-  ConfirmAction,
-  Field,
-  fieldClass,
-  PageHeading,
-  Pagination,
-  primaryButton,
-  SearchField,
-  secondaryButton,
-} from '../../../admin/components/AdminUI'
+
+import { SearchField } from '../../../../components/SearchField/SearchField'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
+import { Pagination } from '../../../../components/Pagination/Pagination'
+import { Field } from '../../../../components/Field/Field'
 import { Badge } from '../../../../components/Badge/Badge'
 import { Panel } from '../../../../components/Panel/Panel'
 import { FormActions } from '../components/FormActions'
@@ -44,7 +39,10 @@ export function CategoriesPage() {
         title="Danh mục"
         description="Sắp xếp thực đơn và quản lý trạng thái danh mục."
         action={
-          <button className={primaryButton} onClick={() => setForm({})}>
+          <button
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+            onClick={() => setForm({})}
+          >
             <Icon name="plus" size={18} />
             Thêm danh mục
           </button>
@@ -63,7 +61,7 @@ export function CategoriesPage() {
           />
           <select
             aria-label="Trạng thái danh mục"
-            className={`${fieldClass} sm:w-52`}
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-52"
             value={status}
             onChange={(e) => {
               setStatus(e.target.value)
@@ -75,7 +73,7 @@ export function CategoriesPage() {
             <option value="false">Ngừng hoạt động</option>
           </select>
           <button
-            className={secondaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
             onClick={() => void list.refetch()}
             aria-label="Làm mới danh mục"
           >
@@ -116,14 +114,14 @@ export function CategoriesPage() {
                     <td>
                       <div className="flex justify-end gap-2">
                         <button
-                          className={secondaryButton}
+                          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                           onClick={() => setForm({ category })}
                           aria-label={`Sửa ${category.categoryName}`}
                         >
                           <Icon name="edit" size={16} />
                         </button>
                         <button
-                          className={secondaryButton}
+                          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                           onClick={() =>
                             setTarget({ category, action: 'status' })
                           }
@@ -131,7 +129,7 @@ export function CategoriesPage() {
                           {category.isActive ? 'Ngừng hoạt động' : 'Kích hoạt'}
                         </button>
                         <button
-                          className={`${secondaryButton} text-rose-600`}
+                          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 text-rose-600"
                           onClick={() =>
                             setTarget({ category, action: 'delete' })
                           }
@@ -151,7 +149,6 @@ export function CategoriesPage() {
           locale="vi"
           total={list.data?.totalCount || 0}
           page={page}
-          size={10}
           onPage={setPage}
         />
       </Panel>
@@ -184,7 +181,7 @@ export function CategoriesPage() {
                 required
                 maxLength={255}
                 defaultValue={form.category?.categoryName}
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 placeholder="Ví dụ: Món chính"
               />
             </Field>
@@ -196,35 +193,51 @@ export function CategoriesPage() {
         </Modal>
       )}
       {target && (
-        <ConfirmAction
-          confirmLabel="Xác nhận"
-          cancelLabel="Hủy"
-          closeLabel="Đóng"
+        <Modal
           title={
             target.action === 'delete'
               ? 'Xóa danh mục?'
               : 'Đổi trạng thái danh mục?'
           }
-          description={
-            target.action === 'delete'
-              ? `Xóa danh mục “${target.category.categoryName}”? Chỉ có thể xóa danh mục chưa có món liên kết.`
-              : `${target.category.isActive ? 'Ngừng hoạt động' : 'Kích hoạt'} danh mục “${target.category.categoryName}”? Không thể ngừng hoạt động danh mục còn món đang mở bán.`
-          }
-          disabled={mutation.isPending}
           onClose={() => {
             if (!mutation.isPending) setTarget(null)
           }}
-          onConfirm={() =>
-            mutation.mutate({
-              method: target.action === 'delete' ? 'delete' : 'patch',
-              path: `/categories/${target.category.categoryId}${target.action === 'status' ? '/status' : ''}`,
-              body:
-                target.action === 'status'
-                  ? { isActive: !target.category.isActive }
-                  : undefined,
-            })
-          }
-        />
+          closeLabel={'Đóng'}
+        >
+          <div className="space-y-5 p-6">
+            <p className="text-sm leading-6 text-slate-600">
+              {target.action === 'delete'
+                ? `Xóa danh mục “${target.category.categoryName}”? Chỉ có thể xóa danh mục chưa có món liên kết.`
+                : `${target.category.isActive ? 'Ngừng hoạt động' : 'Kích hoạt'} danh mục “${target.category.categoryName}”? Không thể ngừng hoạt động danh mục còn món đang mở bán.`}
+            </p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  if (!mutation.isPending) setTarget(null)
+                }}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+              >
+                {'Hủy'}
+              </button>
+              <button
+                disabled={mutation.isPending}
+                onClick={() =>
+                  mutation.mutate({
+                    method: target.action === 'delete' ? 'delete' : 'patch',
+                    path: `/categories/${target.category.categoryId}${target.action === 'status' ? '/status' : ''}`,
+                    body:
+                      target.action === 'status'
+                        ? { isActive: !target.category.isActive }
+                        : undefined,
+                  })
+                }
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+              >
+                {'Xác nhận'}
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </>
   )

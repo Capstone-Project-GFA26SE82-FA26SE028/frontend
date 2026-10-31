@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Modal } from '../../../../components/Modal/Modal'
+
+import { SearchField } from '../../../../components/SearchField/SearchField'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import {
-  Field,
-  fieldClass,
-  PageHeading,
   Pagination,
-  SearchField,
-  secondaryButton,
-} from '../../../admin/components/AdminUI'
+  PAGE_SIZE,
+} from '../../../../components/Pagination/Pagination'
+import { Field } from '../../../../components/Field/Field'
 import { Panel } from '../../../../components/Panel/Panel'
 import { matches } from '../../../admin/utils'
 import { QueryState } from '../../menu-management/components/QueryState'
@@ -48,7 +48,7 @@ export function StaffActivityPage() {
   )
   const currentPage = Math.min(
     page,
-    Math.max(1, Math.ceil(visible.length / 10)),
+    Math.max(1, Math.ceil(visible.length / PAGE_SIZE)),
   )
   return (
     <>
@@ -88,7 +88,7 @@ export function StaffActivityPage() {
                 placeholder="Tìm nhân viên, bàn, đơn hoặc thao tác…"
               />
               <select
-                className={`${fieldClass} sm:w-60`}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-60"
                 aria-label="Loại hoạt động"
                 value={action}
                 onChange={(e) => {
@@ -114,7 +114,7 @@ export function StaffActivityPage() {
                     setFrom(e.target.value)
                     setPage(1)
                   }}
-                  className={fieldClass}
+                  className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 />
               </Field>
               <Field label="Đến ngày (UTC+7)">
@@ -126,7 +126,7 @@ export function StaffActivityPage() {
                     setUntil(e.target.value)
                     setPage(1)
                   }}
-                  className={fieldClass}
+                  className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 />
               </Field>
             </div>
@@ -149,7 +149,10 @@ export function StaffActivityPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {visible
-                    .slice((currentPage - 1) * 10, currentPage * 10)
+                    .slice(
+                      (currentPage - 1) * PAGE_SIZE,
+                      currentPage * PAGE_SIZE,
+                    )
                     .map((record) => (
                       <tr key={record.auditLogId}>
                         <td className="whitespace-nowrap">
@@ -170,7 +173,7 @@ export function StaffActivityPage() {
                         </td>
                         <td className="break-all text-xs text-slate-400">
                           <button
-                            className={secondaryButton}
+                            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                             onClick={() => setSelected(record)}
                           >
                             Xem chi tiết
@@ -186,7 +189,6 @@ export function StaffActivityPage() {
             locale="vi"
             total={visible.length}
             page={currentPage}
-            size={10}
             onPage={setPage}
           />
         </Panel>

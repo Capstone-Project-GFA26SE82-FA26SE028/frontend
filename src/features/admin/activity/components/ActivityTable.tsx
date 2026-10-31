@@ -2,7 +2,7 @@ import { Icon } from '../../../../components/Icon/Icon'
 import { useState } from 'react'
 import { useActivityUser } from '../hooks/useActivity'
 import type { ActivityLog } from '../types/types'
-import { EmptyState } from '../../components/AdminUI'
+import { EmptyState } from '../../../../components/EmptyState/EmptyState'
 export function ActivityTable({
   items,
   onDetail,

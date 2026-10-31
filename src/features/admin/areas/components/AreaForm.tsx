@@ -4,12 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { areaSchema, type AreaValues } from '../schemas/areaSchema'
 import type { Area } from '../types/types'
 import type { Restaurant } from '../../restaurants/types/types'
-import {
-  Field,
-  fieldClass,
-  primaryButton,
-  secondaryButton,
-} from '../../components/AdminUI'
+
+import { Field } from '../../../../components/Field/Field'
 import { areaError } from '../api/areaApi'
 export function AreaForm({
   area,
@@ -86,7 +82,7 @@ export function AreaForm({
           <Field label="Nhà hàng *" error={errors.restaurantId?.message}>
             {area ? (
               <input
-                className={fieldClass + ' bg-slate-50'}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 bg-slate-50"
                 readOnly
                 value={
                   restaurants.find((r) => r.restaurantId === area.restaurantId)
@@ -94,7 +90,10 @@ export function AreaForm({
                 }
               />
             ) : (
-              <select className={fieldClass} {...register('restaurantId')}>
+              <select
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                {...register('restaurantId')}
+              >
                 <option value="">Chọn nhà hàng</option>
                 {restaurants.map((r) => (
                   <option key={r.restaurantId} value={r.restaurantId}>
@@ -116,7 +115,7 @@ export function AreaForm({
           ).map(([key, label, placeholder]) => (
             <Field key={key} label={label} error={errors[key]?.message}>
               <input
-                className={fieldClass + ' bg-white'}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 bg-white"
                 placeholder={placeholder}
                 maxLength={key === 'areaName' ? 100 : 50}
                 {...register(key)}
@@ -135,13 +134,13 @@ export function AreaForm({
         <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-5">
           <button
             type="button"
-            className={secondaryButton + ' justify-center'}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 justify-center"
             onClick={onClose}
           >
             Hủy
           </button>
           <button
-            className={primaryButton + ' justify-center'}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40 justify-center"
             disabled={!!area && !isDirty}
           >
             {pending ? 'Đang lưu…' : area ? 'Lưu thay đổi' : 'Tạo khu vực'}

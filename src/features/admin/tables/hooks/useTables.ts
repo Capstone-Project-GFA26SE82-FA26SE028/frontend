@@ -6,7 +6,7 @@ import {
   keepPreviousData,
 } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import { getTables, getTable, updateTable } from '../api/tableApi'
+import { getAllTables, getTable, updateTable } from '../api/tableApi'
 import { getRestaurants } from '../../restaurants/api/restaurantApi'
 import { getAreas } from '../../areas/api/areaApi'
 import type { Restaurant } from '../../restaurants/types/types'
@@ -18,7 +18,6 @@ export function useTables() {
     [restaurantId, setRestaurant] = useState(''),
     [areaId, setArea] = useState(''),
     [status, setStatus] = useState(''),
-    [page, setPage] = useState(1),
     [revision, setRevision] = useState(0),
     [target, setTarget] = useState<{ mode: TableMode; id?: string } | null>(
       null,
@@ -27,7 +26,6 @@ export function useTables() {
   useEffect(() => {
     const t = setTimeout(() => {
       setTerm(search.trim())
-      setPage(1)
     }, 300)
     return () => clearTimeout(t)
   }, [search])
@@ -49,28 +47,17 @@ export function useTables() {
       return { restaurants, areas }
     },
   })
+  const params = {
+    search: term || undefined,
+    restaurantId: restaurantId || undefined,
+    areaId: areaId || undefined,
+    isActive: status === '' ? undefined : status === 'true',
+  }
   const list = useQuery({
-    queryKey: ['tables', 'list', { page, term, restaurantId, areaId, status }],
-    queryFn: ({ signal }) =>
-      getTables(
-        {
-          page,
-          pageSize: 12,
-          search: term || undefined,
-          restaurantId: restaurantId || undefined,
-          areaId: areaId || undefined,
-          isActive: status === '' ? undefined : status === 'true',
-        },
-        signal,
-      ),
+    queryKey: ['tables', 'list', 'all', params],
+    queryFn: ({ signal }) => getAllTables(params, signal),
     placeholderData: keepPreviousData,
   })
-  if (
-    list.isSuccess &&
-    !list.isPlaceholderData &&
-    page > Math.max(1, Math.ceil(list.data.totalCount / 12))
-  )
-    setPage(Math.max(1, Math.ceil(list.data.totalCount / 12)))
   const detail = useQuery({
     queryKey: ['tables', 'detail', target?.id],
     queryFn: ({ signal }) => getTable(target!.id!, signal),
@@ -93,7 +80,6 @@ export function useTables() {
     restaurantId,
     areaId,
     status,
-    page,
     revision,
     target,
     list,
@@ -117,15 +103,12 @@ export function useTables() {
     filterRestaurant: (v: string) => {
       setRestaurant(v)
       setArea('')
-      setPage(1)
     },
     filterArea: (v: string) => {
       setArea(v)
-      setPage(1)
     },
     filterStatus: (v: string) => {
       setStatus(v)
-      setPage(1)
     },
     reset: () => {
       setSearch('')
@@ -133,16 +116,6 @@ export function useTables() {
       setRestaurant('')
       setArea('')
       setStatus('')
-      setPage(1)
-    },
-    changePage: (v: number) => {
-      setPage(v)
-      window.scrollTo({
-        top: 0,
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-          ? 'auto'
-          : 'smooth',
-      })
     },
   }
 }

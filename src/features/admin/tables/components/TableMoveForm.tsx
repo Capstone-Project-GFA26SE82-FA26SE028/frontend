@@ -1,12 +1,8 @@
 import { useState } from 'react'
 import type { Area } from '../../areas/types/types'
 import type { Table } from '../types/types'
-import {
-  Field,
-  fieldClass,
-  primaryButton,
-  secondaryButton,
-} from '../../components/AdminUI'
+
+import { Field } from '../../../../components/Field/Field'
 import { tableError } from '../api/tableApi'
 export function TableMoveForm({
   table,
@@ -52,7 +48,7 @@ export function TableMoveForm({
         <select
           required
           disabled={pending}
-          className={fieldClass}
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
         >
@@ -78,12 +74,15 @@ export function TableMoveForm({
         <button
           type="button"
           disabled={pending}
-          className={secondaryButton}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
           onClick={onClose}
         >
           Hủy
         </button>
-        <button disabled={pending || !selected} className={primaryButton}>
+        <button
+          disabled={pending || !selected}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+        >
           {pending ? 'Đang chuyển…' : 'Chuyển bàn'}
         </button>
       </div>

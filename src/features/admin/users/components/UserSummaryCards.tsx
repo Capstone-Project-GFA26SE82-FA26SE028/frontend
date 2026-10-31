@@ -1,4 +1,4 @@
-﻿import { SummaryCards } from '../../components/AdminUI'
+﻿import { SummaryCards } from '../../../../components/SummaryCards/SummaryCards'
 
 export function UserSummaryCards({
   totals,

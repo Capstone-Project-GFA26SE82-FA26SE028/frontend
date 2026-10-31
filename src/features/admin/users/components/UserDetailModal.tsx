@@ -1,6 +1,6 @@
 ﻿import { Modal } from '../../../../components/Modal/Modal'
 import { Icon } from '../../../../components/Icon/Icon'
-import { secondaryButton } from '../../components/AdminUI'
+
 import { Badge } from '../../../../components/Badge/Badge'
 import { userRoleLabel } from '../types/types'
 import { useUser } from '../hooks/useUsers'
@@ -42,7 +42,10 @@ export function UserDetailModal({
           <p role="alert" className="text-rose-600">
             {userApiError(error)}
           </p>
-          <button className={secondaryButton} onClick={() => void refetch()}>
+          <button
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+            onClick={() => void refetch()}
+          >
             Thử lại
           </button>
         </div>

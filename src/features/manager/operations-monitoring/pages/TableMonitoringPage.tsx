@@ -2,13 +2,10 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Modal } from '../../../../components/Modal/Modal'
 import { Icon } from '../../../../components/Icon/Icon'
-import {
-  fieldClass,
-  PageHeading,
-  SearchField,
-  secondaryButton,
-  SummaryCards,
-} from '../../../admin/components/AdminUI'
+
+import { SearchField } from '../../../../components/SearchField/SearchField'
+import { SummaryCards } from '../../../../components/SummaryCards/SummaryCards'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import { Badge } from '../../../../components/Badge/Badge'
 import { Panel } from '../../../../components/Panel/Panel'
 import { matches } from '../../../admin/utils'
@@ -97,7 +94,7 @@ export function TableMonitoringPage() {
             />
             <select
               aria-label="Nhà hàng"
-              className={`${fieldClass} sm:w-60`}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-60"
               value={restaurant}
               onChange={(e) => {
                 setRestaurant(e.target.value)
@@ -113,7 +110,7 @@ export function TableMonitoringPage() {
             </select>
             <select
               aria-label="Khu vực"
-              className={`${fieldClass} sm:w-44`}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-44"
               value={area}
               onChange={(e) => setArea(e.target.value)}
             >
@@ -126,7 +123,7 @@ export function TableMonitoringPage() {
             </select>
             <select
               aria-label="Trạng thái bàn"
-              className={`${fieldClass} sm:w-48`}
+              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:w-48"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
             >
@@ -226,7 +223,7 @@ export function TableMonitoringPage() {
                   Thông tin thanh toán: Chưa có.
                 </p>
                 <Link
-                  className={secondaryButton}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
                   to={`/manager/kitchen-monitoring?tableId=${detail.tableId}`}
                 >
                   Xem tiến độ bếp

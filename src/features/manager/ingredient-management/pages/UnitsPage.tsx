@@ -1,12 +1,9 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Modal } from '../../../../components/Modal/Modal'
-import {
-  Field,
-  fieldClass,
-  PageHeading,
-  primaryButton,
-} from '../../../admin/components/AdminUI'
+
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
+import { Field } from '../../../../components/Field/Field'
 import { Panel } from '../../../../components/Panel/Panel'
 import { FormActions } from '../../menu-management/components/FormActions'
 import { QueryState } from '../../menu-management/components/QueryState'
@@ -37,7 +34,10 @@ export function UnitsPage() {
         title="Đơn vị và quy đổi"
         description="Thiết lập đơn vị đo và hệ số quy đổi riêng cho từng nguyên liệu."
         action={
-          <button className={primaryButton} onClick={() => setCreate(true)}>
+          <button
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+            onClick={() => setCreate(true)}
+          >
             Thêm đơn vị
           </button>
         }
@@ -88,7 +88,7 @@ export function UnitsPage() {
               <select
                 aria-label="Chọn nguyên liệu để quy đổi"
                 value={ingredientId}
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                 onChange={(event) =>
                   setParams(
                     event.target.value
@@ -112,7 +112,7 @@ export function UnitsPage() {
                   Đơn vị cơ sở: <strong>{selected.baseUnit}</strong>
                 </p>
                 <button
-                  className={primaryButton}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
                   disabled={!units.data?.length}
                   onClick={() => setConversion(true)}
                 >
@@ -193,7 +193,7 @@ export function UnitsPage() {
                 pattern="[A-Za-z0-9_]+"
                 maxLength={50}
                 placeholder="Ví dụ: kg"
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </Field>
             <Field label="Tên đơn vị *">
@@ -202,7 +202,7 @@ export function UnitsPage() {
                 required
                 maxLength={100}
                 placeholder="Ví dụ: Kilôgam"
-                className={fieldClass}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
             </Field>
             <MutationError error={mutation.error} />

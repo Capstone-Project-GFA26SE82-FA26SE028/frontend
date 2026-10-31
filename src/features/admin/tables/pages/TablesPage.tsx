@@ -1,13 +1,9 @@
 import { useState } from 'react'
 import { TableQrModal } from '../components/TableQrModal'
 import { TableModal } from '../components/TableModal'
-import {
-  PageHeading,
-  EmptyState,
-  Pagination,
-  primaryButton,
-  secondaryButton,
-} from '../../components/AdminUI'
+
+import { EmptyState } from '../../../../components/EmptyState/EmptyState'
+import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import { useTables } from '../hooks/useTables'
 import { tableError } from '../api/tableApi'
 import { TablesByArea } from '../components/TablesByArea'
@@ -23,7 +19,10 @@ export function TablesPage() {
         title="Bàn"
         description="Quản lý bàn và chỗ ngồi tại các nhà hàng."
         action={
-          <button className={primaryButton} onClick={() => m.open('create')}>
+          <button
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
+            onClick={() => m.open('create')}
+          >
             + Thêm bàn
           </button>
         }
@@ -63,7 +62,7 @@ export function TablesPage() {
         <div className="space-y-3 p-8 text-center">
           <p role="alert">{tableError(m.list.error)}</p>
           <button
-            className={secondaryButton}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
             onClick={() => void m.list.refetch()}
           >
             Thử lại
@@ -90,15 +89,6 @@ export function TablesPage() {
               }
             />
           )}
-          <div className="mt-5 rounded-xl bg-white">
-            <Pagination
-              locale="vi"
-              total={m.list.data.totalCount}
-              page={m.page}
-              size={12}
-              onPage={m.changePage}
-            />
-          </div>
         </fieldset>
       )}
       <TableModal management={m} />
