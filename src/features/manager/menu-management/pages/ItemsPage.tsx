@@ -7,11 +7,11 @@ import {
   fieldClass,
   PageHeading,
   Pagination,
-  Panel,
   primaryButton,
   SearchField,
   secondaryButton,
 } from '../../../admin/components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
 import { FormActions } from '../components/FormActions'
 import { ItemFormModal } from '../components/ItemFormModal'
 import { MenuTabs } from '../components/MenuTabs'

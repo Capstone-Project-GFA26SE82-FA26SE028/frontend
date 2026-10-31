@@ -1,9 +1,9 @@
 import {
   PageHeading,
-  Panel,
   Pagination,
   secondaryButton,
 } from '../../components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
 import { useActivity } from '../hooks/useActivity'
 import { activityApiError } from '../api/activityApi'
 import { ActivityFilters } from '../components/ActivityFilters'

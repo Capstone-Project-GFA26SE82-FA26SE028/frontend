@@ -1,5 +1,6 @@
 import { Modal } from '../../../../components/Modal/Modal'
-import { Badge, secondaryButton } from '../../components/AdminUI'
+import { secondaryButton } from '../../components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
 import {
   sessionStatus,
   type LoginSession,

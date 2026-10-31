@@ -1,4 +1,5 @@
-import { Panel, secondaryButton, Pagination } from '../../components/AdminUI'
+import { secondaryButton, Pagination } from '../../components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
 import { UserFilters } from '../components/UserFilters'
 import { UserTable } from '../components/UserTable'
 import { UserDetailModal } from '../components/UserDetailModal'

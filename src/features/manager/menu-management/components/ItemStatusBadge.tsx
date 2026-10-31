@@ -1,4 +1,4 @@
-import { Badge } from '../../../admin/components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
 import { availabilityLabels } from '../constants/catalog'
 import type { Item } from '../types/catalog'
 

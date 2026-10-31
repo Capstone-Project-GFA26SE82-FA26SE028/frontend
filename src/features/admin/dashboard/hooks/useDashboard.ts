@@ -1,22 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../../../../app/hooks'
+import { useTaxFees } from '../../tax-fees/hooks/useTaxFees'
 export function useDashboard() {
   const users = useAppSelector((s) => s.admin.users),
     tables = useAppSelector((s) => s.adminTables),
     areas = useAppSelector((s) => s.adminAreas),
-    fees = useAppSelector((s) => s.adminTaxFees),
     methods = useAppSelector((s) => s.adminPaymentMethods)
   const [now, setNow] = useState(() => Date.now())
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 30000)
     return () => clearInterval(id)
   }, [])
-  const currentFees = [...fees]
-    .filter((f) => new Date(f.effectiveAt).getTime() <= now)
-    .sort(
-      (a, b) =>
-        new Date(b.effectiveAt).getTime() - new Date(a.effectiveAt).getTime(),
-    )[0]
+  const { current: currentFees } = useTaxFees()
   const activeUsers = users.filter((u) => u.active).length
   const current = new Date(now)
   const newUsers = users.filter((u) => {

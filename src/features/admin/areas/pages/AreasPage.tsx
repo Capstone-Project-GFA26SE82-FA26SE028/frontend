@@ -1,11 +1,11 @@
 import { Modal } from '../../../../components/Modal/Modal'
 import {
   PageHeading,
-  Panel,
   Pagination,
   primaryButton,
   secondaryButton,
 } from '../../components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
 import { AreaFilters } from '../components/AreaFilters'
 import { AreaTable } from '../components/AreaTable'
 import { AreaForm } from '../components/AreaForm'

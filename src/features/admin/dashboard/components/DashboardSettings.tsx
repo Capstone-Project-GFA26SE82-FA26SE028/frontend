@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Icon } from '../../../../components/Icon/Icon'
-import type { FeeVersion } from '../../tax-fees/schema'
+import type { FeeVersion } from '../../tax-fees/types/types'
 import type { PaymentMethods } from '../../payment-methods/schema'
 import { DashboardSection } from './DashboardSection'
 export function DashboardSettings({

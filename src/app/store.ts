@@ -3,7 +3,6 @@ import customerBillingReducer from '../features/customer/billing-feedback/billin
 import customerSessionReducer from '../features/customer/table-session/sessionSlice'
 import orderReducer from '../features/customer/payment/previewOrderSlice'
 import adminPaymentMethodsReducer from '../features/admin/payment-methods/paymentMethodSlice'
-import adminTaxFeesReducer from '../features/admin/tax-fees/taxFeeSlice'
 import adminAreasReducer from '../features/admin/areas/areaSlice'
 import adminTablesReducer from '../features/admin/tables/tableSlice'
 import adminReducer, { adminStorageKey } from './adminReducer'
@@ -15,9 +14,9 @@ export const store = configureStore({
     customerBilling: customerBillingReducer,
     orders: orderReducer,
     customerSession: customerSessionReducer,
-    admin: adminReducer,    adminAreas: adminAreasReducer,
+    admin: adminReducer,
+    adminAreas: adminAreasReducer,
     adminTables: adminTablesReducer,
-    adminTaxFees: adminTaxFeesReducer,
     adminPaymentMethods: adminPaymentMethodsReducer,
   },
 })

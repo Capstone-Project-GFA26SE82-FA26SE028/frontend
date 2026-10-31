@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import {
-  Badge,
   fieldClass,
   PageHeading,
   Pagination,
-  Panel,
   secondaryButton,
   SummaryCards,
 } from '../../../admin/components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
+import { Panel } from '../../../../components/Panel/Panel'
 import { downloadCsv } from '../../../admin/utils'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { HistoryFilters } from '../components/HistoryFilters'

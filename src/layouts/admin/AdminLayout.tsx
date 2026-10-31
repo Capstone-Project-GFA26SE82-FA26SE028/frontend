@@ -99,6 +99,7 @@ export function AdminLayout() {
             '/admin/restaurants',
             '/admin/areas',
             '/admin/tables',
+            '/admin/tax-fees',
           ].includes(pathname) && (
             <span>Bản xem trước · Toàn bộ số liệu là dữ liệu mẫu</span>
           )}

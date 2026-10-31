@@ -4,15 +4,15 @@ import { Icon } from '../../../../components/Icon/Icon'
 import { Modal } from '../../../../components/Modal/Modal'
 import { formatCurrency } from '../../../../utils/currency'
 import {
-  Badge,
   ConfirmAction,
   fieldClass,
   PageHeading,
   Pagination,
-  Panel,
   primaryButton,
   secondaryButton,
 } from '../../../admin/components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
+import { Panel } from '../../../../components/Panel/Panel'
 import { MenuTabs } from '../components/MenuTabs'
 import { PriceForm } from '../components/PriceForm'
 import { PricePreview } from '../components/PricePreview'

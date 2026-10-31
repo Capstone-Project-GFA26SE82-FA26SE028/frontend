@@ -1,4 +1,5 @@
-import { Panel, secondaryButton } from '../../components/AdminUI'
+import { secondaryButton } from '../../components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
 import { RoleTable } from '../components/RoleTable'
 import { RoleUsersTable } from '../components/RoleUsersTable'
 import { RoleUserFilters } from '../components/RoleUserFilters'

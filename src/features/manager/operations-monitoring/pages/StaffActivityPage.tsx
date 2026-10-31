@@ -5,10 +5,10 @@ import {
   fieldClass,
   PageHeading,
   Pagination,
-  Panel,
   SearchField,
   secondaryButton,
 } from '../../../admin/components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
 import { matches } from '../../../admin/utils'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { tableClass } from '../../menu-management/constants/styles'

@@ -5,9 +5,9 @@ import {
   Field,
   fieldClass,
   PageHeading,
-  Panel,
   primaryButton,
 } from '../../../admin/components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
 import { FormActions } from '../../menu-management/components/FormActions'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { tableClass } from '../../menu-management/constants/styles'

@@ -1,4 +1,6 @@
-import { Panel, Badge, secondaryButton } from '../../components/AdminUI'
+import { secondaryButton } from '../../components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
+import { Panel } from '../../../../components/Panel/Panel'
 export function PayOSConnection({
   connected,
   onToggle,

@@ -1,4 +1,4 @@
-import { Badge } from '../../../admin/components/AdminUI'
+import { Badge } from '../../../../components/Badge/Badge'
 import { tableClass } from '../../menu-management/constants/styles'
 import { dateLabel } from '../../menu-management/utils/price'
 import type { StockLot } from '../types/stock'

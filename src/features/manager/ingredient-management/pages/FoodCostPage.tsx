@@ -2,9 +2,9 @@ import { Link, useSearchParams } from 'react-router-dom'
 import {
   fieldClass,
   PageHeading,
-  Panel,
   secondaryButton,
 } from '../../../admin/components/AdminUI'
+import { Panel } from '../../../../components/Panel/Panel'
 import { QueryState } from '../../menu-management/components/QueryState'
 import { tableClass } from '../../menu-management/constants/styles'
 import { useItemChoices } from '../../menu-management/hooks/useItemChoices'
