@@ -15,6 +15,7 @@ export function AdminHeader({ onMenu }: { onMenu: () => void }) {
     roles: 'Vai trò và quyền hạn',
     sessions: 'Phiên đăng nhập',
     restaurants: 'Nhà hàng',
+    'restaurant-staff': 'Phân công nhân viên',
     areas: 'Khu vực nhà hàng',
     tables: 'Bàn',
     'tax-fees': 'Thuế VAT và phí dịch vụ',

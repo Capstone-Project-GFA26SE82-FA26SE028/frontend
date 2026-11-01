@@ -27,6 +27,7 @@ export function AdminLayout() {
       {
         '/admin/sessions': 'Phiên đăng nhập',
         '/admin/restaurants': 'Nhà hàng',
+        '/admin/restaurant-staff': 'Phân công nhân viên',
         '/admin/areas': 'Khu vực nhà hàng',
         '/admin/tables': 'Bàn',
         '/admin/tax-fees': 'VAT & phí dịch vụ',
@@ -97,6 +98,7 @@ export function AdminLayout() {
             '/admin/sessions',
             '/admin/activity',
             '/admin/restaurants',
+            '/admin/restaurant-staff',
             '/admin/areas',
             '/admin/tables',
             '/admin/tax-fees',
