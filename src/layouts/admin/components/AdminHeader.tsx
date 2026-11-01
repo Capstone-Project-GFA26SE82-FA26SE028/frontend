@@ -11,6 +11,7 @@ export function AdminHeader({ onMenu }: { onMenu: () => void }) {
   const { pathname } = useLocation()
   const pageNames: Record<string, string> = {
     overview: 'Tổng quan',
+    profile: 'Hồ sơ cá nhân',
     users: 'Tài khoản người dùng',
     roles: 'Vai trò và quyền hạn',
     sessions: 'Phiên đăng nhập',
@@ -28,9 +29,7 @@ export function AdminHeader({ onMenu }: { onMenu: () => void }) {
   const profileRef = useRef<HTMLDivElement>(null)
   const profileButtonRef = useRef<HTMLButtonElement>(null)
   const [profileOpen, setProfileOpen] = useState(false)
-  const [panel, setPanel] = useState<
-    'notifications' | 'profile' | 'messages' | null
-  >(null)
+  const [panel, setPanel] = useState<'notifications' | 'messages' | null>(null)
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && profileOpen) {
@@ -128,7 +127,7 @@ export function AdminHeader({ onMenu }: { onMenu: () => void }) {
               <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 font-semibold text-emerald-800">
                 {displayName.slice(0, 1).toUpperCase()}
               </span>
-              <span className="hidden text-base font-semibold sm:block">
+              <span className="hidden max-w-44 truncate text-sm font-semibold sm:block">
                 {displayName}
               </span>
               <Icon
@@ -140,26 +139,34 @@ export function AdminHeader({ onMenu }: { onMenu: () => void }) {
             {profileOpen && (
               <div
                 id="admin-profile-dropdown"
-                className="absolute top-[calc(100%+8px)] right-0 w-64 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-[0_12px_40px_#18352a14]"
+                className="absolute top-[calc(100%+4px)] right-0 w-52 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-slate-200/70 bg-white shadow-lg shadow-slate-900/10"
               >
-                <div className="border-b border-slate-100 px-5 py-4">
-                  <p className="text-base font-semibold text-[#344760]">
+                <div className="border-b border-slate-100 bg-slate-50/70 px-3 py-2">
+                  <p
+                    className="truncate text-sm font-semibold text-slate-700"
+                    title={displayName}
+                  >
                     {displayName}
                   </p>
-                  <p className="mt-1 text-sm text-slate-400">{user?.email}</p>
+                  <p
+                    className="mt-0.5 truncate text-xs text-slate-400"
+                    title={user?.email}
+                  >
+                    {user?.email}
+                  </p>
                 </div>
-                <div className="p-2">
-                  <button
+                <div className="p-1">
+                  <Link
+                    to="/admin/profile"
                     onClick={() => {
                       setProfileOpen(false)
-                      setPanel('profile')
                     }}
-                    className="flex min-h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-base text-slate-600 hover:bg-emerald-50 hover:text-emerald-800"
+                    className="flex min-h-9 w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-[13px] text-slate-600 transition-colors hover:bg-emerald-50 hover:text-emerald-800"
                   >
-                    <Icon name="users" size={17} />
-                    Thông tin tài khoản
-                  </button>
-                  <LogoutButton />
+                    <Icon name="users" size={16} />
+                    Hồ sơ cá nhân
+                  </Link>
+                  <LogoutButton compact />
                 </div>
               </div>
             )}
@@ -168,13 +175,7 @@ export function AdminHeader({ onMenu }: { onMenu: () => void }) {
       </header>
       {panel && (
         <Modal
-          title={
-            panel === 'profile'
-              ? 'Tài khoản quản trị viên'
-              : panel === 'messages'
-                ? 'Tin nhắn hỗ trợ'
-                : 'Thông báo'
-          }
+          title={panel === 'messages' ? 'Tin nhắn hỗ trợ' : 'Thông báo'}
           closeLabel="Đóng"
           onClose={() => setPanel(null)}
         >
@@ -192,13 +193,6 @@ export function AdminHeader({ onMenu }: { onMenu: () => void }) {
                   tính năng nhắn tin.
                 </p>
               </div>
-            ) : panel === 'profile' ? (
-              <>
-                <p className="font-semibold">{displayName}</p>
-                <p className="mt-3 text-base leading-6 text-slate-500">
-                  {user?.email} · Quản trị nhà hàng
-                </p>
-              </>
             ) : (
               <>
                 <p className="py-4 text-sm text-slate-500">

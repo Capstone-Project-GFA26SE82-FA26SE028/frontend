@@ -9,7 +9,12 @@ import {
   sessionChecking,
   sessionCheckFailed,
 } from '../authSlice'
-import type { AuthResponse, AuthSession, AuthUser, LoginInput } from '../types/types'
+import type {
+  AuthResponse,
+  AuthSession,
+  AuthUser,
+  LoginInput,
+} from '../types/types'
 
 // Separate Axios instance prevents login/refresh from triggering a refresh loop.
 const authClient = axios.create({
@@ -63,10 +68,18 @@ export function clearSession() {
   store.dispatch(signedOut())
   queryClient.clear()
 }
+
+export function updateSessionUser(user: AuthUser) {
+  const session = store.getState().auth.session
+  if (session?.user.userId === user.userId) saveSession({ ...session, user })
+}
 export async function login(input: LoginInput) {
   clearSession()
   const currentRevision = revision
-  const { data } = await authClient.post<AuthResponse<AuthSession>>('/auth/login', input)
+  const { data } = await authClient.post<AuthResponse<AuthSession>>(
+    '/auth/login',
+    input,
+  )
   const session = parseResult(data)
   if (currentRevision !== revision)
     throw new Error(
@@ -87,9 +100,12 @@ export function refreshSession(): Promise<AuthSession> {
   }
   refreshTask = (async () => {
     try {
-      const { data } = await authClient.post<AuthResponse<AuthSession>>('/auth/refresh', {
-        refreshToken: session.refreshToken,
-      })
+      const { data } = await authClient.post<AuthResponse<AuthSession>>(
+        '/auth/refresh',
+        {
+          refreshToken: session.refreshToken,
+        },
+      )
       const next = parseResult(data)
       if (revision !== currentRevision)
         throw new Error('Phiên đăng nhập đã thay đổi. Vui lòng đăng nhập lại.')
@@ -153,7 +169,8 @@ export function restoreSession(): Promise<void> {
   store.dispatch(sessionChecking())
   restoreTask = (async () => {
     try {
-      const { data } = await axiosClient.get<AuthResponse<AuthUser>>('/users/me')
+      const { data } =
+        await axiosClient.get<AuthResponse<AuthUser>>('/users/me')
       if (revision !== currentRevision) return
       const user = parseResult(data)
       const session = store.getState().auth.session
