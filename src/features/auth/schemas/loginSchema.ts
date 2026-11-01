@@ -10,6 +10,6 @@ export const loginSchema = z.object({
     .min(1, 'Vui lòng nhập mật khẩu.')
     .refine(
       (value) => new TextEncoder().encode(value).length <= 72,
-      'Mật khẩu không được vượt quá 72 byte.',
+      'Mật khẩu quá dài. Vui lòng nhập ngắn hơn.',
     ),
 })

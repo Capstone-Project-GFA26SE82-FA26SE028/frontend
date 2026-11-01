@@ -26,6 +26,7 @@ export function AdminLayout() {
     const page =
       {
         '/admin/sessions': 'Phiên đăng nhập',
+        '/admin/profile': 'Hồ sơ cá nhân',
         '/admin/restaurants': 'Nhà hàng',
         '/admin/restaurant-staff': 'Phân công nhân viên',
         '/admin/areas': 'Khu vực nhà hàng',
@@ -94,6 +95,7 @@ export function AdminLayout() {
           <span>FoodHub · Không gian quản trị nhà hàng</span>
           {![
             '/admin/users',
+            '/admin/profile',
             '/admin/roles',
             '/admin/sessions',
             '/admin/activity',
