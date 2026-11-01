@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import { useOutletContext } from 'react-router-dom'
-import type { AdminOutletContext } from '../../../../layouts/admin/AdminLayout'
 import { Modal } from '../../../../components/Modal/Modal'
 
 import { EmptyState } from '../../../../components/EmptyState/EmptyState'
@@ -8,21 +6,16 @@ import { SummaryCards } from '../../../../components/SummaryCards/SummaryCards'
 import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import { Field } from '../../../../components/Field/Field'
 import { Panel } from '../../../../components/Panel/Panel'
-import { matches, downloadCsv } from '../../utils'
+import { downloadCsv } from '../../utils'
 import { scenarioLabels, serviceSamples, type HealthScenario } from '../data'
 import { ServiceCard } from '../components/ServiceCard'
 
 export function HealthPage() {
-  const { query } = useOutletContext<AdminOutletContext>()
   const [scenario, setScenario] = useState<HealthScenario>('normal')
   const [filter, setFilter] = useState('all')
   const [selected, setSelected] = useState('')
   const services = serviceSamples(scenario)
-  const rows = services.filter(
-    (s) =>
-      matches(query, s.name, s.description) &&
-      (filter === 'all' || s.status === filter),
-  )
+  const rows = services.filter((s) => filter === 'all' || s.status === filter)
   const detail = services.find((s) => s.id === selected)
   return (
     <>

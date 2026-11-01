@@ -1,9 +1,7 @@
 import { PAGE_SIZE } from '../../../../components/Pagination/Pagination'
 import { useEffect, useState } from 'react'
-import { useOutletContext } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useAppSelector } from '../../../../app/hooks'
-import type { AdminOutletContext } from '../../../../layouts/admin/AdminLayout'
 import { userApiError } from '../api/userApi'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
@@ -95,7 +93,7 @@ export function useUserMutations() {
 
 export function useUserManagement() {
   const actorId = useAppSelector((state) => state.auth.session?.user.userId)
-  const { query, setQuery } = useOutletContext<AdminOutletContext>()
+  const [query, setQuery] = useState('')
   const [search, setSearch] = useState(query.trim())
   const [role, setRole] = useState('all')
   const [status, setStatus] = useState('all')

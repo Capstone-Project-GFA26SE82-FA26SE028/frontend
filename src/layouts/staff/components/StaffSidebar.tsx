@@ -1,21 +1,26 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Icon } from '../../../components/Icon/Icon'
-import { adminNavigation } from '../navigation'
-import { AdminNavLink } from './AdminNavLink'
-import { AdminSidebarProfile } from './AdminSidebarProfile'
-export function AdminSidebar({
-  collapsed = false,
+import { StaffNavLink } from './StaffNavLink'
+import { StaffSidebarProfile } from './StaffSidebarProfile'
+import type { StaffNavigationGroup } from '../types/types'
+
+export function StaffSidebar({
+  groups,
+  homePath,
+  roleLabel,
+  collapsed,
   onNavigate,
 }: {
-  collapsed?: boolean
-  onNavigate?: () => void
+  groups: StaffNavigationGroup[]
+  homePath: string
+  roleLabel: string
+  collapsed: boolean
+  onNavigate: () => void
 }) {
-  const { hash, pathname } = useLocation()
-  const activeId = pathname.split('/')[2] || hash.slice(1) || 'overview'
   return (
     <div className="flex h-full flex-col bg-[#003b2e] bg-linear-to-br from-[#00382b] via-[#00382d] to-[#002e28] text-white">
       <Link
-        to="/admin"
+        to={homePath}
         onClick={onNavigate}
         aria-label="FoodHub - Tổng quan"
         className={`flex min-h-[76px] shrink-0 items-center gap-3 ${collapsed ? 'justify-center' : 'px-6'}`}
@@ -33,22 +38,22 @@ export function AdminSidebar({
         )}
       </Link>
       <nav
-        aria-label="Điều hướng quản trị"
+        aria-label="Điều hướng nhân viên"
         className="min-h-0 flex-1 space-y-4 overflow-y-auto px-3 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {adminNavigation.map((g, i) => (
-          <div key={i}>
-            {g.title && !collapsed && (
+        {groups.map((group, index) => (
+          <div key={group.title || index}>
+            {group.title && !collapsed && (
               <p className="mb-2 px-3 text-xs font-medium tracking-[.04em] text-white/60">
-                {g.title}
+                {group.title}
               </p>
             )}
             <div className="space-y-0.5">
-              {g.items.map((n) => (
-                <AdminNavLink
-                  key={n.id}
-                  {...n}
-                  active={activeId === n.id}
+              {group.items.map((item) => (
+                <StaffNavLink
+                  key={item.to}
+                  item={item}
+                  homePath={homePath}
                   collapsed={collapsed}
                   onNavigate={onNavigate}
                 />
@@ -57,7 +62,7 @@ export function AdminSidebar({
           </div>
         ))}
       </nav>
-      <AdminSidebarProfile collapsed={collapsed} />
+      <StaffSidebarProfile collapsed={collapsed} roleLabel={roleLabel} />
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { CategoriesPage } from '../features/manager/menu-management/pages/Catego
 import { ItemsPage } from '../features/manager/menu-management/pages/ItemsPage'
 import { ManagerOverview } from '../features/manager/menu-management/pages/ManagerOverview'
 import { PricesPage } from '../features/manager/menu-management/pages/PricesPage'
-import { ManagerLayout } from '../layouts/ManagerLayout'
+import { StaffLayout } from '../layouts/staff/StaffLayout'
 import { IngredientsPage } from '../features/manager/ingredient-management/pages/IngredientsPage'
 import { UnitsPage } from '../features/manager/ingredient-management/pages/UnitsPage'
 import { RecipesPage } from '../features/manager/ingredient-management/pages/RecipesPage'
@@ -14,12 +14,14 @@ import { StockVariancePage } from '../features/manager/inventory-monitoring/page
 import { TableMonitoringPage } from '../features/manager/operations-monitoring/pages/TableMonitoringPage'
 import { KitchenMonitoringPage } from '../features/manager/operations-monitoring/pages/KitchenMonitoringPage'
 import { StaffActivityPage } from '../features/manager/operations-monitoring/pages/StaffActivityPage'
+import { ProfilePage } from '../features/profile/pages/ProfilePage'
 
 export const managerRoute: RouteObject = {
   path: '/manager',
-  element: <ManagerLayout />,
+  element: <StaffLayout role="manager" />,
   children: [
     { index: true, element: <ManagerOverview /> },
+    { path: 'profile', element: <ProfilePage /> },
     { path: 'menu', element: <Navigate to="categories" replace /> },
     { path: 'menu/categories', element: <CategoriesPage /> },
     { path: 'menu/items', element: <ItemsPage /> },
