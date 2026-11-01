@@ -12,11 +12,11 @@ import { RolesPage } from '../features/admin/roles/pages/RolesPage'
 import { UsersPage } from '../features/admin/users/pages/UsersPage'
 import { ProfilePage } from '../features/profile/pages/ProfilePage'
 import { Link, type RouteObject } from 'react-router-dom'
-import { AdminLayout } from '../layouts/admin/AdminLayout'
+import { StaffLayout } from '../layouts/staff/StaffLayout'
 
 export const adminRoute: RouteObject = {
   path: '/admin',
-  element: <AdminLayout />,
+  element: <StaffLayout role="admin" />,
   children: [
     { index: true, element: <DashboardPage /> },
     { path: 'profile', element: <ProfilePage /> },

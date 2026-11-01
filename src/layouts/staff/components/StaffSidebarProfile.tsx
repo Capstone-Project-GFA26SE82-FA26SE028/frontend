@@ -1,14 +1,16 @@
 import { useAppSelector } from '../../../app/hooks'
-export function AdminSidebarProfile({
+export function StaffSidebarProfile({
   collapsed = false,
+  roleLabel,
 }: {
   collapsed?: boolean
+  roleLabel: string
 }) {
   const user = useAppSelector((state) => state.auth.session?.user)
   const displayName = user?.fullName || user?.userName || 'Tài khoản'
   return (
     <div
-      aria-label="Thông tin quản trị viên"
+      aria-label="Thông tin tài khoản"
       className={`flex min-h-[92px] shrink-0 items-center gap-3 border-t border-white/10 ${collapsed ? 'justify-center px-2' : 'px-5'}`}
     >
       <span className="relative flex size-11 shrink-0 items-center justify-center rounded-full bg-emerald-400/15 text-lg font-semibold text-emerald-100 ring-1 ring-inset ring-emerald-300/20">
@@ -26,9 +28,7 @@ export function AdminSidebarProfile({
             <p className="truncate text-base font-semibold text-white">
               {displayName}
             </p>
-            <p className="mt-0.5 text-sm text-emerald-100/65">
-              Quản trị viên nhà hàng
-            </p>
+            <p className="mt-0.5 text-sm text-emerald-100/65">{roleLabel}</p>
           </div>
           <span
             aria-hidden="true"
