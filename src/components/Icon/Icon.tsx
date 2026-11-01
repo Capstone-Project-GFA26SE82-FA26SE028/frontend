@@ -1,4 +1,5 @@
 const paths: Record<string, string> = {
+  briefcase: 'M9 7V4h6v3M3 7h18v14H3V7Zm0 5a20 20 0 0 0 18 0M10 13v3h4v-3',
   refresh: 'M20 15a8 8 0 1 1-2.3-8.7L20.5 9',
   qr: 'M3 3h6v6H3V3Zm12 0h6v6h-6V3ZM3 15h6v6H3v-6Zm12 0h3v3h3v3h-6v-6ZM3 12h6m3-9v6m0 3h3m3 0h3M12 15v6',
   trash: 'M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7',

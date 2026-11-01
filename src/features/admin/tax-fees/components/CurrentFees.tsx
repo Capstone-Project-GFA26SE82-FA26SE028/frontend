@@ -4,9 +4,9 @@ import { dateTime } from '../../utils'
 import type { FeeVersion } from '../types/types'
 export function CurrentFees({ current }: { current?: FeeVersion }) {
   return (
-    <Panel className="mb-4 overflow-hidden">
+    <Panel className="mb-4 overflow-hidden bg-gradient-to-r from-emerald-100 to-emerald-50">
       <div className="flex flex-wrap items-center justify-between gap-2 px-5 pt-4">
-        <h2 className="text-sm font-semibold text-slate-700">
+        <h2 className="text-sm font-semibold text-emerald-800">
           Mức đang áp dụng
         </h2>
         <Badge tone={current ? 'green' : 'slate'}>
@@ -22,7 +22,7 @@ export function CurrentFees({ current }: { current?: FeeVersion }) {
         </div>
         <div>
           <dt className="text-sm text-slate-500">Phí dịch vụ</dt>
-          <dd className="mt-1 text-2xl font-semibold tracking-tight text-slate-900">
+          <dd className="mt-1 text-2xl font-semibold tracking-tight text-emerald-800">
             {current
               ? current.serviceEnabled
                 ? current.service + '%'

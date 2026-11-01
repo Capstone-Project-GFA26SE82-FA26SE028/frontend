@@ -6,6 +6,7 @@ import { TaxFeesPage } from '../features/admin/tax-fees/pages/TaxFeesPage'
 import { TablesPage } from '../features/admin/tables/pages/TablesPage'
 import { AreasPage } from '../features/admin/areas/pages/AreasPage'
 import { RestaurantsPage } from '../features/admin/restaurants/pages/RestaurantsPage'
+import { RestaurantStaffPage } from '../features/admin/restaurant-staff/pages/RestaurantStaffPage'
 import { SessionsPage } from '../features/admin/sessions/pages/SessionsPage'
 import { RolesPage } from '../features/admin/roles/pages/RolesPage'
 import { UsersPage } from '../features/admin/users/pages/UsersPage'
@@ -21,6 +22,7 @@ export const adminRoute: RouteObject = {
     { path: 'roles', element: <RolesPage /> },
     { path: 'sessions', element: <SessionsPage /> },
     { path: 'restaurants', element: <RestaurantsPage /> },
+    { path: 'restaurant-staff', element: <RestaurantStaffPage /> },
     { path: 'areas', element: <AreasPage /> },
     { path: 'tables', element: <TablesPage /> },
     { path: 'tax-fees', element: <TaxFeesPage /> },

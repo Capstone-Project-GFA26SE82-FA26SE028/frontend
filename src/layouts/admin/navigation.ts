@@ -28,6 +28,7 @@ export const adminNavigation: {
         label: 'Nhà hàng',
         icon: 'store',
       },
+      { id: 'restaurant-staff', label: 'Phân công nhân viên', icon: 'briefcase' },
       { id: 'areas', label: 'Khu vực nhà hàng', icon: 'grid' },
       {
         id: 'tables',
