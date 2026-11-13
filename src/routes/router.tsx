@@ -9,6 +9,7 @@ import { OrderTrackingPage } from '../features/customer/order-tracking/pages/Ord
 import { CheckoutPage } from '../features/customer/checkout/pages/CheckoutPage'
 import { CartPage } from '../features/customer/cart/pages/CartPage'
 import { MenuPage } from '../features/customer/menu/pages/MenuPage'
+import { LoyaltyPage } from '../features/customer/loyalty/pages/LoyaltyPage'
 import { CustomerSessionGate } from '../features/customer/table-session/components/CustomerSessionGate'
 import { adminRoute } from './adminRoutes'
 import { managerRoute } from './managerRoutes'
@@ -46,6 +47,7 @@ export const router = createBrowserRouter([
           { path: 'cart', element: <CartPage /> },
           { path: 'checkout', element: <CheckoutPage /> },
           { path: 'orders', element: <OrderTrackingPage /> },
+          { path: 'loyalty', element: <LoyaltyPage /> },
           { path: 'payment', element: <PaymentPage /> },
           { path: 'bill', element: <BillingFeedbackPage /> },
           { path: 'bill/:invoiceId', element: <BillingFeedbackPage /> },
