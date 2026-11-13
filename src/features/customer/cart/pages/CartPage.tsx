@@ -1,7 +1,7 @@
 import { CartEditModal } from '../components/CartEditModal'
 import type { CartEditTarget } from '../types/types'
 import { toast } from 'react-toastify'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon } from '../../../../components/Icon/Icon'
 import { Modal } from '../../../../components/Modal/Modal'
@@ -10,8 +10,11 @@ import { CartSummary } from '../components/CartSummary'
 import { CartStatus } from '../components/CartStatus'
 import { useCustomerCart } from '../hooks/useCustomerCart'
 import { quotedItem, canReviewCart } from '../cartHelpers'
+import { CartRecommendations } from '../../recommendations/components/CartRecommendations'
 export function CartPage() {
   const m = useCustomerCart()
+  // Keep the automatic request limited to once per visit, even as cart versions change.
+  const autoRequested = useRef(false)
   const [confirmClear, setConfirmClear] = useState(false)
   const [editing, setEditing] = useState<CartEditTarget | null>(null)
   const cart = m.cart.data
@@ -57,52 +60,67 @@ export function CartPage() {
               </p>
             )}
             <div className="mt-4 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-              <div className="panel px-5 sm:px-7">
-                {cart.items.map((line, index) => (
-                  <CartItem
-                    key={cart.version + ':' + index}
-                    line={line}
-                    quote={quotedItem(cart, line)}
-                    errors={
-                      cart.quote?.errors
-                        .filter((e) => e.lineIndex === index)
-                        .map((e) => e.message) || []
-                    }
-                    onEdit={() =>
-                      setEditing({
-                        index,
-                        line: {
-                          ...line,
-                          options: line.options.map((o) => ({ ...o })),
-                        },
-                        version: cart.version,
-                      })
-                    }
-                    disabled={disabled}
-                    onQuantity={(quantity) => {
-                      void m
-                        .save({
-                          kind: 'quantity',
+              <div className="min-w-0 space-y-4">
+                <div className="panel px-5 sm:px-7">
+                  {cart.items.map((line, index) => (
+                    <CartItem
+                      key={cart.version + ':' + index}
+                      line={line}
+                      quote={quotedItem(cart, line)}
+                      errors={
+                        cart.quote?.errors
+                          .filter((e) => e.lineIndex === index)
+                          .map((e) => e.message) || []
+                      }
+                      onEdit={() =>
+                        setEditing({
                           index,
-                          quantity,
+                          line: {
+                            ...line,
+                            options: line.options.map((o) => ({ ...o })),
+                          },
                           version: cart.version,
                         })
-                        .catch(() => {})
-                    }}
-                    onRemove={() => {
-                      void m
-                        .save({ kind: 'remove', index, version: cart.version })
-                        .catch(() => {})
-                    }}
-                  />
-                ))}
-                <Link
-                  to="/menu"
-                  className="my-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-brand"
-                >
-                  <Icon name="plus" size={18} />
-                  Chọn thêm món
-                </Link>
+                      }
+                      disabled={disabled}
+                      onQuantity={(quantity) => {
+                        void m
+                          .save({
+                            kind: 'quantity',
+                            index,
+                            quantity,
+                            version: cart.version,
+                          })
+                          .catch(() => {})
+                      }}
+                      onRemove={() => {
+                        void m
+                          .save({
+                            kind: 'remove',
+                            index,
+                            version: cart.version,
+                          })
+                          .catch(() => {})
+                      }}
+                    />
+                  ))}
+                  <Link
+                    to="/menu"
+                    className="my-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-brand"
+                  >
+                    <Icon name="plus" size={18} />
+                    Chọn thêm món
+                  </Link>
+                </div>
+                <CartRecommendations
+                  autoRequested={autoRequested}
+                  key={`${cart.tableSessionId}:${cart.cartId}:${cart.version}`}
+                  sessionId={cart.tableSessionId}
+                  cartId={cart.cartId}
+                  version={cart.version}
+                  disabled={disabled || !cart.quote?.isValid}
+                  onReload={m.reload}
+                />
               </div>
               <CartSummary
                 total={cart.quote?.isValid ? cart.quote.totalAmount : null}

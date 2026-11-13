@@ -14,7 +14,7 @@ export function useChat(sessionId: string) {
 
   async function send(value = draft) {
     const message = value.trim()
-    if (!message || message.length > 1000 || request.current) return
+    if (!message || message.length > 500 || request.current) return
     const controller = new AbortController()
     request.current = controller
     setPending(true)
@@ -32,8 +32,8 @@ export function useChat(sessionId: string) {
       history.current = [
         ...history.current,
         { role: 'user' as const, content: message },
-        { role: 'assistant' as const, content: answer.answer.slice(0, 1000) },
-      ].slice(-6)
+        { role: 'assistant' as const, content: answer.answer.slice(0, 500) },
+      ].slice(-4)
       setMessages((current) => [
         ...current,
         {

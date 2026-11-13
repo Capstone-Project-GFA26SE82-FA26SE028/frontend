@@ -146,7 +146,7 @@ export function CustomerChat({ sessionId }: { sessionId: string }) {
                   placeholder="Hỏi về món ăn…"
                   value={chat.draft}
                   onChange={(event) => chat.setDraft(event.target.value)}
-                  maxLength={1000}
+                  maxLength={500}
                   rows={2}
                   disabled={chat.pending}
                   className="min-w-0 flex-1 resize-none bg-transparent p-2 text-sm outline-none"

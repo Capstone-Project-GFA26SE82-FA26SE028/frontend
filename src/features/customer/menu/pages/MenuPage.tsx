@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 import { Icon } from '../../../../components/Icon/Icon'
 import { MenuBanner } from '../components/MenuBanner'
 import { MenuFilters } from '../components/MenuFilters'
@@ -9,7 +10,6 @@ import { menuError } from '../api/menuApi'
 export function MenuPage() {
   const m = useMenu()
   const [selected, setSelected] = useState<string | null>(null)
-  const [notice, setNotice] = useState('')
   return (
     <>
       <MenuBanner />
@@ -92,24 +92,8 @@ export function MenuPage() {
           sessionId={m.sessionId}
           itemId={selected}
           onClose={() => setSelected(null)}
-          onAdded={() => setNotice('Đã thêm vào giỏ hàng.')}
+          onAdded={() => toast.success('Đã thêm vào giỏ hàng.')}
         />
-      )}
-      {notice && (
-        <div
-          role="status"
-          className="fixed right-4 bottom-24 left-4 z-30 mx-auto flex max-w-md items-center gap-3 rounded-2xl bg-brand-dark p-4 text-sm text-white shadow-xl md:bottom-6"
-        >
-          <Icon name="check" />
-          <span>{notice}</span>
-          <button
-            aria-label="Đóng thông báo"
-            onClick={() => setNotice('')}
-            className="ml-auto flex size-11 shrink-0 items-center justify-center"
-          >
-            <Icon name="close" size={16} />
-          </button>
-        </div>
       )}
     </>
   )
