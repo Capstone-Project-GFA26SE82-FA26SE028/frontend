@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { RestaurantResponse } from '../types/types'
+import type { OnlineRestaurant, RestaurantResponse } from '../types/types'
 
 // Public browsing must not inherit the staff token or selected restaurant header.
 const client = axios.create({
@@ -19,6 +19,20 @@ export async function getOnlineRestaurants(
   if (!data.isSuccess)
     throw new Error(data.message || 'Không thể tải danh sách nhà hàng.')
   return data.result
+}
+
+export async function getAllOnlineRestaurants(signal: AbortSignal) {
+  const items: OnlineRestaurant[] = []
+  for (let page = 1; ; page++) {
+    const result = await getOnlineRestaurants(page, 100, signal)
+    items.push(...result.items)
+    if (
+      !result.items.length ||
+      result.page * result.pageSize >= result.totalCount
+    )
+      break
+  }
+  return { items, totalCount: items.length, page: 1, pageSize: items.length }
 }
 
 export function restaurantError(error: unknown) {

@@ -35,6 +35,25 @@ export function RestaurantList() {
           </span>
         )}
       </div>
+      <div className="relative mb-6 max-w-md">
+        <Icon
+          name="search"
+          size={19}
+          className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
+        />
+        <input
+          type="search"
+          aria-label="Tìm nhà hàng"
+          placeholder="Tìm tên nhà hàng hoặc địa chỉ…"
+          value={m.search}
+          maxLength={200}
+          onChange={(event) => {
+            setSelected(null)
+            m.changeSearch(event.target.value)
+          }}
+          className="min-h-12 w-full rounded-2xl border border-stone-200 bg-white py-3 pr-4 pl-11 text-sm outline-none transition-shadow placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+        />
+      </div>
       {m.restaurants.isPending ? (
         <div role="status" aria-label="Đang tải nhà hàng">
           <p className="mb-4 text-sm text-muted">Đang tải nhà hàng…</p>
@@ -74,7 +93,20 @@ export function RestaurantList() {
       ) : !data?.items.length ? (
         <div className="rounded-3xl border border-dashed border-emerald-200 bg-mint/30 px-5 py-12 text-center">
           <Icon name="store" size={32} className="mx-auto text-brand" />
-          <p className="mt-4 font-semibold">Chưa có nhà hàng</p>
+          <p className="mt-4 font-semibold">
+            {m.search.trim()
+              ? 'Không tìm thấy nhà hàng phù hợp'
+              : 'Chưa có nhà hàng'}
+          </p>
+          {m.search.trim() && (
+            <button
+              type="button"
+              onClick={() => m.changeSearch('')}
+              className="mt-3 text-sm font-semibold text-brand hover:underline"
+            >
+              Xóa tìm kiếm
+            </button>
+          )}
         </div>
       ) : (
         <>
