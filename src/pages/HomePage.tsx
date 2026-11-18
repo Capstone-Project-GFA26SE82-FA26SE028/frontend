@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Icon } from '../components/Icon/Icon'
+import { HomeHeader } from '../components/HomeHeader/HomeHeader'
 
 export function HomePage() {
   return (
@@ -7,22 +8,7 @@ export function HomePage() {
       lang="vi"
       className="flex min-h-dvh flex-col bg-[#faf9f6] text-[#173e32]"
     >
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8 sm:py-7">
-        <Link
-          to="/"
-          aria-label="FoodHub - Trang chủ"
-          className="text-2xl font-bold tracking-tight"
-        >
-          FoodHub<span className="text-emerald-500">.</span>
-        </Link>
-        <Link
-          to="/login"
-          className="flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2.5 text-xs font-semibold transition-colors hover:border-emerald-300 hover:bg-emerald-50 sm:text-sm"
-        >
-          <Icon name="users" size={16} />
-          Đăng nhập nhân viên
-        </Link>
-      </header>
+      <HomeHeader />
 
       <main className="mx-auto flex w-full max-w-6xl flex-1 items-center px-6 py-8 sm:px-8 lg:py-12">
         <section className="grid w-full items-center gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-16">
