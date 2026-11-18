@@ -12,7 +12,6 @@ export function BrandLogo({ compact = false }: { compact?: boolean }) {
         alt="DineLink"
         width={2172}
         height={724}
-        style={{ filter: 'brightness(0) invert(1)' }}
         className={
           compact
             ? 'absolute top-[-9px] left-[-12px] h-[58px] w-[174px] max-w-none'
