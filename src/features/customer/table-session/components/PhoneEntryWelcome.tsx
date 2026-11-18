@@ -1,3 +1,5 @@
+import { BrandLogo } from '../../../../components/BrandLogo/BrandLogo'
+
 export function PhoneEntryWelcome() {
   return (
     <header className="relative isolate flex h-56 shrink-0 flex-col overflow-hidden md:h-auto bg-[#123d30] px-6 pb-6 pt-[max(1.5rem,env(safe-area-inset-top))] text-white sm:px-8 md:min-h-[580px] md:p-10">
@@ -6,7 +8,7 @@ export function PhoneEntryWelcome() {
         className="pointer-events-none absolute -right-24 top-16 -z-10 size-96 rounded-full bg-emerald-300/10 blur-3xl"
       />
       <div className="relative z-10 w-fit text-2xl font-bold tracking-tight drop-shadow-sm">
-        FoodHub<span className="text-[#b8df8d]">.</span>
+        <BrandLogo />
       </div>
       <div className="absolute inset-x-0 bottom-2 top-14 flex items-center justify-center md:hidden">
         <img

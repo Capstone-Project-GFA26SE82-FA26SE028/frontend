@@ -4,7 +4,7 @@ export function CustomerFooter() {
       <div className="mx-auto flex max-w-[1440px] flex-col items-center gap-1.5 px-5 pt-5 text-center text-xs text-muted sm:flex-row sm:justify-between sm:px-8 lg:px-12">
         <p>
           &copy; {new Date().getFullYear()}{' '}
-          <span className="font-semibold text-brand">FoodHub.</span> Bảo lưu mọi
+          <span className="font-semibold text-brand">DineLink.</span> Bảo lưu mọi
           quyền.
         </p>
         <p>

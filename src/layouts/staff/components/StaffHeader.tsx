@@ -60,7 +60,7 @@ export function StaffHeader({
               to={homePath}
               className="text-slate-400 hover:text-emerald-700"
             >
-              FoodHub
+              DineLink
             </Link>
             <Icon name="chevron" size={12} className="text-slate-400" />
             <span aria-current="page" className="font-medium text-emerald-700">

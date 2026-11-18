@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Icon } from '../../../components/Icon/Icon'
+import { BrandLogo } from '../../../components/BrandLogo/BrandLogo'
 import { StaffNavLink } from './StaffNavLink'
 import { StaffSidebarProfile } from './StaffSidebarProfile'
 import type { StaffNavigationGroup } from '../types/types'
@@ -22,17 +22,13 @@ export function StaffSidebar({
       <Link
         to={homePath}
         onClick={onNavigate}
-        aria-label="FoodHub - Tổng quan"
+        aria-label="DineLink - Tổng quan"
         className={`flex min-h-[76px] shrink-0 items-center gap-3 ${collapsed ? 'justify-center' : 'px-6'}`}
       >
-        <span className="relative flex size-10 shrink-0 rotate-[-15deg] items-center justify-center rounded-[40%] border-2 border-lime-300/60 bg-linear-to-br from-lime-400 to-emerald-600 text-[#004c32] shadow-[3px_2px_0_#7ddc5740]">
-          <Icon name="leaf" size={29} />
-        </span>
+        {collapsed && <BrandLogo compact />}
         {!collapsed && (
           <div>
-            <span className="text-[23px] font-bold leading-7 tracking-tight">
-              FoodHub
-            </span>
+            <BrandLogo />
             <p className="text-xs text-white/85">Nền tảng quản lý nhà hàng</p>
           </div>
         )}

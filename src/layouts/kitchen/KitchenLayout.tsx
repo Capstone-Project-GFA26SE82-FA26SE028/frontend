@@ -20,7 +20,7 @@ function KitchenWorkspace() {
     useKds()
   useEffect(() => {
     const old = document.title
-    document.title = 'FoodHub · Kitchen display'
+    document.title = 'DineLink · Kitchen display'
     return () => {
       document.title = old
     }
