@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Icon } from '../../../components/Icon/Icon'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -7,7 +8,7 @@ import { useLogin } from '../hooks/useLogin'
 import { authErrorMessage } from '../api/authApi'
 import type { LoginInput } from '../types/types'
 
-export function LoginForm() {
+export function LoginForm({ initialEmail = '' }: { initialEmail?: string }) {
   const [visible, setVisible] = useState(false)
   const mutation = useLogin()
   const {
@@ -16,7 +17,7 @@ export function LoginForm() {
     formState: { errors, isSubmitting },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: initialEmail, password: '' },
   })
   return (
     <form
@@ -103,9 +104,17 @@ export function LoginForm() {
       >
         {isSubmitting ? 'Đang đăng nhập…' : 'Đăng nhập'}
       </button>
-      <p className="text-center text-xs leading-5 text-muted">
-        Sử dụng tài khoản do nhà hàng cung cấp. Liên hệ quản trị viên nếu bạn
-        cần hỗ trợ.
+      <p className="text-center text-sm text-muted">
+        Chưa có tài khoản?{' '}
+        <Link
+          to="/register"
+          className="font-semibold text-brand hover:underline"
+        >
+          Đăng ký
+        </Link>
+      </p>
+      <p className="text-center text-xs text-muted">
+        Nhân viên dùng tài khoản do nhà hàng cấp.
       </p>
     </form>
   )

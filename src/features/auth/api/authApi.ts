@@ -14,6 +14,7 @@ import type {
   AuthSession,
   AuthUser,
   LoginInput,
+  RegisterInput,
 } from '../types/types'
 
 // Separate Axios instance prevents login/refresh from triggering a refresh loop.
@@ -28,6 +29,27 @@ function parseResult<T>(response: AuthResponse<T>): T {
   if (!response.isSuccess)
     throw new Error('Không thể hoàn tất yêu cầu. Vui lòng thử lại.')
   return response.result
+}
+export async function registerCustomer(input: RegisterInput) {
+  const { data } = await authClient.post<AuthResponse<null>>('/auth/register', {
+    fullName: input.fullName,
+    email: input.email,
+    phoneNumber: input.phoneNumber,
+    password: input.password,
+  })
+  if (!data.isSuccess)
+    throw new Error(data.message || 'Không thể đăng ký tài khoản.')
+  return data.message || 'Đăng ký thành công. Vui lòng đăng nhập.'
+}
+
+export function registerErrorMessage(error: unknown) {
+  if (axios.isAxiosError(error)) {
+    if (!error.response) return 'Không kết nối được máy chủ. Vui lòng thử lại.'
+    const message = error.response.data?.message
+    if (typeof message === 'string' && message.trim()) return message
+    return 'Không thể đăng ký tài khoản. Vui lòng thử lại.'
+  }
+  return error instanceof Error ? error.message : 'Không thể đăng ký tài khoản.'
 }
 export function authErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
@@ -51,6 +73,15 @@ function saveSession(session: AuthSession) {
     throw new Error(
       'Tài khoản đã bị vô hiệu hóa. Vui lòng liên hệ quản trị viên.',
     )
+  const previous = store.getState().auth.session
+  if (
+    previous &&
+    (previous.user.userId !== session.user.userId ||
+      previous.user.restaurantId !== session.user.restaurantId)
+  ) {
+    revision += 1
+    queryClient.clear()
+  }
   try {
     sessionStorage.setItem(authStorageKey, JSON.stringify(session))
   } catch {
@@ -71,7 +102,19 @@ export function clearSession() {
 
 export function updateSessionUser(user: AuthUser) {
   const session = store.getState().auth.session
-  if (session?.user.userId === user.userId) saveSession({ ...session, user })
+  if (session?.user.userId === user.userId)
+    saveSession({ ...session, user: { ...session.user, ...user } })
+}
+
+// Login/refresh currently omit restaurant assignment; /users/me is authoritative.
+async function loadSessionUser(session: AuthSession): Promise<AuthSession> {
+  const { data } = await authClient.get<AuthResponse<AuthUser>>('/users/me', {
+    headers: { Authorization: 'Bearer ' + session.accessToken },
+  })
+  const user = parseResult(data)
+  if (user.userId !== session.user.userId)
+    throw new Error('Thông tin tài khoản không khớp. Vui lòng đăng nhập lại.')
+  return { ...session, user }
 }
 export async function login(input: LoginInput) {
   clearSession()
@@ -80,7 +123,7 @@ export async function login(input: LoginInput) {
     '/auth/login',
     input,
   )
-  const session = parseResult(data)
+  const session = await loadSessionUser(parseResult(data))
   if (currentRevision !== revision)
     throw new Error(
       'Yêu cầu đăng nhập này không còn hiệu lực. Vui lòng thử lại.',
@@ -109,8 +152,21 @@ export function refreshSession(): Promise<AuthSession> {
       const next = parseResult(data)
       if (revision !== currentRevision)
         throw new Error('Phiên đăng nhập đã thay đổi. Vui lòng đăng nhập lại.')
-      saveSession(next)
-      return next
+      let hydrated: AuthSession
+      try {
+        hydrated = await loadSessionUser(next)
+      } catch (error) {
+        // Keep rotated credentials so a network failure can be recovered via get-me.
+        if (revision === currentRevision) {
+          saveSession({ ...next, user: session.user })
+          store.dispatch(sessionCheckFailed(authErrorMessage(error)))
+        }
+        throw error
+      }
+      if (revision !== currentRevision)
+        throw new Error('Phiên đăng nhập đã thay đổi. Vui lòng đăng nhập lại.')
+      saveSession(hydrated)
+      return hydrated
     } catch (error) {
       if (
         revision === currentRevision &&
@@ -137,10 +193,19 @@ axiosClient.interceptors.request.use((config: AuthRequest) => {
   if (session)
     config.headers.set('Authorization', 'Bearer ' + session.accessToken)
   else config.headers.delete('Authorization')
+  if (session?.user.restaurantId)
+    config.headers.set('X-Restaurant-Id', session.user.restaurantId)
+  else config.headers.delete('X-Restaurant-Id')
   return config
 })
 axiosClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if ((response.config as AuthRequest).authRevision !== revision)
+      throw new axios.CanceledError(
+        'Phiên đăng nhập hoặc nhà hàng đã thay đổi.',
+      )
+    return response
+  },
   async (error: unknown) => {
     if (!axios.isAxiosError(error)) throw error
     const config = error.config as AuthRequest | undefined

@@ -5,6 +5,8 @@ export type AuthUser = {
   email: string
   fullName?: string | null
   isActive: boolean
+  restaurantId?: string | null
+  provisioningPending?: boolean
 }
 export type AuthSession = {
   user: AuthUser
@@ -20,3 +22,10 @@ export type AuthResponse<T> = {
   result: T
 }
 export type LoginInput = { email: string; password: string }
+export type RegisterInput = {
+  fullName: string
+  email: string
+  phoneNumber: string
+  password: string
+}
+export type RegisterFormValues = RegisterInput & { confirmPassword: string }

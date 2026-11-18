@@ -1,5 +1,6 @@
 import { kitchenRoute } from './kitchenRoutes'
 import { LoginPage } from '../features/auth/pages/LoginPage'
+import { RegisterPage } from '../features/auth/pages/RegisterPage'
 import { ProtectedRoute } from './ProtectedRoute'
 import { RoleRoute } from './RoleRoute'
 import { BillingFeedbackPage } from '../features/customer/billing-feedback/pages/BillingFeedbackPage'
@@ -21,6 +22,7 @@ import { EmptyState } from '../components/EmptyState/EmptyState'
 
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
+  { path: '/register', element: <RegisterPage /> },
   {
     element: <ProtectedRoute />,
     children: [

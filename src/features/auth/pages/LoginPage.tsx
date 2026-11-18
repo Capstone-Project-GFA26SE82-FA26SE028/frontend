@@ -12,7 +12,19 @@ export function LoginPage() {
   useEffect(() => {
     if (status === 'checking') void restoreSession()
   }, [status])
-  const state = location.state as { from?: string; warning?: string } | null
+  const state = location.state as {
+    from?: string
+    warning?: string
+    email?: string
+  } | null
+  if (session?.user.roleId === 'customer' && status === 'authenticated') {
+    return (
+      <Navigate
+        to={state?.from === '/reservation' ? '/reservation' : '/'}
+        replace
+      />
+    )
+  }
   if (session?.user.roleId === 'kitchen' && status === 'authenticated') {
     return <Navigate to="/kitchen" replace />
   }
@@ -85,7 +97,7 @@ export function LoginPage() {
               </button>
             </div>
           ) : (
-            <LoginForm />
+            <LoginForm initialEmail={state?.email} />
           )}
         </section>
       </div>
