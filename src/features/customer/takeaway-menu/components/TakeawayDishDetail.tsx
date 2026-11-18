@@ -1,6 +1,7 @@
 import { Modal } from '../../../../components/Modal/Modal'
-import { DishImage } from '../../menu/components/DishImage'
+import { Icon } from '../../../../components/Icon/Icon'
 import type { TakeawayDish } from '../types/types'
+import { useState } from 'react'
 
 export function TakeawayDishDetail({
   dish,
@@ -9,14 +10,26 @@ export function TakeawayDishDetail({
   dish: TakeawayDish
   onClose: () => void
 }) {
+  const [failedUrl, setFailedUrl] = useState<string | null>(null)
   return (
     <Modal title={dish.itemName} onClose={onClose}>
       <div className="space-y-5 p-6">
-        <DishImage
-          src={dish.imageUrl}
-          name={dish.itemName}
-          className="aspect-[4/3] rounded-2xl"
-        />
+        <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl bg-mint">
+          {dish.imageUrl &&
+          /^https?:\/\//i.test(dish.imageUrl) &&
+          failedUrl !== dish.imageUrl ? (
+            <img
+              src={dish.imageUrl}
+              alt={dish.itemName}
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              onError={() => setFailedUrl(dish.imageUrl)}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <Icon name="utensils" size={40} className="text-brand/35" />
+          )}
+        </div>
         <div className="flex items-center justify-between gap-3">
           <span className="text-sm text-muted">{dish.categoryName}</span>
           <p className="text-xl font-bold text-brand">
@@ -44,10 +57,6 @@ export function TakeawayDishDetail({
             className="rounded-2xl border border-stone-200 p-4"
           >
             <h3 className="font-semibold">{group.optionGroupName}</h3>
-            <p className="mt-1 text-xs text-muted">
-              {group.minSelection > 0 ? 'Bắt buộc' : 'Không bắt buộc'} · Chọn{' '}
-              {group.minSelection}–{group.maxSelection}
-            </p>
             <ul className="mt-3 divide-y divide-stone-100">
               {group.options.map((option) => (
                 <li

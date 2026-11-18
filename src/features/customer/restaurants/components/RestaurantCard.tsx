@@ -5,10 +5,8 @@ import type { OnlineRestaurant } from '../types/types'
 
 export function RestaurantCard({
   restaurant,
-  onView,
 }: {
   restaurant: OnlineRestaurant
-  onView: () => void
 }) {
   const [failedUrl, setFailedUrl] = useState<string | null>(null)
   const showLogo =
@@ -17,10 +15,9 @@ export function RestaurantCard({
     restaurant.logoUrl !== failedUrl
   return (
     <article className="group flex min-w-0 flex-col overflow-hidden rounded-3xl border border-stone-200/70 bg-white shadow-sm shadow-stone-900/[0.02] transition-shadow hover:shadow-xl hover:shadow-emerald-950/10">
-      <button
-        type="button"
-        onClick={onView}
-        aria-label={'Xem nhà hàng ' + restaurant.restaurantName}
+      <Link
+        to={'/restaurants/' + restaurant.restaurantId + '/menu'}
+        aria-label={'Mở thực đơn ' + restaurant.restaurantName}
         className="relative flex h-48 w-full items-center justify-center overflow-hidden border-b border-emerald-900/5 bg-gradient-to-br from-[#e4efdf] via-[#f5f8f1] to-emerald-100/70 focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-brand"
       >
         <span
@@ -44,7 +41,7 @@ export function RestaurantCard({
             <Icon name="store" size={36} />
           </span>
         )}
-      </button>
+      </Link>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <h3 className="break-words text-lg font-bold tracking-tight">
           {restaurant.restaurantName}

@@ -1,18 +1,14 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { Icon } from '../../../../components/Icon/Icon'
-import { Modal } from '../../../../components/Modal/Modal'
 import { Pagination } from '../../../../components/Pagination/Pagination'
 import { restaurantError } from '../api/restaurantApi'
 import { useOnlineRestaurants } from '../hooks/useOnlineRestaurants'
-import type { OnlineRestaurant } from '../types/types'
 import { RestaurantCard } from './RestaurantCard'
 
 export function RestaurantList() {
   const m = useOnlineRestaurants()
   const section = useRef<HTMLElement>(null)
-  const [selected, setSelected] = useState<OnlineRestaurant | null>(null)
   const data = m.restaurants.data
-  const phone = selected?.hotline.replace(/[^\d+]/g, '') || ''
   return (
     <section
       ref={section}
@@ -48,7 +44,6 @@ export function RestaurantList() {
           value={m.search}
           maxLength={200}
           onChange={(event) => {
-            setSelected(null)
             m.changeSearch(event.target.value)
           }}
           className="min-h-12 w-full rounded-2xl border border-stone-200 bg-white py-3 pr-4 pl-11 text-sm outline-none transition-shadow placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
@@ -115,7 +110,6 @@ export function RestaurantList() {
               <RestaurantCard
                 key={restaurant.restaurantId}
                 restaurant={restaurant}
-                onView={() => setSelected(restaurant)}
               />
             ))}
           </div>
@@ -126,7 +120,6 @@ export function RestaurantList() {
                 page={m.page}
                 size={m.pageSize}
                 onPage={(page) => {
-                  setSelected(null)
                   m.setPage(page)
                   section.current?.scrollIntoView({
                     behavior: window.matchMedia(
@@ -141,51 +134,6 @@ export function RestaurantList() {
             </div>
           )}
         </>
-      )}
-      {selected && (
-        <Modal
-          title={selected.restaurantName}
-          onClose={() => setSelected(null)}
-        >
-          <div className="space-y-5 p-6">
-            <dl className="space-y-4 text-sm">
-              <div>
-                <dt className="mb-1.5 flex items-center gap-2 text-xs text-muted">
-                  <Icon name="pin" size={15} />
-                  Địa chỉ
-                </dt>
-                <dd className="break-words font-medium">
-                  {selected.address || 'Chưa cập nhật'}
-                </dd>
-              </div>
-              <div>
-                <dt className="mb-1.5 flex items-center gap-2 text-xs text-muted">
-                  <Icon name="phone" size={15} />
-                  Hotline
-                </dt>
-                <dd>
-                  {phone ? (
-                    <a
-                      href={'tel:' + phone}
-                      className="font-semibold text-brand hover:underline"
-                    >
-                      {selected.hotline}
-                    </a>
-                  ) : (
-                    'Chưa cập nhật'
-                  )}
-                </dd>
-              </div>
-            </dl>
-            <button
-              type="button"
-              onClick={() => setSelected(null)}
-              className="btn-secondary w-full"
-            >
-              Đóng
-            </button>
-          </div>
-        </Modal>
       )}
     </section>
   )
