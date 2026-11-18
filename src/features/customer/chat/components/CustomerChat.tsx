@@ -21,14 +21,14 @@ export function CustomerChat({ sessionId }: { sessionId: string }) {
         type="button"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
-        aria-label="Trợ lý FoodHub"
-        title="Trợ lý FoodHub"
+        aria-label="Trợ lý DineLink"
+        title="Trợ lý DineLink"
         className="fixed bottom-24 right-4 z-30 flex size-12 items-center justify-center rounded-2xl border border-white/20 bg-brand-dark text-white shadow-lg transition-colors hover:bg-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-700 md:bottom-6"
       >
         <Icon name="message" size={22} />
       </button>
       {open && (
-        <Modal title="Trợ lý FoodHub" onClose={() => setOpen(false)}>
+        <Modal title="Trợ lý DineLink" onClose={() => setOpen(false)}>
           <div className="flex flex-col">
             <div
               className="h-[min(48dvh,420px)] space-y-4 overflow-y-auto bg-stone-50/70 p-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"

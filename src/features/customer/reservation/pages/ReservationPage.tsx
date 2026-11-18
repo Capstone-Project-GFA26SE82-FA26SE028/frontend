@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon } from '../../../../components/Icon/Icon'
+import { BrandLogo } from '../../../../components/BrandLogo/BrandLogo'
 import { ReservationBanner } from '../components/ReservationBanner'
 import { ReservationForm } from '../components/ReservationForm'
 import { ReservationSuccess } from '../components/ReservationSuccess'
@@ -15,7 +16,7 @@ export function ReservationPage() {
           to="/"
           className="text-2xl font-bold tracking-tight text-brand-dark"
         >
-          FoodHub<span className="text-emerald-500">.</span>
+          <BrandLogo />
         </Link>
         <Link
           to="/"
@@ -38,7 +39,7 @@ export function ReservationPage() {
         </div>
       </main>
       <footer className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3 px-5 py-5 text-xs text-slate-500 sm:px-8">
-        <span>FoodHub</span>
+        <span>DineLink</span>
         <a
           href="mailto:foodhub@gmail.com"
           className="flex items-center gap-2 underline-offset-4 hover:text-emerald-800 hover:underline"

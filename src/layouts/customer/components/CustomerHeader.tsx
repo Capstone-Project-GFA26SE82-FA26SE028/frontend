@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Icon } from '../../../components/Icon/Icon'
+import { BrandLogo } from '../../../components/BrandLogo/BrandLogo'
 import { CustomerNotifications } from '../../../features/customer/notifications/components/CustomerNotifications'
 import { ServiceRequestButton } from '../../../features/customer/service-requests/components/ServiceRequestButton'
 import { navigation } from '../navigation'
@@ -16,20 +17,10 @@ export function CustomerHeader({ count }: { count: number }) {
         <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between gap-2 px-4 sm:gap-4 sm:px-8 lg:px-12">
           <Link
             to="/menu"
-            aria-label="Mộc – Thực đơn"
+            aria-label="DineLink – Thực đơn"
             className="flex items-center gap-2.5"
           >
-            <span className="flex size-10 items-center justify-center rounded-full bg-brand text-white max-[360px]:hidden">
-              <Icon name="leaf" size={25} />
-            </span>
-            <span className="text-3xl font-bold tracking-[-.08em] text-brand">
-              mộc<span className="text-[#8aa45a]">.</span>
-            </span>
-            <span className="ml-3 hidden border-l border-stone-300 pl-4 text-[10px] leading-4 font-semibold tracking-[.13em] text-muted lg:block">
-              BẾP TƯƠI LÀNH
-              <br />
-              VỊ AN NHIÊN
-            </span>
+            <BrandLogo />
           </Link>
           <nav
             aria-label="Điều hướng chính"

@@ -16,7 +16,7 @@ export function RegisterPage() {
         <section className="p-6 sm:p-10">
           <h1 className="text-2xl font-bold">Tạo tài khoản</h1>
           <p className="mt-2 text-sm text-muted">
-            Dành cho khách hàng FoodHub.
+            Dành cho khách hàng DineLink.
           </p>
           <RegisterForm />
         </section>

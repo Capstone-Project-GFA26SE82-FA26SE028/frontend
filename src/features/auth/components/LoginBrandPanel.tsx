@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Icon } from '../../../components/Icon/Icon'
+import { BrandLogo } from '../../../components/BrandLogo/BrandLogo'
 
 export function LoginBrandPanel() {
   return (
@@ -11,10 +12,10 @@ export function LoginBrandPanel() {
       <div className="flex items-center justify-between gap-3">
         <Link
           to="/"
-          aria-label="FoodHub - Trang chủ"
+          aria-label="DineLink - Trang chủ"
           className="w-fit text-2xl font-bold tracking-tight"
         >
-          FoodHub<span className="text-[#b8df8d]">.</span>
+          <BrandLogo />
         </Link>
         <Link
           to="/"

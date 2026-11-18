@@ -35,7 +35,7 @@ export function StaffLayout({ role }: { role: StaffRole }) {
   }, [hash])
   useEffect(() => {
     const before = document.title
-    document.title = `FoodHub · ${pageName}`
+    document.title = `DineLink · ${pageName}`
     return () => {
       document.title = before
     }

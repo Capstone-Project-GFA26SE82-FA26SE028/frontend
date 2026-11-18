@@ -16,6 +16,7 @@ import { adminRoute } from './adminRoutes'
 import { managerRoute } from './managerRoutes'
 import { createBrowserRouter } from 'react-router-dom'
 import { HomePage } from '../pages/HomePage'
+import { RestaurantsPage } from '../features/customer/restaurants/pages/RestaurantsPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 import { CustomerLayout } from '../layouts/customer/CustomerLayout'
 import { EmptyState } from '../components/EmptyState/EmptyState'
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
     ],
   },
   { path: '/', element: <HomePage /> },
+  { path: '/restaurants', element: <RestaurantsPage /> },
   {
     element: <CustomerSessionGate />,
     errorElement: (

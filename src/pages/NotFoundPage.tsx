@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
+import { BrandLogo } from '../components/BrandLogo/BrandLogo'
 
 export function NotFoundPage() {
   const navigate = useNavigate()
@@ -12,7 +13,7 @@ export function NotFoundPage() {
     <main className="flex min-h-dvh items-center justify-center bg-[#faf9f6] px-6 py-12">
       <div className="w-full max-w-md text-center">
         <Link to="/" className="text-2xl font-bold text-emerald-900">
-          FoodHub<span className="text-emerald-500">.</span>
+          <BrandLogo />
         </Link>
         <p className="mt-10 text-8xl font-bold tracking-tight text-emerald-700">
           404
