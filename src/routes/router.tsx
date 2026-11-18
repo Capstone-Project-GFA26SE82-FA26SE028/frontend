@@ -18,6 +18,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import { HomePage } from '../pages/HomePage'
 import { RestaurantsPage } from '../features/customer/restaurants/pages/RestaurantsPage'
 import { TakeawayMenuPage } from '../features/customer/takeaway-menu/pages/TakeawayMenuPage'
+import { TakeawayCartPage } from '../features/customer/takeaway-cart/pages/TakeawayCartPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 import { CustomerLayout } from '../layouts/customer/CustomerLayout'
 import { EmptyState } from '../components/EmptyState/EmptyState'
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
           {
             path: '/restaurants/:restaurantId/menu',
             element: <TakeawayMenuPage />,
+          },
+          {
+            path: '/restaurants/:restaurantId/cart',
+            element: <TakeawayCartPage />,
           },
         ],
       },

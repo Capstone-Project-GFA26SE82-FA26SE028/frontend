@@ -22,7 +22,7 @@ export function LoginPage() {
   if (session?.user.roleId === 'customer' && status === 'authenticated') {
     if (
       state?.from &&
-      /^\/restaurants\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/menu$/i.test(
+      /^\/restaurants\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/(menu|cart)$/i.test(
         state.from,
       )
     )

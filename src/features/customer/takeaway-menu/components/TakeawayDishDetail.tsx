@@ -1,14 +1,27 @@
 import { Modal } from '../../../../components/Modal/Modal'
 import { Icon } from '../../../../components/Icon/Icon'
-import type { TakeawayDish } from '../types/types'
+import type { TakeawayDish, TakeawaySelection } from '../types/types'
 import { useState } from 'react'
+import { TakeawayDishOptionsForm } from './TakeawayDishOptionsForm'
 
 export function TakeawayDishDetail({
   dish,
   onClose,
+  onAdd,
+  pending,
+  disabled,
+  cartError,
+  cartLoading,
+  onReload,
 }: {
   dish: TakeawayDish
   onClose: () => void
+  onAdd: (line: TakeawaySelection) => Promise<void>
+  pending: boolean
+  disabled: boolean
+  cartError: string
+  cartLoading: boolean
+  onReload: () => void
 }) {
   const [failedUrl, setFailedUrl] = useState<string | null>(null)
   return (
@@ -51,39 +64,37 @@ export function TakeawayDishDetail({
             {dish.unavailableReason || 'Món hiện không khả dụng.'}
           </p>
         )}
-        {dish.optionGroups.map((group) => (
-          <section
-            key={group.optionGroupId}
-            className="rounded-2xl border border-stone-200 p-4"
+        {cartError && (
+          <div
+            role="alert"
+            className="rounded-2xl bg-amber-50 p-4 text-sm text-amber-900"
           >
-            <h3 className="font-semibold">{group.optionGroupName}</h3>
-            <ul className="mt-3 divide-y divide-stone-100">
-              {group.options.map((option) => (
-                <li
-                  key={option.optionId}
-                  className="flex items-center justify-between gap-3 py-3 text-sm"
-                >
-                  <div>
-                    <p>{option.optionName}</p>
-                    {!option.canSelect && (
-                      <p className="mt-1 text-xs text-amber-700">
-                        Không khả dụng
-                      </p>
-                    )}
-                  </div>
-                  <span className="shrink-0 font-medium text-brand">
-                    {option.extraPrice === 0
-                      ? 'Không phụ thu'
-                      : '+' + option.extraPrice.toLocaleString('vi-VN') + ' đ'}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
+            <p>{cartError}</p>
+            <button
+              type="button"
+              disabled={pending || cartLoading}
+              onClick={onReload}
+              className="mt-3 font-semibold underline underline-offset-4 disabled:opacity-40"
+            >
+              {cartLoading ? 'Đang tải…' : 'Tải lại giỏ hàng'}
+            </button>
+          </div>
+        )}
+        {!cartError && cartLoading && (
+          <p role="status" className="text-sm text-muted">
+            Đang tải giỏ hàng…
+          </p>
+        )}
+        <TakeawayDishOptionsForm
+          dish={dish}
+          pending={pending}
+          disabled={disabled}
+          onAdd={onAdd}
+        />
         <button
           type="button"
           onClick={onClose}
+          disabled={pending}
           className="btn-secondary w-full"
         >
           Đóng

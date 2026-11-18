@@ -8,6 +8,7 @@ import { TakeawayMenuBanner } from '../components/TakeawayMenuBanner'
 import { TakeawayMenuFilters } from '../components/TakeawayMenuFilters'
 import { TakeawayDishList } from '../components/TakeawayDishList'
 import { TakeawayDishDetail } from '../components/TakeawayDishDetail'
+import { useTakeawayCart } from '../../takeaway-cart/hooks/useTakeawayCart'
 
 export function TakeawayMenuPage() {
   const { restaurantId = '' } = useParams()
@@ -27,10 +28,13 @@ export function TakeawayMenuPage() {
 
 function TakeawayMenu({ restaurantId }: { restaurantId: string }) {
   const m = useTakeawayMenu(restaurantId)
+  const cart = useTakeawayCart(restaurantId, m.restaurant.isSuccess)
+  const count =
+    cart.cart.data?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0
   return (
     <div lang="vi" className="min-h-dvh bg-[#faf9f6] text-[#173e32]">
       <HomeHeader />
-      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-8">
+      <main className="mx-auto max-w-6xl px-4 pt-6 pb-28 sm:px-8">
         <Link
           to="/restaurants"
           className="mb-5 inline-flex min-h-10 items-center gap-2 text-sm font-medium text-brand"
@@ -81,10 +85,52 @@ function TakeawayMenu({ restaurantId }: { restaurantId: string }) {
           </>
         )}
       </main>
+      {m.restaurant.isSuccess && (
+        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-stone-200 bg-[#faf9f6]/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-sm">
+          <Link
+            to={'/restaurants/' + restaurantId + '/cart'}
+            className="mx-auto flex min-h-12 max-w-lg items-center justify-between gap-3 rounded-2xl bg-brand px-5 py-3 text-sm font-semibold text-white"
+          >
+            <span className="flex items-center gap-2">
+              <Icon name="bag" size={18} />
+              Giỏ mang đi{count > 0 ? ' (' + count + ')' : ''}
+            </span>
+            <span>
+              {cart.cart.data?.quote?.isValid &&
+              cart.cart.data.quote.totalAmount !== null
+                ? cart.cart.data.quote.totalAmount.toLocaleString('vi-VN') +
+                  ' đ'
+                : 'Xem giỏ'}{' '}
+              →
+            </span>
+          </Link>
+        </div>
+      )}
       {m.selected && (
         <TakeawayDishDetail
+          key={m.selected.itemId}
           dish={m.selected}
-          onClose={() => m.setSelectedId(null)}
+          onClose={() => {
+            if (!cart.pending) m.setSelectedId(null)
+          }}
+          onAdd={async (line) => {
+            if (await cart.addItem(line)) m.setSelectedId(null)
+          }}
+          pending={cart.pending}
+          disabled={
+            !cart.cart.data ||
+            cart.cart.isFetching ||
+            cart.cart.isError ||
+            cart.needsReload
+          }
+          cartError={
+            cart.error ||
+            (cart.needsReload
+              ? 'Giỏ hàng cần được tải lại trước khi thêm món.'
+              : '')
+          }
+          cartLoading={cart.cart.isFetching || cart.cart.isPending}
+          onReload={() => void cart.reload()}
         />
       )}
     </div>
