@@ -9,9 +9,13 @@ import { BrandLogo } from '../BrandLogo/BrandLogo'
 export function HomeHeader() {
   const { session, status } = useAppSelector((state) => state.auth)
   const [open, setOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const headerRef = useRef<HTMLElement>(null)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
   const accountRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const panelId = useId()
+  const navigationId = useId()
   const user = status === 'authenticated' ? session?.user : null
   const name = user?.fullName || user?.userName || 'Tài khoản'
 
@@ -20,14 +24,17 @@ export function HomeHeader() {
   }, [status])
 
   useEffect(() => {
-    if (!open) return
+    if (!open && !menuOpen) return
     function closeOutside(event: PointerEvent) {
       if (!accountRef.current?.contains(event.target as Node)) setOpen(false)
+      if (!headerRef.current?.contains(event.target as Node)) setMenuOpen(false)
     }
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         setOpen(false)
-        buttonRef.current?.focus()
+        setMenuOpen(false)
+        if (open) buttonRef.current?.focus()
+        else menuButtonRef.current?.focus()
       }
     }
     document.addEventListener('pointerdown', closeOutside)
@@ -36,22 +43,29 @@ export function HomeHeader() {
       document.removeEventListener('pointerdown', closeOutside)
       document.removeEventListener('keydown', closeOnEscape)
     }
-  }, [open])
+  }, [open, menuOpen])
 
   return (
-    <header className="relative z-40 border-b border-white/10 bg-[#123d30] text-white shadow-[0_4px_20px_-12px_rgba(18,61,48,0.4)]">
-      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-8 sm:py-5">
+    <header
+      ref={headerRef}
+      className="relative z-40 border-b border-white/10 bg-[#123d30] text-white shadow-[0_4px_20px_-12px_rgba(18,61,48,0.4)]"
+    >
+      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-8 lg:py-5">
         <Link
           to="/"
           aria-label="DineLink - Trang chủ"
-          className="shrink-0 text-2xl font-extrabold tracking-tight text-white sm:text-3xl"
+          className="mr-auto shrink-0 text-white [&>span]:w-28 lg:mr-0 lg:[&>span]:w-40"
         >
           <BrandLogo />
         </Link>
 
         <nav
+          id={navigationId}
           aria-label="Điều hướng chính"
-          className="order-last flex w-full items-center justify-center gap-1 border-t border-white/15 pt-3 text-sm font-semibold sm:order-none sm:w-auto sm:border-0 sm:pt-0"
+          onClick={(event) => {
+            if ((event.target as HTMLElement).closest('a')) setMenuOpen(false)
+          }}
+          className={`${menuOpen ? 'flex' : 'hidden'} order-last w-full flex-col gap-1 border-t border-white/15 pt-3 text-sm font-semibold lg:order-none lg:flex lg:w-auto lg:flex-row lg:items-center lg:justify-center lg:border-0 lg:pt-0`}
         >
           <NavLink
             to="/"
@@ -84,6 +98,11 @@ export function HomeHeader() {
           >
             Đặt bàn
           </NavLink>
+          {!user && status === 'anonymous' && (
+            <Link to="/register" className="rounded-xl px-4 py-2.5 text-[#d7e9b7] hover:bg-white/10 lg:hidden">
+              Đăng ký tài khoản
+            </Link>
+          )}
         </nav>
 
         {status === 'checking' ? (
@@ -98,15 +117,21 @@ export function HomeHeader() {
             Kiểm tra tài khoản
           </Link>
         ) : user ? (
-          <div ref={accountRef} className="relative min-w-0 max-w-[60%] text-[#173e32]">
+          <div
+            ref={accountRef}
+            className="relative shrink-0 text-[#173e32] lg:min-w-0 lg:max-w-60"
+          >
             <button
               ref={buttonRef}
               type="button"
               aria-label={'Tài khoản ' + name}
               aria-expanded={open}
               aria-controls={panelId}
-              onClick={() => setOpen(!open)}
-              className="flex min-h-11 max-w-full items-center gap-2 rounded-full border border-stone-200/80 bg-white py-1.5 pr-3 pl-1.5 text-sm font-semibold transition-colors hover:border-emerald-200 hover:bg-emerald-50/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
+              onClick={() => {
+                setOpen(!open)
+                setMenuOpen(false)
+              }}
+              className="flex size-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-sm font-semibold transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:h-auto lg:w-auto lg:min-h-11 lg:max-w-full lg:gap-2 lg:border-stone-200/80 lg:bg-white lg:py-1.5 lg:pr-3 lg:pl-1.5 lg:hover:bg-emerald-50"
             >
               <span
                 aria-hidden="true"
@@ -114,11 +139,11 @@ export function HomeHeader() {
               >
                 {name.trim().slice(0, 1).toUpperCase()}
               </span>
-              <span className="truncate">{name}</span>
+              <span className="hidden truncate lg:block">{name}</span>
               <Icon
                 name="chevron"
                 size={14}
-                className={`shrink-0 text-slate-400 transition-transform ${open ? '-rotate-90' : 'rotate-90'}`}
+                className={`hidden shrink-0 text-slate-400 transition-transform lg:block ${open ? '-rotate-90' : 'rotate-90'}`}
               />
             </button>
             {open && (
@@ -156,12 +181,26 @@ export function HomeHeader() {
             </Link>
             <Link
               to="/register"
-              className="inline-flex min-h-10 items-center justify-center rounded-full bg-[#d7e9b7] px-3 text-xs font-semibold text-[#123d30] transition-colors hover:bg-white sm:px-4 sm:text-sm"
+              className="hidden min-h-10 items-center justify-center rounded-full bg-[#d7e9b7] px-3 text-xs font-semibold text-[#123d30] transition-colors hover:bg-white lg:inline-flex lg:px-4 lg:text-sm"
             >
               Đăng ký
             </Link>
           </nav>
         )}
+        <button
+          ref={menuButtonRef}
+          type="button"
+          aria-label={menuOpen ? 'Đóng menu' : 'Mở menu'}
+          aria-expanded={menuOpen}
+          aria-controls={navigationId}
+          onClick={() => {
+            setMenuOpen(!menuOpen)
+            setOpen(false)
+          }}
+          className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:hidden"
+        >
+          <Icon name={menuOpen ? 'close' : 'menu'} size={24} />
+        </button>
       </div>
     </header>
   )

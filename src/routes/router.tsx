@@ -17,6 +17,7 @@ import { managerRoute } from './managerRoutes'
 import { createBrowserRouter } from 'react-router-dom'
 import { HomePage } from '../pages/HomePage'
 import { RestaurantsPage } from '../features/customer/restaurants/pages/RestaurantsPage'
+import { TakeawayMenuPage } from '../features/customer/takeaway-menu/pages/TakeawayMenuPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 import { CustomerLayout } from '../layouts/customer/CustomerLayout'
 import { EmptyState } from '../components/EmptyState/EmptyState'
@@ -27,6 +28,15 @@ export const router = createBrowserRouter([
   {
     element: <ProtectedRoute />,
     children: [
+      {
+        element: <RoleRoute roles={['customer']} />,
+        children: [
+          {
+            path: '/restaurants/:restaurantId/menu',
+            element: <TakeawayMenuPage />,
+          },
+        ],
+      },
       { element: <RoleRoute roles={['kitchen']} />, children: [kitchenRoute] },
       { element: <RoleRoute roles={['admin']} />, children: [adminRoute] },
       { element: <RoleRoute roles={['manager']} />, children: [managerRoute] },

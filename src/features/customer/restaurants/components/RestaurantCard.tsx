@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Icon } from '../../../../components/Icon/Icon'
 import type { OnlineRestaurant } from '../types/types'
 
@@ -60,15 +61,14 @@ export function RestaurantCard({
             {restaurant.hotline || 'Chưa cập nhật hotline'}
           </span>
         </div>
-        <button
-          type="button"
-          onClick={onView}
-          aria-label={'Xem thông tin ' + restaurant.restaurantName}
+        <Link
+          to={'/restaurants/' + restaurant.restaurantId + '/menu'}
+          aria-label={'Xem thực đơn ' + restaurant.restaurantName}
           className="mt-6 inline-flex min-h-11 w-full items-center justify-between gap-2 rounded-xl bg-[#226449] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#184c37] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
-          Xem thông tin
+          Xem thực đơn
           <Icon name="arrow" size={16} />
-        </button>
+        </Link>
       </div>
     </article>
   )
