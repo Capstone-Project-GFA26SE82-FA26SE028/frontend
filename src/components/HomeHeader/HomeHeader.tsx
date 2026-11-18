@@ -48,7 +48,7 @@ export function HomeHeader() {
   return (
     <header
       ref={headerRef}
-      className="relative z-40 border-b border-white/10 bg-[#123d30] text-white shadow-[0_4px_20px_-12px_rgba(18,61,48,0.4)]"
+      className="sticky top-0 z-40 border-b border-white/10 bg-[#123d30] text-white shadow-[0_4px_20px_-12px_rgba(18,61,48,0.4)]"
     >
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-8 lg:py-5">
         <Link
@@ -99,7 +99,10 @@ export function HomeHeader() {
             Đặt bàn
           </NavLink>
           {!user && status === 'anonymous' && (
-            <Link to="/register" className="rounded-xl px-4 py-2.5 text-[#d7e9b7] hover:bg-white/10 lg:hidden">
+            <Link
+              to="/register"
+              className="rounded-xl px-4 py-2.5 text-[#d7e9b7] hover:bg-white/10 lg:hidden"
+            >
               Đăng ký tài khoản
             </Link>
           )}

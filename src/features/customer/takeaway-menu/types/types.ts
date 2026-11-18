@@ -41,3 +41,10 @@ export type TakeawayResponse<T> = {
   message?: string | null
   result: T
 }
+
+export type TakeawaySelection = {
+  itemId: string
+  quantity: number
+  note: string | null
+  options: { optionId: string; quantity: number }[]
+}
