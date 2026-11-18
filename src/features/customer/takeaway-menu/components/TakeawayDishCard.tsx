@@ -1,4 +1,5 @@
-import { DishImage } from '../../menu/components/DishImage'
+import { useState } from 'react'
+import { Icon } from '../../../../components/Icon/Icon'
 import type { TakeawayDish } from '../types/types'
 
 export function TakeawayDishCard({
@@ -8,6 +9,7 @@ export function TakeawayDishCard({
   dish: TakeawayDish
   onView: () => void
 }) {
+  const [failedUrl, setFailedUrl] = useState<string | null>(null)
   return (
     <article className="flex min-w-0 flex-col overflow-hidden rounded-3xl border border-stone-200/70 bg-white shadow-sm">
       <button
@@ -16,11 +18,22 @@ export function TakeawayDishCard({
         aria-label={'Xem món ' + dish.itemName}
         className="focus-visible:outline-2 focus-visible:outline-brand"
       >
-        <DishImage
-          src={dish.imageUrl}
-          name={dish.itemName}
-          className="aspect-[4/3] w-full"
-        />
+        <div className="flex aspect-[4/3] w-full items-center justify-center overflow-hidden bg-mint">
+          {dish.imageUrl &&
+          /^https?:\/\//i.test(dish.imageUrl) &&
+          failedUrl !== dish.imageUrl ? (
+            <img
+              src={dish.imageUrl}
+              alt={dish.itemName}
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              onError={() => setFailedUrl(dish.imageUrl)}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <Icon name="utensils" size={40} className="text-brand/35" />
+          )}
+        </div>
       </button>
       <div className="flex flex-1 flex-col p-5">
         <p className="text-xs font-medium text-muted">{dish.categoryName}</p>
