@@ -1,3 +1,4 @@
+import { RolesPage } from '../features/platform-admin/roles/pages/RolesPage'
 import { ActivityPage } from '../features/platform-admin/activity/pages/ActivityPage'
 import { SessionsPage } from '../features/platform-admin/sessions/pages/SessionsPage'
 import { RestaurantStaffPage } from '../features/platform-admin/restaurant-staff/pages/RestaurantStaffPage'
@@ -15,6 +16,7 @@ export const platformAdminRoute: RouteObject = {
     { index: true, element: <PlatformAdminPage /> },
     { path: 'profile', element: <ProfilePage /> },
     { path: 'users', element: <UsersPage /> },
+    { path: 'roles', element: <RolesPage /> },
     { path: 'activity', element: <ActivityPage /> },
     { path: 'sessions', element: <SessionsPage /> },
     { path: 'restaurants', element: <RestaurantsPage /> },

@@ -4,13 +4,13 @@ export function RoleSummaryCards({
   totals,
 }: {
   roleCount?: number
-  totals?: { total: number; active: number; admins: number }
+  totals?: { total: number; active: number }
 }) {
   return (
     <SummaryCards
       items={[
         {
-          label: 'Vai trò hệ thống',
+          label: 'Vai trò nhân viên',
           value: roleCount ?? '—',
           icon: 'shield',
           note: 'Các vai trò cố định',
@@ -19,19 +19,13 @@ export function RoleSummaryCards({
           label: 'Tài khoản',
           value: totals?.total ?? '—',
           icon: 'users',
-          note: 'Tất cả tài khoản người dùng',
+          note: 'Nhân viên trong nhà hàng',
         },
         {
           label: 'Tài khoản hoạt động',
           value: totals?.active ?? '—',
           icon: 'users',
           note: 'Đang được kích hoạt',
-        },
-        {
-          label: 'Quản trị viên hoạt động',
-          value: totals?.admins ?? '—',
-          icon: 'shield',
-          note: 'Cần có ít nhất một người',
         },
       ]}
     />

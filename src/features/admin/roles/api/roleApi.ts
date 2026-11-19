@@ -45,7 +45,9 @@ export function roleApiError(error: unknown): string {
       return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.'
     if (status === 403) return 'Bạn không có quyền quản lý vai trò.'
     if (status === 409)
-      return 'Không thể đổi vai trò của quản trị viên đang hoạt động cuối cùng.'
+      return typeof error.response?.data?.message === 'string'
+        ? error.response.data.message
+        : 'Không thể đổi vai trò. Vui lòng tải lại tài khoản.'
     if (status === 404)
       return 'Tài khoản này không còn tồn tại. Vui lòng làm mới danh sách và thử lại.'
     if (status === 429) return 'Có quá nhiều yêu cầu. Vui lòng đợi rồi thử lại.'

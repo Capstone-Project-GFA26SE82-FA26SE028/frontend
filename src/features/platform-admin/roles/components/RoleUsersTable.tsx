@@ -1,0 +1,118 @@
+import { RoleBadge } from './RoleBadge'
+import { UserAvatar } from '../../users/components/UserAvatar'
+import type { RoleAccount, SystemRole } from '../types/types'
+
+import { EmptyState } from '../../../../components/EmptyState/EmptyState'
+import { Pagination } from '../../../../components/Pagination/Pagination'
+import { Badge } from '../../../../components/Badge/Badge'
+
+export function RoleUsersTable({
+  users,
+  roles,
+  total,
+  page,
+  pageSize,
+  busy,
+  onPage,
+  onSelect,
+}: {
+  users: RoleAccount[]
+  roles: SystemRole[]
+  total: number
+  page: number
+  pageSize: number
+  busy: boolean
+  onPage: (page: number) => void
+  onSelect: (user: RoleAccount) => void
+}) {
+  return (
+    <fieldset disabled={busy} aria-busy={busy} className="min-w-0">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[680px] text-left text-sm">
+          <thead className="border-y border-slate-200 bg-slate-50 text-slate-600">
+            <tr>
+              {[
+                'Tài khoản',
+                'Tên đăng nhập',
+                'Vai trò',
+                'Trạng thái',
+                'Thao tác',
+              ].map((label) => (
+                <th
+                  key={label}
+                  scope="col"
+                  className="whitespace-nowrap px-5 py-3.5 font-semibold"
+                >
+                  {label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr
+                key={user.userId}
+                className="border-t border-slate-100 hover:bg-slate-50"
+              >
+                <td className="px-5 py-4">
+                  <div className="flex items-center gap-3">
+                    <UserAvatar
+                      src={user.avatarUrl}
+                      name={user.fullName || user.userName}
+                    />
+                    <div className="min-w-0">
+                      <p className="font-semibold">
+                        {user.fullName || user.userName}
+                      </p>
+                      <p className="mt-1 text-slate-500">{user.email}</p>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-5 py-4 text-slate-600">{user.userName}</td>
+                <td className="px-5 py-4">
+                  <RoleBadge
+                    id={user.roleId}
+                    name={
+                      roles.find((item) => item.roleId === user.roleId)
+                        ?.roleName || user.roleId
+                    }
+                  />
+                </td>
+                <td className="px-5 py-4">
+                  <Badge tone={user.isActive ? 'green' : 'red'}>
+                    {user.isActive ? 'Đang hoạt động' : 'Đã vô hiệu hóa'}
+                  </Badge>
+                </td>
+                <td className="px-5 py-4">
+                  <button
+                    aria-label={
+                      'Đổi vai trò cho ' + (user.fullName || user.userName)
+                    }
+                    aria-haspopup="dialog"
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 whitespace-nowrap"
+                    onClick={() => onSelect(user)}
+                  >
+                    Đổi vai trò
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {!users.length && (
+        <EmptyState
+          title="Không tìm thấy tài khoản"
+          description="Thử thay đổi nội dung tìm kiếm hoặc bộ lọc."
+        />
+      )}
+      <Pagination
+        total={total}
+        page={page}
+        size={pageSize}
+        locale="vi"
+        onPage={onPage}
+      />
+    </fieldset>
+  )
+}
