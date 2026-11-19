@@ -4,7 +4,7 @@ export const platformAdminNavigation: StaffNavigationGroup[] = [
     title: '',
     items: [{ to: '/platform-admin', label: 'Tổng quan', icon: 'home' }],
   },
-   {
+  {
     title: 'QUẢN LÝ TÀI KHOẢN',
     items: [
       {
@@ -22,6 +22,16 @@ export const platformAdminNavigation: StaffNavigationGroup[] = [
         to: '/platform-admin/restaurant-staff',
         label: 'Phân công nhân viên',
         icon: 'briefcase',
+      },
+    ],
+  },
+  {
+    title: 'HỆ THỐNG',
+    items: [
+      {
+        to: '/platform-admin/activity',
+        label: 'Nhật ký hoạt động',
+        icon: 'clipboard',
       },
     ],
   },

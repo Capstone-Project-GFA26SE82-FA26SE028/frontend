@@ -1,6 +1,5 @@
 import { DashboardPage } from '../features/admin/dashboard/pages/DashboardPage'
 import { HealthPage } from '../features/admin/health/pages/HealthPage'
-import { ActivityPage } from '../features/admin/activity/pages/ActivityPage'
 import { PaymentMethodsPage } from '../features/admin/payment-methods/pages/PaymentMethodsPage'
 import { TaxFeesPage } from '../features/admin/tax-fees/pages/TaxFeesPage'
 import { TablesPage } from '../features/admin/tables/pages/TablesPage'
@@ -23,7 +22,6 @@ export const adminRoute: RouteObject = {
     { path: 'tables', element: <TablesPage /> },
     { path: 'tax-fees', element: <TaxFeesPage /> },
     { path: 'payment-methods', element: <PaymentMethodsPage /> },
-    { path: 'activity', element: <ActivityPage /> },
     { path: 'health', element: <HealthPage /> },
     {
       path: '*',

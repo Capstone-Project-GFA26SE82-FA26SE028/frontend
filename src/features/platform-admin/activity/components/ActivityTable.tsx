@@ -1,6 +1,4 @@
 import { Icon } from '../../../../components/Icon/Icon'
-import { useState } from 'react'
-import { useActivityUser } from '../hooks/useActivity'
 import type { ActivityLog } from '../types/types'
 import { EmptyState } from '../../../../components/EmptyState/EmptyState'
 export function ActivityTable({
@@ -50,7 +48,18 @@ export function ActivityTable({
                 </time>
               </td>
               <td className="p-4">
-                <ActivityUserName id={item.userId} onSelect={onUser} />
+                {item.userId ? (
+                  <button
+                    type="button"
+                    className="break-all text-left font-mono text-xs text-emerald-700 hover:underline"
+                    title="Lọc theo người dùng này"
+                    onClick={() => onUser(item.userId!)}
+                  >
+                    {item.userId}
+                  </button>
+                ) : (
+                  <span className="text-slate-500">Chưa có dữ liệu</span>
+                )}
               </td>
               <td className="break-words p-4">
                 <span className="inline-block max-w-full rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
@@ -76,71 +85,5 @@ export function ActivityTable({
         </tbody>
       </table>
     </div>
-  )
-}
-
-function ActivityUserName({
-  id,
-  onSelect,
-}: {
-  id: string | null
-  onSelect?: (id: string) => void
-}) {
-  const [failedUrl, setFailedUrl] = useState<string | null>(null)
-  const user = useActivityUser(id)
-  if (!id) return <span className="text-slate-500">Chưa có dữ liệu</span>
-  if (user.isPending)
-    return <span className="text-slate-500">Đang tải người dùng…</span>
-  if (user.isError)
-    return (
-      <button
-        className="text-left text-sm text-rose-600 underline"
-        onClick={() => void user.refetch()}
-      >
-        Không tải được người dùng. Thử lại
-      </button>
-    )
-  if (!user.data)
-    return <span className="text-slate-500">Người dùng chưa xác định</span>
-  const content = (
-    <span className="flex items-center gap-3">
-      <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-emerald-100 font-semibold text-emerald-800">
-        {user.data.avatarUrl &&
-        /^https?:\/\//i.test(user.data.avatarUrl) &&
-        failedUrl !== user.data.avatarUrl ? (
-          <img
-            src={user.data.avatarUrl}
-            alt={(user.data.fullName || user.data.userName) + ' - ảnh đại diện'}
-            referrerPolicy="no-referrer"
-            className="h-full w-full object-cover"
-            onError={() => setFailedUrl(user.data!.avatarUrl)}
-          />
-        ) : (
-          (user.data.fullName || user.data.userName)
-            .trim()
-            .charAt(0)
-            .toUpperCase() || '?'
-        )}
-      </span>
-      <span className="min-w-0">
-        <span className="block break-words font-semibold">
-          {user.data.fullName || user.data.userName}
-        </span>
-        <span className="mt-1 block break-all text-xs text-slate-500">
-          {user.data.email}
-        </span>
-      </span>
-    </span>
-  )
-  return onSelect ? (
-    <button
-      className="text-left hover:text-emerald-700"
-      title="Lọc theo người dùng này"
-      onClick={() => onSelect(id)}
-    >
-      {content}
-    </button>
-  ) : (
-    <div>{content}</div>
   )
 }

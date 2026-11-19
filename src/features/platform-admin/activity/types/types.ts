@@ -11,14 +11,6 @@ export type ActivityLog = {
 }
 export type ActivityQuery = { page: number; pageSize: number; userId?: string }
 
-export type ActivityUser = {
-  userId: string
-  userName: string
-  fullName: string | null
-  avatarUrl: string | null
-  email: string
-}
-
 export type ActivityResponse<T> = {
   isSuccess: boolean
   message?: string | null

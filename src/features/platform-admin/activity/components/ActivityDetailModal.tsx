@@ -1,5 +1,3 @@
-import { useState } from 'react'
-import { useActivityUser } from '../hooks/useActivity'
 import { Modal } from '../../../../components/Modal/Modal'
 
 import type { ActivityLog } from '../types/types'
@@ -76,8 +74,6 @@ export function ActivityDetailModal({
   log: ActivityLog
   onClose: () => void
 }) {
-  const [failedUrl, setFailedUrl] = useState<string | null>(null)
-  const user = useActivityUser(log.userId)
   const before = parseSnapshot(log.oldValue)
   const after = parseSnapshot(log.newValue)
   const fields = [...new Set([...Object.keys(before), ...Object.keys(after)])]
@@ -89,54 +85,6 @@ export function ActivityDetailModal({
       size="wide"
     >
       <div className="space-y-5 p-5 sm:p-6">
-        <section className="rounded-xl bg-emerald-50 p-4">
-          {!log.userId ? (
-            <span className="text-slate-500">Chưa có dữ liệu</span>
-          ) : user.isPending ? (
-            <span className="text-slate-500">Đang tải người dùng…</span>
-          ) : user.isError ? (
-            <button
-              className="text-left text-sm text-rose-600 underline"
-              onClick={() => void user.refetch()}
-            >
-              Không tải được người dùng. Thử lại
-            </button>
-          ) : !user.data ? (
-            <span className="text-slate-500">Người dùng chưa xác định</span>
-          ) : (
-            <div className="flex items-center gap-4">
-              <span className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-emerald-100 font-semibold text-emerald-800">
-                {user.data.avatarUrl &&
-                /^https?:\/\//i.test(user.data.avatarUrl) &&
-                failedUrl !== user.data.avatarUrl ? (
-                  <img
-                    src={user.data.avatarUrl}
-                    alt={
-                      (user.data.fullName || user.data.userName) +
-                      ' - ảnh đại diện'
-                    }
-                    referrerPolicy="no-referrer"
-                    className="h-full w-full object-cover"
-                    onError={() => setFailedUrl(user.data!.avatarUrl)}
-                  />
-                ) : (
-                  (user.data.fullName || user.data.userName)
-                    .trim()
-                    .charAt(0)
-                    .toUpperCase() || '?'
-                )}
-              </span>
-              <div className="min-w-0">
-                <span className="block break-words font-semibold">
-                  {user.data.fullName || user.data.userName}
-                </span>
-                <span className="mt-1 block break-all text-xs text-slate-500">
-                  {user.data.email}
-                </span>
-              </div>
-            </div>
-          )}
-        </section>
         <dl className="grid gap-3 sm:grid-cols-2">
           {[
             ['Thao tác', log.action],
