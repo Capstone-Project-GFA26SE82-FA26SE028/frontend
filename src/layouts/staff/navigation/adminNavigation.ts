@@ -10,7 +10,6 @@ export const adminNavigation: StaffNavigationGroup[] = [
     items: [
       { to: '/admin/users', label: 'Tài khoản người dùng', icon: 'users' },
       { to: '/admin/roles', label: 'Vai trò và quyền hạn', icon: 'shield' },
-      { to: '/admin/sessions', label: 'Phiên đăng nhập', icon: 'monitor' },
     ],
   },
   {

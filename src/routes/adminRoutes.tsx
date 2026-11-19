@@ -5,7 +5,6 @@ import { PaymentMethodsPage } from '../features/admin/payment-methods/pages/Paym
 import { TaxFeesPage } from '../features/admin/tax-fees/pages/TaxFeesPage'
 import { TablesPage } from '../features/admin/tables/pages/TablesPage'
 import { AreasPage } from '../features/admin/areas/pages/AreasPage'
-import { SessionsPage } from '../features/admin/sessions/pages/SessionsPage'
 import { RolesPage } from '../features/admin/roles/pages/RolesPage'
 import { UsersPage } from '../features/admin/users/pages/UsersPage'
 import { ProfilePage } from '../features/profile/pages/ProfilePage'
@@ -20,7 +19,6 @@ export const adminRoute: RouteObject = {
     { path: 'profile', element: <ProfilePage /> },
     { path: 'users', element: <UsersPage /> },
     { path: 'roles', element: <RolesPage /> },
-    { path: 'sessions', element: <SessionsPage /> },
     { path: 'areas', element: <AreasPage /> },
     { path: 'tables', element: <TablesPage /> },
     { path: 'tax-fees', element: <TaxFeesPage /> },
