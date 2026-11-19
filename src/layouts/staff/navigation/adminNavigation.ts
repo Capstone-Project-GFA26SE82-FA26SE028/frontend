@@ -16,7 +16,6 @@ export const adminNavigation: StaffNavigationGroup[] = [
   {
     title: 'QUẢN LÝ NHÀ HÀNG',
     items: [
-      { to: '/admin/restaurants', label: 'Nhà hàng', icon: 'store' },
       {
         to: '/admin/restaurant-staff',
         label: 'Phân công nhân viên',

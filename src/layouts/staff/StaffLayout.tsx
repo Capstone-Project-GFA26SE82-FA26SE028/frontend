@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { StaffSidebar } from './components/StaffSidebar'
 import { StaffHeader } from './components/StaffHeader'
 import { StaffFooter } from './components/StaffFooter'
+import { platformAdminNavigation } from './navigation/platformAdminNavigation'
 import { adminNavigation } from './navigation/adminNavigation'
 import { managerNavigation } from './navigation/managerNavigation'
 import type { StaffRole } from './types/types'
@@ -11,12 +12,25 @@ export function StaffLayout({ role }: { role: StaffRole }) {
   const [collapsed, setCollapsed] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { hash, pathname } = useLocation()
-  const groups = role === 'admin' ? adminNavigation : managerNavigation
-  const homePath = `/${role}`
+  const groups =
+    role === 'platform_admin'
+      ? platformAdminNavigation
+      : role === 'admin'
+        ? adminNavigation
+        : managerNavigation
+  const homePath = role === 'platform_admin' ? '/platform-admin' : `/${role}`
   const workspaceTitle =
-    role === 'admin' ? 'Quản trị nhà hàng' : 'Quản lý nhà hàng'
+    role === 'platform_admin'
+      ? 'Quản trị nền tảng'
+      : role === 'admin'
+        ? 'Quản trị nhà hàng'
+        : 'Quản lý nhà hàng'
   const roleLabel =
-    role === 'admin' ? 'Quản trị viên nhà hàng' : 'Quản lý nhà hàng'
+    role === 'platform_admin'
+      ? 'Quản trị viên nền tảng'
+      : role === 'admin'
+        ? 'Quản trị viên nhà hàng'
+        : 'Quản lý nhà hàng'
   const currentItem = groups
     .flatMap((group) => group.items)
     .find((item) => item.to === pathname)

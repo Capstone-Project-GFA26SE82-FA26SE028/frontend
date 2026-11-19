@@ -14,8 +14,8 @@ import {
   setAreaStatus,
   deleteArea,
 } from '../api/areaApi'
-import { getRestaurants } from '../../restaurants/api/restaurantApi'
-import type { Restaurant } from '../../restaurants/types/types'
+import { getRestaurants } from '../../../platform-admin/restaurants/api/restaurantApi'
+import type { Restaurant } from '../../../platform-admin/restaurants/types/types'
 import type { AreaValues } from '../schemas/areaSchema'
 export function useAreas() {
   const [search, setSearch] = useState(''),

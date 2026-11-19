@@ -1,4 +1,4 @@
-import type { Restaurant } from '../../restaurants/types/types'
+import type { Restaurant } from '../../../platform-admin/restaurants/types/types'
 export function AreaFilters({
   search,
   onSearch,

@@ -2,7 +2,7 @@ import { TableCard } from './TableCard'
 import { Icon } from '../../../../components/Icon/Icon'
 import type { Table, TableMode } from '../types/types'
 import type { Area } from '../../areas/types/types'
-import type { Restaurant } from '../../restaurants/types/types'
+import type { Restaurant } from '../../../platform-admin/restaurants/types/types'
 export function TablesByArea({
   tables,
   areas,

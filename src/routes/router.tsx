@@ -12,9 +12,11 @@ import { CartPage } from '../features/customer/cart/pages/CartPage'
 import { MenuPage } from '../features/customer/menu/pages/MenuPage'
 import { LoyaltyPage } from '../features/customer/loyalty/pages/LoyaltyPage'
 import { CustomerSessionGate } from '../features/customer/table-session/components/CustomerSessionGate'
+import { platformAdminRoute } from './platformAdminRoutes'
 import { adminRoute } from './adminRoutes'
 import { managerRoute } from './managerRoutes'
-import { createBrowserRouter } from 'react-router-dom'
+import { useAppSelector } from '../app/hooks'
+import { Navigate, Outlet, createBrowserRouter } from 'react-router-dom'
 import { HomePage } from '../pages/HomePage'
 import { RestaurantsPage } from '../features/customer/restaurants/pages/RestaurantsPage'
 import { TakeawayMenuPage } from '../features/customer/takeaway-menu/pages/TakeawayMenuPage'
@@ -23,9 +25,23 @@ import { NotFoundPage } from '../pages/NotFoundPage'
 import { CustomerLayout } from '../layouts/customer/CustomerLayout'
 import { EmptyState } from '../components/EmptyState/EmptyState'
 
+// Customer pages allow guests and customers; staff return to their workspace.
+// This guard stays with the route configuration.
+// eslint-disable-next-line react-refresh/only-export-components
+function CustomerPageRoute() {
+  const role = useAppSelector((state) => state.auth.session?.user.roleId)
+  if (!role || role === 'customer') return <Outlet />
+  if (role === 'admin') return <Navigate to="/admin" replace />
+  if (role === 'platform_admin')
+    return <Navigate to="/platform-admin" replace />
+  if (role === 'manager') return <Navigate to="/manager" replace />
+  if (role === 'kitchen') return <Navigate to="/kitchen" replace />
+  return <Navigate to="/login" replace />
+}
+
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
-  { path: '/register', element: <RegisterPage /> },
+
   {
     element: <ProtectedRoute />,
     children: [
@@ -44,36 +60,46 @@ export const router = createBrowserRouter([
       },
       { element: <RoleRoute roles={['kitchen']} />, children: [kitchenRoute] },
       { element: <RoleRoute roles={['admin']} />, children: [adminRoute] },
+      {
+        element: <RoleRoute roles={['platform_admin']} />,
+        children: [platformAdminRoute],
+      },
       { element: <RoleRoute roles={['manager']} />, children: [managerRoute] },
     ],
   },
-  { path: '/', element: <HomePage /> },
-  { path: '/restaurants', element: <RestaurantsPage /> },
   {
-    element: <CustomerSessionGate />,
-    errorElement: (
-      <EmptyState
-        title="Không thể mở trang"
-        description="Vui lòng tải lại trang để thử lại."
-        action={<a href="/">Về trang chủ</a>}
-      />
-    ),
+    element: <CustomerPageRoute />,
     children: [
+      { path: '/register', element: <RegisterPage /> },
+      { path: '/', element: <HomePage /> },
+      { path: '/restaurants', element: <RestaurantsPage /> },
       {
-        element: <CustomerLayout />,
+        element: <CustomerSessionGate />,
+        errorElement: (
+          <EmptyState
+            title="Không thể mở trang"
+            description="Vui lòng tải lại trang để thử lại."
+            action={<a href="/">Về trang chủ</a>}
+          />
+        ),
         children: [
-          { path: 'menu', element: <MenuPage /> },
-          { path: 'cart', element: <CartPage /> },
-          { path: 'checkout', element: <CheckoutPage /> },
-          { path: 'orders', element: <OrderTrackingPage /> },
-          { path: 'loyalty', element: <LoyaltyPage /> },
-          { path: 'payment', element: <PaymentPage /> },
-          { path: 'bill', element: <BillingFeedbackPage /> },
-          { path: 'bill/:invoiceId', element: <BillingFeedbackPage /> },
+          {
+            element: <CustomerLayout />,
+            children: [
+              { path: 'menu', element: <MenuPage /> },
+              { path: 'cart', element: <CartPage /> },
+              { path: 'checkout', element: <CheckoutPage /> },
+              { path: 'orders', element: <OrderTrackingPage /> },
+              { path: 'loyalty', element: <LoyaltyPage /> },
+              { path: 'payment', element: <PaymentPage /> },
+              { path: 'bill', element: <BillingFeedbackPage /> },
+              { path: 'bill/:invoiceId', element: <BillingFeedbackPage /> },
+            ],
+          },
         ],
       },
+      { path: '/reservation', element: <ReservationPage /> },
     ],
   },
-  { path: '/reservation', element: <ReservationPage /> },
   { path: '*', element: <NotFoundPage /> },
 ])
