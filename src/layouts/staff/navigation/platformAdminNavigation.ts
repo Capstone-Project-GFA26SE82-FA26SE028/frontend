@@ -7,7 +7,15 @@ export const platformAdminNavigation: StaffNavigationGroup[] = [
   {
     title: 'QUẢN LÝ NHÀ HÀNG',
     items: [
-      { to: '/platform-admin/restaurants', label: 'Nhà hàng', icon: 'store' },
+      { to: '/platform-admin/restaurants', 
+        label: 'Nhà hàng', 
+        icon: 'store' 
+      },
+      {
+        to: '/platform-admin/restaurant-staff',
+        label: 'Phân công nhân viên',
+        icon: 'briefcase',
+      },
     ],
   },
 ]
