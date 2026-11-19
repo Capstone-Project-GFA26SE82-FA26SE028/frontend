@@ -1,3 +1,4 @@
+import { RestaurantStaffPage } from '../features/platform-admin/restaurant-staff/pages/RestaurantStaffPage'
 import type { RouteObject } from 'react-router-dom'
 import { StaffLayout } from '../layouts/staff/StaffLayout'
 import { PlatformAdminPage } from '../features/platform-admin/pages/PlatformAdminPage'
@@ -11,6 +12,7 @@ export const platformAdminRoute: RouteObject = {
     { index: true, element: <PlatformAdminPage /> },
     { path: 'profile', element: <ProfilePage /> },
     { path: 'restaurants', element: <RestaurantsPage /> },
+    { path: 'restaurant-staff', element: <RestaurantStaffPage /> },
     { path: '*', element: <NotFoundPage /> },
   ],
 }

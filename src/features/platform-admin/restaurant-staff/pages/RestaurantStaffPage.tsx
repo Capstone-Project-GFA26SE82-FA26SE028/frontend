@@ -5,7 +5,7 @@ import { Icon } from '../../../../components/Icon/Icon'
 import {
   getRestaurants,
   restaurantError,
-} from '../../../platform-admin/restaurants/api/restaurantApi'
+} from '../../restaurants/api/restaurantApi'
 import { RestaurantStaffSection } from '../components/RestaurantStaffSection'
 
 export function RestaurantStaffPage() {
