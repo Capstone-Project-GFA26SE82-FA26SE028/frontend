@@ -17,6 +17,8 @@ function result<T>(envelope: UserResponse<T>): T {
 function mapUser(user: UserDto): UserAccount {
   return {
     id: user.userId,
+    restaurantId: user.restaurantId ?? null,
+    provisioningPending: user.provisioningPending ?? false,
     userName: user.userName,
     name: user.fullName || user.userName,
     email: user.email,
@@ -48,12 +50,12 @@ export function userApiError(error: unknown): string {
     if (message.includes('Role không tồn tại'))
       return 'Vai trò đã chọn không còn tồn tại.'
     if (error.response.status === 409)
-      return 'Email hoặc tên đăng nhập đã được sử dụng. Vui lòng chọn thông tin khác.'
+      return message || 'Không thể cập nhật tài khoản. Vui lòng tải lại.'
     if (error.response.status === 404)
       return 'Tài khoản này không còn tồn tại. Vui lòng làm mới danh sách và thử lại.'
     if (error.response.status === 429)
       return 'Có quá nhiều yêu cầu. Vui lòng đợi rồi thử lại.'
-    return 'Yêu cầu không hợp lệ. Vui lòng kiểm tra thông tin.'
+    return message || 'Yêu cầu không hợp lệ. Vui lòng kiểm tra thông tin.'
   }
   return error instanceof Error ? error.message : 'Không thể hoàn tất yêu cầu.'
 }

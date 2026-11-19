@@ -7,12 +7,14 @@ import { PlatformAdminPage } from '../features/platform-admin/pages/PlatformAdmi
 import { ProfilePage } from '../features/profile/pages/ProfilePage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 import { RestaurantsPage } from '../features/platform-admin/restaurants/pages/RestaurantsPage'
+import { UsersPage } from '../features/platform-admin/users/pages/UsersPage'
 export const platformAdminRoute: RouteObject = {
   path: '/platform-admin',
   element: <StaffLayout role="platform_admin" />,
   children: [
     { index: true, element: <PlatformAdminPage /> },
     { path: 'profile', element: <ProfilePage /> },
+    { path: 'users', element: <UsersPage /> },
     { path: 'activity', element: <ActivityPage /> },
     { path: 'sessions', element: <SessionsPage /> },
     { path: 'restaurants', element: <RestaurantsPage /> },

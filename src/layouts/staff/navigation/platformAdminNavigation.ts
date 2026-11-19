@@ -8,6 +8,11 @@ export const platformAdminNavigation: StaffNavigationGroup[] = [
     title: 'QUẢN LÝ TÀI KHOẢN',
     items: [
       {
+        to: '/platform-admin/users',
+        label: 'Tài khoản người dùng',
+        icon: 'users',
+      },
+      {
         to: '/platform-admin/sessions',
         label: 'Phiên đăng nhập',
         icon: 'monitor',

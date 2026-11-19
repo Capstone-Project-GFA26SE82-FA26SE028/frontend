@@ -39,6 +39,8 @@ export type UsersState = {
 
 // API-backed accounts. Legacy AdminUser remains for screens not yet migrated.
 export type UserAccount = {
+  restaurantId: string | null
+  provisioningPending: boolean
   id: string
   userName: string
   name: string
@@ -57,6 +59,8 @@ export type UserResponse<T> = {
   result: T
 }
 export type UserDto = {
+  restaurantId: string | null
+  provisioningPending: boolean
   userId: string
   userName: string
   email: string
@@ -76,7 +80,9 @@ export type UserPage = {
 }
 export function userRoleLabel(roleId: string) {
   const labels: Record<string, string> = {
-    admin: 'Quản trị viên hệ thống',
+    admin: 'Quản trị nhà hàng',
+    platform_admin: 'Quản trị nền tảng',
+    customer: 'Khách hàng',
     manager: 'Quản lý nhà hàng',
     waiter: 'Nhân viên phục vụ',
     cashier: 'Thu ngân',
