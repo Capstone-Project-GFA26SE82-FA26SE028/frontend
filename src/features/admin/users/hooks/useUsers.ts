@@ -136,9 +136,12 @@ export function useUserManagement() {
 
   async function save(values: AccountFormValues, existing?: UserAccount) {
     try {
-      await mutations.save.mutateAsync({ values, existing })
+      const saved = await mutations.save.mutateAsync({ values, existing })
       setForm(undefined)
-      toast.success(existing ? 'Đã cập nhật tài khoản.' : 'Đã tạo tài khoản.')
+      if (saved.provisioningPending)
+        toast.info('Tài khoản đang chờ phân công và chưa thể đăng nhập.')
+      else
+        toast.success(existing ? 'Đã cập nhật tài khoản.' : 'Đã tạo tài khoản.')
       return ''
     } catch (error) {
       return userApiError(error)

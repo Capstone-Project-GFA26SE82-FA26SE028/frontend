@@ -77,6 +77,17 @@ export function UserDetailModal({
               </div>
             </section>
 
+            {user.provisioningPending && (
+              <p
+                role="status"
+                className="mt-4 rounded-xl bg-amber-50 p-4 text-sm text-amber-900"
+              >
+                Tài khoản đang chờ phân công và chưa thể đăng nhập.
+              </p>
+            )}
+            <p className="mt-4 break-all text-sm text-slate-500">
+              Mã nhà hàng: {user.restaurantId || 'Chưa gán'}
+            </p>
             <section className="mt-6" aria-labelledby="user-contact-heading">
               <h4
                 id="user-contact-heading"
