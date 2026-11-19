@@ -7,9 +7,9 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { getAllTables, getTable, updateTable } from '../api/tableApi'
-import { getRestaurants } from '../../restaurants/api/restaurantApi'
+import { getRestaurants } from '../../../platform-admin/restaurants/api/restaurantApi'
 import { getAreas } from '../../areas/api/areaApi'
-import type { Restaurant } from '../../restaurants/types/types'
+import type { Restaurant } from '../../../platform-admin/restaurants/types/types'
 import type { Area } from '../../areas/types/types'
 import type { TableMode } from '../types/types'
 export function useTables() {

@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { getTable } from '../api/tableApi'
 import { getArea } from '../../areas/api/areaApi'
-import { getRestaurant } from '../../restaurants/api/restaurantApi'
+import { getRestaurant } from '../../../platform-admin/restaurants/api/restaurantApi'
 import { getCurrentQr, issueTableQr, getQrImage } from '../api/tableQrApi'
 export function useTableQr(tableId: string) {
   const [confirm, setConfirm] = useState(false)

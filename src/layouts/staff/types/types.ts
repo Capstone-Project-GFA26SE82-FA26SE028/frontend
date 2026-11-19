@@ -1,4 +1,4 @@
-export type StaffRole = 'admin' | 'manager'
+export type StaffRole = 'admin' | 'manager' | 'platform_admin'
 
 export type StaffNavigationItem = {
   to: string

@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { areaSchema, type AreaValues } from '../schemas/areaSchema'
 import type { Area } from '../types/types'
-import type { Restaurant } from '../../restaurants/types/types'
+import type { Restaurant } from '../../../platform-admin/restaurants/types/types'
 
 import { Field } from '../../../../components/Field/Field'
 import { areaError } from '../api/areaApi'

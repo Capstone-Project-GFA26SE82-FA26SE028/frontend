@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { tableSchema, type TableValues } from '../schemas/tableSchema'
 import type { Table } from '../types/types'
 import type { Area } from '../../areas/types/types'
-import type { Restaurant } from '../../restaurants/types/types'
+import type { Restaurant } from '../../../platform-admin/restaurants/types/types'
 
 import { Field } from '../../../../components/Field/Field'
 import { tableError } from '../api/tableApi'
