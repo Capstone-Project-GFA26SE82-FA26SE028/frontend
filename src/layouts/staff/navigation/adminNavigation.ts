@@ -33,7 +33,6 @@ export const adminNavigation: StaffNavigationGroup[] = [
   {
     title: 'HỆ THỐNG',
     items: [
-      { to: '/admin/activity', label: 'Nhật ký hoạt động', icon: 'clipboard' },
       {
         to: '/admin/health',
         label: 'Giám sát hệ thống',

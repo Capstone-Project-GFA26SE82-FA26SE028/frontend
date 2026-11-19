@@ -1,7 +1,7 @@
 import { PAGE_SIZE } from '../../../../components/Pagination/Pagination'
 import { useState } from 'react'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { getActivityLogs, getActivityUser } from '../api/activityApi'
+import { getActivityLogs } from '../api/activityApi'
 import type { ActivityLog } from '../types/types'
 const pageSize = PAGE_SIZE
 export function useActivity() {
@@ -45,13 +45,4 @@ export function useActivity() {
     detail,
     setDetail,
   }
-}
-
-export function useActivityUser(id: string | null) {
-  return useQuery({
-    queryKey: ['users', 'activity-user', id],
-    queryFn: ({ signal }) => getActivityUser(id!, signal),
-    enabled: !!id,
-    staleTime: 60_000,
-  })
 }

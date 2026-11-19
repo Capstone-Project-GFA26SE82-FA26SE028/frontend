@@ -1,3 +1,4 @@
+import { ActivityPage } from '../features/platform-admin/activity/pages/ActivityPage'
 import { SessionsPage } from '../features/platform-admin/sessions/pages/SessionsPage'
 import { RestaurantStaffPage } from '../features/platform-admin/restaurant-staff/pages/RestaurantStaffPage'
 import type { RouteObject } from 'react-router-dom'
@@ -12,6 +13,7 @@ export const platformAdminRoute: RouteObject = {
   children: [
     { index: true, element: <PlatformAdminPage /> },
     { path: 'profile', element: <ProfilePage /> },
+    { path: 'activity', element: <ActivityPage /> },
     { path: 'sessions', element: <SessionsPage /> },
     { path: 'restaurants', element: <RestaurantsPage /> },
     { path: 'restaurant-staff', element: <RestaurantStaffPage /> },
