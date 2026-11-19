@@ -101,11 +101,6 @@ export function RoleAssignmentModal({
           />
           <div>
             <p>Tài khoản sẽ cần đăng nhập lại.</p>
-            {user.roleId === 'admin' && (
-              <p className="mt-1 text-amber-800">
-                Phải có ít nhất một quản trị viên đang hoạt động.
-              </p>
-            )}
           </div>
         </div>
         {errors.root && (

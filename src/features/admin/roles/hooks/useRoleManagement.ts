@@ -53,18 +53,13 @@ export function useRoleManagement() {
   const summary = useQuery({
     queryKey: ['users', 'role-summary'],
     queryFn: async ({ signal }) => {
-      const [all, active, admins] = await Promise.all([
+      const [all, active] = await Promise.all([
         getRoleUsers({ page: 1, pageSize: 1 }, signal),
         getRoleUsers({ page: 1, pageSize: 1, isActive: true }, signal),
-        getRoleUsers(
-          { page: 1, pageSize: 1, roleId: 'admin', isActive: true },
-          signal,
-        ),
       ])
       return {
         total: all.totalCount,
         active: active.totalCount,
-        admins: admins.totalCount,
       }
     },
   })
@@ -127,10 +122,11 @@ export function useRoleManagement() {
   }
   async function saveAssignment(values: RoleAssignmentValues) {
     if (!selectedUser || mutation.isPending)
-      return 'Unable to update this account.'
-    if (values.role === selectedUser.roleId) return 'Select a different role.'
+      return 'Không thể cập nhật tài khoản.'
+    if (values.role === selectedUser.roleId)
+      return 'Vui lòng chọn vai trò khác.'
     if (!roles.data?.some((item) => item.roleId === values.role))
-      return 'The selected role is no longer available.'
+      return 'Vai trò đã chọn không còn khả dụng.'
     try {
       const updated = await mutation.mutateAsync({
         id: selectedUser.userId,

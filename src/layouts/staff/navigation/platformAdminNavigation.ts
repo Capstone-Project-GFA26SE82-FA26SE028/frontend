@@ -13,6 +13,11 @@ export const platformAdminNavigation: StaffNavigationGroup[] = [
         icon: 'users',
       },
       {
+        to: '/platform-admin/roles',
+        label: 'Vai trò và quyền hạn',
+        icon: 'shield',
+      },
+      {
         to: '/platform-admin/sessions',
         label: 'Phiên đăng nhập',
         icon: 'monitor',
