@@ -1,21 +1,14 @@
-import type { Restaurant } from '../../../platform-admin/restaurants/types/types'
 export function AreaFilters({
   search,
   onSearch,
   status,
   onStatus,
-  restaurantId,
-  onRestaurant,
-  restaurants,
   onReset,
 }: {
   search: string
   onSearch: (v: string) => void
   status: string
   onStatus: (v: string) => void
-  restaurantId: string
-  onRestaurant: (v: string) => void
-  restaurants: Restaurant[]
   onReset: () => void
 }) {
   return (
@@ -49,19 +42,6 @@ export function AreaFilters({
         value={search}
         onChange={(e) => onSearch(e.target.value)}
       />
-      <select
-        aria-label="Lọc theo nhà hàng"
-        className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 sm:!w-56"
-        value={restaurantId}
-        onChange={(e) => onRestaurant(e.target.value)}
-      >
-        <option value="">Tất cả nhà hàng</option>
-        {restaurants.map((r) => (
-          <option key={r.restaurantId} value={r.restaurantId}>
-            {r.restaurantName}
-          </option>
-        ))}
-      </select>
       <button
         className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
         onClick={onReset}

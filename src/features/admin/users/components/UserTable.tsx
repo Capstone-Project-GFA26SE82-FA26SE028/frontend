@@ -27,6 +27,7 @@ export function UserTable({
                 'Người dùng',
                 'Vai trò',
                 'Tên đăng nhập',
+                'Nhà hàng',
                 'Trạng thái',
                 'Thao tác',
               ].map((h) => (
@@ -57,6 +58,14 @@ export function UserTable({
                   <RoleBadge id={u.role} name={userRoleLabel(u.role)} />
                 </td>
                 <td className="px-5 text-slate-500">{u.userName}</td>
+                <td className="max-w-60 whitespace-normal break-words px-5 text-slate-500">
+                  {u.restaurantName ||
+                    (u.restaurantId
+                      ? 'Chưa có tên nhà hàng'
+                      : ['customer', 'platform_admin'].includes(u.role)
+                        ? 'Không áp dụng'
+                        : 'Chưa gán nhà hàng')}
+                </td>
                 <td className="px-5">
                   <Badge tone={u.active ? 'green' : 'red'}>
                     {u.active ? 'Đang hoạt động' : 'Đã vô hiệu hóa'}
@@ -95,6 +104,15 @@ export function UserTable({
             <p className="text-sm text-slate-500">
               <RoleBadge id={u.role} name={userRoleLabel(u.role)} /> ·{' '}
               {u.userName}
+            </p>
+            <p className="break-words text-sm text-slate-500">
+              Nhà hàng:{' '}
+              {u.restaurantName ||
+                (u.restaurantId
+                  ? 'Chưa có tên nhà hàng'
+                  : ['customer', 'platform_admin'].includes(u.role)
+                    ? 'Không áp dụng'
+                    : 'Chưa gán nhà hàng')}
             </p>
             <UserActions
               user={u}

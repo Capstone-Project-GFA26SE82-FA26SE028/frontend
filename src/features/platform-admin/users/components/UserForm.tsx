@@ -1,4 +1,5 @@
 import { useAccountRestaurants } from '../hooks/useUsers'
+import { useState, type ReactNode } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { UserAvatar } from './UserAvatar'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,19 +17,24 @@ export function UserForm({
   roles,
   onClose,
   onSave,
+  restaurantSection,
+  transferLocked = false,
 }: {
   user: UserAccount | null
   roles: UserRole[]
   onClose: () => void
   onSave: (values: AccountFormValues) => Promise<string>
+  restaurantSection?: ReactNode
+  transferLocked?: boolean
 }) {
+  const [tab, setTab] = useState<'account' | 'restaurant'>('account')
   const {
     register,
     handleSubmit,
     setError,
     setValue,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema(!!user)),
     defaultValues: {
@@ -63,7 +69,42 @@ export function UserForm({
       title={user ? 'Sửa tài khoản' : 'Thêm tài khoản'}
       onClose={close}
     >
+      {restaurantSection && (
+        <div
+          className="flex gap-5 border-b border-slate-100 px-6"
+          role="tablist"
+          aria-label="Sửa tài khoản"
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === 'account'}
+            aria-controls="user-account-panel"
+            id="user-account-tab"
+            disabled={isSubmitting}
+            onClick={() => setTab('account')}
+            className={`border-b-2 py-3 text-sm font-semibold ${tab === 'account' ? 'border-brand text-brand' : 'border-transparent text-slate-500'}`}
+          >
+            Thông tin tài khoản
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === 'restaurant'}
+            aria-controls="user-restaurant-panel"
+            id="user-restaurant-tab"
+            disabled={isSubmitting}
+            onClick={() => setTab('restaurant')}
+            className={`border-b-2 py-3 text-sm font-semibold ${tab === 'restaurant' ? 'border-brand text-brand' : 'border-transparent text-slate-500'}`}
+          >
+            Chuyển nhà hàng
+          </button>
+        </div>
+      )}
       <form
+        id="user-account-panel"
+        aria-labelledby={restaurantSection ? 'user-account-tab' : undefined}
+        hidden={tab !== 'account'}
         noValidate
         className="space-y-4 p-6"
         onSubmit={handleSubmit(async (values) => {
@@ -71,7 +112,19 @@ export function UserForm({
           if (error) setError('root', { message: error })
         })}
       >
-        <fieldset disabled={isSubmitting} className="space-y-4">
+        {transferLocked && (
+          <p
+            role="status"
+            className="rounded-xl bg-amber-50 p-3 text-sm text-amber-800"
+          >
+            Đang kiểm tra chuyển nhà hàng. Vui lòng đợi kết quả trước khi sửa
+            tài khoản.
+          </p>
+        )}
+        <fieldset
+          disabled={isSubmitting || transferLocked}
+          className="space-y-4"
+        >
           <div className="flex flex-col items-center gap-2 rounded-2xl bg-slate-50 p-4">
             <UserAvatar src={avatarUrl} name={name} large />
             <span className="text-xs text-slate-500">
@@ -215,7 +268,7 @@ export function UserForm({
             Hủy
           </button>
           <button
-            disabled={isSubmitting || !roles.length}
+            disabled={isSubmitting || transferLocked || !roles.length}
             className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
           >
             {isSubmitting
@@ -226,6 +279,28 @@ export function UserForm({
           </button>
         </div>
       </form>
+      {restaurantSection && (
+        <section
+          id="user-restaurant-panel"
+          role="tabpanel"
+          aria-labelledby="user-restaurant-tab"
+          hidden={tab !== 'restaurant'}
+          className="p-6"
+        >
+          {isDirty && (
+            <p
+              role="alert"
+              className="mb-4 rounded-xl bg-amber-50 p-3 text-sm leading-6 text-amber-800"
+            >
+              Thông tin tài khoản chưa được lưu. Lưu thay đổi rồi mở lại để
+              chuyển nhà hàng.
+            </p>
+          )}
+          <fieldset disabled={isDirty || isSubmitting}>
+            {restaurantSection}
+          </fieldset>
+        </section>
+      )}
     </Modal>
   )
 }

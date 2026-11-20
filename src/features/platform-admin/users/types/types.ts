@@ -1,5 +1,6 @@
 export type UserAccount = {
   restaurantId: string | null
+  restaurantName: string | null
   provisioningPending: boolean
   id: string
   userName: string
@@ -20,6 +21,7 @@ export type UserResponse<T> = {
 }
 export type UserDto = {
   restaurantId: string | null
+  restaurantName: string | null
   provisioningPending: boolean
   userId: string
   userName: string
@@ -58,4 +60,25 @@ export type UserQuery = {
   search?: string
   roleId?: string
   isActive?: boolean
+}
+
+export type StaffTransfer = {
+  id: string
+  userId: string
+  sourceRestaurantId: string
+  targetRestaurantId: string
+  status: 'Pending' | 'Completed' | 'Rejected'
+  message: string | null
+  createdAt: string
+  completedAt: string | null
+}
+
+export function canTransferUser(user: UserAccount) {
+  return (
+    ['manager', 'waiter', 'cashier', 'kitchen', 'inventory'].includes(
+      user.role,
+    ) &&
+    !!user.restaurantId &&
+    !user.provisioningPending
+  )
 }

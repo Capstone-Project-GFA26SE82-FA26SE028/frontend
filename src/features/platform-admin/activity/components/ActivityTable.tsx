@@ -1,4 +1,5 @@
 import { Icon } from '../../../../components/Icon/Icon'
+import { useState } from 'react'
 import type { ActivityLog } from '../types/types'
 import { EmptyState } from '../../../../components/EmptyState/EmptyState'
 export function ActivityTable({
@@ -10,11 +11,12 @@ export function ActivityTable({
   onDetail: (item: ActivityLog) => void
   onUser: (id: string) => void
 }) {
+  const [failedAvatars, setFailedAvatars] = useState<string[]>([])
   if (!items.length)
     return (
       <EmptyState
         title="Không tìm thấy hoạt động"
-        description="Thử xóa bộ lọc người dùng hoặc kiểm tra lại sau."
+        description="Thử thay đổi bộ lọc hoặc kiểm tra lại sau."
       />
     )
   return (
@@ -51,11 +53,40 @@ export function ActivityTable({
                 {item.userId ? (
                   <button
                     type="button"
-                    className="break-all text-left font-mono text-xs text-emerald-700 hover:underline"
+                    className="flex items-center gap-3 text-left hover:text-emerald-700"
                     title="Lọc theo người dùng này"
                     onClick={() => onUser(item.userId!)}
                   >
-                    {item.userId}
+                    <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-emerald-50 text-emerald-700">
+                      {item.avatarUrl &&
+                      /^https?:\/\//i.test(item.avatarUrl) &&
+                      !failedAvatars.includes(item.avatarUrl) ? (
+                        <img
+                          src={item.avatarUrl}
+                          alt=""
+                          className="size-full object-cover"
+                          referrerPolicy="no-referrer"
+                          onError={() =>
+                            setFailedAvatars((previous) => [
+                              ...previous,
+                              item.avatarUrl!,
+                            ])
+                          }
+                        />
+                      ) : (
+                        <Icon name="users" size={19} />
+                      )}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block break-words font-semibold">
+                        {item.fullName || item.userName || item.userId}
+                      </span>
+                      {item.email && (
+                        <span className="mt-1 block break-all text-xs text-slate-500">
+                          {item.email}
+                        </span>
+                      )}
+                    </span>
                   </button>
                 ) : (
                   <span className="text-slate-500">Chưa có dữ liệu</span>

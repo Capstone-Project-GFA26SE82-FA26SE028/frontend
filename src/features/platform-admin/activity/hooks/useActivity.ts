@@ -3,15 +3,34 @@ import { useState } from 'react'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { getActivityLogs } from '../api/activityApi'
 import type { ActivityLog } from '../types/types'
+import type { ActivityFilterValues } from '../schemas/activityFilterSchema'
 const pageSize = PAGE_SIZE
 export function useActivity() {
-  const [userId, setUserId] = useState('')
+  const [filters, setFilters] = useState<ActivityFilterValues>({
+    userId: '',
+    search: '',
+    action: '',
+    from: '',
+    to: '',
+  })
   const [page, setPage] = useState(1)
   const [detail, setDetail] = useState<ActivityLog | null>(null)
+  const params = {
+    page,
+    pageSize,
+    userId: filters.userId || undefined,
+    search: filters.search || undefined,
+    action: filters.action || undefined,
+    from: filters.from
+      ? new Date(filters.from + 'T00:00:00').toISOString()
+      : undefined,
+    to: filters.to
+      ? new Date(filters.to + 'T23:59:59.999').toISOString()
+      : undefined,
+  }
   const logs = useQuery({
-    queryKey: ['activity-logs', { page, pageSize, userId }],
-    queryFn: ({ signal }) =>
-      getActivityLogs({ page, pageSize, userId: userId || undefined }, signal),
+    queryKey: ['activity-logs', params],
+    queryFn: ({ signal }) => getActivityLogs(params, signal),
     placeholderData: keepPreviousData,
   })
   const total = logs.data?.totalCount ?? 0
@@ -21,8 +40,8 @@ export function useActivity() {
       if (page > lastPage) setPage(lastPage)
     }
   }
-  function filter(value: string) {
-    setUserId(value)
+  function filter(value: ActivityFilterValues) {
+    setFilters(value)
     setPage(1)
   }
   function changePage(value: number) {
@@ -39,7 +58,11 @@ export function useActivity() {
     total,
     page,
     pageSize,
-    userId,
+    filters,
+    filterUser: (id: string) => {
+      setFilters((previous) => ({ ...previous, userId: id }))
+      setPage(1)
+    },
     filter,
     changePage,
     detail,

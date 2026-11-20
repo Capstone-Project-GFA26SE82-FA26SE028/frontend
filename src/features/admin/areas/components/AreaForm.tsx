@@ -3,20 +3,17 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { areaSchema, type AreaValues } from '../schemas/areaSchema'
 import type { Area } from '../types/types'
-import type { Restaurant } from '../../../platform-admin/restaurants/types/types'
 
 import { Field } from '../../../../components/Field/Field'
 import { areaError } from '../api/areaApi'
 export function AreaForm({
   area,
-  restaurants,
   restaurantId,
   pending,
   onSave,
   onClose,
 }: {
   area?: Area
-  restaurants: Restaurant[]
   restaurantId: string
   pending: boolean
   onSave: (values: AreaValues) => Promise<unknown>
@@ -62,7 +59,7 @@ export function AreaForm({
         disabled={pending || isSubmitting}
         className="min-w-0 space-y-5"
       >
-        {area && <input type="hidden" {...register('restaurantId')} />}
+        <input type="hidden" {...register('restaurantId')} />
         <div className="space-y-4 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4 sm:p-5">
           <div className="flex items-center gap-3">
             <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-700 shadow-sm">
@@ -75,42 +72,23 @@ export function AreaForm({
               <p className="mt-0.5 text-xs text-slate-500">
                 {area
                   ? 'Cập nhật thông tin khu vực.'
-                  : 'Chọn nhà hàng cho khu vực này.'}
+                  : 'Khu vực thuộc nhà hàng của bạn.'}
               </p>
             </div>
           </div>
-          <Field label="Nhà hàng *" error={errors.restaurantId?.message}>
-            {area ? (
-              <input
-                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 bg-slate-50"
-                readOnly
-                value={
-                  restaurants.find((r) => r.restaurantId === area.restaurantId)
-                    ?.restaurantName || 'Chưa có thông tin nhà hàng'
-                }
-              />
-            ) : (
-              <select
-                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-                {...register('restaurantId')}
-              >
-                <option value="">Chọn nhà hàng</option>
-                {restaurants.map((r) => (
-                  <option key={r.restaurantId} value={r.restaurantId}>
-                    {r.restaurantName}
-                  </option>
-                ))}
-              </select>
-            )}
-          </Field>
+          {errors.restaurantId && (
+            <p role="alert" className="text-sm text-rose-600">
+              {errors.restaurantId.message}
+            </p>
+          )}
         </div>
         <div className="grid gap-4 rounded-2xl border border-slate-100 bg-slate-50/80 p-4 sm:grid-cols-2 sm:p-5">
           {(
             [
-              ['areaCode', 'Mã khu vực *', 'Ví dụ: TANGTRET-01'],
-              ['areaName', 'Tên khu vực *', 'Ví dụ: Tầng trệt'],
-              ['serviceType', 'Loại phục vụ *', 'Ví dụ: Buffet'],
-              ['spaceType', 'Loại không gian *', 'Ví dụ: Trong nhà'],
+              ['areaCode', 'Mã khu vực *', 'TANGTRET-01, TANGTRET-02,...'],
+              ['areaName', 'Tên khu vực *', 'Tầng trệt, Tầng 2, Sân Thượng,...'],
+              ['serviceType', 'Loại phục vụ *', 'Buffet, Quầy Nước,...'],
+              ['spaceType', 'Loại không gian *', 'Trong nhà, Ngoài Trời,...'],
             ] as const
           ).map(([key, label, placeholder]) => (
             <Field key={key} label={label} error={errors[key]?.message}>
