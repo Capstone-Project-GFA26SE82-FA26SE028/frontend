@@ -95,13 +95,7 @@ export function TableQrModal({
     <Modal
       key="preview"
       title={context.data ? 'QR - ' + context.data.table.tableCode : 'QR bàn'}
-      subtitle={
-        context.data
-          ? context.data.restaurant.restaurantName +
-            ' / ' +
-            context.data.area.areaName
-          : undefined
-      }
+      subtitle={context.data ? context.data.area.areaName : undefined}
       closeLabel="Đóng"
       onClose={() => {
         if (!mutation.isPending) onClose()

@@ -1,18 +1,14 @@
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { tableSchema, type TableValues } from '../schemas/tableSchema'
 import type { Table } from '../types/types'
 import type { Area } from '../../areas/types/types'
-import type { Restaurant } from '../../../platform-admin/restaurants/types/types'
 
 import { Field } from '../../../../components/Field/Field'
 import { tableError } from '../api/tableApi'
 export function TableForm({
   table,
   areas,
-  restaurants,
-  initialRestaurantId,
   initialAreaId,
   pending,
   onSave,
@@ -20,22 +16,14 @@ export function TableForm({
 }: {
   table?: Table
   areas: Area[]
-  restaurants: Restaurant[]
-  initialRestaurantId: string
   initialAreaId: string
   pending: boolean
   onSave: (v: TableValues) => Promise<unknown>
   onClose: () => void
 }) {
-  const [restaurantId, setRestaurantId] = useState(
-    table
-      ? areas.find((a) => a.areaId === table.areaId)?.restaurantId || ''
-      : initialRestaurantId,
-  )
   const {
     register,
     handleSubmit,
-    setValue,
     setError,
     clearErrors,
     formState: { errors, isDirty, isSubmitting },
@@ -77,26 +65,7 @@ export function TableForm({
         disabled={pending || isSubmitting}
         className="min-w-0 space-y-5"
       >
-        <div className="grid gap-4 rounded-2xl bg-emerald-50 p-4 sm:grid-cols-2">
-          <Field label="Nhà hàng *">
-            <select
-              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-              required
-              disabled={!!table}
-              value={restaurantId}
-              onChange={(e) => {
-                setRestaurantId(e.target.value)
-                setValue('areaId', '', { shouldDirty: true })
-              }}
-            >
-              <option value="">Chọn nhà hàng</option>
-              {restaurants.map((r) => (
-                <option key={r.restaurantId} value={r.restaurantId}>
-                  {r.restaurantName}
-                </option>
-              ))}
-            </select>
-          </Field>
+        <div className="rounded-2xl bg-emerald-50 p-4">
           <Field label="Khu vực *" error={errors.areaId?.message}>
             <select
               className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
@@ -104,11 +73,7 @@ export function TableForm({
             >
               <option value="">Chọn khu vực đang hoạt động</option>
               {areas
-                .filter(
-                  (a) =>
-                    a.restaurantId === restaurantId &&
-                    (a.isActive || a.areaId === table?.areaId),
-                )
+                .filter((a) => a.isActive || a.areaId === table?.areaId)
                 .map((a) => (
                   <option
                     key={a.areaId}
@@ -116,7 +81,7 @@ export function TableForm({
                     disabled={!a.isActive}
                   >
                     {a.areaName}
-                    {!a.isActive ? ' (Inactive)' : ''}
+                    {!a.isActive ? ' (Ngừng hoạt động)' : ''}
                   </option>
                 ))}
             </select>

@@ -13,7 +13,6 @@ export function TableModal({
   const { target, detail, mutation } = m
   if (!target) return null
   const areas = m.options.data?.areas || []
-  const restaurants = m.options.data?.restaurants || []
   const table = detail.data
   const currentArea = areas.find((area) => area.areaId === table?.areaId)
   return (
@@ -67,11 +66,11 @@ export function TableModal({
         </div>
       ) : m.options.isPending ? (
         <p role="status" className="p-6">
-          Đang tải nhà hàng và khu vực…
+          Đang tải khu vực…
         </p>
       ) : m.options.isError ? (
         <div className="p-6">
-          <p role="alert">Không thể tải nhà hàng và khu vực.</p>
+          <p role="alert">Không thể tải khu vực.</p>
           <button
             className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
             onClick={() => void m.options.refetch()}
@@ -81,9 +80,7 @@ export function TableModal({
         </div>
       ) : target.mode === 'create' ? (
         <TableForm
-          restaurants={restaurants}
           areas={areas}
-          initialRestaurantId={m.restaurantId}
           initialAreaId={m.areaId}
           pending={mutation.isPending}
           onClose={m.close}
@@ -95,11 +92,6 @@ export function TableModal({
           <TableDetail
             table={table}
             areaName={currentArea?.areaName || 'Chưa có thông tin khu vực'}
-            restaurantName={
-              restaurants.find(
-                (r) => r.restaurantId === currentArea?.restaurantId,
-              )?.restaurantName || 'Chưa có thông tin nhà hàng'
-            }
             onClose={m.close}
             onEdit={() => m.open('edit', table.tableId)}
           />
@@ -107,9 +99,7 @@ export function TableModal({
           <TableForm
             key={table.tableId + '-' + m.revision}
             table={table}
-            restaurants={restaurants}
             areas={areas}
-            initialRestaurantId={currentArea?.restaurantId || ''}
             initialAreaId={table.areaId}
             pending={mutation.isPending}
             onClose={m.close}

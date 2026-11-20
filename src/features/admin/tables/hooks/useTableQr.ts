@@ -3,19 +3,32 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { getTable } from '../api/tableApi'
 import { getArea } from '../../areas/api/areaApi'
-import { getRestaurant } from '../../../platform-admin/restaurants/api/restaurantApi'
+import { useAppSelector } from '../../../../app/hooks'
 import { getCurrentQr, issueTableQr, getQrImage } from '../api/tableQrApi'
 export function useTableQr(tableId: string) {
+  const user = useAppSelector((state) => state.auth.session?.user)
+  const restaurantId = user?.restaurantId || ''
+  const actorId = user?.userId
+  const canManage =
+    !!restaurantId && ['admin', 'manager'].includes(user?.roleId || '')
   const [confirm, setConfirm] = useState(false)
   const client = useQueryClient()
   const context = useQuery({
-    queryKey: ['table-qr', 'table', tableId],
+    queryKey: ['table-qr', restaurantId, actorId, 'table', tableId],
+    enabled: canManage,
+    retry: false,
     queryFn: async ({ signal }) => {
       const table = await getTable(tableId, signal)
       const area = await getArea(table.areaId, signal)
-      const restaurant = await getRestaurant(area.restaurantId, signal)
-      const qr = await getCurrentQr(table.tableId, table.tableCode, signal)
-      return { table, area, restaurant, qr }
+      if (area.restaurantId !== restaurantId)
+        throw new Error('Bàn không thuộc nhà hàng của bạn.')
+      const qr = await getCurrentQr(
+        table.tableId,
+        table.tableCode,
+        signal,
+        restaurantId,
+      )
+      return { table, area, qr }
     },
     staleTime: 0,
     refetchOnMount: 'always',
@@ -23,9 +36,10 @@ export function useTableQr(tableId: string) {
   })
   const current = context.data?.qr
   const picture = useQuery({
-    queryKey: ['table-qr', 'image', current?.qrId],
+    queryKey: ['table-qr', restaurantId, actorId, 'image', current?.qrId],
     queryFn: ({ signal }) => getQrImage(current!.qrId, signal),
-    enabled: !!current,
+    enabled: canManage && !!current,
+    retry: false,
     staleTime: 0,
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,
@@ -35,10 +49,10 @@ export function useTableQr(tableId: string) {
     mutationFn: () => issueTableQr(tableId, current?.qrId),
     onSuccess: (qr) => {
       void client.invalidateQueries({
-        queryKey: ['table-qr', 'status', tableId],
+        queryKey: ['table-qr', restaurantId, actorId, 'status', tableId],
       })
       client.setQueryData(
-        ['table-qr', 'table', tableId],
+        ['table-qr', restaurantId, actorId, 'table', tableId],
         (old: typeof context.data) => (old ? { ...old, qr } : old),
       )
       setConfirm(false)
@@ -46,16 +60,20 @@ export function useTableQr(tableId: string) {
     },
   })
   const allowed =
-    !!context.data?.table.isActive && !!context.data?.area.isActive
+    context.isSuccess &&
+    !!context.data?.table.isActive &&
+    !!context.data?.area.isActive
   async function reload() {
     const r = await context.refetch()
     if (r.isSuccess) {
       void client.invalidateQueries({
-        queryKey: ['table-qr', 'status', tableId],
+        queryKey: ['table-qr', restaurantId, actorId, 'status', tableId],
       })
       mutation.reset()
       setConfirm(false)
-      void client.invalidateQueries({ queryKey: ['table-qr', 'image'] })
+      void client.invalidateQueries({
+        queryKey: ['table-qr', restaurantId, actorId, 'image'],
+      })
     }
   }
   function download() {

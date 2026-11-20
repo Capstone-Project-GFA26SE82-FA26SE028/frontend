@@ -9,7 +9,7 @@ const position = z
   )
   .nullable()
 export const tableSchema = z.object({
-  areaId: z.uuid('Vui lòng chọn khu vực.'),
+  areaId: z.guid('Vui lòng chọn khu vực.'),
   tableCode: z.string().trim().min(1, 'Vui lòng nhập mã bàn.').max(50),
   capacity: z.number().int().min(1).max(2147483647),
   positionX: position,

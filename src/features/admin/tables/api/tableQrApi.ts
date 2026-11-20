@@ -9,10 +9,17 @@ export async function getCurrentQr(
   tableId: string,
   tableCode: string,
   signal?: AbortSignal,
+  restaurantId?: string,
 ) {
   for (let page = 1; ; page++) {
     const { data } = await axiosClient.get<TableResponse<TableQrPage>>('/qr', {
-      params: { search: tableCode, isActive: true, page, pageSize: 100 },
+      params: {
+        restaurantId,
+        search: tableCode,
+        isActive: true,
+        page,
+        pageSize: 100,
+      },
       signal,
     })
     const list = result(data)

@@ -9,17 +9,21 @@ import { tableError } from '../api/tableApi'
 import { TablesByArea } from '../components/TablesByArea'
 import { TableFilters } from '../components/TableFilters'
 export function TablesPage() {
-  const [qrTableId, setQrTableId] = useState<string | null>(null)
+  const [qrTarget, setQrTarget] = useState<{
+    id: string
+    scope: string
+  } | null>(null)
   const m = useTables()
-  const areas = m.options.data?.areas || [],
-    restaurants = m.options.data?.restaurants || []
+  const areas = m.options.data?.areas || []
+  const qrTableId = qrTarget?.scope === m.scope ? qrTarget.id : null
   return (
     <>
       <PageHeading
         title="Bàn"
-        description="Quản lý bàn và chỗ ngồi tại các nhà hàng."
+        description="Quản lý bàn và chỗ ngồi trong nhà hàng của bạn."
         action={
           <button
+            disabled={!m.canManage || m.list.isError || m.options.isError}
             className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
             onClick={() => m.open('create')}
           >
@@ -32,7 +36,7 @@ export function TablesPage() {
           className="mb-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
           role="alert"
         >
-          Không thể tải nhà hàng và khu vực.{' '}
+          Không thể tải khu vực.{' '}
           <button
             className="underline"
             onClick={() => void m.options.refetch()}
@@ -44,13 +48,10 @@ export function TablesPage() {
       <TableFilters
         search={m.search}
         onSearch={m.setSearch}
-        restaurantId={m.restaurantId}
-        onRestaurant={m.filterRestaurant}
         areaId={m.areaId}
         onArea={m.filterArea}
         status={m.status}
         onStatus={m.filterStatus}
-        restaurants={restaurants}
         areas={areas}
         onReset={m.reset}
       />
@@ -83,9 +84,10 @@ export function TablesPage() {
             <TablesByArea
               tables={m.list.data.items}
               areas={areas}
-              restaurants={restaurants}
               onAction={(mode, id) =>
-                mode === 'qr' ? setQrTableId(id) : m.open(mode, id)
+                mode === 'qr'
+                  ? setQrTarget({ id, scope: m.scope })
+                  : m.open(mode, id)
               }
             />
           )}
@@ -96,7 +98,7 @@ export function TablesPage() {
         <TableQrModal
           key={qrTableId}
           tableId={qrTableId}
-          onClose={() => setQrTableId(null)}
+          onClose={() => setQrTarget(null)}
         />
       )}
     </>
