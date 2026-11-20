@@ -3,13 +3,11 @@ import type { Table } from '../types/types'
 export function TableDetail({
   table,
   areaName,
-  restaurantName,
   onEdit,
   onClose,
 }: {
   table: Table
   areaName: string
-  restaurantName: string
   onEdit: () => void
   onClose: () => void
 }) {
@@ -23,12 +21,11 @@ export function TableDetail({
       </div>
       <dl className="divide-y divide-slate-100">
         {[
-          ['Nhà hàng', restaurantName],
           ['Khu vực', areaName],
-          ['Sức chứa', table.capacity + ' seats'],
+          ['Sức chứa', table.capacity + ' chỗ'],
           ['Trạng thái vệ sinh', table.cleaningStatus],
-          ['Tọa độ X', table.positionX ?? 'Not set'],
-          ['Tọa độ Y', table.positionY ?? 'Not set'],
+          ['Tọa độ X', table.positionX ?? 'Chưa thiết lập'],
+          ['Tọa độ Y', table.positionY ?? 'Chưa thiết lập'],
         ].map(([label, value]) => (
           <div
             key={label}

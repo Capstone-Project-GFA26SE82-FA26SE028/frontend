@@ -96,6 +96,9 @@ export function tableError(e: unknown) {
 export function isTableVersionConflict(e: unknown) {
   if (!axios.isAxiosError(e) || e.response?.status !== 409) return false
   return [
+    'Dữ liệu bàn đã thay đổi. Vui lòng tải lại dữ liệu.',
+    'Dữ liệu đã thay đổi. Vui lòng tải lại trước khi tiếp tục.',
+    'Phát hiện thao tác đồng thời. Vui lòng tải lại và thử lại.',
     'The table has changed. Reload the data.',
     'The data has changed. Reload before continuing.',
     'A concurrent operation was detected. Reload and try again.',
