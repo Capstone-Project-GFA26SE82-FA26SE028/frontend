@@ -12,15 +12,15 @@ import { areaError } from '../api/areaApi'
 export function AreasPage() {
   const m = useAreas(),
     { target, detail, mutation } = m
-  const restaurants = m.restaurants.data || []
   const area = detail.data
   return (
     <>
       <PageHeading
         title="Khu vực nhà hàng"
-        description="Quản lý khu vực phục vụ của từng nhà hàng."
+        description="Quản lý khu vực phục vụ trong nhà hàng của bạn."
         action={
           <button
+            disabled={!m.canManage || m.list.isError}
             className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
             onClick={() => m.open('create')}
           >
@@ -28,29 +28,12 @@ export function AreasPage() {
           </button>
         }
       />
-      {m.restaurants.isError && (
-        <div
-          role="alert"
-          className="mb-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
-        >
-          Không thể tải tên nhà hàng.{' '}
-          <button
-            className="underline"
-            onClick={() => void m.restaurants.refetch()}
-          >
-            Thử lại
-          </button>
-        </div>
-      )}
       <Panel>
         <AreaFilters
           search={m.search}
           onSearch={m.setSearch}
           status={m.status}
           onStatus={m.filterStatus}
-          restaurantId={m.restaurantId}
-          onRestaurant={m.filterRestaurant}
-          restaurants={restaurants}
           onReset={m.reset}
         />
         {m.list.isPending ? (
@@ -73,11 +56,7 @@ export function AreasPage() {
             disabled={m.list.isPlaceholderData}
             aria-busy={m.list.isFetching}
           >
-            <AreaTable
-              items={m.list.data.items}
-              restaurants={restaurants}
-              onAction={m.open}
-            />
+            <AreaTable items={m.list.data.items} onAction={m.open} />
             <Pagination
               locale="vi"
               total={m.list.data.totalCount}
@@ -111,27 +90,14 @@ export function AreasPage() {
           onClose={m.close}
         >
           {target.mode === 'create' ? (
-            m.restaurants.isPending ? (
-              <p role="status" className="p-6">
-                Đang tải nhà hàng…
-              </p>
-            ) : m.restaurants.isError ? (
-              <p className="p-6">
-                Chưa tải được danh sách nhà hàng. Vui lòng đóng và thử lại.
-              </p>
-            ) : restaurants.length === 0 ? (
-              <p className="p-6">Tạo nhà hàng trước khi thêm khu vực.</p>
-            ) : (
-              <AreaForm
-                restaurants={restaurants}
-                restaurantId={m.restaurantId}
-                pending={mutation.isPending}
-                onClose={m.close}
-                onSave={(values) =>
-                  mutation.mutateAsync({ kind: 'save', values })
-                }
-              />
-            )
+            <AreaForm
+              restaurantId={m.restaurantId}
+              pending={mutation.isPending}
+              onClose={m.close}
+              onSave={(values) =>
+                mutation.mutateAsync({ kind: 'save', values })
+              }
+            />
           ) : detail.isPending ? (
             <p role="status" className="p-6">
               Đang tải khu vực…
@@ -151,10 +117,6 @@ export function AreasPage() {
             (target.mode === 'view' ? (
               <AreaDetail
                 area={area}
-                restaurantName={
-                  restaurants.find((r) => r.restaurantId === area.restaurantId)
-                    ?.restaurantName || 'Chưa có thông tin nhà hàng'
-                }
                 onClose={m.close}
                 onEdit={() => m.open('edit', area.areaId)}
               />
@@ -162,7 +124,6 @@ export function AreasPage() {
               <AreaForm
                 key={area.areaId}
                 area={area}
-                restaurants={restaurants}
                 restaurantId={area.restaurantId}
                 pending={mutation.isPending}
                 onClose={m.close}

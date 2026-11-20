@@ -118,6 +118,7 @@ export function RestaurantStaffPage() {
         <RestaurantStaffSection
           key={restaurantId}
           restaurantId={restaurantId}
+          restaurantName={selected.restaurantName}
         />
       ) : (
         <div className="flex flex-col items-center rounded-2xl border border-dashed border-slate-200 bg-white/60 px-4 py-16 text-center">

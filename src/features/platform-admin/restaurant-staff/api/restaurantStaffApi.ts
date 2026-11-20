@@ -1,6 +1,21 @@
 import { axiosClient } from '../../../../api/axiosClient'
 import axios from 'axios'
 import type { RestaurantStaffResponse, RestaurantStaff } from '../types/types'
+import type { StaffAccountPage } from '../types/types'
+
+export async function searchStaffAccounts(
+  search: string,
+  page: number,
+  signal?: AbortSignal,
+) {
+  const { data } = await axiosClient.get<
+    RestaurantStaffResponse<StaffAccountPage>
+  >('/users', {
+    params: { search, page, pageSize: 10 },
+    signal,
+  })
+  return result(data)
+}
 
 export function restaurantStaffError(error: unknown): string {
   if (axios.isAxiosError(error)) {

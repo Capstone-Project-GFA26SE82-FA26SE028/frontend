@@ -3,12 +3,10 @@ import type { Area } from '../types/types'
 
 export function AreaDetail({
   area,
-  restaurantName,
   onEdit,
   onClose,
 }: {
   area: Area
-  restaurantName: string
   onEdit: () => void
   onClose: () => void
 }) {
@@ -47,16 +45,12 @@ export function AreaDetail({
       </div>
       <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {[
-          ['Nhà hàng', restaurantName, 'store'],
           ['Loại phục vụ', area.serviceType, 'utensils'],
           ['Loại không gian', area.spaceType, 'home'],
-        ].map(([label, value, icon], index) => (
+        ].map(([label, value, icon]) => (
           <div
             key={label}
-            className={
-              'min-w-0 rounded-2xl border border-slate-100 bg-slate-50/80 p-4 ' +
-              (index === 0 ? 'sm:col-span-2' : '')
-            }
+            className="min-w-0 rounded-2xl border border-slate-100 bg-slate-50/80 p-4"
           >
             <dt className="flex items-center gap-2 text-xs font-medium text-slate-500">
               <Icon name={icon} size={16} />

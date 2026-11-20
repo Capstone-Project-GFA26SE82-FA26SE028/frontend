@@ -10,7 +10,9 @@ import { useTaxFees } from '../hooks/useTaxFees'
 
 import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import { taxFeeError } from '../api/taxFeeApi'
+import { useAppSelector } from '../../../../app/hooks'
 export function TaxFeesPage() {
+  const user = useAppSelector((state) => state.auth.session?.user)
   const {
     list,
     effective,
@@ -23,7 +25,9 @@ export function TaxFeesPage() {
     total,
     refresh,
   } = useTaxFees()
-  const initialized = useRef(false)
+  const formOwner = `${user?.userId || ''}:${user?.restaurantId || ''}`
+  const initialized = useRef<string | null>(null)
+  const resetSave = save.reset
   const {
     register,
     handleSubmit,
@@ -41,8 +45,8 @@ export function TaxFeesPage() {
     },
   })
   useEffect(() => {
-    if (!effective.isSuccess || initialized.current) return
-    initialized.current = true
+    if (initialized.current === formOwner) return
+    resetSave()
     reset({
       vat: current?.vat ?? 0,
       service: current?.service ?? 0,
@@ -50,13 +54,14 @@ export function TaxFeesPage() {
       applyAt: 'now',
       effectiveAt: '',
     })
-  }, [effective.isSuccess, current, reset])
+    if (effective.isSuccess) initialized.current = formOwner
+  }, [formOwner, effective.isSuccess, current, reset, resetSave])
   const applyAt = useWatch({ control, name: 'applyAt' })
   return (
     <>
       <PageHeading
         title="VAT & phí dịch vụ"
-        description="Áp dụng chung cho tất cả nhà hàng."
+        description="Cấu hình áp dụng cho nhà hàng của bạn."
         action={
           <button
             type="button"

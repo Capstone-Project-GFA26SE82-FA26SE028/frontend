@@ -6,7 +6,7 @@ export const adminNavigation: StaffNavigationGroup[] = [
     items: [{ to: '/admin', label: 'Tổng quan', icon: 'home' }],
   },
   {
-    title: 'QUẢN LÝ TÀI KHOẢN',
+    title: 'QUẢN LÝ TÀI KHOẢN NHÂN VIÊN',
     items: [
       { to: '/admin/users', label: 'Tài khoản người dùng', icon: 'users' },
       { to: '/admin/roles', label: 'Vai trò và quyền hạn', icon: 'shield' },

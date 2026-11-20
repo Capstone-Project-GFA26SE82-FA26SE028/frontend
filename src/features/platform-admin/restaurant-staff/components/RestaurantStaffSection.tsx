@@ -8,15 +8,15 @@ import { RestaurantStaffForm } from './RestaurantStaffForm'
 
 export function RestaurantStaffSection({
   restaurantId,
+  restaurantName,
 }: {
   restaurantId: string
+  restaurantName: string
 }) {
   const m = useRestaurantStaff(restaurantId)
-  const [search, setSearch] = useState('')
-  const rows = m.active.filter((row) =>
-    row.userIdRef.toLowerCase().includes(search.trim().toLowerCase()),
-  )
-  // TODO backend: trả thêm thông tin tài khoản trong API staff để hiển thị tên, email, ảnh và vai trò.
+  const [failedAvatars, setFailedAvatars] = useState<string[]>([])
+  const { search, setSearch, rows } = m
+  const removing = m.active.find((row) => row.userIdRef === m.removing)
   return (
     <>
       <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm shadow-slate-200/20">
@@ -78,7 +78,7 @@ export function RestaurantStaffSection({
           <>
             <div className="px-5 py-4 sm:px-6">
               <label className="relative block sm:max-w-sm">
-                <span className="sr-only">Tìm ID tài khoản đã phân công</span>
+                <span className="sr-only">Tìm nhân viên đã phân công</span>
                 <Icon
                   name="search"
                   size={18}
@@ -88,7 +88,7 @@ export function RestaurantStaffSection({
                   type="search"
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Tìm theo ID tài khoản…"
+                  placeholder="Tìm tên, username, email hoặc ID…"
                   className="min-h-11 w-full rounded-xl border border-slate-200 py-2 pl-10 pr-3 text-sm outline-none focus:border-emerald-500"
                 />
               </label>
@@ -98,7 +98,10 @@ export function RestaurantStaffSection({
                 <thead className="border-y border-slate-100 bg-slate-50 text-xs text-slate-500">
                   <tr>
                     <th scope="col" className="px-5 py-3">
-                      ID tài khoản
+                      Nhân viên
+                    </th>
+                    <th scope="col" className="px-4 py-3">
+                      Vai trò
                     </th>
                     <th scope="col" className="px-4 py-3">
                       Phân công
@@ -112,17 +115,56 @@ export function RestaurantStaffSection({
                   {!rows.length && (
                     <tr>
                       <td
-                        colSpan={3}
+                        colSpan={4}
                         className="p-8 text-center text-slate-500"
                       >
-                        Không tìm thấy ID phù hợp.
+                        Không tìm thấy nhân viên phù hợp.
                       </td>
                     </tr>
                   )}
                   {rows.map((row) => (
                     <tr key={row.userIdRef} className="hover:bg-slate-50/60">
-                      <td className="break-all px-5 py-4 font-mono text-xs text-slate-700">
-                        {row.userIdRef}
+                      <td className="px-5 py-4 text-slate-700">
+                        <div className="flex items-center gap-3">
+                          <span className="flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-emerald-50 text-emerald-700">
+                            {row.avatarUrl &&
+                            /^https?:\/\//i.test(row.avatarUrl) &&
+                            !failedAvatars.includes(row.avatarUrl) ? (
+                              <img
+                                src={row.avatarUrl}
+                                alt={
+                                  'Ảnh ' +
+                                  (row.fullName || row.userName || 'nhân viên')
+                                }
+                                referrerPolicy="no-referrer"
+                                className="size-full object-cover"
+                                onError={() =>
+                                  setFailedAvatars((previous) => [
+                                    ...previous,
+                                    row.avatarUrl!,
+                                  ])
+                                }
+                              />
+                            ) : (
+                              <Icon name="users" size={20} />
+                            )}
+                          </span>
+                          <div className="min-w-0">
+                            <p className="break-words font-semibold">
+                              {row.fullName || row.userName || row.userIdRef}
+                            </p>
+                            {row.email && (
+                              <p className="mt-1 break-all text-xs text-slate-500">
+                                {row.email}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <Badge tone="slate">
+                          {row.roleId || 'Chưa có dữ liệu'}
+                        </Badge>
                       </td>
                       <td className="px-4 py-4">
                         <Badge tone="green">Đã gán</Badge>
@@ -131,7 +173,10 @@ export function RestaurantStaffSection({
                         <button
                           type="button"
                           title="Gỡ khỏi nhà hàng"
-                          aria-label={'Gỡ tài khoản ' + row.userIdRef}
+                          aria-label={
+                            'Gỡ tài khoản ' +
+                            (row.fullName || row.userName || row.userIdRef)
+                          }
                           disabled={m.change.isPending || m.list.isFetching}
                           onClick={() => m.setRemoving(row.userIdRef)}
                           className="inline-flex size-10 items-center justify-center rounded-xl text-slate-400 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-40"
@@ -169,10 +214,8 @@ export function RestaurantStaffSection({
         >
           <div className="p-6">
             <p className="text-sm text-slate-600">
-              Gỡ tài khoản này khỏi nhà hàng?
-            </p>
-            <p className="mt-3 break-all rounded-xl bg-slate-50 p-4 font-mono text-xs text-slate-700">
-              {m.removing}
+              Gỡ {removing?.fullName || removing?.userName || 'tài khoản này'}{' '}
+              khỏi nhà hàng <strong>{restaurantName}</strong>?
             </p>
             <div className="mt-6 flex justify-end gap-3">
               <button

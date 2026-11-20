@@ -85,8 +85,14 @@ export function UserDetailModal({
                 Tài khoản đang chờ phân công và chưa thể đăng nhập.
               </p>
             )}
-            <p className="mt-4 break-all text-sm text-slate-500">
-              Mã nhà hàng: {user.restaurantId || 'Chưa gán'}
+            <p className="mt-4 break-words text-sm text-slate-500">
+              Nhà hàng:{' '}
+              {user.restaurantName ||
+                (user.restaurantId
+                  ? 'Chưa có tên nhà hàng'
+                  : ['customer', 'platform_admin'].includes(user.role)
+                    ? 'Không áp dụng'
+                    : 'Chưa gán nhà hàng')}
             </p>
             <section className="mt-6" aria-labelledby="user-contact-heading">
               <h4

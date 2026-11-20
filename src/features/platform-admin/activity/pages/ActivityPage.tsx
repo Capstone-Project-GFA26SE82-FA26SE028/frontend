@@ -36,7 +36,7 @@ export function ActivityPage() {
         }
       />
       <Panel>
-        <ActivityFilters userId={activity.userId} onApply={activity.filter} />
+        <ActivityFilters filters={activity.filters} onApply={activity.filter} />
         {logs.isPending ? (
           <p role="status" className="p-8 text-center text-slate-500">
             Đang tải nhật ký hoạt động…
@@ -68,7 +68,7 @@ export function ActivityPage() {
               <ActivityTable
                 items={logs.data.items}
                 onDetail={activity.setDetail}
-                onUser={activity.filter}
+                onUser={activity.filterUser}
               />
               <Pagination
                 locale="vi"

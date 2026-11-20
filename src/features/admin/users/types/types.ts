@@ -40,6 +40,7 @@ export type UsersState = {
 // API-backed accounts. Legacy AdminUser remains for screens not yet migrated.
 export type UserAccount = {
   restaurantId: string | null
+  restaurantName: string | null
   provisioningPending: boolean
   id: string
   userName: string
@@ -60,6 +61,7 @@ export type UserResponse<T> = {
 }
 export type UserDto = {
   restaurantId: string | null
+  restaurantName: string | null
   provisioningPending: boolean
   userId: string
   userName: string

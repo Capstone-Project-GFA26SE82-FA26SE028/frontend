@@ -18,6 +18,7 @@ function mapUser(user: UserDto): UserAccount {
   return {
     id: user.userId,
     restaurantId: user.restaurantId ?? null,
+    restaurantName: user.restaurantName?.trim() || null,
     provisioningPending: user.provisioningPending ?? false,
     userName: user.userName,
     name: user.fullName || user.userName,

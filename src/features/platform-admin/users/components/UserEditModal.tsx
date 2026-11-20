@@ -5,6 +5,9 @@ import { userApiError } from '../api/userApi'
 import { UserForm } from './UserForm'
 import type { UserAccount } from '../types/types'
 import type { AccountFormValues } from '../schemas/userSchema'
+import { canTransferUser } from '../types/types'
+import { useStaffTransfer } from '../hooks/useStaffTransfer'
+import { UserRestaurantTransfer } from './UserRestaurantTransfer'
 
 export function UserEditModal({
   id,
@@ -17,6 +20,7 @@ export function UserEditModal({
 }) {
   const { data, isPending, isError, error, refetch } = useUser(id)
   const roles = useUserRoles()
+  const transfer = useStaffTransfer(id)
   if (!isPending && !isError && data && roles.isSuccess)
     return (
       <UserForm
@@ -24,6 +28,12 @@ export function UserEditModal({
         roles={roles.data}
         onClose={onClose}
         onSave={(values) => onSave(values, data)}
+        transferLocked={transfer.locked}
+        restaurantSection={
+          canTransferUser(data) || transfer.hasAttempt ? (
+            <UserRestaurantTransfer user={data} model={transfer} />
+          ) : undefined
+        }
       />
     )
   return (

@@ -1,4 +1,6 @@
 import { Modal } from '../../../../components/Modal/Modal'
+import { useState } from 'react'
+import { Icon } from '../../../../components/Icon/Icon'
 
 import type { ActivityLog } from '../types/types'
 function parseSnapshot(value: string | null): Record<string, unknown> {
@@ -74,6 +76,7 @@ export function ActivityDetailModal({
   log: ActivityLog
   onClose: () => void
 }) {
+  const [failedAvatar, setFailedAvatar] = useState(false)
   const before = parseSnapshot(log.oldValue)
   const after = parseSnapshot(log.newValue)
   const fields = [...new Set([...Object.keys(before), ...Object.keys(after)])]
@@ -85,6 +88,38 @@ export function ActivityDetailModal({
       size="wide"
     >
       <div className="space-y-5 p-5 sm:p-6">
+        <div className="flex items-center gap-4 rounded-2xl bg-emerald-50 p-4">
+          <span className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-emerald-100 text-emerald-700">
+            {log.avatarUrl &&
+            /^https?:\/\//i.test(log.avatarUrl) &&
+            !failedAvatar ? (
+              <img
+                src={log.avatarUrl}
+                alt=""
+                className="size-full object-cover"
+                referrerPolicy="no-referrer"
+                onError={() => setFailedAvatar(true)}
+              />
+            ) : (
+              <Icon name="users" size={24} />
+            )}
+          </span>
+          <div className="min-w-0">
+            <p className="break-words font-semibold">
+              {log.fullName || log.userName || log.userId || 'Chưa có dữ liệu'}
+            </p>
+            {log.userName && (
+              <p className="mt-1 break-all text-xs text-slate-500">
+                @{log.userName}
+              </p>
+            )}
+            {log.email && (
+              <p className="mt-1 break-all text-sm text-slate-500">
+                {log.email}
+              </p>
+            )}
+          </div>
+        </div>
         <dl className="grid gap-3 sm:grid-cols-2">
           {[
             ['Thao tác', log.action],

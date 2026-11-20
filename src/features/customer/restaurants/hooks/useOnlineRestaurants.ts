@@ -1,53 +1,38 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import {
-  getAllOnlineRestaurants,
-  getOnlineRestaurants,
-} from '../api/restaurantApi'
+import { getOnlineRestaurants } from '../api/restaurantApi'
 
 export function useOnlineRestaurants() {
-  const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
+  const [keyword, setKeyword] = useState('')
+  const [pagination, setPagination] = useState({ keyword: '', page: 1 })
   const pageSize = 6
-  const keyword = search
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/gi, 'd')
-    .toLocaleLowerCase('vi-VN')
+  const page = pagination.keyword === keyword ? pagination.page : 1
+  useEffect(() => {
+    const timer = window.setTimeout(() => setKeyword(search.trim()), 300)
+    return () => window.clearTimeout(timer)
+  }, [search])
   const restaurants = useQuery({
-    queryKey: [
-      'online-restaurants',
-      keyword ? { all: true } : { page, pageSize },
-    ],
+    queryKey: ['online-restaurants', { page, pageSize, search: keyword }],
     queryFn: ({ signal }) =>
-      keyword
-        ? getAllOnlineRestaurants(signal)
-        : getOnlineRestaurants(page, pageSize, signal),
-    select: (data) => {
-      if (!keyword) return data
-      const items = data.items.filter((restaurant) =>
-        (restaurant.restaurantName + ' ' + restaurant.address)
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/đ/gi, 'd')
-          .toLocaleLowerCase('vi-VN')
-          .includes(keyword),
-      )
-      return {
-        items: items.slice((page - 1) * pageSize, page * pageSize),
-        totalCount: items.length,
-        page,
-        pageSize,
-      }
-    },
+      getOnlineRestaurants(page, pageSize, signal, keyword),
     retry: false,
     staleTime: 30000,
     refetchOnWindowFocus: false,
   })
+  if (restaurants.isSuccess) {
+    const lastPage = Math.max(
+      1,
+      Math.ceil(restaurants.data.totalCount / pageSize),
+    )
+    if (page > lastPage) setPagination({ keyword, page: lastPage })
+  }
   function changeSearch(value: string) {
     setSearch(value)
-    setPage(1)
+    setPagination({ keyword: value.trim(), page: 1 })
+  }
+  function setPage(value: number) {
+    setPagination({ keyword, page: value })
   }
   return { page, setPage, pageSize, restaurants, search, changeSearch }
 }

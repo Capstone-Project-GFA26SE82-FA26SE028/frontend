@@ -1,14 +1,11 @@
 import { Icon } from '../../../../components/Icon/Icon'
 import { EmptyState } from '../../../../components/EmptyState/EmptyState'
 import type { Area } from '../types/types'
-import type { Restaurant } from '../../../platform-admin/restaurants/types/types'
 export function AreaTable({
   items,
-  restaurants,
   onAction,
 }: {
   items: Area[]
-  restaurants: Restaurant[]
   onAction: (mode: 'view' | 'edit' | 'status' | 'delete', id: string) => void
 }) {
   if (!items.length)
@@ -20,12 +17,11 @@ export function AreaTable({
     )
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[950px] text-left text-sm">
+      <table className="w-full min-w-[800px] text-left text-sm">
         <thead className="border-y border-slate-100 bg-slate-50 text-slate-500">
           <tr>
             {[
               'Khu vực',
-              'Nhà hàng',
               'Loại phục vụ',
               'Loại không gian',
               'Trạng thái',
@@ -46,10 +42,6 @@ export function AreaTable({
               <td className="max-w-56 break-words p-4">
                 <p className="font-semibold">{area.areaName}</p>
                 <p className="mt-1 text-xs text-slate-500">{area.areaCode}</p>
-              </td>
-              <td className="max-w-56 break-words p-4">
-                {restaurants.find((r) => r.restaurantId === area.restaurantId)
-                  ?.restaurantName || 'Chưa có thông tin nhà hàng'}
               </td>
               <td className="max-w-40 break-words p-4">{area.serviceType}</td>
               <td className="max-w-40 break-words p-4">{area.spaceType}</td>

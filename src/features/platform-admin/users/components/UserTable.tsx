@@ -57,14 +57,15 @@ export function UserTable({
                   <UserRoleBadge id={u.role} name={userRoleLabel(u.role)} />
                 </td>
                 <td
-                  className="px-5 text-slate-500"
-                  title={u.restaurantId || undefined}
+                  className="max-w-60 whitespace-normal break-words px-5 text-slate-500"
+                  title={u.restaurantName || undefined}
                 >
-                  {u.restaurantId
-                    ? u.restaurantId
-                    : ['customer', 'platform_admin'].includes(u.role)
-                      ? 'Không áp dụng'
-                      : 'Chưa gán nhà hàng'}
+                  {u.restaurantName ||
+                    (u.restaurantId
+                      ? 'Chưa có tên nhà hàng'
+                      : ['customer', 'platform_admin'].includes(u.role)
+                        ? 'Không áp dụng'
+                        : 'Chưa gán nhà hàng')}
                 </td>
                 <td className="px-5">
                   <Badge
@@ -126,15 +127,16 @@ export function UserTable({
               {u.userName}
             </p>
             <p
-              className="text-sm text-slate-500"
-              title={u.restaurantId || undefined}
+              className="break-words text-sm text-slate-500"
+              title={u.restaurantName || undefined}
             >
               Nhà hàng:{' '}
-              {u.restaurantId
-                ? u.restaurantId
-                : ['customer', 'platform_admin'].includes(u.role)
-                  ? 'Không áp dụng'
-                  : 'Chưa gán'}
+              {u.restaurantName ||
+                (u.restaurantId
+                  ? 'Chưa có tên nhà hàng'
+                  : ['customer', 'platform_admin'].includes(u.role)
+                    ? 'Không áp dụng'
+                    : 'Chưa gán nhà hàng')}
             </p>
             <UserActions
               user={u}

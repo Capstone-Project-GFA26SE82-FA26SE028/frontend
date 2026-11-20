@@ -11,9 +11,10 @@ export async function getOnlineRestaurants(
   page: number,
   pageSize: number,
   signal: AbortSignal,
+  search?: string,
 ) {
   const { data } = await client.get<RestaurantResponse>('/online/restaurants', {
-    params: { page, pageSize },
+    params: { page, pageSize, search: search?.trim() || undefined },
     signal,
   })
   if (!data.isSuccess)
