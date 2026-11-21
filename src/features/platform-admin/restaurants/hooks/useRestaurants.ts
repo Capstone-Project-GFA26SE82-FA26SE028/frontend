@@ -1,4 +1,3 @@
-import { PAGE_SIZE } from '../../../../components/Pagination/Pagination'
 import { useState, useEffect } from 'react'
 import {
   keepPreviousData,
@@ -13,7 +12,7 @@ import {
   saveRestaurant,
 } from '../api/restaurantApi'
 import type { RestaurantValues } from '../schemas/restaurantSchema'
-const pageSize = PAGE_SIZE
+const pageSize = 12
 export function useRestaurants() {
   const [search, setSearch] = useState(''),
     [term, setTerm] = useState(''),
@@ -61,12 +60,6 @@ export function useRestaurants() {
   })
   function changePage(value: number) {
     setPage(value)
-    window.scrollTo({
-      top: 0,
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ? 'auto'
-        : 'smooth',
-    })
   }
   return {
     search,

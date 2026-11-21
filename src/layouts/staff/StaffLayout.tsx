@@ -111,6 +111,9 @@ export function StaffLayout({ role }: { role: StaffRole }) {
         />
         <main
           id="staff-main"
+          data-pagination-scroll={
+            role === 'admin' || role === 'platform_admin' ? 'top' : undefined
+          }
           className="mx-auto flex w-full max-w-[1760px] flex-1 flex-col px-3 py-4 sm:px-5"
         >
           <Outlet />

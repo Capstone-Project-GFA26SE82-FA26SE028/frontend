@@ -1,3 +1,4 @@
+import type { MouseEvent } from 'react'
 import { Icon } from '../Icon/Icon'
 
 // Số dòng mặc định dùng chung cho giao diện và các API danh sách.
@@ -17,6 +18,22 @@ export function Pagination({
   locale?: 'vi' | 'en'
 }) {
   const pages = Math.max(1, Math.ceil(total / size))
+
+  function changePage(event: MouseEvent<HTMLButtonElement>, nextPage: number) {
+    const button = event.currentTarget
+    onPage(nextPage)
+    if (!button.closest('[data-pagination-scroll="top"]')) return
+
+    const scrollArea = button.closest('dialog') ?? window
+    requestAnimationFrame(() => {
+      scrollArea.scrollTo({
+        top: 0,
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          ? 'instant'
+          : 'smooth',
+      })
+    })
+  }
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-4 py-3">
       <p className="text-sm text-slate-500">
@@ -30,7 +47,7 @@ export function Pagination({
         <button
           aria-label={locale === 'en' ? 'Previous page' : 'Trang trước'}
           disabled={page <= 1}
-          onClick={() => onPage(page - 1)}
+          onClick={(event) => changePage(event, page - 1)}
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 px-3"
         >
           <Icon name="chevron" className="rotate-180" size={14} />
@@ -41,7 +58,7 @@ export function Pagination({
         <button
           aria-label={locale === 'en' ? 'Next page' : 'Trang sau'}
           disabled={page >= pages}
-          onClick={() => onPage(page + 1)}
+          onClick={(event) => changePage(event, page + 1)}
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40 px-3"
         >
           <Icon name="chevron" size={14} />

@@ -30,7 +30,7 @@ export function RestaurantCard({
             alt={'Logo ' + restaurant.restaurantName}
             loading="lazy"
             referrerPolicy="no-referrer"
-            className="relative h-full w-full object-contain p-6 motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-105"
+            className="relative h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-105"
             onError={() => setFailedUrl(restaurant.logoUrl)}
           />
         ) : (
@@ -61,10 +61,10 @@ export function RestaurantCard({
         <Link
           to={'/restaurants/' + restaurant.restaurantId + '/menu'}
           aria-label={'Xem thực đơn ' + restaurant.restaurantName}
-          className="mt-6 inline-flex min-h-11 w-full items-center justify-between gap-2 rounded-xl bg-[#226449] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#184c37] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          className="mt-6 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#226449] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#184c37] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
-          Xem thực đơn
-          <Icon name="arrow" size={16} />
+          <Icon name="receipt" size={16} />
+          Xem menu
         </Link>
       </div>
     </article>

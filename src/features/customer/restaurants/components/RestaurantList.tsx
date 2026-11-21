@@ -1,17 +1,13 @@
-import { useRef } from 'react'
 import { Icon } from '../../../../components/Icon/Icon'
-import { Pagination } from '../../../../components/Pagination/Pagination'
 import { restaurantError } from '../api/restaurantApi'
 import { useOnlineRestaurants } from '../hooks/useOnlineRestaurants'
 import { RestaurantCard } from './RestaurantCard'
 
 export function RestaurantList() {
   const m = useOnlineRestaurants()
-  const section = useRef<HTMLElement>(null)
-  const data = m.restaurants.data
+  const remaining = Math.max(0, m.totalCount - m.items.length)
   return (
     <section
-      ref={section}
       id="nha-hang"
       aria-labelledby="restaurant-list-title"
       className="scroll-mt-6 pb-4"
@@ -25,9 +21,9 @@ export function RestaurantList() {
             Danh sách nhà hàng
           </h2>
         </div>
-        {m.restaurants.isSuccess && data && (
+        {!m.isSearching && m.restaurants.data && (
           <span className="rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-brand">
-            {data.totalCount} nhà hàng
+            {m.totalCount} nhà hàng
           </span>
         )}
       </div>
@@ -49,7 +45,7 @@ export function RestaurantList() {
           className="min-h-12 w-full rounded-2xl border border-stone-200 bg-white py-3 pr-4 pl-11 text-sm outline-none transition-shadow placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         />
       </div>
-      {m.restaurants.isPending ? (
+      {m.isSearching ? (
         <div role="status" aria-label="Đang tải nhà hàng">
           <p className="mb-4 text-sm text-muted">Đang tải nhà hàng…</p>
           <div
@@ -71,7 +67,7 @@ export function RestaurantList() {
             ))}
           </div>
         </div>
-      ) : m.restaurants.isError ? (
+      ) : m.restaurants.isError && !m.restaurants.data ? (
         <div className="rounded-3xl border border-stone-200/70 bg-white px-5 py-10 text-center">
           <p role="alert" className="text-sm text-muted">
             {restaurantError(m.restaurants.error)}
@@ -85,7 +81,7 @@ export function RestaurantList() {
             Thử lại
           </button>
         </div>
-      ) : !data?.items.length ? (
+      ) : !m.items.length ? (
         <div className="rounded-3xl border border-dashed border-emerald-200 bg-mint/30 px-5 py-12 text-center">
           <Icon name="store" size={32} className="mx-auto text-brand" />
           <p className="mt-4 font-semibold">
@@ -106,31 +102,35 @@ export function RestaurantList() {
       ) : (
         <>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {data.items.map((restaurant) => (
+            {m.items.map((restaurant) => (
               <RestaurantCard
                 key={restaurant.restaurantId}
                 restaurant={restaurant}
               />
             ))}
           </div>
-          {data.totalCount > m.pageSize && (
-            <div className="mt-6 overflow-hidden rounded-2xl border border-stone-200/70 bg-white">
-              <Pagination
-                total={data.totalCount}
-                page={m.page}
-                size={m.pageSize}
-                onPage={(page) => {
-                  m.setPage(page)
-                  section.current?.scrollIntoView({
-                    behavior: window.matchMedia(
-                      '(prefers-reduced-motion: reduce)',
-                    ).matches
-                      ? 'instant'
-                      : 'smooth',
-                    block: 'start',
-                  })
-                }}
-              />
+          {m.restaurants.hasNextPage && (
+            <div className="mt-6">
+              {m.restaurants.isFetchNextPageError && (
+                <p
+                  role="alert"
+                  className="mb-3 text-center text-sm text-rose-700"
+                >
+                  {restaurantError(m.restaurants.error)}
+                </p>
+              )}
+              <button
+                type="button"
+                disabled={m.restaurants.isFetching}
+                onClick={() => void m.restaurants.fetchNextPage()}
+                className="min-h-12 w-full rounded-full border border-emerald-900/20 bg-white px-5 py-3 text-sm font-semibold text-brand transition-colors hover:bg-emerald-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+              >
+                {m.restaurants.isFetchingNextPage
+                  ? 'Đang tải thêm…'
+                  : m.restaurants.isFetchNextPageError
+                    ? 'Thử tải lại'
+                    : `Xem thêm ${remaining} quán`}
+              </button>
             </div>
           )}
         </>

@@ -1,38 +1,49 @@
 import { useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { getOnlineRestaurants } from '../api/restaurantApi'
 
 export function useOnlineRestaurants() {
   const [search, setSearch] = useState('')
   const [keyword, setKeyword] = useState('')
-  const [pagination, setPagination] = useState({ keyword: '', page: 1 })
-  const pageSize = 6
-  const page = pagination.keyword === keyword ? pagination.page : 1
+  const pageSize = 9
   useEffect(() => {
     const timer = window.setTimeout(() => setKeyword(search.trim()), 300)
     return () => window.clearTimeout(timer)
   }, [search])
-  const restaurants = useQuery({
-    queryKey: ['online-restaurants', { page, pageSize, search: keyword }],
-    queryFn: ({ signal }) =>
-      getOnlineRestaurants(page, pageSize, signal, keyword),
+  const restaurants = useInfiniteQuery({
+    queryKey: [
+      'online-restaurants',
+      'load-more',
+      { pageSize, search: keyword },
+    ],
+    initialPageParam: 1,
+    queryFn: ({ signal, pageParam }) =>
+      getOnlineRestaurants(pageParam, pageSize, signal, keyword),
+    getNextPageParam: (lastPage) =>
+      lastPage.items.length &&
+      lastPage.page * lastPage.pageSize < lastPage.totalCount
+        ? lastPage.page + 1
+        : undefined,
     retry: false,
     staleTime: 30000,
     refetchOnWindowFocus: false,
   })
-  if (restaurants.isSuccess) {
-    const lastPage = Math.max(
-      1,
-      Math.ceil(restaurants.data.totalCount / pageSize),
-    )
-    if (page > lastPage) setPagination({ keyword, page: lastPage })
+  const pages = restaurants.data?.pages ?? []
+  const items = Array.from(
+    new Map(
+      pages
+        .flatMap((page) => page.items)
+        .map((item) => [item.restaurantId, item]),
+    ).values(),
+  )
+  const totalCount = pages.at(-1)?.totalCount ?? 0
+  const isSearching = search.trim() !== keyword || restaurants.isPending
+  return {
+    restaurants,
+    items,
+    totalCount,
+    search,
+    changeSearch: setSearch,
+    isSearching,
   }
-  function changeSearch(value: string) {
-    setSearch(value)
-    setPagination({ keyword: value.trim(), page: 1 })
-  }
-  function setPage(value: number) {
-    setPagination({ keyword, page: value })
-  }
-  return { page, setPage, pageSize, restaurants, search, changeSearch }
 }
