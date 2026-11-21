@@ -19,6 +19,9 @@ export function LoginPage() {
     warning?: string
     email?: string
   } | null
+  if (session?.user.roleId === 'cashier' && status === 'authenticated') {
+    return <Navigate to="/cashier" replace />
+  }
   if (session?.user.roleId === 'customer' && status === 'authenticated') {
     if (
       state?.from &&
@@ -61,7 +64,8 @@ export function LoginPage() {
   if (session?.user.roleId === 'platform_admin' && status === 'authenticated') {
     const from = state?.from
     const target =
-      from && (from === '/platform-admin' || from.startsWith('/platform-admin/'))
+      from &&
+      (from === '/platform-admin' || from.startsWith('/platform-admin/'))
         ? from
         : '/platform-admin'
     return <Navigate to={target} replace />
