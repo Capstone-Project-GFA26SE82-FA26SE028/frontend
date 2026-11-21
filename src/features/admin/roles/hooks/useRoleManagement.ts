@@ -113,12 +113,6 @@ export function useRoleManagement() {
   }
   function changePage(value: number) {
     setPagination({ filter, page: value })
-    window.scrollTo({
-      top: 0,
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ? 'instant'
-        : 'smooth',
-    })
   }
   async function saveAssignment(values: RoleAssignmentValues) {
     if (!selectedUser || mutation.isPending)
