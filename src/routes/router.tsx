@@ -1,4 +1,5 @@
 import { kitchenRoute } from './kitchenRoutes'
+import { cashierRoute } from './cashierRoutes'
 import { LoginPage } from '../features/auth/pages/LoginPage'
 import { RegisterPage } from '../features/auth/pages/RegisterPage'
 import { ProtectedRoute } from './ProtectedRoute'
@@ -36,6 +37,7 @@ function CustomerPageRoute() {
     return <Navigate to="/platform-admin" replace />
   if (role === 'manager') return <Navigate to="/manager" replace />
   if (role === 'kitchen') return <Navigate to="/kitchen" replace />
+  if (role === 'cashier') return <Navigate to="/cashier" replace />
   return <Navigate to="/login" replace />
 }
 
@@ -59,6 +61,7 @@ export const router = createBrowserRouter([
         ],
       },
       { element: <RoleRoute roles={['kitchen']} />, children: [kitchenRoute] },
+      { element: <RoleRoute roles={['cashier']} />, children: [cashierRoute] },
       { element: <RoleRoute roles={['admin']} />, children: [adminRoute] },
       {
         element: <RoleRoute roles={['platform_admin']} />,
