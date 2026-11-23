@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAppSelector } from '../../../../app/hooks'
 import { Icon } from '../../../../components/Icon/Icon'
 import { Modal } from '../../../../components/Modal/Modal'
+import { PaymentRequestOption } from '../../payment-requests/components/PaymentRequestOption'
 import { sessionError } from '../../table-session/api/tableSessionApi'
 import { useStaffCall } from '../hooks/useStaffCall'
 
@@ -86,11 +87,12 @@ function StaffCallButton({
                     disabled={send.isPending || call.isFetching}
                     onClick={() => send.mutate()}
                   >
-                    {send.isPending ? 'Đang gửi…' : 'Gọi phục vụ'}
+                    {send.isPending ? 'Đang gửi…' : 'Gọi nhân viên'}
                   </button>
                 )}
               </>
             )}
+            <PaymentRequestOption sessionId={sessionId} />
           </div>
         </Modal>
       )}
