@@ -1,5 +1,23 @@
 export type BillingTab = 'incoming' | 'paid'
 
+export type CashierBill = {
+  currency: string
+  subTotal: number
+  discountAmount: number
+  vatAmount: number
+  serviceAmount: number
+  roundingAdjustment: number
+  totalAmount: number
+  warnings: string[]
+  items: {
+    billLineId: string
+    item: { name: string }
+    quantity: number
+    unitPriceSnapshot: number
+    lineTotal: number
+  }[]
+}
+
 export type CashierTable = {
   tableId: string
   tableCode: string

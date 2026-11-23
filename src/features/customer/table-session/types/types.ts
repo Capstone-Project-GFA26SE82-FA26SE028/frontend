@@ -4,6 +4,9 @@ export type TableSession = {
   tableCode: string
   areaId: string
   restaurantId: string
+  restaurantName: string
+  areaName: string
+  logoUrl: string | null
   status: string
   openedAt: string
   isNewSession: boolean

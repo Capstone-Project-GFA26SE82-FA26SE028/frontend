@@ -18,7 +18,7 @@ export function CustomerNavLink({
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `relative flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 text-[11px] font-semibold transition-colors hover:text-brand md:h-20 md:flex-none md:flex-row md:rounded-none md:px-0 md:text-sm ${mobileOnly ? 'md:hidden' : ''} ${isActive ? 'bg-mint text-brand md:bg-transparent md:after:absolute md:after:right-0 md:after:bottom-0 md:after:left-0 md:after:h-0.5 md:after:bg-brand' : 'text-muted'}`
+        `relative flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 text-[11px] font-semibold transition-colors hover:text-brand md:h-20 md:flex-none md:flex-row md:rounded-none md:px-0 md:text-sm md:hover:text-white ${mobileOnly ? 'md:hidden' : ''} ${isActive ? 'bg-mint text-brand md:bg-transparent md:text-lime-200 md:after:absolute md:after:right-0 md:after:bottom-0 md:after:left-0 md:after:h-0.5 md:after:bg-lime-200' : 'text-muted md:text-white/80'}`
       }
     >
       <Icon name={icon} className="md:hidden" />

@@ -1,5 +1,9 @@
-﻿import type { BillingEntry, BillingTab } from '../types/types'
-import { money, STATUS_NAMES, tableName } from '../utils/billingDisplay'
+import { useQuery } from '@tanstack/react-query'
+import { cashShiftError } from '../../shifts/api/cashShiftApi'
+import { getCashierBill } from '../api/billApi'
+import type { BillingEntry, BillingTab } from '../types/types'
+import { STATUS_NAMES, tableName } from '../utils/billingDisplay'
+import { BillSummary } from './BillSummary'
 
 export function BillingDetails({
   selected,
@@ -8,56 +12,77 @@ export function BillingDetails({
   selected: BillingEntry | undefined
   tab: BillingTab
 }) {
+  const billId = selected?.billId
+  const bill = useQuery({
+    queryKey: ['cashier', 'bill-details', billId],
+    queryFn: ({ signal }) => getCashierBill(billId!, signal),
+    enabled: !!billId,
+    retry: false,
+  })
+  const recordedAt = tab === 'paid' ? selected?.paidAt : selected?.submittedAt
+  const metadata = selected
+    ? [
+        ...new Set(selected.tables.map((table) => table.areaName)),
+        selected.billCode,
+        recordedAt &&
+          new Date(recordedAt).toLocaleTimeString('vi-VN', {
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+      ]
+        .filter(Boolean)
+        .join(' · ')
+    : ''
+
   return (
-    <section className="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white">
-      <header className="border-b border-slate-100 px-5 py-4">
-        <h2 className="break-words text-lg font-bold">
-          {selected ? tableName(selected) : 'Hóa đơn'}
-        </h2>
+    <section className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      <header className="flex items-start justify-between gap-3 border-b border-slate-100 px-5 py-4">
+        <div className="min-w-0 flex-1">
+          <h2 className="break-words text-xl font-bold">
+            {selected ? tableName(selected) : 'Hóa đơn'}
+          </h2>
+          {metadata && (
+            <p className="mt-1 truncate text-xs text-slate-500" title={metadata}>
+              {metadata}
+            </p>
+          )}
+        </div>
         {selected && (
-          <p className="mt-1 text-sm text-slate-500">
-            {selected.tables
-              .map((table) => table.areaName)
-              .filter((name, index, values) => values.indexOf(name) === index)
-              .join(' · ')}
-          </p>
+          <span
+            className={`mt-0.5 inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold ${tab === 'paid' ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}
+          >
+            <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-current" />
+            {tab === 'incoming' && selected.billId
+              ? 'Chờ thanh toán'
+              : (STATUS_NAMES[selected.status] ?? selected.status)}
+          </span>
         )}
       </header>
-      {selected ? (
-        <dl className="space-y-4 break-words p-5 text-sm">
-          <div>
-            <dt className="text-slate-500">Trạng thái</dt>
-            <dd>{STATUS_NAMES[selected.status] ?? selected.status}</dd>
-          </div>
-          <div>
-            <dt className="text-slate-500">Mã hóa đơn</dt>
-            <dd>{selected.billCode ?? 'Chưa lập hóa đơn'}</dd>
-          </div>
-          <div>
-            <dt className="text-slate-500">
-              {tab === 'paid' ? 'Thanh toán lúc' : 'Gửi yêu cầu lúc'}
-            </dt>
-            <dd>
-              {(tab === 'paid' ? selected.paidAt : selected.submittedAt)
-                ? new Date(
-                    (tab === 'paid' ? selected.paidAt : selected.submittedAt)!,
-                  ).toLocaleString('vi-VN')
-                : 'Chưa ghi nhận'}
-            </dd>
-          </div>
-          {selected.totalAmount !== null && (
-            <div>
-              <dt className="text-slate-500">Tổng tiền</dt>
-              <dd className="text-xl font-bold text-emerald-800">
-                {money.format(selected.totalAmount)}
-              </dd>
-            </div>
-          )}
-        </dl>
-      ) : (
+      {!selected ? (
         <p className="p-5 text-sm text-slate-500">
-          Chọn thẻ bàn để xem thông tin hóa đơn.
+          Chọn thẻ bàn để xem hóa đơn.
         </p>
+      ) : !billId ? (
+        <p className="p-5 text-sm text-slate-500">Bàn này chưa có hóa đơn.</p>
+      ) : bill.isPending ? (
+        <p role="status" className="p-5 text-sm text-slate-500">
+          Đang tải hóa đơn…
+        </p>
+      ) : bill.isError ? (
+        <div className="space-y-3 p-5">
+          <p role="alert" className="text-sm text-rose-700">
+            {cashShiftError(bill.error)}
+          </p>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => void bill.refetch()}
+          >
+            Thử lại
+          </button>
+        </div>
+      ) : (
+        <BillSummary bill={bill.data} paid={tab === 'paid'} />
       )}
     </section>
   )

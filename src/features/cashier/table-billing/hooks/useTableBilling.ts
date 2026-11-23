@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { getBillingQueue } from '../api/tableBillingApi'
 import type { BillingEntry, BillingTab } from '../types/types'
 import { entryKey } from '../utils/billingDisplay'
@@ -12,6 +13,16 @@ export function useTableBilling(restaurantId: string, cashShiftId: string) {
   const [page, setPage] = useState(1)
   const [selectedKey, setSelectedKey] = useState<string | null>(null)
   const pageSize = 12
+  useEffect(() => {
+    const term = input.trim()
+    if (term === search) return
+    const timer = window.setTimeout(() => {
+      setSearch(term)
+      setSelectedKey(null)
+      setPage(1)
+    }, 300)
+    return () => window.clearTimeout(timer)
+  }, [input, search])
   const list = useQuery({
     queryKey: [
       'cashier',
@@ -84,7 +95,6 @@ export function useTableBilling(restaurantId: string, cashShiftId: string) {
     input,
     setInput,
     search,
-    setSearch,
     areaId,
     setAreaId,
     page,
