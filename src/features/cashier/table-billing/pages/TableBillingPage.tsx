@@ -4,6 +4,8 @@ import { useCashShift } from '../../shifts/hooks/useCashShift'
 import { useTableBilling } from '../hooks/useTableBilling'
 import { BillingTableList } from '../components/BillingTableList'
 import { BillingDetails } from '../components/BillingDetails'
+import { usePrepareBill } from '../hooks/usePrepareBill'
+import { entryKey } from '../utils/billingDisplay'
 import { BillingToolbar } from '../components/BillingToolbar'
 
 export function TableBillingPage() {
@@ -60,6 +62,11 @@ function BillingDesk({
   openedAt: string
 }) {
   const model = useTableBilling(restaurantId, cashShiftId)
+  const prepare = usePrepareBill(restaurantId, cashShiftId, (entry, billId) => {
+    model.setSelectedKey((current) =>
+      current === entryKey(entry) ? billId : current,
+    )
+  })
   const searchInput = useRef<HTMLInputElement>(null)
 
   return (
@@ -75,7 +82,11 @@ function BillingDesk({
       />
       <div className="grid flex-1 content-start gap-3 lg:content-stretch lg:grid-cols-[minmax(0,1fr)_420px] 2xl:grid-cols-[minmax(0,1fr)_480px]">
         <BillingTableList model={model} searchInput={searchInput} />
-        <BillingDetails selected={model.selected} tab={model.tab} />
+        <BillingDetails
+          selected={model.selected}
+          tab={model.tab}
+          prepare={prepare}
+        />
       </div>
     </div>
   )
