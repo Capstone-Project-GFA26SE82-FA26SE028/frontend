@@ -62,7 +62,11 @@ export function BillingTableList({
       </header>
       <div className="space-y-3 border-b border-slate-100 p-4">
         <label className="relative block">
-          <Icon name="search" size={17} className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-slate-400" />
+          <Icon
+            name="search"
+            size={17}
+            className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-slate-400"
+          />
           <input
             ref={searchInput}
             aria-label="Tìm bàn hoặc mã hóa đơn"
@@ -73,7 +77,9 @@ export function BillingTableList({
             placeholder="Tìm bàn, mã hóa đơn…"
             className="min-h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2 pr-3 pl-9 text-sm outline-none focus:border-emerald-500 lg:pr-12"
           />
-          <kbd className="pointer-events-none absolute top-1/2 right-3 hidden -translate-y-1/2 text-xs text-slate-400 lg:block">F2</kbd>
+          <kbd className="pointer-events-none absolute top-1/2 right-3 hidden -translate-y-1/2 text-xs text-slate-400 lg:block">
+            F2
+          </kbd>
         </label>
         <div className="flex flex-wrap gap-2">
           {[['', 'Tất cả khu vực'], ...(areas.data ?? [])].map(([id, name]) => (
