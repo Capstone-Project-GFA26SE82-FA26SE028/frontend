@@ -47,6 +47,7 @@ export function TableBillingPage() {
       key={shift.cashShiftId}
       restaurantId={restaurantId}
       cashShiftId={shift.cashShiftId}
+      cashRegisterId={shift.cashRegisterId}
       openedAt={shift.openedAt}
     />
   )
@@ -55,10 +56,12 @@ export function TableBillingPage() {
 function BillingDesk({
   restaurantId,
   cashShiftId,
+  cashRegisterId,
   openedAt,
 }: {
   restaurantId: string
   cashShiftId: string
+  cashRegisterId: string
   openedAt: string
 }) {
   const model = useTableBilling(restaurantId, cashShiftId)
@@ -86,6 +89,9 @@ function BillingDesk({
           selected={model.selected}
           tab={model.tab}
           prepare={prepare}
+          cashShiftId={cashShiftId}
+          cashRegisterId={cashRegisterId}
+          restaurantId={restaurantId}
         />
       </div>
     </div>

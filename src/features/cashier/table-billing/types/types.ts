@@ -1,5 +1,15 @@
 export type BillingTab = 'incoming' | 'paid'
 
+export type CashHandover = {
+  paymentId: string
+  billId: string
+  cashShiftId: string
+  status: string
+  amount: number
+  cashReceived: number
+  changeAmount: number
+}
+
 export type CashierBill = {
   currency: string
   subTotal: number

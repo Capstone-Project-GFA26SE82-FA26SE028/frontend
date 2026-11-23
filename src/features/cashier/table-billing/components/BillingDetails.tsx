@@ -4,16 +4,23 @@ import { getCashierBill } from '../api/billApi'
 import type { BillingEntry, BillingTab } from '../types/types'
 import { STATUS_NAMES, tableName } from '../utils/billingDisplay'
 import { BillSummary } from './BillSummary'
+import { CashHandoverPanel } from './CashHandoverPanel'
 import type { usePrepareBill } from '../hooks/usePrepareBill'
 
 export function BillingDetails({
   selected,
   tab,
   prepare,
+  cashShiftId,
+  cashRegisterId,
+  restaurantId,
 }: {
   selected: BillingEntry | undefined
   tab: BillingTab
   prepare: ReturnType<typeof usePrepareBill>
+  cashShiftId: string
+  cashRegisterId: string
+  restaurantId: string
 }) {
   const billId = selected?.billId
   const checkoutId = selected?.checkoutId
@@ -114,7 +121,18 @@ export function BillingDetails({
           </button>
         </div>
       ) : (
-        <BillSummary bill={bill.data} paid={tab === 'paid'} />
+        <>
+          <BillSummary bill={bill.data} paid={tab === 'paid'} />
+          {tab === 'incoming' && (
+            <CashHandoverPanel
+              key={billId}
+              billId={billId}
+              shiftId={cashShiftId}
+              registerId={cashRegisterId}
+              restaurantId={restaurantId}
+            />
+          )}
+        </>
       )}
     </section>
   )
