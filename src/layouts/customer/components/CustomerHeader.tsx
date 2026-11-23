@@ -9,11 +9,7 @@ import { CustomerNavLink } from './CustomerNavLink'
 export function CustomerHeader({ count }: { count: number }) {
   return (
     <>
-      <header className="sticky top-0 z-20 isolate border-b border-stone-200/70">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-cream/95 backdrop-blur-xl"
-        />
+      <header className="sticky top-0 z-20 isolate border-b border-white/10 bg-brand-dark">
         <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between gap-2 px-4 sm:gap-4 sm:px-8 lg:px-12">
           <Link
             to="/menu"
@@ -42,11 +38,10 @@ export function CustomerHeader({ count }: { count: number }) {
             />
           </nav>
           <div className="flex items-center gap-2 sm:gap-3">
-            <CustomerNotifications />
             <ServiceRequestButton />
             <Link
               to="/cart"
-              className="relative flex min-h-11 items-center gap-2 rounded-full bg-brand px-3 py-3 sm:px-4 text-sm font-semibold text-white"
+              className="relative hidden min-h-11 items-center gap-2 rounded-full border border-white/20 bg-brand px-4 py-3 text-sm font-semibold text-white md:flex"
             >
               <Icon name="bag" size={19} />
               <span className="hidden lg:inline">Giỏ hàng</span>
@@ -57,6 +52,7 @@ export function CustomerHeader({ count }: { count: number }) {
                 {count}
               </span>
             </Link>
+            <CustomerNotifications />
           </div>
         </div>
       </header>

@@ -22,7 +22,6 @@ export function BillingTableList({
     input,
     setInput,
     search,
-    setSearch,
     areaId,
     setAreaId,
     page,
@@ -62,14 +61,8 @@ export function BillingTableList({
         </div>
       </header>
       <div className="space-y-3 border-b border-slate-100 p-4">
-        <form
-          className="flex flex-wrap gap-2"
-          onSubmit={(event) => {
-            event.preventDefault()
-            setSearch(input.trim())
-            changePage(1)
-          }}
-        >
+        <label className="relative block">
+          <Icon name="search" size={17} className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-slate-400" />
           <input
             ref={searchInput}
             aria-label="Tìm bàn hoặc mã hóa đơn"
@@ -78,23 +71,10 @@ export function BillingTableList({
             value={input}
             onChange={(event) => setInput(event.target.value)}
             placeholder="Tìm bàn, mã hóa đơn…"
-            className="min-h-11 min-w-40 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm"
+            className="min-h-11 w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2 pr-3 pl-9 text-sm outline-none focus:border-emerald-500 lg:pr-12"
           />
-          <button className="btn-secondary">Tìm</button>
-          {search && (
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={() => {
-                setInput('')
-                setSearch('')
-                changePage(1)
-              }}
-            >
-              Xóa tìm kiếm
-            </button>
-          )}
-        </form>
+          <kbd className="pointer-events-none absolute top-1/2 right-3 hidden -translate-y-1/2 text-xs text-slate-400 lg:block">F2</kbd>
+        </label>
         <div className="flex flex-wrap gap-2">
           {[['', 'Tất cả khu vực'], ...(areas.data ?? [])].map(([id, name]) => (
             <button
@@ -148,28 +128,39 @@ export function BillingTableList({
                     type="button"
                     aria-pressed={selected === entry}
                     onClick={() => setSelectedKey(entryKey(entry))}
-                    className="h-full w-full space-y-2 rounded-2xl border border-slate-200 bg-white p-4 text-left hover:border-emerald-600 aria-pressed:border-emerald-600 aria-pressed:ring-1 aria-pressed:ring-emerald-600"
+                    className={`flex h-full w-full min-w-0 flex-col rounded-2xl border p-4 text-left transition-colors hover:border-emerald-600 aria-pressed:border-emerald-600 aria-pressed:ring-1 aria-pressed:ring-emerald-600 ${tab === 'paid' ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'}`}
                   >
-                    <Icon
-                      name="utensils"
-                      size={20}
-                      className="text-emerald-700"
-                    />
-                    <span className="block break-words font-bold">
+                    <span className="block break-words text-lg font-bold">
                       {tableName(entry)}
                     </span>
-                    <span className="block text-xs text-slate-500">
+                    <span className="mt-1 block text-xs text-slate-500">
                       {entry.partySize > 0
                         ? `${entry.partySize} khách`
                         : (STATUS_NAMES[entry.status] ?? entry.status)}
+                      {entry.openedAt && (
+                        <>
+                          {' '}
+                          ·{' '}
+                          {new Date(entry.openedAt).toLocaleTimeString(
+                            'vi-VN',
+                            {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            },
+                          )}
+                        </>
+                      )}
                     </span>
-                    <span className="block border-t border-slate-100 pt-2 text-sm font-semibold text-emerald-800">
+                    <span className="mt-4 block w-full border-t border-slate-100 pt-3 text-base font-bold text-emerald-800">
                       {entry.totalAmount === null
                         ? 'Chờ lập hóa đơn'
                         : money.format(entry.totalAmount)}
                     </span>
                     {entry.billCode && (
-                      <span className="block break-words text-xs text-slate-500">
+                      <span
+                        className="mt-1 block w-full truncate text-xs text-slate-500"
+                        title={entry.billCode}
+                      >
                         {entry.billCode}
                       </span>
                     )}
