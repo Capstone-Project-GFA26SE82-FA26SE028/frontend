@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 import { BrandLogo } from '../../components/BrandLogo/BrandLogo'
 import { useAppSelector } from '../../app/hooks'
 import { LogoutButton } from '../../features/auth/components/LogoutButton'
@@ -26,12 +26,27 @@ export function CashierLayout() {
           </div>
         </details>
       </header>
-      <main className="flex flex-1 items-center justify-center p-4 sm:p-8">
+      <nav
+        aria-label="Điều hướng thu ngân"
+        className="flex flex-wrap gap-2 border-b border-slate-200 bg-white px-5 py-2"
+      >
+        <NavLink
+          end
+          to="/cashier"
+          className="rounded-lg px-3 py-2 text-sm font-semibold aria-[current=page]:bg-emerald-50 aria-[current=page]:text-emerald-800"
+        >
+          Ca làm việc
+        </NavLink>
+        <NavLink
+          to="/cashier/table-billing"
+          className="rounded-lg px-3 py-2 text-sm font-semibold aria-[current=page]:bg-emerald-50 aria-[current=page]:text-emerald-800"
+        >
+          Bàn & hóa đơn
+        </NavLink>
+      </nav>
+      <main className="flex min-h-0 flex-1 items-center justify-center p-3 sm:p-4">
         <Outlet />
       </main>
-      <footer className="px-6 py-4 text-center text-xs text-slate-500">
-        DineLink · Không gian thu ngân
-      </footer>
     </div>
   )
 }
