@@ -9,6 +9,7 @@ import { BrandLogo } from '../BrandLogo/BrandLogo'
 export function HomeHeader() {
   const { session, status } = useAppSelector((state) => state.auth)
   const [open, setOpen] = useState(false)
+  const [failedAvatar, setFailedAvatar] = useState<string>()
   const [menuOpen, setMenuOpen] = useState(false)
   const headerRef = useRef<HTMLElement>(null)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
@@ -17,6 +18,7 @@ export function HomeHeader() {
   const panelId = useId()
   const navigationId = useId()
   const user = status === 'authenticated' ? session?.user : null
+  const avatar = user?.avatarUrl
   const name = user?.fullName || user?.userName || 'Tài khoản'
 
   useEffect(() => {
@@ -138,9 +140,21 @@ export function HomeHeader() {
             >
               <span
                 aria-hidden="true"
-                className="flex size-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-800"
+                className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-emerald-100 text-sm font-bold text-emerald-800"
               >
-                {name.trim().slice(0, 1).toUpperCase()}
+                {avatar &&
+                /^https?:\/\//i.test(avatar) &&
+                avatar !== failedAvatar ? (
+                  <img
+                    src={avatar}
+                    alt=""
+                    className="size-full object-cover"
+                    referrerPolicy="no-referrer"
+                    onError={() => setFailedAvatar(avatar)}
+                  />
+                ) : (
+                  name.trim().slice(0, 1).toUpperCase()
+                )}
               </span>
               <span className="hidden truncate lg:block">{name}</span>
               <Icon
@@ -166,6 +180,16 @@ export function HomeHeader() {
                   </p>
                 </div>
                 <div className="p-1.5">
+                  {user.roleId === 'customer' && (
+                    <Link
+                      to="/profile"
+                      onClick={() => setOpen(false)}
+                      className="flex min-h-9 items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] text-slate-600 hover:bg-emerald-50 hover:text-emerald-800"
+                    >
+                      <Icon name="users" size={16} />
+                      Hồ sơ cá nhân
+                    </Link>
+                  )}
                   <LogoutButton compact />
                 </div>
               </div>

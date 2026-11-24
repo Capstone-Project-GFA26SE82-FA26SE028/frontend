@@ -2,6 +2,7 @@ import { kitchenRoute } from './kitchenRoutes'
 import { cashierRoute } from './cashierRoutes'
 import { LoginPage } from '../features/auth/pages/LoginPage'
 import { RegisterPage } from '../features/auth/pages/RegisterPage'
+import { CustomerProfilePage } from '../features/profile/pages/CustomerProfilePage'
 import { ProtectedRoute } from './ProtectedRoute'
 import { RoleRoute } from './RoleRoute'
 import { BillingFeedbackPage } from '../features/customer/billing-feedback/pages/BillingFeedbackPage'
@@ -50,6 +51,7 @@ export const router = createBrowserRouter([
       {
         element: <RoleRoute roles={['customer']} />,
         children: [
+          { path: '/profile', element: <CustomerProfilePage /> },
           {
             path: '/restaurants/:restaurantId/menu',
             element: <TakeawayMenuPage />,
