@@ -6,7 +6,7 @@ export function SummaryCards({
   items: { label: string; value: number | string; icon: string; note: string }[]
 }) {
   return (
-    <div className="mb-5 grid grid-cols-2 gap-3 xl:grid-cols-4">
+    <div className={`mb-5 grid gap-3 ${items.length === 3 ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-2 xl:grid-cols-4'}`}>
       {items.map((item, i) => (
         <div
           key={item.label}

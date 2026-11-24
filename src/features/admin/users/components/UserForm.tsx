@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { UserAvatar } from './UserAvatar'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,6 +10,7 @@ import {
 import { userRoleLabel, type UserAccount, type UserRole } from '../types/types'
 
 import { Field } from '../../../../components/Field/Field'
+import { Icon } from '../../../../components/Icon/Icon'
 
 export function UserForm({
   user,
@@ -19,7 +21,7 @@ export function UserForm({
   user: UserAccount | null
   roles: UserRole[]
   onClose: () => void
-  onSave: (values: AccountFormValues) => Promise<string>
+  onSave: (values: AccountFormValues, avatarFile?: File) => Promise<string>
 }) {
   const {
     register,
@@ -42,6 +44,14 @@ export function UserForm({
   })
   const avatarUrl = useWatch({ control, name: 'avatarUrl' })
   const name = useWatch({ control, name: 'name' })
+  const avatarInput = useRef<HTMLInputElement>(null)
+  const [selectedAvatar, setSelectedAvatar] = useState<{
+    file: File
+    url: string
+  }>()
+  useEffect(() => {
+    if (selectedAvatar) return () => URL.revokeObjectURL(selectedAvatar.url)
+  }, [selectedAvatar])
   const close = () => {
     if (!isSubmitting) onClose()
   }
@@ -55,43 +65,76 @@ export function UserForm({
         noValidate
         className="space-y-4 p-6"
         onSubmit={handleSubmit(async (values) => {
-          const error = await onSave(values)
+          const error = await onSave(values, selectedAvatar?.file)
           if (error) setError('root', { message: error })
         })}
       >
         <fieldset disabled={isSubmitting} className="space-y-4">
-          <div className="flex flex-col items-center gap-2 rounded-2xl bg-slate-50 p-4">
-            <UserAvatar src={avatarUrl} name={name} large />
-            <span className="text-xs text-slate-500">
-              Xem trước ảnh đại diện
-            </span>
-          </div>
-          <Field
-            label="Đường dẫn ảnh đại diện (không bắt buộc)"
-            error={errors.avatarUrl?.message}
-          >
+          <div className="flex items-center gap-4 rounded-2xl border border-emerald-100 bg-slate-50 p-4">
+            <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white ring-1 ring-slate-200">
+              {selectedAvatar ? (
+                <img
+                  src={selectedAvatar.url}
+                  alt="Ảnh đại diện xem trước"
+                  className="size-full object-cover"
+                />
+              ) : (
+                <UserAvatar src={avatarUrl} name={name} />
+              )}
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-slate-800">
+                Ảnh đại diện
+              </p>
+              <p className="mt-1 truncate text-xs text-slate-500">
+                {selectedAvatar?.file.name ||
+                  'JPG, PNG hoặc WebP · Tối đa 2 MB'}
+              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <button
+                  type="button"
+                  onClick={() => avatarInput.current?.click()}
+                  className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-emerald-200 bg-white px-3 text-xs font-semibold text-emerald-800 transition-colors hover:bg-emerald-50"
+                >
+                  <Icon name="edit" size={14} />
+                  {selectedAvatar || avatarUrl ? 'Đổi ảnh' : 'Chọn ảnh'}
+                </button>
+                {(selectedAvatar || avatarUrl) && (
+                  <button
+                    type="button"
+                    className="min-h-9 text-xs font-medium text-rose-700"
+                    onClick={() => {
+                      if (selectedAvatar) setSelectedAvatar(undefined)
+                      else
+                        setValue('avatarUrl', '', {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        })
+                    }}
+                  >
+                    {selectedAvatar ? 'Bỏ ảnh đã chọn' : 'Xóa ảnh'}
+                  </button>
+                )}
+              </div>
+              {errors.avatarUrl && (
+                <p role="alert" className="mt-1 text-xs text-rose-700">
+                  {errors.avatarUrl.message}
+                </p>
+              )}
+            </div>
             <input
-              type="url"
-              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-              placeholder="https://example.com/avatar.jpg"
-              {...register('avatarUrl')}
-              aria-invalid={!!errors.avatarUrl}
+              ref={avatarInput}
+              type="file"
+              hidden
+              accept="image/jpeg,image/png,image/webp"
+              onChange={(event) => {
+                const file = event.target.files?.[0]
+                event.target.value = ''
+                if (file)
+                  setSelectedAvatar({ file, url: URL.createObjectURL(file) })
+              }}
             />
-          </Field>
-          {avatarUrl && (
-            <button
-              type="button"
-              className="text-sm font-medium text-rose-600"
-              onClick={() =>
-                setValue('avatarUrl', '', {
-                  shouldDirty: true,
-                  shouldValidate: true,
-                })
-              }
-            >
-              Xóa ảnh
-            </button>
-          )}
+          </div>
           {(
             [
               ['userName', 'Tên đăng nhập'],

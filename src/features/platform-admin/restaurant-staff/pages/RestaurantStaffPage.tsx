@@ -28,9 +28,9 @@ export function RestaurantStaffPage() {
         title="Phân công nhân viên"
         description="Quản lý nhân viên theo nhà hàng."
       />
-      <div className="mb-5 flex flex-col justify-between gap-5 rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-100 to-emerald-50 p-5 sm:p-6 lg:flex-row lg:items-center">
+      <div className="mb-5 grid items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:grid-cols-[minmax(0,1fr)_minmax(13rem,17rem)] sm:gap-x-6 sm:p-5">
         <div className="flex min-w-0 items-center gap-4">
-          <span className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-emerald-100 bg-white text-emerald-700 shadow-sm shadow-emerald-100/50">
+          <span className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-emerald-100 bg-emerald-50 text-emerald-700">
             {selected?.logoUrl &&
             /^https?:\/\//i.test(selected.logoUrl) &&
             selected.logoUrl !== failedLogo ? (
@@ -46,28 +46,29 @@ export function RestaurantStaffPage() {
             )}
           </span>
           <div className="min-w-0">
-            <p className="mb-1 text-xs font-medium text-emerald-700">
-              Nhà hàng
-            </p>
-            <h2 className="truncate text-lg font-semibold text-slate-800">
+            <h2 className="break-words text-lg font-semibold leading-tight text-slate-900">
               {selected?.restaurantName || 'Chọn nhà hàng'}
             </h2>
             {selected && (
-              <p className="mt-1 break-words text-sm text-slate-500">
-                {selected.address}
+              <p className="mt-1.5 flex items-start gap-1.5 text-sm text-slate-600">
+                <Icon
+                  name="pin"
+                  size={15}
+                  className="mt-0.5 shrink-0 text-emerald-700"
+                />
+                <span className="min-w-0 break-words">{selected.address}</span>
               </p>
             )}
           </div>
         </div>
-        <div className="flex shrink-0 flex-wrap items-end gap-3 lg:max-w-sm">
-          <label className="block w-full space-y-2 sm:max-w-md">
-            <span className="sr-only">Nhà hàng</span>
+        <div className="min-w-0 space-y-2">
+          <label className="relative block">
+            <span className="sr-only">Chọn nhà hàng</span>
             <select
-              aria-label="Nhà hàng"
               value={restaurantId}
               onChange={(e) => setRestaurantId(e.target.value)}
               disabled={restaurants.isPending}
-              className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 disabled:opacity-50"
+              className="min-h-11 w-full cursor-pointer appearance-none truncate rounded-xl border border-emerald-100 bg-emerald-50/70 py-2 pl-3 pr-9 text-sm font-medium text-emerald-950 outline-none hover:border-emerald-300 focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-default disabled:opacity-50"
             >
               <option value="">
                 {restaurants.isPending ? 'Đang tải nhà hàng…' : 'Chọn nhà hàng'}
@@ -78,13 +79,18 @@ export function RestaurantStaffPage() {
                 </option>
               ))}
             </select>
+            <Icon
+              name="chevron"
+              size={15}
+              className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 rotate-90 text-emerald-700"
+            />
           </label>
           {restaurants.hasNextPage && (
             <button
               type="button"
               disabled={restaurants.isFetching}
               onClick={() => void restaurants.fetchNextPage()}
-              className="min-h-12 rounded-xl border border-slate-200 px-4 text-sm text-emerald-700 disabled:opacity-40"
+              className="min-h-9 px-1 text-sm font-medium text-emerald-700 hover:underline disabled:opacity-40"
             >
               {restaurants.isFetchingNextPage
                 ? 'Đang tải…'
@@ -93,7 +99,7 @@ export function RestaurantStaffPage() {
           )}
         </div>
         {restaurants.isError && (
-          <div role="alert" className="mt-3 text-sm text-rose-600">
+          <div role="alert" className="text-sm text-rose-600 sm:col-span-2">
             {restaurantError(restaurants.error)}{' '}
             <button
               type="button"

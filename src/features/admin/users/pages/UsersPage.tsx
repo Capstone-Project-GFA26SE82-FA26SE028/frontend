@@ -132,7 +132,7 @@ export function UsersPage() {
           user={null}
           roles={roles.data || []}
           onClose={() => setForm(undefined)}
-          onSave={(values) => save(values)}
+          onSave={(values, avatarFile) => save(values, undefined, avatarFile)}
         />
       )}
       {typeof form === 'string' && (

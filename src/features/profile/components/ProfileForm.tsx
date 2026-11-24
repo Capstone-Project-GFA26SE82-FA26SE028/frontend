@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Field } from '../../../components/Field/Field'
 import { Icon } from '../../../components/Icon/Icon'
@@ -11,15 +11,16 @@ import type { Profile, ProfileValues } from '../types/types'
 export function ProfileForm({
   profile,
   onSave,
+  onSaveAvatar,
   busy,
 }: {
   profile: Profile
   onSave: (values: ProfileValues) => Promise<Profile>
+  onSaveAvatar: (file: File) => Promise<string>
   busy: boolean
 }) {
   const {
     register,
-    control,
     handleSubmit,
     reset,
     formState: { errors, isDirty },
@@ -28,12 +29,17 @@ export function ProfileForm({
     defaultValues: {
       fullName: profile.fullName || '',
       phoneNumber: profile.phoneNumber || '',
-      avatarUrl: profile.avatarUrl || '',
     },
   })
   const [error, setError] = useState('')
-  const [editingAvatar, setEditingAvatar] = useState(false)
-  const avatar = useWatch({ control, name: 'avatarUrl' }).trim()
+  const avatarInput = useRef<HTMLInputElement>(null)
+  const [selectedAvatar, setSelectedAvatar] = useState<{
+    file: File
+    url: string
+  }>()
+  useEffect(() => {
+    if (selectedAvatar) return () => URL.revokeObjectURL(selectedAvatar.url)
+  }, [selectedAvatar])
   return (
     <form
       noValidate
@@ -41,12 +47,17 @@ export function ProfileForm({
         if (busy) return
         setError('')
         try {
-          const saved = await onSave(values)
-          reset({
-            fullName: saved.fullName || '',
-            phoneNumber: saved.phoneNumber || '',
-            avatarUrl: saved.avatarUrl || '',
-          })
+          if (isDirty) {
+            const saved = await onSave(values)
+            reset({
+              fullName: saved.fullName || '',
+              phoneNumber: saved.phoneNumber || '',
+            })
+          }
+          if (selectedAvatar) {
+            await onSaveAvatar(selectedAvatar.file)
+            setSelectedAvatar(undefined)
+          }
         } catch (e) {
           setError(profileError(e))
         }
@@ -56,28 +67,31 @@ export function ProfileForm({
         <div className="grid items-start gap-6 lg:grid-cols-[280px_minmax(0,1fr)] xl:gap-8">
           <ProfileAccountCard
             profile={profile}
-            avatarUrl={avatar}
-            editingAvatar={editingAvatar}
-            onChangeAvatar={() => setEditingAvatar(!editingAvatar)}
+            previewUrl={selectedAvatar?.url}
+            onChangeAvatar={() => avatarInput.current?.click()}
+            onClearPreview={() => setSelectedAvatar(undefined)}
+          />
+          <input
+            ref={avatarInput}
+            type="file"
+            hidden
+            accept="image/jpeg,image/png,image/webp"
+            onChange={(event) => {
+              const file = event.target.files?.[0]
+              event.target.value = ''
+              if (!file) return
+              if (!file.size || file.size > 2 * 1024 * 1024) {
+                setError('Chọn ảnh JPEG, PNG hoặc WebP tối đa 2 MiB.')
+                return
+              }
+              setError('')
+              setSelectedAvatar({ file, url: URL.createObjectURL(file) })
+            }}
           />
           <div className="min-w-0 space-y-5">
             <h2 className="border-b border-slate-100 pb-4 font-semibold text-slate-800">
               Thông tin tài khoản
             </h2>
-            {(editingAvatar || errors.avatarUrl) && (
-              <Field
-                label="Đường dẫn ảnh đại diện"
-                error={errors.avatarUrl?.message}
-              >
-                <input
-                  {...register('avatarUrl')}
-                  type="url"
-                  maxLength={2048}
-                  placeholder="https://…"
-                  className="min-h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-                />
-              </Field>
-            )}
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Họ và tên" error={errors.fullName?.message}>
                 <input
@@ -126,7 +140,7 @@ export function ProfileForm({
             <div className="flex justify-end border-t border-slate-100 pt-4">
               <button
                 type="submit"
-                disabled={!isDirty || busy}
+                disabled={(!isDirty && !selectedAvatar) || busy}
                 className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-700 px-5 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-40"
               >
                 <Icon name="check" size={17} />

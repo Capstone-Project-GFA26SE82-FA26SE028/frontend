@@ -27,6 +27,12 @@ export function RoleSummaryCards({
           icon: 'users',
           note: 'Đang được kích hoạt',
         },
+        {
+          label: 'Tài khoản vô hiệu hóa',
+          value: totals ? Math.max(0, totals.total - totals.active) : '—',
+          icon: 'ban',
+          note: 'Đã bị vô hiệu hóa',
+        },
       ]}
     />
   )

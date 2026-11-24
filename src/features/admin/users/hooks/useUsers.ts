@@ -10,6 +10,7 @@ import {
   getUsers,
   saveUserAccount,
   setUserStatus,
+  uploadUserAvatar,
 } from '../api/userApi'
 import type { AccountFormValues } from '../schemas/userSchema'
 import type { UserAccount, UserQuery } from '../types/types'
@@ -37,8 +38,18 @@ export function useUserRoles() {
   })
 }
 export function useUserCounts(search?: string, roleId?: string) {
+  const user = useAppSelector((state) => state.auth.session?.user)
   return useQuery({
-    queryKey: ['users', 'counts', { search, roleId }],
+    queryKey: [
+      'users',
+      'counts',
+      {
+        userId: user?.userId,
+        restaurantId: user?.restaurantId,
+        search,
+        roleId,
+      },
+    ],
     queryFn: async ({ signal }) => {
       const [all, active, locked] = await Promise.all([
         getUsers({ page: 1, pageSize: 1, search, roleId }, signal),
@@ -55,6 +66,9 @@ export function useUserCounts(search?: string, roleId?: string) {
         all: all.totalCount,
         active: active.totalCount,
         locked: locked.totalCount,
+        restaurantName: all.items.find(
+          (account) => account.restaurantId === user?.restaurantId,
+        )?.restaurantName,
       }
     },
   })
@@ -67,13 +81,25 @@ export function useUserMutations() {
       await restoreSession()
   }
   const save = useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       values,
       existing,
+      avatarFile,
     }: {
       values: AccountFormValues
       existing?: UserAccount
-    }) => saveUserAccount(values, existing),
+      avatarFile?: File
+    }) => {
+      const saved = await saveUserAccount(values, existing)
+      if (!avatarFile) return saved
+      try {
+        const avatarUrl = await uploadUserAvatar(saved.id, avatarFile)
+        return { ...saved, avatarUrl }
+      } catch (error) {
+        toast.warn(`Đã lưu tài khoản. Tải ảnh thất bại: ${userApiError(error)}`)
+        return saved
+      }
+    },
     onSuccess: invalidate,
     onError: async () => {
       // Refresh partially saved details without remounting the authenticated page.
@@ -134,9 +160,19 @@ export function useUserManagement() {
     setPagination({ filter, page: maxPage })
   }
 
-  async function save(values: AccountFormValues, existing?: UserAccount) {
+  async function save(
+    values: AccountFormValues,
+    existing?: UserAccount,
+    avatarFile?: File,
+  ) {
+    if (avatarFile && (!avatarFile.size || avatarFile.size > 2 * 1024 * 1024))
+      return 'Chọn ảnh JPEG, PNG hoặc WebP tối đa 2 MiB.'
     try {
-      const saved = await mutations.save.mutateAsync({ values, existing })
+      const saved = await mutations.save.mutateAsync({
+        values,
+        existing,
+        avatarFile,
+      })
       setForm(undefined)
       if (saved.provisioningPending)
         toast.info('Tài khoản đang chờ phân công và chưa thể đăng nhập.')

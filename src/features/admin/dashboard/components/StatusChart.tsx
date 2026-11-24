@@ -14,7 +14,7 @@ export function StatusChart({
   const total = items.reduce((sum, item) => sum + item.value, 0)
   return (
     <DashboardSection title={title} icon={icon}>
-      <div className="flex flex-col items-center gap-4 min-[480px]:flex-row">
+      <div className="flex flex-col items-center gap-4 min-[480px]:flex-row sm:gap-6">
         <div
           className="relative size-[176px] shrink-0"
           aria-label={label + ': ' + total}
@@ -49,9 +49,12 @@ export function StatusChart({
             <span className="mt-1 text-xs text-slate-500">{label}</span>
           </div>
         </div>
-        <ul className="w-full min-w-0 flex-1 space-y-5">
+        <ul className="w-full min-w-0 flex-1 space-y-2">
           {items.map((item) => (
-            <li key={item.name} className="flex items-center gap-2 text-sm">
+            <li
+              key={item.name}
+              className="flex items-center gap-2 rounded-xl bg-slate-50 px-3 py-2.5 text-sm"
+            >
               <span
                 className="size-2.5 shrink-0 rounded-full"
                 style={{ background: item.color }}

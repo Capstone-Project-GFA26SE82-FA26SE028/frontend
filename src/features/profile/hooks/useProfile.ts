@@ -4,7 +4,13 @@ import { toast } from 'react-toastify'
 import { useAppSelector } from '../../../app/hooks'
 import { store } from '../../../app/store'
 import { clearSession, updateSessionUser } from '../../auth/api/authApi'
-import { getProfile, updateProfile, changePassword } from '../api/profileApi'
+import {
+  getProfile,
+  updateProfile,
+  changePassword,
+  uploadProfileAvatar,
+} from '../api/profileApi'
+import type { Profile } from '../types/types'
 
 export function useProfile() {
   const userId = useAppSelector((state) => state.auth.session?.user.userId)
@@ -33,6 +39,21 @@ export function useProfile() {
       toast.success('Đã cập nhật hồ sơ cá nhân.')
     },
   })
+  const avatar = useMutation({
+    mutationFn: uploadProfileAvatar,
+    retry: false,
+    onSuccess: (avatarUrl) => {
+      const session = store.getState().auth.session
+      if (!session || !sameSession()) return
+      client.setQueryData<Profile>(['profile', userId], (current) =>
+        current ? { ...current, avatarUrl } : current,
+      )
+      updateSessionUser({ ...session.user, avatarUrl })
+      void client.invalidateQueries({ queryKey: ['profile', userId] })
+      void client.invalidateQueries({ queryKey: ['users'] })
+      toast.success('Đã cập nhật ảnh đại diện.')
+    },
+  })
   const password = useMutation({
     mutationFn: changePassword,
     retry: false,
@@ -44,5 +65,5 @@ export function useProfile() {
       navigate('/login', { replace: true })
     },
   })
-  return { profile, save, password }
+  return { profile, save, avatar, password }
 }

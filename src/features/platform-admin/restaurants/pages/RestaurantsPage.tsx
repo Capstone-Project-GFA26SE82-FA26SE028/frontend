@@ -159,7 +159,9 @@ export function RestaurantsPage() {
               key="create"
               pending={save.isPending}
               onCancel={close}
-              onSave={(values) => save.mutateAsync({ values })}
+              onSave={(values, logoFile) =>
+                save.mutateAsync({ values, logoFile })
+              }
             />
           ) : detail.isPending ? (
             <p role="status" className="p-8">
@@ -194,7 +196,9 @@ export function RestaurantsPage() {
                 restaurant={detail.data}
                 pending={save.isPending}
                 onCancel={close}
-                onSave={(values) => save.mutateAsync({ values, id: target.id })}
+                onSave={(values, logoFile) =>
+                  save.mutateAsync({ values, id: target.id, logoFile })
+                }
               />
             ))
           )}

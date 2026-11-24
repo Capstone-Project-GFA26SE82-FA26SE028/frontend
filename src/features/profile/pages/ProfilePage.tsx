@@ -7,8 +7,8 @@ import { profileError } from '../api/profileApi'
 
 export function ProfilePage() {
   const [tab, setTab] = useState<'information' | 'password'>('information')
-  const { profile, save, password } = useProfile()
-  const busy = save.isPending || password.isPending
+  const { profile, save, avatar, password } = useProfile()
+  const busy = save.isPending || avatar.isPending || password.isPending
   return (
     <div className="w-full">
       <h1 className="mb-5 text-2xl font-bold tracking-tight">Hồ sơ cá nhân</h1>
@@ -65,7 +65,8 @@ export function ProfilePage() {
               key={profile.data.userId}
               profile={profile.data}
               onSave={(values) => save.mutateAsync(values)}
-              busy={save.isPending}
+              onSaveAvatar={(file) => avatar.mutateAsync(file)}
+              busy={busy}
             />
           ) : (
             <PasswordForm

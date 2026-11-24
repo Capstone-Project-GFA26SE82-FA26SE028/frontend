@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { BrandLogo } from '../../../components/BrandLogo/BrandLogo'
 import { StaffNavLink } from './StaffNavLink'
 import { StaffSidebarProfile } from './StaffSidebarProfile'
+import { StaffSidebarRestaurant } from './StaffSidebarRestaurant'
 import type { StaffNavigationGroup } from '../types/types'
 
 export function StaffSidebar({
@@ -33,6 +34,7 @@ export function StaffSidebar({
           </div>
         )}
       </Link>
+      <StaffSidebarRestaurant collapsed={collapsed} />
       <nav
         aria-label="Điều hướng nhân viên"
         className="min-h-0 flex-1 space-y-4 overflow-y-auto px-3 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"

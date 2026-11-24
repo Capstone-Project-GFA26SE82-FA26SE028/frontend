@@ -10,6 +10,8 @@ import {
   getRestaurants,
   getRestaurant,
   saveRestaurant,
+  uploadRestaurantLogo,
+  restaurantError,
 } from '../api/restaurantApi'
 import type { RestaurantValues } from '../schemas/restaurantSchema'
 const pageSize = 12
@@ -48,14 +50,34 @@ export function useRestaurants() {
     refetchOnWindowFocus: false,
   })
   const save = useMutation({
-    mutationFn: ({ values, id }: { values: RestaurantValues; id?: string }) =>
-      saveRestaurant(values, id),
+    mutationFn: async ({
+      values,
+      id,
+      logoFile,
+    }: {
+      values: RestaurantValues
+      id?: string
+      logoFile?: File
+    }) => {
+      if (logoFile && (!logoFile.size || logoFile.size > 2 * 1024 * 1024))
+        throw new Error('Chọn ảnh JPEG, PNG hoặc WebP tối đa 2 MiB.')
+      const saved = await saveRestaurant(values, id)
+      if (!logoFile) return { saved }
+      try {
+        const logoUrl = await uploadRestaurantLogo(saved.restaurantId, logoFile)
+        return { saved: { ...saved, logoUrl } }
+      } catch (error) {
+        return { saved, logoError: restaurantError(error) }
+      }
+    },
     retry: false,
-    onSuccess: (saved) => {
+    onSuccess: ({ saved, logoError }) => {
       client.setQueryData(['restaurants', 'detail', saved.restaurantId], saved)
       void client.invalidateQueries({ queryKey: ['restaurants', 'list'] })
       setTarget(null)
-      toast.success('Đã lưu thông tin nhà hàng.')
+      if (logoError)
+        toast.warn(`Đã lưu nhà hàng. Tải logo thất bại: ${logoError}`)
+      else toast.success('Đã lưu thông tin nhà hàng.')
     },
   })
   function changePage(value: number) {

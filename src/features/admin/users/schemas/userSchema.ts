@@ -1,25 +1,4 @@
 import { z } from 'zod'
-import { roles } from '../types/types'
-
-const storedRestaurant = z.object({
-  id: z.string(),
-  name: z.string(),
-  active: z.boolean(),
-})
-const storedUser = z.object({
-  id: z.string(),
-  name: z.string(),
-  email: z.string(),
-  phone: z.string(),
-  role: z.enum(roles),
-  restaurantId: z.string(),
-  active: z.boolean(),
-  created: z.string(),
-})
-export const usersStorageSchema = z.object({
-  restaurants: z.array(storedRestaurant),
-  users: z.array(storedUser),
-})
 
 export const accountFormSchema = (editing: boolean) =>
   z.object({
