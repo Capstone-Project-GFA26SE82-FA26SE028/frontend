@@ -13,7 +13,7 @@ export function UserEditModal({
 }: {
   id: string
   onClose: () => void
-  onSave: (values: AccountFormValues, user: UserAccount) => Promise<string>
+  onSave: (values: AccountFormValues, user: UserAccount, avatarFile?: File) => Promise<string>
 }) {
   const { data, isPending, isError, error, refetch } = useUser(id)
   const roles = useUserRoles()
@@ -23,7 +23,7 @@ export function UserEditModal({
         user={data}
         roles={roles.data}
         onClose={onClose}
-        onSave={(values) => onSave(values, data)}
+        onSave={(values, avatarFile) => onSave(values, data, avatarFile)}
       />
     )
   return (

@@ -32,7 +32,6 @@ export async function saveRestaurant(values: RestaurantValues, id?: string) {
   const body = {
     ...values,
     taxCode: values.taxCode || null,
-    logoUrl: values.logoUrl || null,
   }
   const { data } = id
     ? await axiosClient.put<RestaurantResponse<Restaurant>>(
@@ -45,6 +44,15 @@ export async function saveRestaurant(values: RestaurantValues, id?: string) {
       )
   return result(data)
 }
+export async function uploadRestaurantLogo(id: string, file: File) {
+  const form = new FormData()
+  form.append('file', file)
+  const { data } = await axiosClient.post<
+    RestaurantResponse<{ logoUrl: string }>
+  >(`/restaurants/${id}/logo`, form)
+  return result(data).logoUrl
+}
+
 export function restaurantError(error: unknown): string {
   if (axios.isAxiosError(error)) {
     const status = error.response?.status

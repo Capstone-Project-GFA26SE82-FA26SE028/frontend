@@ -1,57 +1,66 @@
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useAppSelector } from '../../../../app/hooks'
+import { getAllAreas } from '../../areas/api/areaApi'
+import { getAllTables } from '../../tables/api/tableApi'
 import { useTaxFees } from '../../tax-fees/hooks/useTaxFees'
+import { useUserCounts } from '../../users/hooks/useUsers'
 export function useDashboard() {
-  const users = useAppSelector((s) => s.admin.users),
-    tables = useAppSelector((s) => s.adminTables),
-    areas = useAppSelector((s) => s.adminAreas),
-    methods = useAppSelector((s) => s.adminPaymentMethods)
-  const [now, setNow] = useState(() => Date.now())
-  useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), 30000)
-    return () => clearInterval(id)
-  }, [])
+  const methods = useAppSelector((s) => s.adminPaymentMethods)
+  const userCounts = useUserCounts()
+  const user = useAppSelector((s) => s.auth.session?.user)
+  const restaurantId = user?.restaurantId || ''
+  const layout = useQuery({
+    queryKey: ['dashboard-layout', restaurantId, user?.userId],
+    enabled: !!restaurantId,
+    retry: false,
+    queryFn: async ({ signal }) => {
+      const [areas, tables] = await Promise.all([
+        getAllAreas(restaurantId, signal),
+        getAllTables({ restaurantId }, signal),
+      ])
+      return { areas, tables: tables.items }
+    },
+  })
   const { current: currentFees } = useTaxFees()
-  const activeUsers = users.filter((u) => u.active).length
-  const current = new Date(now)
-  const newUsers = users.filter((u) => {
-    const date = new Date(u.created)
-    return (
-      date.getFullYear() === current.getFullYear() &&
-      date.getMonth() === current.getMonth() &&
-      date.getTime() <= now
-    )
-  }).length
-  const available = (t: (typeof tables)[number]) =>
-    t.active && areas.some((a) => a.id === t.areaId && a.active)
+  const areas = layout.data?.areas || []
+  const tables = layout.data?.tables || []
+  const activeAreas = new Set(
+    areas.filter((area) => area.isActive).map((area) => area.areaId),
+  )
+  const activeTables = tables.filter(
+    (table) => table.isActive && activeAreas.has(table.areaId),
+  ).length
   return {
-    users,
-    activeUsers,
-    newUsers,
+    userCounts,
     tables,
     areas,
+    layout,
+    restaurantId,
     currentFees,
     methods,
     tableStatus: [
       {
-        name: 'Đang sử dụng',
-        value: tables.filter((t) => available(t) && t.busy).length,
-        color: '#43bf73',
-      },
-      {
-        name: 'Trống',
-        value: tables.filter((t) => available(t) && !t.busy).length,
-        color: '#e2e8f0',
+        name: 'Đang hoạt động',
+        value: activeTables,
+        color: '#16805d',
       },
       {
         name: 'Ngừng hoạt động',
-        value: tables.filter((t) => !available(t)).length,
-        color: '#fb777b',
+        value: tables.length - activeTables,
+        color: '#d58a94',
       },
     ],
     userStatus: [
-      { name: 'Hoạt động', value: activeUsers, color: '#43bf73' },
-      { name: 'Bị khóa', value: users.length - activeUsers, color: '#fb777b' },
+      {
+        name: 'Hoạt động',
+        value: userCounts.data?.active ?? 0,
+        color: '#16805d',
+      },
+      {
+        name: 'Bị khóa',
+        value: userCounts.data?.locked ?? 0,
+        color: '#d58a94',
+      },
     ],
   }
 }

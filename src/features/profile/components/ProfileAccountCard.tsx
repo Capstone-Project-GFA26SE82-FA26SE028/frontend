@@ -13,21 +13,23 @@ function profileDate(value: string | null) {
 
 export function ProfileAccountCard({
   profile,
-  avatarUrl,
-  editingAvatar = false,
+  previewUrl,
   onChangeAvatar,
+  onClearPreview,
 }: {
   profile: Profile
-  avatarUrl?: string
-  editingAvatar?: boolean
+  previewUrl?: string
   onChangeAvatar?: () => void
+  onClearPreview?: () => void
 }) {
   const [failedUrl, setFailedUrl] = useState('')
-  const avatar = (avatarUrl ?? profile.avatarUrl ?? '').trim()
+  const avatar = (previewUrl ?? profile.avatarUrl ?? '').trim()
   return (
     <div className="flex min-w-0 flex-col items-center rounded-2xl border border-emerald-100 bg-gradient-to-b from-emerald-50 to-white px-5 py-6 text-center">
       <span className="flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-emerald-100 text-3xl font-semibold text-emerald-700 shadow-sm ring-1 ring-emerald-100">
-        {avatar && /^https?:\/\//i.test(avatar) && avatar !== failedUrl ? (
+        {avatar &&
+        (previewUrl || /^https?:\/\//i.test(avatar)) &&
+        avatar !== failedUrl ? (
           <img
             src={avatar}
             alt="Ảnh đại diện"
@@ -49,12 +51,20 @@ export function ProfileAccountCard({
         {onChangeAvatar && (
           <button
             type="button"
-            aria-expanded={editingAvatar}
             onClick={onChangeAvatar}
             className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-900"
           >
             <Icon name="edit" size={13} />
-            {editingAvatar ? 'Thu gọn' : 'Thay ảnh'}
+            Đổi ảnh
+          </button>
+        )}
+        {previewUrl && onClearPreview && (
+          <button
+            type="button"
+            onClick={onClearPreview}
+            className="mt-2 block w-full text-xs font-medium text-rose-700 hover:underline"
+          >
+            Bỏ ảnh đã chọn
           </button>
         )}
       </div>

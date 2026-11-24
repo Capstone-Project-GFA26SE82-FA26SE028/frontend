@@ -23,6 +23,8 @@ export function StaffHeader({
   const profileRef = useRef<HTMLDivElement>(null)
   const profileButtonRef = useRef<HTMLButtonElement>(null)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [failedAvatar, setFailedAvatar] = useState<string>()
+  const avatarUrl = user?.avatarUrl
   const [panel, setPanel] = useState<'notifications' | 'messages' | null>(null)
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -121,8 +123,20 @@ export function StaffHeader({
               onClick={() => setProfileOpen((v) => !v)}
               className="flex min-h-11 items-center gap-2 rounded-xl px-1.5 text-slate-600 transition-colors hover:bg-slate-50 sm:gap-2.5"
             >
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 font-semibold text-emerald-800">
-                {displayName.slice(0, 1).toUpperCase()}
+              <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-emerald-100 font-semibold text-emerald-800">
+                {avatarUrl &&
+                /^https?:\/\//i.test(avatarUrl) &&
+                avatarUrl !== failedAvatar ? (
+                  <img
+                    src={avatarUrl}
+                    alt=""
+                    className="size-full object-cover"
+                    referrerPolicy="no-referrer"
+                    onError={() => setFailedAvatar(avatarUrl)}
+                  />
+                ) : (
+                  displayName.slice(0, 1).toUpperCase()
+                )}
               </span>
               <span className="hidden max-w-44 truncate text-sm font-semibold sm:block">
                 {displayName}

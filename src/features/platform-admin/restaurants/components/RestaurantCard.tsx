@@ -13,7 +13,7 @@ export function RestaurantCard({
   const [failed, setFailed] = useState<string[]>([])
   return (
     <article className="flex min-w-0 flex-col overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm transition-shadow hover:shadow-md">
-      <div className="relative flex h-36 items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 via-emerald-100 to-teal-200">
+      <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-50 via-emerald-100 to-teal-200">
         {item.logoUrl &&
         /^https?:\/\//i.test(item.logoUrl) &&
         !failed.includes(item.logoUrl) ? (

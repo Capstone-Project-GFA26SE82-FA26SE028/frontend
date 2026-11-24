@@ -1,6 +1,6 @@
 import { RestaurantHours } from './RestaurantHours'
 import { Icon } from '../../../../components/Icon/Icon'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -18,11 +18,19 @@ export function RestaurantForm({
   pending,
 }: {
   restaurant?: Restaurant
-  onSave: (values: RestaurantValues) => Promise<unknown>
+  onSave: (values: RestaurantValues, logoFile?: File) => Promise<unknown>
   onCancel: () => void
   pending: boolean
 }) {
   const [failed, setFailed] = useState('')
+  const logoInput = useRef<HTMLInputElement>(null)
+  const [selectedLogo, setSelectedLogo] = useState<{
+    file: File
+    url: string
+  }>()
+  useEffect(() => {
+    if (selectedLogo) return () => URL.revokeObjectURL(selectedLogo.url)
+  }, [selectedLogo])
   const {
     register,
     handleSubmit,
@@ -38,7 +46,6 @@ export function RestaurantForm({
       address: restaurant?.address || '',
       hotline: restaurant?.hotline || '',
       taxCode: restaurant?.taxCode || '',
-      logoUrl: restaurant?.logoUrl || '',
       timeZone: restaurant?.timeZone || 'Asia/Ho_Chi_Minh',
       openingHours:
         restaurant?.openingHours ??
@@ -49,7 +56,7 @@ export function RestaurantForm({
         })),
     },
   })
-  const logo = useWatch({ control, name: 'logoUrl' })
+  const logo = selectedLogo?.url || restaurant?.logoUrl
   const hours = useWatch({ control, name: 'openingHours' })
   return (
     <form
@@ -57,7 +64,7 @@ export function RestaurantForm({
       onSubmit={handleSubmit(async (values) => {
         clearErrors('root')
         try {
-          await onSave(values)
+          await onSave(values, selectedLogo?.file)
         } catch (error) {
           setError('root', { message: restaurantError(error) })
         }
@@ -72,7 +79,9 @@ export function RestaurantForm({
             className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-slate-300 bg-slate-50 text-slate-400 sm:size-24"
             aria-label="Xem trước logo"
           >
-            {logo && /^https?:\/\//i.test(logo) && logo !== failed ? (
+            {logo &&
+            (selectedLogo || /^https?:\/\//i.test(logo)) &&
+            logo !== failed ? (
               <img
                 src={logo}
                 alt="Logo nhà hàng"
@@ -95,6 +104,40 @@ export function RestaurantForm({
                 {...register('restaurantName')}
               />
             </Field>
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+              <button
+                type="button"
+                onClick={() => logoInput.current?.click()}
+                className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-emerald-200 bg-white px-3 text-xs font-semibold text-emerald-800 hover:bg-emerald-50"
+              >
+                <Icon name="edit" size={14} />
+                {logo ? 'Đổi logo' : 'Chọn logo'}
+              </button>
+              {selectedLogo && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedLogo(undefined)}
+                  className="min-h-9 text-xs font-medium text-rose-700"
+                >
+                  Bỏ ảnh đã chọn
+                </button>
+              )}
+              <input
+                ref={logoInput}
+                type="file"
+                hidden
+                accept="image/jpeg,image/png,image/webp"
+                onChange={(event) => {
+                  const file = event.target.files?.[0]
+                  event.target.value = ''
+                  if (file)
+                    setSelectedLogo({ file, url: URL.createObjectURL(file) })
+                }}
+              />
+            </div>
+            <p className="mt-1 truncate text-xs text-slate-500">
+              {selectedLogo?.file.name || 'JPG, PNG hoặc WebP · Tối đa 2 MiB'}
+            </p>
           </div>
         </div>
         <div className="grid gap-6 sm:grid-cols-2">
@@ -106,11 +149,6 @@ export function RestaurantForm({
                 'address',
                 'Địa chỉ *',
                 'Số nhà, đường, quận/huyện, tỉnh/thành phố',
-              ],
-              [
-                'logoUrl',
-                'Đường dẫn logo',
-                'https://example.com/restaurant-logo.jpg',
               ],
               ['timeZone', 'Múi giờ *', 'Asia/Ho_Chi_Minh'],
             ] as const
@@ -129,11 +167,6 @@ export function RestaurantForm({
                   {...register(key)}
                 />
               </Field>
-              {key === 'logoUrl' && (
-                <p className="mt-2 text-xs text-slate-400">
-                  Dán đường dẫn ảnh để xem trước logo nhà hàng.
-                </p>
-              )}
             </div>
           ))}
         </div>
@@ -169,7 +202,7 @@ export function RestaurantForm({
           </button>
           <button
             type="submit"
-            disabled={!!restaurant && !isDirty}
+            disabled={!!restaurant && !isDirty && !selectedLogo}
             className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-800 disabled:opacity-40"
           >
             {pending

@@ -13,18 +13,6 @@ export const profileSchema = z.object({
       (value) => !value || /^0\d{9}$/.test(value),
       'Nhập số điện thoại gồm 10 chữ số bắt đầu bằng 0.',
     ),
-  avatarUrl: z
-    .string()
-    .trim()
-    .max(2048, 'Đường dẫn ảnh tối đa 2048 ký tự.')
-    .refine((value) => {
-      if (!value) return true
-      try {
-        return ['http:', 'https:'].includes(new URL(value).protocol)
-      } catch {
-        return false
-      }
-    }, 'Nhập đường dẫn ảnh HTTP hoặc HTTPS hợp lệ.'),
 })
 
 const maxPasswordBytes = (value: string) =>

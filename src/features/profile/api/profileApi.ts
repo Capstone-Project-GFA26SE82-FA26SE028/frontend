@@ -29,6 +29,17 @@ export async function updateProfile(values: ProfileValues) {
   return result(data)
 }
 
+export async function uploadProfileAvatar(file: File) {
+  const form = new FormData()
+  form.append('file', file)
+  const { data } = await axiosClient.post<
+    ProfileResponse<{ avatarUrl: string }>
+  >('/users/me/avatar', form)
+  const avatarUrl = result(data)?.avatarUrl
+  if (!avatarUrl) throw new Error('Không thể tải ảnh đại diện.')
+  return avatarUrl
+}
+
 export async function changePassword(values: PasswordValues) {
   const { data } = await axiosClient.post<ProfileResponse<null>>(
     '/auth/change-password',

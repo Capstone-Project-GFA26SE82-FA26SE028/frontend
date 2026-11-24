@@ -16,8 +16,8 @@ export function DashboardSection({
 }) {
   return (
     <section className="min-w-0 rounded-2xl border border-slate-200/60 bg-white p-4 shadow-[0_2px_12px_#173b2c03] sm:p-5">
-      <div className="mb-4 flex items-center gap-3">
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+      <div className="mb-4 flex items-center gap-3 border-b border-slate-100 pb-3">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
           <Icon name={icon} size={17} />
         </span>
         <h2 className="text-base font-semibold text-slate-800">{title}</h2>

@@ -127,6 +127,18 @@ export async function saveUserAccount(
   }
   return saved
 }
+export async function uploadUserAvatar(id: string, file: File) {
+  const form = new FormData()
+  form.append('file', file)
+  const { data } = await axiosClient.post<UserResponse<{ avatarUrl: string }>>(
+    `/users/${id}/avatar`,
+    form,
+  )
+  const avatarUrl = result(data)?.avatarUrl
+  if (!avatarUrl) throw new Error('Không thể tải ảnh đại diện.')
+  return avatarUrl
+}
+
 export async function setUserStatus(id: string, isActive: boolean) {
   const { data } = await axiosClient.patch<UserResponse<UserDto>>(
     '/users/' + encodeURIComponent(id) + '/status',

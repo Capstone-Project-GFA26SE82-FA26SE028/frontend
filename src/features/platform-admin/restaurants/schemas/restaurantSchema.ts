@@ -12,14 +12,6 @@ export const restaurantSchema = z
     address: z.string().trim().min(1, 'Vui lòng nhập địa chỉ.').max(500),
     hotline: z.string().trim().min(1, 'Vui lòng nhập số điện thoại.').max(20),
     taxCode: z.string().trim().max(50),
-    logoUrl: z
-      .string()
-      .trim()
-      .max(2048)
-      .refine(
-        (v) => !v || (z.url().safeParse(v).success && /^https?:\/\//i.test(v)),
-        'Nhập đường dẫn ảnh HTTP hoặc HTTPS hợp lệ.',
-      ),
     timeZone: z.string().trim().min(1, 'Vui lòng nhập múi giờ.').max(100),
     openingHours: z
       .array(

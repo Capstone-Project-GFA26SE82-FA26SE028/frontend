@@ -4,6 +4,7 @@ export type AuthUser = {
   userName: string
   email: string
   fullName?: string | null
+  avatarUrl?: string | null
   isActive: boolean
   restaurantId?: string | null
   provisioningPending?: boolean
