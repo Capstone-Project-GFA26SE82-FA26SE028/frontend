@@ -4,7 +4,7 @@ import { SessionsPage } from '../features/platform-admin/sessions/pages/Sessions
 import { RestaurantStaffPage } from '../features/platform-admin/restaurant-staff/pages/RestaurantStaffPage'
 import type { RouteObject } from 'react-router-dom'
 import { StaffLayout } from '../layouts/staff/StaffLayout'
-import { PlatformAdminPage } from '../features/platform-admin/pages/PlatformAdminPage'
+import { PlatformAdminPage } from '../features/platform-admin/dashboard/pages/PlatformAdminPage'
 import { ProfilePage } from '../features/profile/pages/ProfilePage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 import { RestaurantsPage } from '../features/platform-admin/restaurants/pages/RestaurantsPage'
