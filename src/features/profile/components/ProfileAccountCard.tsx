@@ -77,7 +77,11 @@ export function ProfileAccountCard({
         <div className="flex flex-wrap justify-between gap-2">
           <dt className="text-slate-500">Vai trò</dt>
           <dd className="font-medium text-emerald-800">
-            {profile.roleId === 'admin' ? 'Quản trị viên' : profile.roleId}
+            {profile.roleId === 'customer'
+              ? 'Khách hàng'
+              : profile.roleId === 'admin'
+                ? 'Quản trị viên'
+                : profile.roleId}
           </dd>
         </div>
         <div>
