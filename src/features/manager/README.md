@@ -35,8 +35,9 @@ folders remain placeholders, not implemented pages.
 
 Table monitoring reads the same tables and areas as Admin, scoped to the Manager's
 assigned restaurant. It has independent components, read-only API functions,
-filters, details, and 15-second polling. Kitchen monitoring and staff activity
-still use preview data. Earlier
+filters, details, and 15-second polling. Kitchen monitoring reads real tasks,
+summary statistics, and table names using its own API and components, with
+15-second polling and no mutation actions. Staff activity still uses preview data. Earlier
 implementation notes are preserved in `docs`; their old paths are historical.
 
 Validation: run `npm run build` and `npm run lint` from `frontend`.

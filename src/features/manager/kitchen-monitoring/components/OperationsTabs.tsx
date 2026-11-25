@@ -3,14 +3,6 @@ import { NavLink } from 'react-router-dom'
 export function OperationsTabs() {
   return (
     <>
-      <div
-        role="status"
-        className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900"
-      >
-        <strong>Xem trước · Dữ liệu mẫu.</strong> Phần này chỉ minh họa giao
-        diện, chưa kết nối dữ liệu bàn, tác vụ bếp hay hoạt động nhân viên thực
-        tế. Dữ liệu backend không bị thay đổi.
-      </div>
       <nav
         aria-label="Theo dõi vận hành"
         className="mb-5 flex gap-1 overflow-x-auto rounded-xl border border-slate-200/70 bg-white p-1"
