@@ -12,17 +12,25 @@ import {
 import { Field } from '../../../../components/Field/Field'
 import { Badge } from '../../../../components/Badge/Badge'
 import { Panel } from '../../../../components/Panel/Panel'
-import { matches } from '../../../admin/utils'
 import { QueryState } from '../components/QueryState'
 import { tableClass } from '../constants/styles'
 import { dateLabel } from '../utils/price'
 import { OperationsTabs } from '../components/OperationsTabs'
 import { OperationsRefresh } from '../components/OperationsRefresh'
-import { useKitchenTasks } from '../hooks/useKitchenTasks'
+import {
+  useKitchenTasks,
+  useOperationsTables,
+  useKitchenSummary,
+} from '../hooks/useKitchenTasks'
 import { useMonitoringClock } from '../hooks/useMonitoringClock'
-import { useOperationsTables } from '../hooks/useOperationsTables'
-import { isDelayed, waitingMinutes, withinDays } from '../utils/operations'
-import type { KitchenTask } from '../types/operations'
+import {
+  isDelayed,
+  isLate,
+  matches,
+  waitingMinutes,
+  withinDays,
+} from '../utils/operations'
+import { kitchenError } from '../api/kitchenApi'
 
 const taskLabels: Record<string, string> = {
   Pending: 'Đang chờ',
@@ -34,6 +42,7 @@ const taskLabels: Record<string, string> = {
 export function KitchenMonitoringPage() {
   const tasks = useKitchenTasks()
   const tables = useOperationsTables()
+  const summary = useKitchenSummary()
   const [params, setParams] = useSearchParams()
   const tableId = params.get('tableId') || ''
   const [search, setSearch] = useState('')
@@ -43,13 +52,16 @@ export function KitchenMonitoringPage() {
   const [until, setUntil] = useState('')
   const [delayedOnly, setDelayedOnly] = useState(false)
   const [page, setPage] = useState(1)
-  const [selected, setSelected] = useState<KitchenTask | null>(null)
+  const [selected, setSelected] = useState<{
+    taskId: string
+    scope: string
+  } | null>(null)
   const now = useMonitoringClock()
   const all = tasks.data || []
   const tableName = (id: string) =>
     tables.data?.find((table) => table.tableId === id)?.tableCode ||
     id ||
-    'Chưa phân công'
+    'Mang đi / không có bàn'
   const visible = all.filter(
     (task) =>
       matches(
@@ -68,39 +80,57 @@ export function KitchenMonitoringPage() {
     page,
     Math.max(1, Math.ceil(visible.length / PAGE_SIZE)),
   )
-  const detail = all.find((task) => task.taskId === selected?.taskId)
+  const selection = selected?.scope === tasks.scope ? selected : null
+  const detail = all.find((task) => task.taskId === selection?.taskId)
+  const refresh = () => {
+    void tasks.refetch()
+    void tables.refetch()
+    void summary.refetch()
+  }
+  if (!tasks.restaurantId)
+    return (
+      <PageHeading
+        title="Tiến độ bếp"
+        description="Bạn cần được phân công nhà hàng để xem tiến độ bếp."
+      />
+    )
   return (
     <>
       <PageHeading
         eyebrow="Theo dõi vận hành"
         title="Tiến độ bếp"
-        description="Theo dõi từng tác vụ bếp và xác định các món đang chờ quá 15 phút."
+        description="Theo dõi tiến độ chế biến, thời gian chờ và món trễ hạn trong nhà hàng."
       />
       <OperationsTabs />
-      <QueryState
-        pending={tasks.isPending}
-        error={tasks.error}
-        retry={() => void tasks.refetch()}
-      >
+      <QueryState pending={tasks.isPending} error={tasks.error} retry={refresh}>
         <SummaryCards
           items={[
             {
               label: 'Đang chờ',
-              value: all.filter((task) => task.status === 'Pending').length,
+              value:
+                summary.data && !summary.isError
+                  ? summary.data.pendingCount
+                  : '—',
               icon: 'clock',
               note: 'Tác vụ đang chờ chế biến',
             },
             {
               label: 'Đang nấu',
-              value: all.filter((task) => task.status === 'Cooking').length,
+              value:
+                summary.data && !summary.isError
+                  ? summary.data.cookingCount
+                  : '—',
               icon: 'fire',
               note: 'Tác vụ đang chế biến',
             },
             {
               label: 'Đã xong',
-              value: all.filter((task) => task.status === 'Ready').length,
+              value:
+                summary.data && !summary.isError
+                  ? summary.data.readyCount
+                  : '—',
               icon: 'check',
-              note: 'Tác vụ bếp đã hoàn thành',
+              note: 'Món đã xong, chưa phục vụ',
             },
             {
               label: 'Chờ > 15 phút',
@@ -112,9 +142,31 @@ export function KitchenMonitoringPage() {
         />
         <OperationsRefresh
           updatedAt={tasks.dataUpdatedAt}
-          refreshing={tasks.isFetching}
-          refresh={() => void tasks.refetch()}
+          refreshing={
+            tasks.isFetching || tables.isFetching || summary.isFetching
+          }
+          refresh={refresh}
         />
+        {summary.isError ? (
+          <p role="alert" className="mb-4 text-sm text-rose-700">
+            Không thể tải thống kê bếp: {kitchenError(summary.error)}
+          </p>
+        ) : (
+          <p className="mb-4 text-sm text-slate-500">
+            Thời gian nấu trung bình:{' '}
+            {summary.data
+              ? `${summary.data.avgCookingTimeMinutes.toLocaleString('vi-VN', { maximumFractionDigits: 1 })} phút`
+              : 'Đang tải…'}
+            . Thống kê trên toàn bộ nhà hàng; bộ lọc bên dưới áp dụng cho danh
+            sách.
+          </p>
+        )}
+        {tables.isError && (
+          <p role="alert" className="mb-4 text-sm text-amber-700">
+            Chưa tải được tên bàn: {kitchenError(tables.error)} Danh sách tạm
+            hiển thị mã bàn.
+          </p>
+        )}
         <Panel>
           <div className="space-y-3 border-b border-slate-100 p-4">
             <div className="flex flex-wrap gap-3">
@@ -164,6 +216,33 @@ export function KitchenMonitoringPage() {
               </select>
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
+              <Field label="Bàn">
+                <select
+                  aria-label="Lọc theo bàn"
+                  value={tableId}
+                  disabled={tables.isPending || tables.isError}
+                  className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 disabled:opacity-40"
+                  onChange={(event) => {
+                    const next = new URLSearchParams(params)
+                    if (event.target.value)
+                      next.set('tableId', event.target.value)
+                    else next.delete('tableId')
+                    setParams(next)
+                    setPage(1)
+                  }}
+                >
+                  <option value="">Tất cả bàn / mang đi</option>
+                  {tableId &&
+                    !tables.data?.some(
+                      (table) => table.tableId === tableId,
+                    ) && <option value={tableId}>{tableName(tableId)}</option>}
+                  {tables.data?.map((table) => (
+                    <option key={table.tableId} value={table.tableId}>
+                      {table.tableCode}
+                    </option>
+                  ))}
+                </select>
+              </Field>
               <Field label="Từ ngày (UTC+7)">
                 <input
                   type="date"
@@ -244,12 +323,18 @@ export function KitchenMonitoringPage() {
                     .map((task) => (
                       <tr
                         key={task.taskId}
-                        className={isDelayed(task, now) ? 'bg-amber-50/60' : ''}
+                        className={
+                          isDelayed(task, now) || isLate(task, now)
+                            ? 'bg-amber-50/60'
+                            : ''
+                        }
                       >
                         <td>
                           <p className="font-semibold">{task.orderNumber}</p>
                           <p className="mt-1 text-xs text-slate-500">
-                            {tableName(task.tableId)}
+                            {task.channel === 'Takeaway'
+                              ? 'Mang đi'
+                              : tableName(task.tableId)}
                           </p>
                         </td>
                         <td>
@@ -277,12 +362,21 @@ export function KitchenMonitoringPage() {
                           </Badge>
                           {isDelayed(task, now) && (
                             <p className="mt-2 text-xs font-semibold text-amber-700">
-                              Chậm
+                              Chờ quá 15 phút
+                            </p>
+                          )}
+                          {isLate(task, now) && (
+                            <p className="mt-2 text-xs font-semibold text-rose-700">
+                              Trễ hạn dự kiến
                             </p>
                           )}
                         </td>
                         <td className="whitespace-nowrap">
-                          {waitingMinutes(task, now)} phút
+                          {task.status === 'Cancelled' &&
+                          !task.cookingAt &&
+                          !task.readyAt
+                            ? 'Không có dữ liệu'
+                            : `${waitingMinutes(task, now)} phút`}
                         </td>
                         <td className="whitespace-nowrap text-xs">
                           {dateLabel(task.queuedAt)}
@@ -290,7 +384,12 @@ export function KitchenMonitoringPage() {
                         <td>
                           <button
                             className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
-                            onClick={() => setSelected(task)}
+                            onClick={() =>
+                              setSelected({
+                                taskId: task.taskId,
+                                scope: tasks.scope,
+                              })
+                            }
                           >
                             Xem
                           </button>
@@ -309,7 +408,7 @@ export function KitchenMonitoringPage() {
           />
         </Panel>
       </QueryState>
-      {selected && (
+      {selection && !tasks.isError && (
         <Modal
           title="Chi tiết tác vụ bếp"
           closeLabel="Đóng"
@@ -325,11 +424,35 @@ export function KitchenMonitoringPage() {
                   Đơn: {detail.orderNumber} · Bàn: {tableName(detail.tableId)}
                 </p>
                 <p className="text-sm">Trạm: {detail.stationName}</p>
+                <Badge tone={detail.status === 'Ready' ? 'green' : 'blue'}>
+                  {taskLabels[detail.status] || detail.status}
+                </Badge>
+                <p className="text-sm">
+                  Dự kiến:{' '}
+                  {detail.estimatedMinutes == null
+                    ? 'Chưa thiết lập'
+                    : `${detail.estimatedMinutes} phút`}
+                </p>
+                {detail.note && (
+                  <p className="whitespace-pre-wrap text-sm">
+                    Ghi chú: {detail.note}
+                  </p>
+                )}
+                {!!detail.options.length && (
+                  <ul className="space-y-1 text-sm">
+                    {detail.options.map((option) => (
+                      <li key={option.optionId}>
+                        {option.name} × {option.quantity}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 <dl className="space-y-3 text-sm">
                   {[
                     ['Vào hàng chờ', detail.queuedAt],
                     ['Bắt đầu nấu', detail.cookingAt],
                     ['Đã xong', detail.readyAt],
+                    ['Hạn dự kiến', detail.dueAt],
                   ].map(([label, value]) => (
                     <div key={label} className="flex justify-between gap-3">
                       <dt className="text-slate-500">{label}</dt>
