@@ -125,13 +125,21 @@ test('concurrent updates and permission errors have actionable messages', () => 
     kdsError(
       new axios.AxiosError('', '', undefined, undefined, { status: 409 }),
     ),
-    /changed/,
+    /đã thay đổi/,
   )
   assert.match(
     kdsError(
       new axios.AxiosError('', '', undefined, undefined, { status: 403 }),
     ),
-    /permission/,
+    /không có quyền/,
+  )
+  const message = 'Món đang có yêu cầu hủy; cần xử lý trước khi tiếp tục chế biến.'
+  assert.equal(
+    kdsError(new axios.AxiosError('', '', undefined, undefined, {
+      status: 409,
+      data: { message },
+    })),
+    message,
   )
 })
 

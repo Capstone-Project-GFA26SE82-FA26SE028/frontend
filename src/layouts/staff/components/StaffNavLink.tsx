@@ -16,7 +16,7 @@ export function StaffNavLink({
   return (
     <NavLink
       to={item.to}
-      end={item.to === homePath}
+      end={item.end ?? item.to === homePath}
       onClick={onNavigate}
       title={collapsed ? item.label : undefined}
       className={({ isActive }) =>

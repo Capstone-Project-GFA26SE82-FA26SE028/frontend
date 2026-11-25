@@ -15,6 +15,8 @@ import { TableMonitoringPage } from '../features/manager/table-monitoring/pages/
 import { KitchenMonitoringPage } from '../features/manager/kitchen-monitoring/pages/KitchenMonitoringPage'
 import { StaffActivityPage } from '../features/manager/staff-activity/pages/StaffActivityPage'
 import { ProfilePage } from '../features/profile/pages/ProfilePage'
+import { KitchenStationsPage } from '../features/manager/kitchen-stations/pages/KitchenStationsPage'
+import { KitchenStationItemsPage } from '../features/manager/kitchen-stations/pages/KitchenStationItemsPage'
 
 export const managerRoute: RouteObject = {
   path: '/manager',
@@ -35,6 +37,8 @@ export const managerRoute: RouteObject = {
     { path: 'stock-variance', element: <StockVariancePage /> },
     { path: 'table-monitoring', element: <TableMonitoringPage /> },
     { path: 'kitchen-monitoring', element: <KitchenMonitoringPage /> },
+    { path: 'kitchen-stations', element: <KitchenStationsPage /> },
+    { path: 'kitchen-stations/items', element: <KitchenStationItemsPage /> },
     { path: 'staff-activity', element: <StaffActivityPage /> },
     {
       path: '*',

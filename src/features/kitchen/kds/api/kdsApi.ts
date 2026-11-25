@@ -96,8 +96,12 @@ export const kdsApi = {
 
 export function kdsError(error: unknown): string {
   if (axios.isAxiosError(error)) {
-    if (error.response?.status === 409)
-      return 'Món này đã thay đổi. Vui lòng kiểm tra dữ liệu mới nhất trước khi thử lại.'
+    if (error.response?.status === 409) {
+      const message = error.response.data?.message
+      return typeof message === 'string' && message.trim()
+        ? message
+        : 'Món này đã thay đổi. Vui lòng kiểm tra dữ liệu mới nhất trước khi thử lại.'
+    }
     if (error.response?.status === 403)
       return 'Bạn không có quyền thực hiện thao tác này.'
     if (!error.response) return 'Không kết nối được máy chủ. Vui lòng thử lại.'

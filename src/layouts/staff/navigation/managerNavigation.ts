@@ -3,6 +3,22 @@ import type { StaffNavigationGroup } from '../types/types'
 export const managerNavigation: StaffNavigationGroup[] = [
   { title: '', items: [{ to: '/manager', label: 'Tổng quan', icon: 'home' }] },
   {
+    title: 'QUẢN LÝ TRẠM BẾP',
+    items: [
+      {
+        to: '/manager/kitchen-stations',
+        label: 'Danh sách trạm bếp',
+        icon: 'fire',
+        end: true,
+      },
+      {
+        to: '/manager/kitchen-stations/items',
+        label: 'Thiết lập món cho trạm',
+        icon: 'utensils',
+      },
+    ],
+  },
+  {
     title: 'THỰC ĐƠN VÀ GIÁ BÁN',
     items: [
       { to: '/manager/menu/categories', label: 'Danh mục', icon: 'grid' },

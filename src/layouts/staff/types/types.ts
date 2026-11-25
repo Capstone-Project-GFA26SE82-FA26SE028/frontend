@@ -4,6 +4,7 @@ export type StaffNavigationItem = {
   to: string
   label: string
   icon: string
+  end?: boolean
 }
 
 export type StaffNavigationGroup = {
