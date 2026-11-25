@@ -80,8 +80,7 @@ export async function appliedPrice(
 }
 export function catalogError(error: unknown): string {
   if (axios.isAxiosError(error)) {
-    if (!error.response)
-      return 'Không kết nối được máy chủ. Vui lòng thử lại.'
+    if (!error.response) return 'Không kết nối được máy chủ. Vui lòng thử lại.'
     if (error.response.status === 403)
       return 'Tài khoản của bạn không có quyền thực hiện thao tác này.'
     return (

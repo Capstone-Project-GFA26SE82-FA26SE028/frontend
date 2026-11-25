@@ -33,8 +33,10 @@ The profile route uses the application-wide profile feature.
 The `analytics`, `promotions`, `purchase-requests`, `reports`, and `suppliers`
 folders remain placeholders, not implemented pages.
 
-Table monitoring, kitchen monitoring, and staff activity still use preview data.
-Reorganizing these modules does not connect them to backend APIs. Earlier
+Table monitoring reads the same tables and areas as Admin, scoped to the Manager's
+assigned restaurant. It has independent components, read-only API functions,
+filters, details, and 15-second polling. Kitchen monitoring and staff activity
+still use preview data. Earlier
 implementation notes are preserved in `docs`; their old paths are historical.
 
 Validation: run `npm run build` and `npm run lint` from `frontend`.

@@ -1,9 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import {
-  catalogError,
-  writeCatalog,
-} from '../api/catalogApi'
+import { catalogError, writeCatalog } from '../api/catalogApi'
 
 export function useIngredientMutation(onSuccess?: () => void) {
   const client = useQueryClient()
