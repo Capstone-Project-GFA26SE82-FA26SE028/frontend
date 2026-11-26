@@ -11,6 +11,8 @@ export type CashHandover = {
 }
 
 export type CashierBill = {
+  status: string
+  customerRef: string | null
   currency: string
   subTotal: number
   discountAmount: number

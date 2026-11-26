@@ -28,7 +28,7 @@ export function PhoneEntryForm({
       className="mt-7 space-y-3"
     >
       <label className="block text-sm font-semibold" htmlFor="entry-phone">
-        Số điện thoại hoặc mã bàn
+        Số điện thoại hoặc 3 số cuối
       </label>
       <input
         {...register('phone')}

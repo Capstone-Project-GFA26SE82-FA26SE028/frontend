@@ -1,4 +1,4 @@
-﻿import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { cashShiftError } from '../../shifts/api/cashShiftApi'
 import { useCashShift } from '../../shifts/hooks/useCashShift'
 import { useTableBilling } from '../hooks/useTableBilling'
@@ -92,6 +92,9 @@ function BillingDesk({
           cashShiftId={cashShiftId}
           cashRegisterId={cashRegisterId}
           restaurantId={restaurantId}
+          onPaid={(billId) =>
+            model.setSelectedKey((current) => current === billId ? null : current)
+          }
         />
       </div>
     </div>

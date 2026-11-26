@@ -1,3 +1,4 @@
+import { formatCurrencyInput } from '../../../../utils/currency'
 import { useState } from 'react'
 import { useCashShift } from '../hooks/useCashShift'
 import { cashShiftError } from '../api/cashShiftApi'
@@ -114,8 +115,11 @@ function ShiftContent({ model }: { model: ReturnType<typeof useCashShift> }) {
                   inputMode="numeric"
                   autoComplete="off"
                   className="min-w-0 flex-1 rounded-xl bg-transparent px-4 py-4 text-2xl font-semibold outline-none"
-                  value={amount}
-                  onChange={(event) => setAmount(event.target.value)}
+                  value={formatCurrencyInput(amount)}
+                  onChange={(event) => {
+                    const digits = event.target.value.replace(/\./g, '')
+                    if (/^\d*$/.test(digits)) setAmount(digits)
+                  }}
                   aria-describedby="cash-help"
                 />
                 <span className="text-sm text-slate-500">VND</span>
