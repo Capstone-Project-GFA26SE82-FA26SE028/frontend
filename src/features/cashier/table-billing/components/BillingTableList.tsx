@@ -1,11 +1,10 @@
-﻿import { Icon } from '../../../../components/Icon/Icon'
+import { Icon } from '../../../../components/Icon/Icon'
 import { Pagination } from '../../../../components/Pagination/Pagination'
 import { cashShiftError } from '../../shifts/api/cashShiftApi'
 import type { useTableBilling } from '../hooks/useTableBilling'
 import {
   entryKey,
   money,
-  STATUS_NAMES,
   tableName,
 } from '../utils/billingDisplay'
 
@@ -98,7 +97,7 @@ export function BillingTableList({
           ))}
         </div>
       </div>
-      <div className="flex-1 space-y-5 bg-slate-50 p-4">
+      <div className="flex-1 space-y-5 bg-slate-50/70 p-3 sm:p-4">
         {list.isPending && <p role="status">Đang tải danh sách…</p>}
         {list.isError && (
           <p role="alert" className="text-sm text-rose-700">
@@ -123,53 +122,23 @@ export function BillingTableList({
         )}
         {[...groups].map(([name, entries]) => (
           <div key={name}>
-            <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold">
+            <h2 className="mb-2.5 flex items-center gap-2 text-sm font-semibold text-slate-700">
               <Icon name="pin" size={16} />
               {name}
+              <span className="rounded-full bg-slate-200/60 px-2 py-0.5 text-xs font-medium text-slate-600">{entries.length}</span>
             </h2>
-            <ul className="grid gap-3 sm:grid-cols-[repeat(auto-fill,minmax(160px,1fr))]">
+            <ul className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,8rem),1fr))] gap-3">
               {entries.map((entry) => (
                 <li key={entryKey(entry)} className="min-w-0">
                   <button
                     type="button"
                     aria-pressed={selected === entry}
                     onClick={() => setSelectedKey(entryKey(entry))}
-                    className={`flex h-full w-full min-w-0 flex-col rounded-2xl border p-4 text-left transition-colors hover:border-emerald-600 aria-pressed:border-emerald-600 aria-pressed:ring-1 aria-pressed:ring-emerald-600 ${tab === 'paid' ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'}`}
+                    className={`flex min-h-20 w-full min-w-0 items-center justify-center rounded-2xl border px-4 py-3 text-center transition-colors hover:border-emerald-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 aria-pressed:border-emerald-600 aria-pressed:ring-1 aria-pressed:ring-emerald-600 ${tab === 'paid' ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'}`}
                   >
-                    <span className="block break-words text-lg font-bold">
+                    <span className="block break-words text-xl font-bold leading-tight text-slate-900">
                       {tableName(entry)}
                     </span>
-                    <span className="mt-1 block text-xs text-slate-500">
-                      {entry.partySize > 0
-                        ? `${entry.partySize} khách`
-                        : (STATUS_NAMES[entry.status] ?? entry.status)}
-                      {entry.openedAt && (
-                        <>
-                          {' '}
-                          ·{' '}
-                          {new Date(entry.openedAt).toLocaleTimeString(
-                            'vi-VN',
-                            {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            },
-                          )}
-                        </>
-                      )}
-                    </span>
-                    <span className="mt-4 block w-full border-t border-slate-100 pt-3 text-base font-bold text-emerald-800">
-                      {entry.totalAmount === null
-                        ? 'Chờ lập hóa đơn'
-                        : money.format(entry.totalAmount)}
-                    </span>
-                    {entry.billCode && (
-                      <span
-                        className="mt-1 block w-full truncate text-xs text-slate-500"
-                        title={entry.billCode}
-                      >
-                        {entry.billCode}
-                      </span>
-                    )}
                   </button>
                 </li>
               ))}

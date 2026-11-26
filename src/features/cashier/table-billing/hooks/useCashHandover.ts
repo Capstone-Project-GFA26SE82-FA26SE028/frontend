@@ -7,6 +7,7 @@ export function useCashHandover(
   registerId: string,
   shiftId: string,
   billId: string,
+  onPaid: (billId: string) => void,
 ) {
   const client = useQueryClient()
   const key = ['cashier', 'cash-handover', registerId, shiftId, billId]
@@ -25,7 +26,10 @@ export function useCashHandover(
       amount: number
     }) => confirmCashHandover(paymentId, amount),
     retry: false,
-    onSuccess: () => toast.success('Đã xác nhận nhận tiền mặt.'),
+    onSuccess: () => {
+      onPaid(billId)
+      toast.success('Đã xác nhận nhận tiền mặt.')
+    },
     onSettled: () =>
       Promise.all([
         client.invalidateQueries({ queryKey: key }),

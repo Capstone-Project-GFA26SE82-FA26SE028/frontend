@@ -3,6 +3,7 @@ import { cashShiftError } from '../../shifts/api/cashShiftApi'
 import { getCashierBill } from '../api/billApi'
 import type { BillingEntry, BillingTab } from '../types/types'
 import { STATUS_NAMES, tableName } from '../utils/billingDisplay'
+import { LoyaltyPhoneForm } from './LoyaltyPhoneForm'
 import { BillSummary } from './BillSummary'
 import { CashHandoverPanel } from './CashHandoverPanel'
 import type { usePrepareBill } from '../hooks/usePrepareBill'
@@ -14,6 +15,7 @@ export function BillingDetails({
   cashShiftId,
   cashRegisterId,
   restaurantId,
+  onPaid,
 }: {
   selected: BillingEntry | undefined
   tab: BillingTab
@@ -21,6 +23,7 @@ export function BillingDetails({
   cashShiftId: string
   cashRegisterId: string
   restaurantId: string
+  onPaid: (billId: string) => void
 }) {
   const billId = selected?.billId
   const checkoutId = selected?.checkoutId
@@ -52,6 +55,7 @@ export function BillingDetails({
       <header className="flex items-start justify-between gap-3 border-b border-slate-100 px-5 py-4">
         <div className="min-w-0 flex-1">
           <h2 className="break-words text-xl font-bold">
+            {selected && selected.tables.some((table) => table.tableCode) && 'Bàn '}
             {selected ? tableName(selected) : 'Hóa đơn'}
           </h2>
           {metadata && (
@@ -122,6 +126,13 @@ export function BillingDetails({
         </div>
       ) : (
         <>
+          {tab === 'incoming' && bill.data.status === 'Unpaid' && (
+            <LoyaltyPhoneForm
+              key={billId}
+              billId={billId}
+              customerRef={bill.data.customerRef}
+            />
+          )}
           <BillSummary bill={bill.data} paid={tab === 'paid'} />
           {tab === 'incoming' && (
             <CashHandoverPanel
@@ -130,6 +141,7 @@ export function BillingDetails({
               shiftId={cashShiftId}
               registerId={cashRegisterId}
               restaurantId={restaurantId}
+              onPaid={onPaid}
             />
           )}
         </>

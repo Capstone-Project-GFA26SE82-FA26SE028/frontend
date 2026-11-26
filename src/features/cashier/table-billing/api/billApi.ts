@@ -23,3 +23,15 @@ export async function getCashierBill(billId: string, signal: AbortSignal) {
   if (!data.isSuccess) throw new Error(data.message || 'Không thể tải hóa đơn.')
   return data.result
 }
+
+export async function saveBillLoyaltyPhone(billId: string, phoneNumber: string) {
+  const { data } = await axiosClient.post<{
+    isSuccess: boolean
+    message?: string | null
+    result: CashierBill
+  }>(`/bills/${billId}/customer`, { phoneNumber })
+  if (!data.isSuccess) {
+    throw new Error(data.message || 'Không thể gán khách vào hóa đơn.')
+  }
+  return data.result
+}
