@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { axiosClient } from '../../../../api/axiosClient'
 import type {
+  KitchenSummary,
+  KitchenBatch,
   ActiveRecipe,
   KitchenTask,
   KitchenItem,
@@ -60,7 +62,47 @@ export async function kdsList<T>(
   }
 }
 
+async function write<T>(method: 'post' | 'patch', path: string, body: object) {
+  const { data } = await axiosClient[method]<Envelope<T>>(path, body)
+  if (!data.isSuccess)
+    throw new Error(data.message || 'Không thể cập nhật dữ liệu bếp.')
+  return data.result
+}
+
 export const kdsApi = {
+  summary: (stationId: string, signal?: AbortSignal) =>
+    get<KitchenSummary>(
+      '/kitchen-tasks/summary',
+      { kitchenStationId: stationId },
+      signal,
+    ),
+  batches: (stationId: string, signal?: AbortSignal) =>
+    get<KitchenBatch[]>(
+      '/kitchen-tasks/batches',
+      { kitchenStationId: stationId },
+      signal,
+    ),
+  task: (id: string, signal?: AbortSignal) =>
+    get<KitchenTask>(`/kitchen-tasks/${id}`, undefined, signal),
+  batch: (action: 'start' | 'complete', taskIds: string[]) =>
+    write<{ affectedCount: number; status: string }>(
+      'post',
+      `/kitchen-tasks/batches/${action}`,
+      { taskIds },
+    ),
+  remake: (id: string, reason: string) =>
+    write<KitchenTask>('post', `/kitchen-tasks/${id}/remake`, { reason }),
+  fire: (tableSessionId: string, orderId: string, course: string) =>
+    write<{ activatedCount: number; message: string }>(
+      'post',
+      '/kitchen-tasks/fire-course',
+      { tableSessionId, orderId, course },
+    ),
+  availability: (item: KitchenItem, availability: string) =>
+    write<KitchenItem>('patch', `/items/${item.itemId}/status`, {
+      availability,
+      version: item.version,
+    }),
   allTasks: (signal?: AbortSignal) =>
     kdsList<KitchenTask>('/kitchen-tasks', signal, { status: 'all' }),
   items: (signal?: AbortSignal) => kdsList<KitchenItem>('/items', signal),

@@ -1,3 +1,4 @@
+import { KdsOperations } from '../components/KdsOperations'
 import { Icon } from '../../../../components/Icon/Icon'
 import { KdsHeader } from '../components/KdsHeader'
 import { KdsOverview } from '../components/KdsOverview'
@@ -25,6 +26,7 @@ export function KdsPage() {
         active={m.active}
         late={m.late}
       />
+      <KdsOperations />
       <KdsFilters
         query={m.query}
         setQuery={m.setQuery}

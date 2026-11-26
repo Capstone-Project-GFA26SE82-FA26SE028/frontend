@@ -5,6 +5,7 @@ import { Icon } from '../../../../components/Icon/Icon'
 import { BrandLogo } from '../../../../components/BrandLogo/BrandLogo'
 import { LogoutButton } from '../../../auth/components/LogoutButton'
 import { useKds } from '../hooks/useKds'
+import { KdsNotificationBell } from '../../notifications/components/KdsNotificationBell'
 
 export function KdsWorkspaceHeader() {
   const { stations, stationId, setStationId, refresh, pending } = useKds()
@@ -88,6 +89,7 @@ export function KdsWorkspaceHeader() {
         >
           <Icon name="activity" size={21} />
         </button>
+        <KdsNotificationBell />
         <div
           ref={accountRef}
           className="relative"

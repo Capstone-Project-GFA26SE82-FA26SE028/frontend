@@ -1,10 +1,5 @@
 export type Status =
-  | 'Pending'
-  | 'Cooking'
-  | 'Ready'
-  | 'Hold'
-  | 'Served'
-  | 'Cancelled'
+  'Pending' | 'Cooking' | 'Ready' | 'Hold' | 'Served' | 'Cancelled'
 
 export type Ticket = {
   id: string
@@ -13,6 +8,10 @@ export type Ticket = {
   quantity: number
   note: string
   vip: boolean
+  priority?: number
+  dueAt?: number
+  isLate?: boolean
+  estimatedMinutes?: number | null
   previousNote?: string
   created: number
   status: Status
@@ -28,11 +27,17 @@ export type KdsState = {
   dishes: Dish[]
   feedback: { error: boolean; text: string } | null
 }
-export type KdsCommand = {
-  type: 'transition'
-  id: string
-  status: 'Cooking' | 'Ready'
-}
+export type KdsCommand =
+  | { type: 'priority'; id: string; priority: number }
+  | { type: 'remake'; id: string; reason: string }
+  | { type: 'batch'; action: 'start' | 'complete'; taskIds: string[] }
+  | { type: 'fire'; tableSessionId: string; orderId: string; course: string }
+  | { type: 'availability'; id: string; availability: string }
+  | {
+      type: 'transition'
+      id: string
+      status: 'Cooking' | 'Ready' | 'Cancelled'
+    }
 
 export type KitchenItem = {
   itemId: string
@@ -54,7 +59,8 @@ export type KitchenTask = {
   kitchenStationId: string
   kitchenStationName: string
   orderNumber: string
-  tableSessionId: string
+  channel?: string
+  tableSessionId: string | null
   orderId: string
   orderItemId: string
   originalTableId?: string | null
@@ -109,4 +115,23 @@ export type KdsBoardProps = KdsActions & {
   now: number
   late: (ticket: Ticket) => boolean
   isFiltered: boolean
+}
+
+export type KitchenSummary = {
+  pendingCount: number
+  cookingCount: number
+  readyCount: number
+  avgCookingTimeMinutes: number
+}
+export type KitchenBatch = {
+  itemId: string
+  itemName: string
+  kitchenStationId: string
+  totalQuantity: number
+  tasks: {
+    kitchenTaskId: string
+    orderNumber: string
+    quantity: number
+    note?: string | null
+  }[]
 }

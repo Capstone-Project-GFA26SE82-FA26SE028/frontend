@@ -19,7 +19,11 @@ export function useKdsBoard() {
     ['Pending', 'Cooking', 'Ready', 'Hold'].includes(t.status),
   )
   const late = (t: Ticket) =>
-    t.status === 'Pending' && now - t.created >= 10 * 60000
+    !!t.isLate ||
+    (t.status !== 'Ready' &&
+      (t.dueAt
+        ? now >= t.dueAt
+        : t.status === 'Pending' && now - t.created >= 10 * 60000))
   const orders = groupKdsOrders(active)
   const shown = orders
     .filter(

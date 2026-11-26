@@ -1,4 +1,5 @@
 import { Link, Navigate, type RouteObject } from 'react-router-dom'
+import { OffersPage } from '../features/manager/promotions/pages/OffersPage'
 import { CategoriesPage } from '../features/manager/categories/pages/CategoriesPage'
 import { ItemsPage } from '../features/manager/dishes/pages/ItemsPage'
 import { ManagerOverview } from '../features/manager/dashboard/pages/ManagerOverview'
@@ -17,12 +18,15 @@ import { StaffActivityPage } from '../features/manager/staff-activity/pages/Staf
 import { ProfilePage } from '../features/profile/pages/ProfilePage'
 import { KitchenStationsPage } from '../features/manager/kitchen-stations/pages/KitchenStationsPage'
 import { KitchenStationItemsPage } from '../features/manager/kitchen-stations/pages/KitchenStationItemsPage'
+import { KitchenAssignmentsPage } from '../features/manager/kitchen-assignments/pages/KitchenAssignmentsPage'
 
 export const managerRoute: RouteObject = {
   path: '/manager',
   element: <StaffLayout role="manager" />,
   children: [
     { index: true, element: <ManagerOverview /> },
+    { path: 'promotions', element: <OffersPage kind="promotions" /> },
+    { path: 'vouchers', element: <OffersPage kind="vouchers" /> },
     { path: 'profile', element: <ProfilePage /> },
     { path: 'menu', element: <Navigate to="categories" replace /> },
     { path: 'menu/categories', element: <CategoriesPage /> },
@@ -39,6 +43,10 @@ export const managerRoute: RouteObject = {
     { path: 'kitchen-monitoring', element: <KitchenMonitoringPage /> },
     { path: 'kitchen-stations', element: <KitchenStationsPage /> },
     { path: 'kitchen-stations/items', element: <KitchenStationItemsPage /> },
+    {
+      path: 'kitchen-stations/assignments',
+      element: <KitchenAssignmentsPage />,
+    },
     { path: 'staff-activity', element: <StaffActivityPage /> },
     {
       path: '*',

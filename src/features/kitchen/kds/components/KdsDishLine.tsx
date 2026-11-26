@@ -80,7 +80,7 @@ export function KdsDishLine({
         <button
           className="grid h-12 min-h-12 w-12 shrink-0 place-items-center rounded-[7px] border border-[#e1e8df] bg-white text-[#475569] hover:bg-[#f1f5ef] motion-safe:transition-colors motion-safe:duration-150 "
           onClick={() => onSelect(ticket.id)}
-          aria-label={`Chi tiết ${ticket.id}`}
+          aria-label={`Chi tiết ${dish.name}`}
         >
           <Icon name="receipt" size={18} />
         </button>

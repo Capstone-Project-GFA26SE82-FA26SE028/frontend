@@ -54,6 +54,10 @@ export function mapKdsState({
         .filter(Boolean)
         .join('\n'),
       vip: task.priority > 0,
+      priority: task.priority,
+      dueAt: task.dueAt ? Date.parse(task.dueAt) : undefined,
+      isLate: task.isLate,
+      estimatedMinutes: task.estimatedMinutes,
       created: Date.parse(task.queuedAt),
       status: task.status as Status,
       started: task.cookingAt ? Date.parse(task.cookingAt) : undefined,
