@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { RecipeModal } from './RecipeModal'
 import { useKds } from '../hooks/useKds'
 import { kdsApi, kdsError, kdsReadPolicy, kdsPollInterval } from '../api/kdsApi'
 
@@ -13,6 +14,10 @@ export function KdsOperations() {
   const [reason, setReason] = useState('')
   const [course, setCourse] = useState('Dessert')
   const [history, setHistory] = useState(false)
+  const [optionRecipe, setOptionRecipe] = useState<{
+    id: string
+    name: string
+  }>()
   const selected = tasks.find((t) => t.kitchenTaskId === taskId)
   const detail = useQuery({
     ...kdsReadPolicy,
@@ -154,7 +159,6 @@ export function KdsOperations() {
             </p>
             <p className="whitespace-pre-line">
               {task.note || 'Không có ghi chú'}
-              {task.options.map((o) => `\n${o.quantity} × ${o.name}`).join('')}
             </p>
             <p>
               Dự kiến: {task.estimatedMinutes ?? '—'} phút · Hạn hoàn thành:{' '}
@@ -162,6 +166,18 @@ export function KdsOperations() {
               {task.isLate && ' · Đã trễ'}
             </p>
             <div className="flex flex-wrap items-center gap-2">
+              {task.options.map((option, index) => (
+                <button
+                  key={option.optionId + ':' + index}
+                  type="button"
+                  className={button}
+                  onClick={() =>
+                    setOptionRecipe({ id: option.optionId, name: option.name })
+                  }
+                >
+                  Công thức {option.quantity} × {option.name}
+                </button>
+              ))}
               <input
                 aria-label="Mức ưu tiên"
                 type="number"
@@ -189,21 +205,6 @@ export function KdsOperations() {
               >
                 Lưu ưu tiên
               </button>
-              {['Pending', 'Cooking', 'Hold'].includes(task.status) && (
-                <button
-                  className={button}
-                  disabled={pending}
-                  onClick={() =>
-                    void run({
-                      type: 'transition',
-                      id: task.kitchenTaskId,
-                      status: 'Cancelled',
-                    })
-                  }
-                >
-                  Hủy món
-                </button>
-              )}
             </div>
             {task.channel !== 'Takeaway' && (
               <form
@@ -282,31 +283,32 @@ export function KdsOperations() {
               <span>
                 {item.itemName} · {item.availability}
               </span>
-              <button
-                className={button}
-                disabled={
-                  pending ||
-                  !['Available', 'OutOfStock'].includes(item.availability)
-                }
-                onClick={() =>
-                  void run({
-                    type: 'availability',
-                    id: item.itemId,
-                    availability:
-                      item.availability === 'OutOfStock'
-                        ? 'Available'
-                        : 'OutOfStock',
-                  })
-                }
-              >
-                {item.availability === 'OutOfStock'
-                  ? 'Mở bán lại'
-                  : 'Báo hết món'}
-              </button>
+              {item.availability === 'Available' && (
+                <button
+                  className={button}
+                  disabled={pending}
+                  onClick={() =>
+                    void run({
+                      type: 'availability',
+                      id: item.itemId,
+                      availability: 'OutOfStock',
+                    })
+                  }
+                >
+                  Báo hết món
+                </button>
+              )}
             </div>
           ))}
         </div>
       </details>
+      {optionRecipe && (
+        <RecipeModal
+          option
+          dish={{ ...optionRecipe, image: '' }}
+          onClose={() => setOptionRecipe(undefined)}
+        />
+      )}
     </section>
   )
 }

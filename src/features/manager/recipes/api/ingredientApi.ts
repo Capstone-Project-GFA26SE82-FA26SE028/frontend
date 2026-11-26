@@ -32,5 +32,13 @@ export const getConversions = (ingredientId: string, signal?: AbortSignal) =>
     z.array(conversionSchema),
     signal,
   )
-export const getRecipes = (itemId: string, signal?: AbortSignal) =>
-  getResult(`/items/${itemId}/recipes`, z.array(recipeSchema), signal)
+export const getRecipes = (
+  itemId: string,
+  signal?: AbortSignal,
+  option = false,
+) =>
+  getResult(
+    `/${option ? 'options' : 'items'}/${itemId}/recipes`,
+    z.array(recipeSchema),
+    signal,
+  )

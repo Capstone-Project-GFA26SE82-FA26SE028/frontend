@@ -18,11 +18,12 @@ import { recipeStatus } from '../utils/recipe'
 
 export function RecipesPage() {
   const [params, setParams] = useSearchParams()
-  const itemId = params.get('itemId') || ''
+  const optionId = params.get('optionId') || ''
+  const itemId = optionId || params.get('itemId') || ''
   const [versionId, setVersionId] = useState('')
   const [create, setCreate] = useState(false)
   const items = useItemChoices()
-  const recipes = useRecipes(itemId)
+  const recipes = useRecipes(itemId, !!optionId)
   const ingredients = useIngredientChoices()
   const units = useUnits()
   const sorted = [...(recipes.data || [])].sort((a, b) => b.version - a.version)
@@ -45,34 +46,43 @@ export function RecipesPage() {
         }
       />
       <IngredientTabs />
-      <Panel className="mb-5 p-4">
-        <QueryState
-          pending={items.isPending}
-          error={items.error}
-          retry={() => void items.refetch()}
-        >
-          <label className="block space-y-2 text-sm font-medium">
-            Món ăn
-            <select
-              value={itemId}
-              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-              onChange={(event) => {
-                setParams(
-                  event.target.value ? { itemId: event.target.value } : {},
-                )
-                setVersionId('')
-              }}
-            >
-              <option value="">Chọn món ăn</option>
-              {items.data?.map((item) => (
-                <option key={item.itemId} value={item.itemId}>
-                  {item.itemName}
-                </option>
-              ))}
-            </select>
-          </label>
-        </QueryState>
-      </Panel>
+      {optionId ? (
+        <Panel className="mb-5 flex items-center justify-between gap-3 p-4">
+          <strong>C?ng th?c t?y ch?n</strong>
+          <Link className="btn-secondary" to="/manager/menu/options">
+            Quay v? t?y ch?n m?n
+          </Link>
+        </Panel>
+      ) : (
+        <Panel className="mb-5 p-4">
+          <QueryState
+            pending={items.isPending}
+            error={items.error}
+            retry={() => void items.refetch()}
+          >
+            <label className="block space-y-2 text-sm font-medium">
+              Món ăn
+              <select
+                value={itemId}
+                className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-base text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                onChange={(event) => {
+                  setParams(
+                    event.target.value ? { itemId: event.target.value } : {},
+                  )
+                  setVersionId('')
+                }}
+              >
+                <option value="">Chọn món ăn</option>
+                {items.data?.map((item) => (
+                  <option key={item.itemId} value={item.itemId}>
+                    {item.itemName}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </QueryState>
+        </Panel>
+      )}
       {!itemId ? (
         <Panel className="p-12 text-center text-sm text-slate-500">
           Chọn món ăn để xem lịch sử công thức.
@@ -159,12 +169,14 @@ export function RecipesPage() {
                   >
                     Dùng phiên bản này làm mẫu
                   </button>
-                  <Link
-                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
-                    to={`/manager/food-cost?itemId=${itemId}`}
-                  >
-                    Xem giá vốn
-                  </Link>
+                  {!optionId && (
+                    <Link
+                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-40"
+                      to={`/manager/food-cost?itemId=${itemId}`}
+                    >
+                      Xem giá vốn
+                    </Link>
+                  )}
                 </div>
               </Panel>
             </div>
@@ -188,6 +200,7 @@ export function RecipesPage() {
           >
             <RecipeForm
               itemId={itemId}
+              option={!!optionId}
               source={selected}
               latestStart={sorted[0]?.effectiveFrom}
               ingredients={ingredients.data || []}

@@ -3,12 +3,20 @@ import { useQuery } from '@tanstack/react-query'
 import { useAppSelector } from '../../../../app/hooks'
 import { kdsApi, kdsError, kdsReadPolicy } from '../api/kdsApi'
 
-export function useRecipe(itemId: string) {
+export function useRecipe(itemId: string, option = false) {
   const userId = useAppSelector((s) => s.auth.session?.user.userId)
   const recipe = useQuery({
     ...kdsReadPolicy,
-    queryKey: ['kitchen-live', userId, 'recipe', itemId],
-    queryFn: ({ signal }) => kdsApi.activeRecipe(itemId, signal),
+    queryKey: [
+      'kitchen-live',
+      userId,
+      option ? 'option-recipe' : 'recipe',
+      itemId,
+    ],
+    queryFn: ({ signal }) =>
+      option
+        ? kdsApi.activeOptionRecipe(itemId, signal)
+        : kdsApi.activeRecipe(itemId, signal),
     staleTime: 60000,
     retry: (count, error) =>
       axios.isAxiosError(error) && error.response?.status === 404

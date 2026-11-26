@@ -1,5 +1,7 @@
 import { Link, Navigate, type RouteObject } from 'react-router-dom'
 import { OffersPage } from '../features/manager/promotions/pages/OffersPage'
+import { ReportsPage } from '../features/manager/reports/pages/ReportsPage'
+import { MenuOptionsPage } from '../features/manager/menu-options/pages/MenuOptionsPage'
 import { CategoriesPage } from '../features/manager/categories/pages/CategoriesPage'
 import { ItemsPage } from '../features/manager/dishes/pages/ItemsPage'
 import { ManagerOverview } from '../features/manager/dashboard/pages/ManagerOverview'
@@ -27,10 +29,12 @@ export const managerRoute: RouteObject = {
     { index: true, element: <ManagerOverview /> },
     { path: 'promotions', element: <OffersPage kind="promotions" /> },
     { path: 'vouchers', element: <OffersPage kind="vouchers" /> },
+    { path: 'reports', element: <ReportsPage /> },
     { path: 'profile', element: <ProfilePage /> },
     { path: 'menu', element: <Navigate to="categories" replace /> },
     { path: 'menu/categories', element: <CategoriesPage /> },
     { path: 'menu/items', element: <ItemsPage /> },
+    { path: 'menu/options', element: <MenuOptionsPage /> },
     { path: 'menu/prices', element: <PricesPage /> },
     { path: 'ingredients', element: <IngredientsPage /> },
     { path: 'units', element: <UnitsPage /> },

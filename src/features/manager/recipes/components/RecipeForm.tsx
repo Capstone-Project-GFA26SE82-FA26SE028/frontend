@@ -10,6 +10,7 @@ import { MutationError } from './MutationError'
 
 export function RecipeForm({
   itemId,
+  option = false,
   source,
   latestStart,
   ingredients,
@@ -17,6 +18,7 @@ export function RecipeForm({
   close,
 }: {
   itemId: string
+  option?: boolean
   source?: Recipe
   latestStart?: string
   ingredients: Ingredient[]
@@ -95,7 +97,7 @@ export function RecipeForm({
         setError('')
         mutation.mutate({
           method: 'post',
-          path: `/items/${itemId}/recipes`,
+          path: `/${option ? 'options' : 'items'}/${itemId}/recipes`,
           body: {
             effectiveFrom,
             instructions: String(data.get('instructions')).trim(),

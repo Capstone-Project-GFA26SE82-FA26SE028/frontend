@@ -108,6 +108,8 @@ export const kdsApi = {
   items: (signal?: AbortSignal) => kdsList<KitchenItem>('/items', signal),
   activeRecipe: (itemId: string, signal?: AbortSignal) =>
     get<ActiveRecipe>(`/items/${itemId}/recipes/active`, undefined, signal),
+  activeOptionRecipe: (optionId: string, signal?: AbortSignal) =>
+    get<ActiveRecipe>(`/options/${optionId}/recipes/active`, undefined, signal),
   async stations(signal?: AbortSignal) {
     const items: Station[] = []
     for (let page = 1; ; page++) {
