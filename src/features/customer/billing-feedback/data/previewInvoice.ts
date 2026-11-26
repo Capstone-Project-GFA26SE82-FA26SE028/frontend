@@ -8,7 +8,7 @@ export const previewInvoice: Invoice = {
   issuedAt: '2026-10-17T12:30:00+07:00',
   paidAt: '2026-10-17T12:35:00+07:00',
   status: 'PAID',
-  method: 'bank',
+  method: 'payos',
   items: [
     {
       id: 'sample-salmon',

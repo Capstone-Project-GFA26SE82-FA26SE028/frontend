@@ -36,10 +36,10 @@ export function InvoiceDetails({ invoice }: { invoice: Invoice }) {
           <div>
             <dt className="text-muted">Phương thức</dt>
             <dd className="mt-1">
-              {invoice.method === 'bank'
-                ? 'Chuyển khoản ngân hàng'
+              {invoice.method === 'payos'
+                ? 'Chuyển khoản VietQR (PayOS)'
                 : invoice.method === 'cash'
-                  ? 'Tiền mặt'
+                  ? 'Tiền mặt tại bàn'
                   : 'Chưa chọn'}
             </dd>
           </div>

@@ -1,4 +1,5 @@
 import type { CartItem } from '../cart/types/types'
+import type { PaymentMethod } from '../payment/types'
 
 export type Invoice = {
   id: string
@@ -7,7 +8,7 @@ export type Invoice = {
   issuedAt: string
   paidAt: string | null
   status: 'PENDING' | 'PAID'
-  method: 'cash' | 'bank' | null
+  method: PaymentMethod | null
   items: CartItem[]
   subtotal: number
   tax: number

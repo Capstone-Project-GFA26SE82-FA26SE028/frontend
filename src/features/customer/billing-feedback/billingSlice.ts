@@ -3,6 +3,7 @@ import { previewInvoice } from './data/previewInvoice'
 import { feedbackSchema } from './schemas/feedbackSchema'
 import type { Invoice, InvoiceFeedback } from './types'
 import type { PreviewOrder } from '../payment/previewOrderTypes'
+import type { PaymentMethod } from '../payment/types'
 
 type BillingState = {
   invoices: Invoice[]
@@ -22,61 +23,67 @@ const billingSlice = createSlice({
       }: PayloadAction<{
         id: string
         createdAt: string
-        method: 'cash' | 'bank'
+        method: PaymentMethod
         orders: PreviewOrder[]
       }>,
     ) {
       const billedIds = new Set(
         state.invoices.flatMap((invoice) => invoice.orderIds ?? []),
       )
-      const orders = payload.orders.filter((order) => !billedIds.has(order.id))
-      if (
-        !orders.length ||
-        state.invoices.some((invoice) => invoice.id === payload.id)
+      const unbilledOrders = payload.orders.filter(
+        (order) => !billedIds.has(order.id),
       )
-        return
-      const items = orders.flatMap((order) =>
-        order.items.map((item) => ({ ...item, id: `${order.id}-${item.id}` })),
-      )
+      const targetOrders = unbilledOrders.length
+        ? unbilledOrders
+        : payload.orders
+      const items = targetOrders.flatMap((order) => order.items)
       const subtotal = items.reduce(
         (sum, item) => sum + item.quantity * item.unitPrice,
         0,
       )
-      state.invoices.unshift({
+      const tax = Math.round(subtotal * 0.08)
+      const serviceFee = Math.round(subtotal * 0.05)
+      const invoice: Invoice = {
         id: payload.id,
-        code: `MOC-${payload.id.slice(0, 8).toUpperCase()}`,
-        tableName: 'Bàn 08 · Không gian vườn',
+        code: `HD-${payload.createdAt.slice(0, 10).replace(/-/g, '')}-${payload.id.slice(0, 4).toUpperCase()}`,
+        tableName: 'Bàn T-03',
         issuedAt: payload.createdAt,
         paidAt: payload.createdAt,
         status: 'PAID',
         method: payload.method,
         items,
         subtotal,
-        tax: 0,
-        serviceFee: 0,
+        tax,
+        serviceFee,
         discount: 0,
-        total: subtotal,
+        total: subtotal + tax + serviceFee,
         isPreview: true,
-        orderIds: orders.map((order) => order.id),
-      })
+        orderIds: targetOrders.map((order) => order.id),
+      }
+      state.invoices.unshift(invoice)
     },
-    submitFeedback(state, { payload }: PayloadAction<InvoiceFeedback>) {
-      const invoice = state.invoices.find(
-        (item) => item.id === payload.invoiceId,
-      )
+    submitFeedback(
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        invoiceId: string
+        rating: number
+        comment?: string
+        createdAt?: string
+      }>,
+    ) {
       const parsed = feedbackSchema.safeParse(payload)
-      // Kiểm tra cả ở state, không chỉ ẩn form; BE phải thực thi lại các quy tắc này.
-      if (
-        !invoice ||
-        invoice.status !== 'PAID' ||
-        state.feedback[invoice.id] ||
-        !parsed.success
-      )
-        return
-      state.feedback[invoice.id] = { ...payload, ...parsed.data }
+      if (!parsed.success) return
+      state.feedback[payload.invoiceId] = {
+        invoiceId: payload.invoiceId,
+        rating: parsed.data.rating,
+        comment: parsed.data.comment?.trim() ?? '',
+        createdAt: payload.createdAt ?? new Date().toISOString(),
+      }
     },
   },
 })
 
-export const { submitFeedback, completePreviewPayment } = billingSlice.actions
+export const { completePreviewPayment, submitFeedback } = billingSlice.actions
 export default billingSlice.reducer

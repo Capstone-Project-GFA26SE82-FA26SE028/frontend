@@ -35,9 +35,9 @@ export function PaymentSuccess({ invoice }: { invoice: Invoice }) {
           <div className="flex flex-wrap justify-between gap-2">
             <dt className="text-muted">Phương thức</dt>
             <dd className="font-semibold">
-              {invoice.method === 'cash'
-                ? 'Tiền mặt tại bàn'
-                : 'Chuyển khoản ngân hàng'}
+              {invoice.method === 'payos'
+                ? 'Chuyển khoản VietQR (PayOS)'
+                : 'Tiền mặt tại bàn'}
             </dd>
           </div>
           <div className="flex flex-wrap justify-between gap-2">
