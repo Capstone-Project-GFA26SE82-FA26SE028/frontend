@@ -44,6 +44,9 @@ test('Kitchen renders only the four-column KDS, including legacy tool links', as
       ],
     })
     const value = {
+      tasks: [],
+      items: [],
+      batches: [],
       state,
       tickets: state.tickets,
       run: async () => true,
@@ -72,7 +75,11 @@ test('Kitchen renders only the four-column KDS, including legacy tool links', as
           React.createElement(
             KdsContext.Provider,
             { value },
-            React.createElement(KdsPage),
+            React.createElement(
+              QueryClientProvider,
+              { client: new QueryClient() },
+              React.createElement(KdsPage),
+            ),
           ),
         ),
       )

@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom'
 export function StationTabs() {
   return (
-    <nav aria-label="Thiết lập bếp" className="mb-5 flex gap-3">
+    <nav aria-label="Thiết lập bếp" className="mb-5 flex flex-wrap gap-3">
       {[
         ['/manager/kitchen-stations', 'Trạm bếp'],
         ['/manager/kitchen-stations/items', 'Phân món cho trạm'],
+        ['/manager/kitchen-stations/assignments', 'Phân công nhân viên'],
       ].map(([to, label]) => (
         <NavLink
           end

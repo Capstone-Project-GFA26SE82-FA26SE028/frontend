@@ -16,6 +16,7 @@ Each Manager page has its own folder:
 - `table-monitoring`
 - `kitchen-monitoring`
 - `staff-activity`
+- `kitchen-assignments`
 
 Every page module contains `api`, `components`, `hooks`, `pages`, `schemas`,
 `types`, and `utils`. Empty directories use `.gitkeep` until needed.
@@ -30,6 +31,10 @@ Do not recreate grouped modules such as `menu-management`,
 `ingredient-management`, `inventory-monitoring`, or `operations-monitoring`.
 
 The profile route uses the application-wide profile feature.
+Kitchen assignments at `/manager/kitchen-stations/assignments` use live APIs
+to assign, replace and remove the employee responsible for a station. Queries
+are scoped by user and restaurant; replacement/removal preserves the original
+employee ID as the server concurrency precondition.
 The `analytics`, `promotions`, `purchase-requests`, `reports`, and `suppliers`
 folders remain placeholders, not implemented pages.
 

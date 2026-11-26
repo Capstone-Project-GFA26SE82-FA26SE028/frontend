@@ -11,9 +11,11 @@ import { groupKdsOrders } from '../src/features/kitchen/kds/utils/orders.ts'
 // Run the actual transport against a deterministic HTTP adapter, without a server or credentials.
 let getHandler
 let patchHandler
+let postHandler
 globalThis.__kitchenTestClient = {
   get: (...args) => getHandler(...args),
   patch: (...args) => patchHandler(...args),
+  post: (...args) => postHandler(...args),
 }
 const require = createRequire(import.meta.url)
 const source = (
@@ -42,6 +44,59 @@ const { kdsApi, kdsList, kdsError, kdsReadPolicy, kdsPollInterval } =
   )
 delete globalThis.__kitchenTestClient
 const ok = (result) => ({ data: { isSuccess: true, result } })
+
+test('station summary, batches and task detail preserve scope and cancellation', async () => {
+  const signal = new AbortController().signal
+  const calls = []
+  getHandler = async (url, config) => {
+    calls.push([url, config])
+    return ok([])
+  }
+  await kdsApi.summary('station-1', signal)
+  await kdsApi.batches('station-1', signal)
+  await kdsApi.task('task-1', signal)
+  assert.deepEqual(
+    calls.map(([url]) => url),
+    [
+      '/kitchen-tasks/summary',
+      '/kitchen-tasks/batches',
+      '/kitchen-tasks/task-1',
+    ],
+  )
+  assert.ok(calls.every(([, config]) => config.signal === signal))
+  assert.deepEqual(calls[0][1].params, { kitchenStationId: 'station-1' })
+  assert.deepEqual(calls[1][1].params, { kitchenStationId: 'station-1' })
+})
+
+test('batch, remake, fire and availability use the backend write contracts', async () => {
+  const calls = []
+  postHandler = patchHandler = async (...args) => {
+    calls.push(args)
+    return ok({ affectedCount: 2 })
+  }
+  await kdsApi.batch('start', ['a', 'b'])
+  await kdsApi.batch('complete', ['a', 'b'])
+  await kdsApi.remake('a', 'Undercooked')
+  await kdsApi.fire('session', 'order', 'Dessert')
+  await kdsApi.availability(
+    { itemId: 'dish', version: 'current' },
+    'OutOfStock',
+  )
+  assert.deepEqual(calls, [
+    ['/kitchen-tasks/batches/start', { taskIds: ['a', 'b'] }],
+    ['/kitchen-tasks/batches/complete', { taskIds: ['a', 'b'] }],
+    ['/kitchen-tasks/a/remake', { reason: 'Undercooked' }],
+    [
+      '/kitchen-tasks/fire-course',
+      { tableSessionId: 'session', orderId: 'order', course: 'Dessert' },
+    ],
+    ['/items/dish/status', { availability: 'OutOfStock', version: 'current' }],
+  ])
+  postHandler = async () => ({
+    data: { isSuccess: false, message: 'Rejected' },
+  })
+  await assert.rejects(kdsApi.batch('start', ['a']), /Rejected/)
+})
 
 test('fetches every page and preserves all-status filter and abort signal', async () => {
   const calls = []
@@ -133,12 +188,15 @@ test('concurrent updates and permission errors have actionable messages', () => 
     ),
     /không có quyền/,
   )
-  const message = 'Món đang có yêu cầu hủy; cần xử lý trước khi tiếp tục chế biến.'
+  const message =
+    'Món đang có yêu cầu hủy; cần xử lý trước khi tiếp tục chế biến.'
   assert.equal(
-    kdsError(new axios.AxiosError('', '', undefined, undefined, {
-      status: 409,
-      data: { message },
-    })),
+    kdsError(
+      new axios.AxiosError('', '', undefined, undefined, {
+        status: 409,
+        data: { message },
+      }),
+    ),
     message,
   )
 })

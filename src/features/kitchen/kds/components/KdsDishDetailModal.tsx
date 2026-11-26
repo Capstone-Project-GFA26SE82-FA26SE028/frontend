@@ -14,11 +14,7 @@ export function KdsDishDetailModal({
   onRecipe: (id: string) => void
 }) {
   return (
-    <Modal
-      title={`Đơn ${ticket.order}`}
-      subtitle={`Dòng món ${ticket.id}`}
-      onClose={onClose}
-    >
+    <Modal title="Chi tiết món" onClose={onClose}>
       <div className="space-y-4 p-6">
         <button
           type="button"
