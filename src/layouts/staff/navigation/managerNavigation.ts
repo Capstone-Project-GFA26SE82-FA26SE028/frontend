@@ -35,6 +35,7 @@ export const managerNavigation: StaffNavigationGroup[] = [
     items: [
       { to: '/manager/menu/categories', label: 'Danh mục', icon: 'grid' },
       { to: '/manager/menu/items', label: 'Món ăn', icon: 'utensils' },
+      { to: '/manager/menu/options', label: 'Tùy chọn món', icon: 'settings' },
       { to: '/manager/menu/prices', label: 'Giá bán', icon: 'coin' },
     ],
   },
@@ -70,6 +71,7 @@ export const managerNavigation: StaffNavigationGroup[] = [
   {
     title: 'THEO DÕI VẬN HÀNH',
     items: [
+      { to: '/manager/reports', label: 'Báo cáo nhà hàng', icon: 'chart' },
       {
         to: '/manager/table-monitoring',
         label: 'Trạng thái bàn',

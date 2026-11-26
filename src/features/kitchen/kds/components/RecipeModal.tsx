@@ -3,12 +3,14 @@ import { useRecipe } from '../hooks/useRecipe'
 
 export function RecipeModal({
   dish,
+  option = false,
   onClose,
 }: {
   dish: { id: string; name: string; image: string }
+  option?: boolean
   onClose: () => void
 }) {
-  const recipe = useRecipe(dish.id)
+  const recipe = useRecipe(dish.id, option)
   const data = recipe.data
   return (
     <Modal
@@ -18,11 +20,13 @@ export function RecipeModal({
       onClose={onClose}
     >
       <div className="space-y-5 p-5 sm:p-6">
-        <img
-          src={dish.image}
-          alt={dish.name}
-          className="h-48 w-full rounded-2xl object-cover sm:h-64"
-        />
+        {!option && (
+          <img
+            src={dish.image}
+            alt={dish.name}
+            className="h-48 w-full rounded-2xl object-cover sm:h-64"
+          />
+        )}
         {recipe.isPending && (
           <p role="status" className="text-sm text-emerald-800">
             Đang tải công thức…
