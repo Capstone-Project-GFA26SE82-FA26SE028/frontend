@@ -4,9 +4,10 @@ import { HomeHeader } from '../../../../components/HomeHeader/HomeHeader'
 import { BrandBackground } from '../../../../components/BrandBackground/BrandBackground'
 import { ReservationForm } from '../components/ReservationForm'
 import { ReservationSuccess } from '../components/ReservationSuccess'
+import type { CreatedReservation } from '../api/reservationApi'
 
 export function ReservationPage() {
-  const [done, setDone] = useState(false)
+  const [done, setDone] = useState<CreatedReservation | null>(null)
 
   return (
     <div
@@ -18,9 +19,9 @@ export function ReservationPage() {
       <main className="mx-auto flex w-full max-w-xl flex-1 items-center justify-center px-4 py-8 sm:px-8 sm:py-10">
         <div className="w-full min-w-0 rounded-3xl border border-white/10 bg-white p-6 shadow-2xl shadow-black/15 sm:p-9">
           {done ? (
-            <ReservationSuccess onReset={() => setDone(false)} />
+            <ReservationSuccess reservation={done} onReset={() => setDone(null)} />
           ) : (
-            <ReservationForm onSuccess={() => setDone(true)} />
+            <ReservationForm onSuccess={setDone} />
           )}
         </div>
       </main>
