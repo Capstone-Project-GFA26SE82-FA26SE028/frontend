@@ -7,6 +7,7 @@ export const managerNavigation: StaffNavigationGroup[] = [
     items: [
       { to: '/manager/promotions', label: 'Khuyến mãi', icon: 'coin' },
       { to: '/manager/vouchers', label: 'Voucher', icon: 'ticket' },
+      { to: '/manager/loyalty', label: 'Hạng thành viên', icon: 'crown' },
     ],
   },
   {

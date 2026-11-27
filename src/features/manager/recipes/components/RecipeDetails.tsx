@@ -8,10 +8,12 @@ export function RecipeDetails({
   recipe,
   ingredients,
   units,
+  option = false,
 }: {
   recipe: Recipe
   ingredients: Ingredient[]
   units: Unit[]
+  option?: boolean
 }) {
   return (
     <div className="space-y-4">
@@ -43,7 +45,7 @@ export function RecipeDetails({
           <thead className="bg-slate-50">
             <tr>
               <th>Nguyên liệu</th>
-              <th>Số lượng / phần</th>
+              <th>{option ? 'Số lượng / đơn vị tùy chọn' : 'Số lượng / phần món ăn'}</th>
               <th>Số lượng cơ sở đã lưu</th>
             </tr>
           </thead>
