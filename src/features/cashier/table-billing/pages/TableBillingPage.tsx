@@ -7,6 +7,7 @@ import { BillingDetails } from '../components/BillingDetails'
 import { usePrepareBill } from '../hooks/usePrepareBill'
 import { entryKey } from '../utils/billingDisplay'
 import { BillingToolbar } from '../components/BillingToolbar'
+import { usePayOsPaymentStatus } from '../hooks/usePayOsPaymentStatus'
 
 export function TableBillingPage() {
   const { user, restaurantId, workspace } = useCashShift()
@@ -65,6 +66,7 @@ function BillingDesk({
   openedAt: string
 }) {
   const model = useTableBilling(restaurantId, cashShiftId)
+  const watchPayOsPayment = usePayOsPaymentStatus(restaurantId, cashShiftId)
   const prepare = usePrepareBill(restaurantId, cashShiftId, (entry, billId) => {
     model.setSelectedKey((current) =>
       current === entryKey(entry) ? billId : current,
@@ -92,6 +94,7 @@ function BillingDesk({
           cashShiftId={cashShiftId}
           cashRegisterId={cashRegisterId}
           restaurantId={restaurantId}
+          onWatchPayOsPayment={watchPayOsPayment}
           onPaid={(billId) =>
             model.setSelectedKey((current) => current === billId ? null : current)
           }
