@@ -6,17 +6,23 @@ export function PaymentMethodCard({
   description,
   enabled,
   onChange,
+  statusLabel,
+  disabled = false,
+  disabledReason,
 }: {
   name: string
   symbol: string
   description: string
   enabled: boolean
-  onChange: (enabled: boolean) => void
+  onChange?: (enabled: boolean) => void
+  statusLabel?: string
+  disabled?: boolean
+  disabledReason?: string
 }) {
   return (
     <Panel
       className={
-        'overflow-hidden ' + (enabled ? 'ring-1 ring-emerald-200' : '')
+        'flex flex-col justify-between overflow-hidden ' + (enabled ? 'ring-1 ring-emerald-200' : '')
       }
     >
       <div className="p-5 sm:p-6">
@@ -25,14 +31,20 @@ export function PaymentMethodCard({
             {symbol}
           </span>
           <Badge tone={enabled ? 'green' : 'slate'}>
-            {enabled ? 'Đang bật' : 'Đang tắt'}
+            {statusLabel ?? (enabled ? 'Đang bật' : 'Đang tắt')}
           </Badge>
         </div>
         <h2 className="text-lg font-semibold text-slate-900">{name}</h2>
         <p className="mt-2 min-h-12 text-sm leading-6 text-slate-500">
           {description}
         </p>
+        {disabledReason && (
+          <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-800">
+            {disabledReason}
+          </p>
+        )}
       </div>
+      {onChange && (
       <label className="flex min-h-16 cursor-pointer items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-4 sm:px-6">
         <span className="text-sm font-medium text-slate-700">
           Cho phép thanh toán
@@ -43,6 +55,7 @@ export function PaymentMethodCard({
             type="checkbox"
             role="switch"
             checked={enabled}
+            disabled={disabled}
             onChange={(e) => onChange(e.target.checked)}
             className="peer sr-only"
           />
@@ -56,6 +69,7 @@ export function PaymentMethodCard({
           />
         </span>
       </label>
+      )}
     </Panel>
   )
 }
