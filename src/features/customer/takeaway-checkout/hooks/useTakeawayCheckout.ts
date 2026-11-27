@@ -62,6 +62,6 @@ export function useTakeawayOrder(restaurantId: string, orderId: string, userId?:
     queryFn: ({ signal }) => getTakeawayOrder(restaurantId, orderId, signal),
     retry: false,
     refetchInterval: ({ state }) =>
-      ['PendingPayment', 'PendingConfirmation', 'Accepted', 'Preparing', 'ReadyForPickup'].includes(state.data?.status ?? '') ? 5000 : false,
+      ['PendingPayment', 'PendingConfirmation', 'Accepted', 'Cooking', 'ReadyForPickup'].includes(state.data?.status ?? '') ? 5000 : false,
   })
 }

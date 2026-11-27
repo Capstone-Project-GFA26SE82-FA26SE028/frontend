@@ -4,6 +4,7 @@ import { getCashierBill } from '../api/billApi'
 import type { BillingEntry, BillingTab } from '../types/types'
 import { STATUS_NAMES, tableName } from '../utils/billingDisplay'
 import { LoyaltyPhoneForm } from './LoyaltyPhoneForm'
+import { BillVoucherForm } from './BillVoucherForm'
 import { BillSummary } from './BillSummary'
 import { CashHandoverPanel } from './CashHandoverPanel'
 import type { usePrepareBill } from '../hooks/usePrepareBill'
@@ -131,6 +132,15 @@ export function BillingDetails({
               key={billId}
               billId={billId}
               customerRef={bill.data.customerRef}
+            />
+          )}
+          {tab === 'incoming' && bill.data.status === 'Unpaid' && (
+            <BillVoucherForm
+              key={billId}
+              billId={billId}
+              restaurantId={restaurantId}
+              shiftId={cashShiftId}
+              adjustments={bill.data.adjustments}
             />
           )}
           <BillSummary bill={bill.data} paid={tab === 'paid'} />

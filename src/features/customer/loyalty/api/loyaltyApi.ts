@@ -18,10 +18,10 @@ function result<T>(response: LoyaltyResponse<T>): T {
   return response.result
 }
 
-export async function getMember(phone: string, signal: AbortSignal) {
+export async function getMember(phone: string, tableSessionId: string, signal: AbortSignal) {
   const { data } = await client.get<LoyaltyResponse<CustomerMember>>(
     '/customers/by-phone/' + encodeURIComponent(phone),
-    { signal },
+    { params: { tableSessionId }, signal },
   )
   return result(data)
 }

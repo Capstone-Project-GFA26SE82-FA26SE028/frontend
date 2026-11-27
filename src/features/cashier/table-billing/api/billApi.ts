@@ -1,5 +1,5 @@
 import { axiosClient } from '../../../../api/axiosClient'
-import type { CashierBill } from '../types/types'
+import type { CashierBill, CashierVoucher } from '../types/types'
 
 export async function prepareCashierBill(
   tableSessionId: string,
@@ -33,5 +33,35 @@ export async function saveBillLoyaltyPhone(billId: string, phoneNumber: string) 
   if (!data.isSuccess) {
     throw new Error(data.message || 'Không thể gán khách vào hóa đơn.')
   }
+  return data.result
+}
+
+export async function applyBillVoucher(billId: string, voucherCode: string) {
+  const { data } = await axiosClient.post<{ isSuccess: boolean; message?: string; result: CashierBill }>(
+    `/bills/${billId}/voucher`,
+    { voucherCode },
+  )
+  if (!data.isSuccess || !data.result) throw new Error(data.message || 'Không thể áp dụng mã.')
+  return data.result
+}
+
+export async function removeBillVoucher(billId: string, voucherId: string) {
+  const { data } = await axiosClient.delete<{ isSuccess: boolean; message?: string; result: CashierBill }>(
+    `/bills/${billId}/voucher/${voucherId}`,
+  )
+  if (!data.isSuccess || !data.result) throw new Error(data.message || 'Không thể gỡ mã.')
+  return data.result
+}
+export async function getCashierVouchers(restaurantId: string, page: number, signal: AbortSignal) {
+  const { data } = await axiosClient.get<{
+    isSuccess: boolean
+    message?: string
+    result: { items: CashierVoucher[]; totalCount: number; page: number; pageSize: number }
+  }>('/vouchers', {
+    headers: { 'x-restaurant-id': restaurantId },
+    params: { isActive: true, page, pageSize: 10 },
+    signal,
+  })
+  if (!data.isSuccess || !data.result) throw new Error(data.message || 'Không thể tải danh sách mã.')
   return data.result
 }

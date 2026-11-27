@@ -43,7 +43,7 @@ export function RestaurantCard({
         )}
       </Link>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <h3 className="break-words text-lg font-bold tracking-tight">
+        <h3 className="break-words text-lg font-bold leading-7 tracking-tight sm:line-clamp-2 sm:min-h-14" title={restaurant.restaurantName}>
           {restaurant.restaurantName}
         </h3>
         <div className="mt-3 flex items-start gap-2 text-sm text-muted">

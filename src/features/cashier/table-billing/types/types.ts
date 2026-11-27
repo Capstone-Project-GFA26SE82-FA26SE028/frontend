@@ -10,7 +10,16 @@ export type CashHandover = {
   changeAmount: number
 }
 
+export type BillVoucherAdjustment = {
+  billAdjustmentId: string
+  voucherId: string | null
+  type: string
+  amount: number
+  reason: string | null
+}
+
 export type CashierBill = {
+  adjustments?: BillVoucherAdjustment[]
   status: string
   customerRef: string | null
   currency: string
@@ -60,4 +69,16 @@ export type BillingQueue = {
   totalAmount: number | null
   knownTotalAmount: number
   unbilledCount: number
+}
+
+export type CashierVoucher = {
+  voucherId: string
+  normalizedVoucherCode: string
+  discountType: string
+  discountValue: number
+  maximumDiscount: number | null
+  usageLimit: number | null
+  currentUsage: number
+  startAt: string
+  endAt: string | null
 }
