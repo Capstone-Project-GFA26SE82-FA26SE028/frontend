@@ -4,7 +4,9 @@ import { toast } from 'react-toastify'
 import { formatCurrency } from '../../../../utils/currency'
 import { getBillPayOsPayment } from '../api/billApi'
 
-function readWatchedPayments(key: string): Record<string, string> {
+type TrackedPayment = { table: string; billId: string }
+
+function readWatchedPayments(key: string): Record<string, TrackedPayment | string> {
   try {
     return JSON.parse(sessionStorage.getItem(key) ?? '{}') ?? {}
   } catch {
@@ -36,9 +38,9 @@ export function usePayOsPaymentStatus(restaurantId: string, cashShiftId: string)
     let timer: number
     async function checkPayments() {
       const results = await Promise.allSettled(
-        Object.entries(payments).map(async ([paymentId, table]) => ({
+        Object.entries(payments).map(async ([paymentId, entry]) => ({
           payment: await getBillPayOsPayment(paymentId, controller.signal),
-          table,
+          table: typeof entry === 'string' ? entry : entry.table,
         })),
       )
       if (controller.signal.aborted) return

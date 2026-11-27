@@ -66,7 +66,7 @@ function BillingDesk({
   openedAt: string
 }) {
   const model = useTableBilling(restaurantId, cashShiftId)
-  const watchPayOsPayment = usePayOsPaymentStatus(restaurantId, cashShiftId)
+  const watchPayment = usePayOsPaymentStatus(restaurantId, cashShiftId)
   const prepare = usePrepareBill(restaurantId, cashShiftId, (entry, billId) => {
     model.setSelectedKey((current) =>
       current === entryKey(entry) ? billId : current,
@@ -94,7 +94,7 @@ function BillingDesk({
           cashShiftId={cashShiftId}
           cashRegisterId={cashRegisterId}
           restaurantId={restaurantId}
-          onWatchPayOsPayment={watchPayOsPayment}
+          onWatchPayOsPayment={watchPayment}
           onPaid={(billId) =>
             model.setSelectedKey((current) => current === billId ? null : current)
           }
