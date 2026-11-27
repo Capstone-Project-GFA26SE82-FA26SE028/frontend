@@ -18,6 +18,16 @@ export async function createBillPayOsPayment(
   return data.result
 }
 
+export async function getBillPayOsPayment(paymentId: string, signal: AbortSignal) {
+  const { data } = await axiosClient.get<{
+    isSuccess: boolean
+    message?: string | null
+    result: BillPayOsPayment
+  }>(`/payments/${paymentId}/payos`, { signal })
+  if (!data.isSuccess) throw new Error(data.message || 'Không thể kiểm tra giao dịch PayOS.')
+  return data.result
+}
+
 export async function prepareCashierBill(
   tableSessionId: string,
   checkoutId: string,

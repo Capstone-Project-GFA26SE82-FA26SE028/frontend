@@ -11,12 +11,14 @@ export function PrintPaymentSlip({
   cashShiftId,
   canPrintQr,
   onPrint,
+  onWatchPayment,
 }: {
   billId: string
   checkoutId: string | null | undefined
   cashShiftId: string
   canPrintQr: boolean
   onPrint: (method: string, qrImage?: string) => Promise<void>
+  onWatchPayment: (paymentId: string) => void
 }) {
   const queryClient = useQueryClient()
   const qr = useMutation({
@@ -54,7 +56,9 @@ export function PrintPaymentSlip({
       if (payment.status !== 'Pending' || !payment.linkDetailsAvailable || !payment.qrCode) {
         throw new Error('Mã PayOS chưa sẵn sàng. Vui lòng thử lại.')
       }
-      return toDataURL(payment.qrCode, { margin: 4, width: 512 })
+      const image = await toDataURL(payment.qrCode, { margin: 4, width: 512 })
+      onWatchPayment(payment.paymentId)
+      return image
     },
   })
 
