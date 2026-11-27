@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useAppSelector } from '../../../../app/hooks'
 import { Modal } from '../../../../components/Modal/Modal'
@@ -6,11 +6,12 @@ import { formatCurrency } from '../../../../utils/currency'
 import { cashShiftError } from '../../shifts/api/cashShiftApi'
 import { getCashierVouchers } from '../api/billApi'
 
-export function BillVoucherPicker({ restaurantId, appliedIds, onSelect, onClose }: {
+export function BillVoucherPicker({ restaurantId, appliedIds, onSelect, onClose, children }: {
   restaurantId: string
   appliedIds: (string | null)[]
   onSelect: (code: string) => void
   onClose: () => void
+  children: ReactNode
 }) {
   const userId = useAppSelector((state) => state.auth.session?.user.userId)
   const [page, setPage] = useState(1)
@@ -25,6 +26,7 @@ export function BillVoucherPicker({ restaurantId, appliedIds, onSelect, onClose 
   return (
     <Modal title="Mã ưu đãi" onClose={onClose}>
       <div className="space-y-4 p-5 sm:p-6">
+        {children}
         {vouchers.isPending && <p role="status" className="text-sm text-slate-500">Đang tải mã ưu đãi…</p>}
         {vouchers.isError && (
           <div className="space-y-2">

@@ -11,10 +11,13 @@ export function BillSummary({
     style: 'currency',
     currency: bill.currency || 'VND',
   })
+  const cashierWarnings = bill.warnings.filter(
+    (warning) => warning !== 'Dữ liệu giá vốn nguyên liệu không khả dụng. Không thể tính toán giá vốn và lợi nhuận đầy đủ.',
+  )
   return (
     <>
       <div className="flex-1 overflow-x-auto px-5">
-        <table className="w-full text-left text-sm">
+        <table data-receipt className="w-full text-left text-sm">
           <thead className="border-b border-slate-100 text-xs font-medium uppercase tracking-wide text-slate-500">
             <tr>
               <th scope="col" className="py-3">
@@ -33,7 +36,7 @@ export function BillSummary({
               <tr key={line.billLineId}>
                 <td className="py-4">
                   <p className="font-medium">{line.item.name}</p>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p data-receipt-hide className="mt-1 text-xs text-slate-500">
                     {money.format(line.unitPriceSnapshot)}
                   </p>
                 </td>
@@ -47,15 +50,15 @@ export function BillSummary({
             ))}
           </tbody>
         </table>
-        {!!bill.warnings.length && (
+        {!!cashierWarnings.length && (
           <ul className="my-3 space-y-1 rounded-xl bg-amber-50 p-3 text-sm text-amber-900">
-            {bill.warnings.map((warning, index) => (
+            {cashierWarnings.map((warning, index) => (
               <li key={index}>{warning}</li>
             ))}
           </ul>
         )}
       </div>
-      <dl className="space-y-1.5 border-t border-slate-200 bg-slate-50 p-5 text-xs text-slate-600 [&_dd]:tabular-nums [&_dt]:text-slate-500">
+      <dl data-receipt className="space-y-1.5 border-t border-slate-200 bg-slate-50 p-5 text-xs text-slate-600 [&_dd]:tabular-nums [&_dt]:text-slate-500">
         <div className="flex justify-between gap-3">
           <dt>Tạm tính</dt>
           <dd>{money.format(bill.subTotal)}</dd>

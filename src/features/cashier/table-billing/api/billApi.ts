@@ -1,5 +1,22 @@
 import { axiosClient } from '../../../../api/axiosClient'
-import type { CashierBill, CashierVoucher } from '../types/types'
+import type { BillPayOsPayment, CashierBill, CashierVoucher } from '../types/types'
+
+export async function createBillPayOsPayment(
+  billId: string,
+  checkoutId: string,
+  cashShiftId: string,
+  requestKey: string,
+) {
+  const { data } = await axiosClient.post<{
+    isSuccess: boolean
+    message?: string | null
+    result: BillPayOsPayment
+  }>(`/bills/${billId}/payments/payos`, { checkoutId, cashShiftId }, {
+    headers: { 'Idempotency-Key': requestKey },
+  })
+  if (!data.isSuccess) throw new Error(data.message || 'Không thể tạo QR PayOS.')
+  return data.result
+}
 
 export async function prepareCashierBill(
   tableSessionId: string,
