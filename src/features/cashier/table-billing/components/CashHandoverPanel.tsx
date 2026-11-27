@@ -1,5 +1,6 @@
 import { formatCurrencyInput } from '../../../../utils/currency'
 import { useState } from 'react'
+import { Icon } from '../../../../components/Icon/Icon'
 import { cashShiftError } from '../../shifts/api/cashShiftApi'
 import { useCashHandover } from '../hooks/useCashHandover'
 import { cashHandoverSchema } from '../schemas/cashHandoverSchema'
@@ -31,16 +32,17 @@ export function CashHandoverPanel({
   const matches = amount.success && amount.data === pending?.cashReceived
 
   return (
-    <section className="space-y-3 border-t border-slate-200 p-5">
+    <section className="space-y-4 p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold">Xác nhận đã nhận tiền mặt</h3>
+        <h3 className="text-sm font-semibold text-slate-800">Tiền phục vụ bàn giao</h3>
         <button
           type="button"
-          className="text-sm font-medium text-emerald-800 underline-offset-4 hover:underline disabled:opacity-50"
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
           disabled={handover.isFetching || confirm.isPending}
           onClick={() => void handover.refetch()}
         >
-          Làm mới
+          <Icon name="refresh" size={15} />
+          {handover.isFetching ? 'Đang tải…' : 'Làm mới'}
         </button>
       </div>
       {confirm.isError && (
@@ -57,9 +59,10 @@ export function CashHandoverPanel({
           {cashShiftError(handover.error)}
         </p>
       ) : !pending ? (
-        <p className="text-sm text-slate-500">
+        <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 px-3 py-4 text-sm text-slate-600">
+          <Icon name="clock" size={18} />
           Chưa có khoản tiền mặt chờ bàn giao.
-        </p>
+        </div>
       ) : (
         <form
           className="space-y-3"
@@ -69,22 +72,18 @@ export function CashHandoverPanel({
               confirm.mutate({ paymentId: pending.paymentId, amount: amount.data })
           }}
         >
-          <dl className="space-y-1 rounded-xl bg-slate-50 p-3 text-sm">
-            <div className="flex justify-between gap-2">
-              <dt>Tiền phục vụ ghi nhận</dt>
-              <dd>{money.format(pending.cashReceived)}</dd>
+          <dl className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-slate-50/70 px-3 text-sm tabular-nums">
+            <div className="flex items-center justify-between gap-2 py-2.5">
+              <dt className="text-slate-600">Tiền phục vụ ghi nhận</dt>
+              <dd className="font-semibold text-slate-900">{money.format(pending.cashReceived)}</dd>
             </div>
-            <div className="flex justify-between gap-2">
-              <dt>Tiền thừa</dt>
-              <dd>{money.format(pending.changeAmount)}</dd>
-            </div>
-            <div className="flex justify-between gap-2 font-medium">
-              <dt>Tiền hóa đơn</dt>
-              <dd>{money.format(pending.amount)}</dd>
+            <div className="flex items-center justify-between gap-2 py-2.5">
+              <dt className="text-slate-600">Tiền thừa trả khách</dt>
+              <dd className="font-semibold text-emerald-800">{money.format(pending.changeAmount)}</dd>
             </div>
           </dl>
-          <label className="block text-sm font-medium">
-              Số tiền nhận từ phục vụ
+          <label className="block text-sm font-medium text-slate-800">
+            Số tiền thực nhận
             <input
               type="text"
               inputMode="numeric"
@@ -95,7 +94,8 @@ export function CashHandoverPanel({
                 if (/^\d*$/.test(digits)) setInput(digits)
               }}
               placeholder="Nhập số tiền (đ)"
-              className="mt-1 min-h-11 w-full rounded-xl border border-slate-200 px-3"
+              aria-invalid={!!input && !matches}
+              className="mt-1.5 min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-base font-semibold tabular-nums placeholder:font-normal focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-100"
             />
           </label>
           {input && !matches && (
@@ -107,10 +107,11 @@ export function CashHandoverPanel({
           )}
           <button
             type="submit"
-            className="btn-primary w-full"
+            className="btn-primary w-full gap-2"
             disabled={!matches || confirm.isPending || handover.isFetching}
           >
-            {confirm.isPending ? 'Đang xác nhận…' : 'Xác nhận nhận tiền'}
+            <Icon name="check" size={17} />
+            {confirm.isPending ? 'Đang xác nhận…' : 'Xác nhận đã nhận tiền'}
           </button>
         </form>
       )}
