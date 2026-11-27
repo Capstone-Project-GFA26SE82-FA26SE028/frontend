@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Icon } from '../../../../components/Icon/Icon'
 import { formatCurrency } from '../../../../utils/currency'
 import type { TakeawayCart, TakeawayCartLine } from '../types/types'
@@ -19,13 +20,27 @@ export function TakeawayCartItem({
   onRemove: () => void
   onEdit: () => void
 }) {
+  const [failedImageUrl, setFailedImageUrl] = useState<string | null>(null)
+  const imageUrl = quote?.imageUrl
+  const showImage = imageUrl && /^https?:\/\//i.test(imageUrl) && imageUrl !== failedImageUrl
+
   return (
     <article className="flex gap-4 border-b border-stone-100 py-5 last:border-0">
       <span
         aria-hidden="true"
-        className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-mint text-brand"
+        className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-mint text-brand"
       >
-        <Icon name="utensils" size={25} />
+        {showImage ? (
+          <img
+            src={imageUrl}
+            alt=""
+            loading="lazy"
+            className="size-full object-cover"
+            onError={() => setFailedImageUrl(imageUrl)}
+          />
+        ) : (
+          <Icon name="utensils" size={25} />
+        )}
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">

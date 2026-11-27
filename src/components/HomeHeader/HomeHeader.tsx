@@ -190,6 +190,16 @@ export function HomeHeader() {
                       Hồ sơ cá nhân
                     </Link>
                   )}
+                  {user.roleId === 'customer' && (
+                    <Link
+                      to="/orders"
+                      onClick={() => setOpen(false)}
+                      className="flex min-h-9 items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] text-slate-600 hover:bg-emerald-50 hover:text-emerald-800"
+                    >
+                      <Icon name="receipt" size={16} />
+                      Đơn của tôi
+                    </Link>
+                  )}
                   <LogoutButton compact />
                 </div>
               </div>

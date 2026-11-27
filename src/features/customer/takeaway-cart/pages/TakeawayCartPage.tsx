@@ -136,7 +136,14 @@ function TakeawayCartContent({ restaurantId }: { restaurantId: string }) {
               onEdit={setEditing}
               onChange={model.changeItems}
             />
-            <TakeawayCartSummary cart={cart} />
+            <div className="space-y-3 lg:sticky lg:top-28">
+              <TakeawayCartSummary cart={cart} />
+              {!blocked && cart.quote?.isValid && cart.quote.totalAmount != null && (
+                <Link to={`/restaurants/${restaurantId}/checkout`} className="btn-primary w-full">
+                  Tiếp tục đặt món
+                </Link>
+              )}
+            </div>
           </div>
         ) : null}
       </main>

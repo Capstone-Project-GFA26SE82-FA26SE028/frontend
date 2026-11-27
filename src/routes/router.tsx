@@ -22,6 +22,9 @@ import { Navigate, Outlet, createBrowserRouter } from 'react-router-dom'
 import { HomePage } from '../pages/HomePage'
 import { RestaurantsPage } from '../features/customer/restaurants/pages/RestaurantsPage'
 import { TakeawayMenuPage } from '../features/customer/takeaway-menu/pages/TakeawayMenuPage'
+import { TakeawayPaymentReturnPage } from '../features/customer/takeaway-checkout/pages/TakeawayPaymentReturnPage'
+import { TakeawayOrdersPage } from '../features/customer/takeaway-orders/pages/TakeawayOrdersPage'
+import { TakeawayCheckoutPage } from '../features/customer/takeaway-checkout/pages/TakeawayCheckoutPage'
 import { TakeawayCartPage } from '../features/customer/takeaway-cart/pages/TakeawayCartPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 import { CustomerLayout } from '../layouts/customer/CustomerLayout'
@@ -52,6 +55,7 @@ export const router = createBrowserRouter([
         element: <RoleRoute roles={['customer']} />,
         children: [
           { path: '/profile', element: <CustomerProfilePage /> },
+          { path: '/orders', element: <TakeawayOrdersPage /> },
           {
             path: '/restaurants/:restaurantId/menu',
             element: <TakeawayMenuPage />,
@@ -59,6 +63,14 @@ export const router = createBrowserRouter([
           {
             path: '/restaurants/:restaurantId/cart',
             element: <TakeawayCartPage />,
+          },
+          {
+            path: '/restaurants/:restaurantId/orders',
+            element: <Navigate to="/orders" replace />,
+          },
+          {
+            path: '/restaurants/:restaurantId/checkout',
+            element: <TakeawayCheckoutPage />,
           },
         ],
       },
@@ -78,6 +90,8 @@ export const router = createBrowserRouter([
       { path: '/register', element: <RegisterPage /> },
       { path: '/', element: <HomePage /> },
       { path: '/restaurants', element: <RestaurantsPage /> },
+      { path: '/payment/success', element: <TakeawayPaymentReturnPage /> },
+      { path: '/payment/cancel', element: <TakeawayPaymentReturnPage /> },
       {
         element: <CustomerSessionGate />,
         errorElement: (

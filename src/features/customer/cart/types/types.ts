@@ -16,6 +16,7 @@ export type QuotedItem = {
   name: string
   quantity: number
   unitPrice: number
+  imageUrl?: string | null
   options: QuotedOption[]
 }
 export type CartQuote = {
