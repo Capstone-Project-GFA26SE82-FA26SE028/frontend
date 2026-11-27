@@ -5,6 +5,10 @@ import { useAppSelector } from '../../../../app/hooks'
 import { PageHeading } from '../../../../components/PageHeading/PageHeading'
 import { Panel } from '../../../../components/Panel/Panel'
 import { getReport, type Totals } from '../api/reportApi'
+import { reportTime } from '../utils/reportTime'
+import { DishChart, SalesCharts } from '../components/ReportCharts'
+import { reportPreset, type ReportPreset } from '../utils/reportPreset'
+import { Icon } from '../../../../components/Icon/Icon'
 
 const money = new Intl.NumberFormat('vi-VN', {
   style: 'currency',
@@ -26,9 +30,7 @@ const input =
 const table =
   'w-full text-left text-sm [&_th]:bg-slate-50 [&_td]:border-t [&_td]:border-slate-100 [&_th]:p-3 [&_td]:p-3'
 function amount(value: Totals['collections']) {
-  return value.amount == null
-    ? `Chưa đủ (${money.format(value.knownAmount)} đã ghi nhận)`
-    : money.format(value.amount)
+  return money.format(value.amount ?? value.knownAmount)
 }
 function errorText(error: unknown) {
   if (isAxiosError(error) && error.response?.data?.message)
@@ -52,6 +54,8 @@ function ReportWorkspace({
   restaurantId: string
   userId: string
 }) {
+  const [range, setRange] = useState(() => reportPreset('month'))
+  const [preset, setPreset] = useState<ReportPreset | null>('month')
   const [params, setParams] = useState<{
     from: string
     to: string
@@ -59,7 +63,10 @@ function ReportWorkspace({
     channel: string
     methodCode: string
     shift: string
-  }>()
+  }>(() => {
+    const initial = reportPreset('month')
+    return { from: reportTime(initial.from), to: reportTime(initial.to), groupBy: 'day', channel: 'all', methodCode: 'all', shift: 'all' }
+  })
   const [formError, setFormError] = useState('')
   const key = ['manager-reports', userId, restaurantId, params]
   const period = useQuery({
@@ -98,8 +105,8 @@ function ReportWorkspace({
     }
     setFormError('')
     setParams({
-      from: from + '+07:00',
-      to: to + '+07:00',
+      from: reportTime(from),
+      to: reportTime(to),
       groupBy: read('groupBy'),
       channel: read('channel'),
       methodCode: read('methodCode'),
@@ -120,6 +127,20 @@ function ReportWorkspace({
         description="Xem doanh thu, dòng tiền và hiệu quả bán từng món theo kỳ."
       />
       <Panel className="mb-5 p-4">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-sm font-semibold text-slate-700"><Icon name="calendar" size={18} /> Kỳ báo cáo</div>
+          <div className="flex flex-wrap gap-1 rounded-2xl bg-slate-100 p-1">
+            {([['today', 'Hôm nay'], ['7d', '7 ngày'], ['month', 'Tháng này'], ['year', 'Năm nay']] as const).map(([key, label]) => (
+              <button key={key} type="button" aria-pressed={preset === key} className={`rounded-xl px-3 py-2 text-xs font-semibold transition ${preset === key ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:bg-white'}`} onClick={() => {
+                const next = reportPreset(key)
+                setRange(next)
+                setPreset(key)
+                setFormError('')
+                setParams({ ...params, from: reportTime(next.from), to: reportTime(next.to) })
+              }}>{label}</button>
+            ))}
+          </div>
+        </div>
         <form
           className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
           onSubmit={submit}
@@ -130,12 +151,14 @@ function ReportWorkspace({
               className={input}
               type="datetime-local"
               name="from"
+              value={range.from}
+              onChange={(event) => { setRange({ ...range, from: event.target.value }); setPreset(null) }}
               required
             />
           </label>
           <label>
             Đến, không gồm mốc cuối (UTC+7)
-            <input className={input} type="datetime-local" name="to" required />
+            <input className={input} type="datetime-local" name="to" value={range.to} onChange={(event) => { setRange({ ...range, to: event.target.value }); setPreset(null) }} required />
           </label>
           <label>
             Nhóm theo
@@ -221,23 +244,36 @@ function ReportWorkspace({
       )}
       {sales.data && (
         <>
-          <div className="mb-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {(Object.keys(metrics) as (keyof typeof metrics)[]).map(
-              (metric) => (
-                <Panel key={metric} className="p-4">
-                  <p>{metrics[metric]}</p>
-                  <strong>{amount(sales.data.totals[metric])}</strong>
-                </Panel>
+          <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {(['collections', 'netCollections', 'netDishRevenue'] as const).map(
+              (metric, index) => (
+                <article key={metric} className="rounded-3xl border border-slate-200/70 bg-white p-5 text-brand-dark">
+                  <div className={`mb-5 inline-flex rounded-2xl p-3 ${index === 0 ? 'bg-emerald-50 text-emerald-700' : index === 1 ? 'bg-blue-50 text-blue-700' : 'bg-purple-50 text-purple-700'}`}><Icon name={index === 2 ? 'receipt' : 'chart'} size={21} /></div>
+                  <p className="text-sm text-slate-500">{metrics[metric]}</p>
+                  <strong className="mt-2 block text-2xl font-bold tracking-tight">{amount(sales.data.totals[metric])}</strong>
+                  <p className="mt-2 text-xs text-slate-500">Trong kỳ đang chọn</p>
+                </article>
               ),
             )}
-            <Panel className="p-4">
-              <p>Đơn đã thanh toán</p>
-              <strong>
+            <article className="rounded-3xl border border-slate-200/70 bg-white p-5 text-brand-dark">
+              <div className="mb-5 inline-flex rounded-2xl bg-amber-50 p-3 text-amber-700"><Icon name="receipt" size={21} /></div>
+              <p className="text-sm text-slate-500">Đơn đã thanh toán</p>
+              <strong className="mt-2 block text-2xl font-bold">
                 {sales.data.totals.paidOrders.count ??
                   `Chưa đủ (${sales.data.totals.paidOrders.knownCount} đã ghi nhận)`}
               </strong>
-            </Panel>
+              <p className="mt-2 text-xs text-slate-500">Giao dịch được ghi nhận trong kỳ</p>
+            </article>
           </div>
+          <SalesCharts data={sales.data} />
+          {dishes.data && <DishChart data={dishes.data} />}
+          <details className="mb-5 rounded-2xl border border-slate-200 bg-white p-4">
+            <summary className="cursor-pointer text-sm font-semibold text-slate-700">Xem số liệu và bảng chi tiết</summary>
+            <div className="my-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {(Object.keys(metrics) as (keyof typeof metrics)[]).map((metric) => (
+                <div key={metric} className="rounded-xl bg-slate-50 p-4"><p className="text-xs text-slate-500">{metrics[metric]}</p><strong className="mt-2 block text-sm text-slate-800">{amount(sales.data.totals[metric])}</strong></div>
+              ))}
+            </div>
           {(
             [
               ['Theo thời gian', sales.data.groups],
@@ -276,8 +312,10 @@ function ReportWorkspace({
               )}
             </Panel>
           ))}
+          </details>
         </>
       )}
+      {dishes.data && !sales.data && <DishChart data={dishes.data} />}
       {dishes.data && (
         <Panel className="overflow-x-auto">
           <h2 className="p-4 font-semibold">Hiệu quả theo món</h2>

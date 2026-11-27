@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
-// Model của form; chưa phải request contract của backend.
 export const reservationSchema = z
   .object({
+    restaurantId: z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, 'Vui lòng chọn nhà hàng.'),
     name: z
       .string()
       .trim()
@@ -29,7 +29,6 @@ export const reservationSchema = z
       .int('Số khách phải là số nguyên.')
       .min(1, 'Cần ít nhất 1 khách.')
       .max(12, 'Tối đa 12 khách cho một yêu cầu.'),
-    note: z.string().trim().max(300, 'Lời nhắn không quá 300 ký tự.'),
   })
   .superRefine((values, context) => {
     if (
@@ -37,9 +36,8 @@ export const reservationSchema = z
       !/^([01]\d|2[0-3]):[0-5]\d$/.test(values.time)
     )
       return
-    // Giữ cách tính theo giờ trình duyệt của bản minh họa; chốt múi giờ với BE sau.
     const distance =
-      new Date(`${values.date}T${values.time}`).getTime() - Date.now()
+      new Date(`${values.date}T${values.time}:00+07:00`).getTime() - Date.now()
     if (!Number.isFinite(distance) || distance < 30 * 60 * 1000) {
       context.addIssue({
         code: 'custom',
