@@ -192,7 +192,7 @@ export function HomeHeader() {
                   )}
                   {user.roleId === 'customer' && (
                     <Link
-                      to="/orders"
+                      to="/takeaway-orders"
                       onClick={() => setOpen(false)}
                       className="flex min-h-9 items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] text-slate-600 hover:bg-emerald-50 hover:text-emerald-800"
                     >

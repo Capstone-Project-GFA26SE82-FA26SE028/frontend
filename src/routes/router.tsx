@@ -55,7 +55,7 @@ export const router = createBrowserRouter([
         element: <RoleRoute roles={['customer']} />,
         children: [
           { path: '/profile', element: <CustomerProfilePage /> },
-          { path: '/orders', element: <TakeawayOrdersPage /> },
+          { path: '/takeaway-orders', element: <TakeawayOrdersPage /> },
           {
             path: '/restaurants/:restaurantId/menu',
             element: <TakeawayMenuPage />,
@@ -66,7 +66,7 @@ export const router = createBrowserRouter([
           },
           {
             path: '/restaurants/:restaurantId/orders',
-            element: <Navigate to="/orders" replace />,
+            element: <Navigate to="/takeaway-orders" replace />,
           },
           {
             path: '/restaurants/:restaurantId/checkout',

@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
+import { useAppSelector } from '../../../../app/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { getLoyaltyTiers, getMember, loyaltyError } from '../api/loyaltyApi'
 import type { CustomerMember } from '../types/types'
 
 export function useLoyalty() {
+  const tableSessionId = useAppSelector((state) => state.customerSession.table?.tableSessionId)
   const [phone, setPhone] = useState('')
   const [member, setMember] = useState<CustomerMember | null>(null)
   const [error, setError] = useState('')
@@ -31,6 +33,10 @@ export function useLoyalty() {
 
   async function lookup() {
     if (request.current) return
+    if (!tableSessionId) {
+      setError('Vui lòng tham gia phiên bàn trước khi tra điểm.')
+      return
+    }
     if (!/^0\d{9}$/.test(phone.trim())) {
       setError('Nhập số điện thoại gồm 10 chữ số, bắt đầu bằng 0.')
       return
@@ -41,7 +47,7 @@ export function useLoyalty() {
     setMember(null)
     setPending(true)
     try {
-      const value = await getMember(phone.trim(), controller.signal)
+      const value = await getMember(phone.trim(), tableSessionId, controller.signal)
       if (!controller.signal.aborted) setMember(value)
     } catch (cause) {
       if (!controller.signal.aborted) setError(loyaltyError(cause))

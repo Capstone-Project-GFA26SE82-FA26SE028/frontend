@@ -27,7 +27,7 @@ export function TakeawayCheckoutPage() {
       <main className="mx-auto w-full max-w-xl px-4 py-6 sm:px-6">
         <Link
           className="inline-flex min-h-10 items-center gap-2 rounded-md text-sm font-semibold text-brand hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-          to={orderId ? '/orders' : basePath + '/cart'}
+          to={orderId ? '/takeaway-orders' : basePath + '/cart'}
         >
           <Icon name="chevron" size={16} className="rotate-180" />
           {orderId ? 'Về đơn của tôi' : 'Về giỏ hàng'}
@@ -113,9 +113,9 @@ function TakeawayPayment({ restaurantId, orderId, userId }: { restaurantId: stri
     PendingPayment: 'Chờ thanh toán',
     PendingConfirmation: 'Chờ nhà hàng xác nhận',
     Accepted: 'Đã xác nhận',
-    Preparing: 'Đang chuẩn bị',
+    Cooking: 'Đang chuẩn bị',
     ReadyForPickup: 'Sẵn sàng nhận món',
-    Collected: 'Đã nhận món',
+    Completed: 'Đã nhận món',
     Cancelled: 'Đã hủy',
     Rejected: 'Nhà hàng đã từ chối',
   }
