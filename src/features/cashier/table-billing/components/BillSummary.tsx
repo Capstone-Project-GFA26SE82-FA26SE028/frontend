@@ -58,7 +58,7 @@ export function BillSummary({
           </ul>
         )}
       </div>
-      <dl data-receipt className="space-y-1.5 border-t border-slate-200 bg-slate-50 p-5 text-xs text-slate-600 [&_dd]:tabular-nums [&_dt]:text-slate-500">
+      <dl data-receipt className="space-y-1.5 border-t border-slate-200 bg-slate-50/50 p-4 text-xs text-slate-600 [&_dd]:tabular-nums [&_dt]:text-slate-400">
         <div className="flex justify-between gap-3">
           <dt>Tạm tính</dt>
           <dd>{money.format(bill.subTotal)}</dd>
@@ -83,7 +83,7 @@ export function BillSummary({
             <dd>{money.format(bill.roundingAdjustment)}</dd>
           </div>
         )}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-3">
           <dt className="text-sm font-semibold text-slate-700!">
             {paid ? 'Đã thu' : 'Khách cần trả'}
           </dt>

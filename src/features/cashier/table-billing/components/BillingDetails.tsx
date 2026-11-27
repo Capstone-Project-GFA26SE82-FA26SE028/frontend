@@ -10,6 +10,7 @@ import { LoyaltyPhoneForm } from './LoyaltyPhoneForm'
 import { BillVoucherForm } from './BillVoucherForm'
 import { BillSummary } from './BillSummary'
 import { PrintPaymentSlip } from './PrintPaymentSlip'
+import { CashHandoverModal } from './CashHandoverModal'
 import { printReceipt } from '../utils/printReceipt'
 import { CashHandoverPanel } from './CashHandoverPanel'
 import type { usePrepareBill } from '../hooks/usePrepareBill'
@@ -197,15 +198,23 @@ export function BillingDetails({
             </div>
           )}
           <BillSummary bill={bill.data} paid={tab === 'paid'} />
-          {tab === 'incoming' && (
-            <CashHandoverPanel
+          {tab === 'incoming' && bill.data.status === 'Unpaid' && (
+            <CashHandoverModal
               key={billId}
-              billId={billId}
-              shiftId={cashShiftId}
-              registerId={cashRegisterId}
-              restaurantId={restaurantId}
-              onPaid={onPaid}
-            />
+              table={`Bàn ${tableName(selected)}`}
+              formattedTotal={new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: bill.data.currency || 'VND',
+              }).format(bill.data.totalAmount)}
+            >
+              <CashHandoverPanel
+                billId={billId}
+                shiftId={cashShiftId}
+                registerId={cashRegisterId}
+                restaurantId={restaurantId}
+                onPaid={onPaid}
+              />
+            </CashHandoverModal>
           )}
         </>
       )}
