@@ -21,6 +21,8 @@ import { ProfilePage } from '../features/profile/pages/ProfilePage'
 import { KitchenStationsPage } from '../features/manager/kitchen-stations/pages/KitchenStationsPage'
 import { KitchenStationItemsPage } from '../features/manager/kitchen-stations/pages/KitchenStationItemsPage'
 import { KitchenAssignmentsPage } from '../features/manager/kitchen-assignments/pages/KitchenAssignmentsPage'
+import { OrdersPage } from '../features/manager/orders/pages/OrdersPage'
+import { PaymentsPage } from '../features/manager/payments/pages/PaymentsPage'
 
 export const managerRoute: RouteObject = {
   path: '/manager',
@@ -52,6 +54,8 @@ export const managerRoute: RouteObject = {
       element: <KitchenAssignmentsPage />,
     },
     { path: 'staff-activity', element: <StaffActivityPage /> },
+    { path: 'orders', element: <OrdersPage /> },
+    { path: 'payments', element: <PaymentsPage /> },
     {
       path: '*',
       element: (

@@ -8,6 +8,7 @@ import { tableError } from '../utils/table'
 import { TableFilters } from '../components/TableFilters'
 import { TablesByArea } from '../components/TablesByArea'
 import { TableDetail } from '../components/TableDetail'
+import { TableQrModal } from '../components/TableQrModal'
 export function TableMonitoringPage() {
   const [search, setSearch] = useState('')
   const [area, setArea] = useState({ scope: '', id: '' })
@@ -15,6 +16,7 @@ export function TableMonitoringPage() {
   const [selection, setSelection] = useState<{
     scope: string
     id: string
+    mode: 'view' | 'qr'
   } | null>(null)
   const term = useDebounce(search.trim(), 300)
   // Keep selections and area filters scoped to the current restaurant and user.
@@ -38,8 +40,8 @@ export function TableMonitoringPage() {
   return (
     <>
       <PageHeading
-        title="Bàn"
-        description="Xem bàn và chỗ ngồi trong nhà hàng của bạn."
+        title="Bàn & QR"
+        description="Xem bàn, chỗ ngồi và quản lý mã QR trong nhà hàng của bạn."
         action={
           <button
             disabled={
@@ -99,23 +101,42 @@ export function TableMonitoringPage() {
             <TablesByArea
               tables={tables}
               areas={areas}
-              onView={(id) => setSelection({ scope: m.scope, id })}
+              onView={(id) =>
+                setSelection({ scope: m.scope, id, mode: 'view' })
+              }
+              onQr={(id) => setSelection({ scope: m.scope, id, mode: 'qr' })}
             />
           )}
         </>
       )}
-      {selected && !m.tables.isError && !m.areas.isError && (
-        <Modal title="Chi tiết bàn" onClose={() => setSelection(null)}>
-          <TableDetail
-            table={selected}
-            areaName={
-              areas.find((value) => value.areaId === selected.areaId)
-                ?.areaName || 'Chưa có thông tin khu vực'
-            }
+      {selected &&
+        !m.tables.isError &&
+        !m.areas.isError &&
+        (selection?.mode === 'qr' ? (
+          <TableQrModal
+            key={`${m.scope}:${selected.tableId}`}
+            tableId={selected.tableId}
             onClose={() => setSelection(null)}
           />
-        </Modal>
-      )}
+        ) : (
+          <Modal title="Chi tiết bàn" onClose={() => setSelection(null)}>
+            <TableDetail
+              table={selected}
+              areaName={
+                areas.find((value) => value.areaId === selected.areaId)
+                  ?.areaName || 'Chưa có thông tin khu vực'
+              }
+              onClose={() => setSelection(null)}
+              onQr={() =>
+                setSelection({
+                  scope: m.scope,
+                  id: selected.tableId,
+                  mode: 'qr',
+                })
+              }
+            />
+          </Modal>
+        ))}
     </>
   )
 }

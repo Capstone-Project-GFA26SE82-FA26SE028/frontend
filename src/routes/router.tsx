@@ -2,6 +2,7 @@ import { kitchenRoute } from './kitchenRoutes'
 import { cashierRoute } from './cashierRoutes'
 import { LoginPage } from '../features/auth/pages/LoginPage'
 import { RegisterPage } from '../features/auth/pages/RegisterPage'
+import { RestaurantRegisterPage } from '../features/auth/pages/RestaurantRegisterPage'
 import { CustomerProfilePage } from '../features/profile/pages/CustomerProfilePage'
 import { ProtectedRoute } from './ProtectedRoute'
 import { RoleRoute } from './RoleRoute'
@@ -88,6 +89,7 @@ export const router = createBrowserRouter([
     element: <CustomerPageRoute />,
     children: [
       { path: '/register', element: <RegisterPage /> },
+      { path: '/register/restaurant', element: <RestaurantRegisterPage /> },
       { path: '/', element: <HomePage /> },
       { path: '/restaurants', element: <RestaurantsPage /> },
       { path: '/payment/success', element: <TakeawayPaymentReturnPage /> },

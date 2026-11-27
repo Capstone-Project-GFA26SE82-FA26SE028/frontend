@@ -32,7 +32,13 @@ export function LoginPage() {
       return <Navigate to={state.from} replace />
     return (
       <Navigate
-        to={state?.from === '/reservation' ? '/reservation' : '/'}
+        to={
+          state?.from === '/register/restaurant'
+            ? '/register/restaurant'
+            : state?.from === '/reservation'
+              ? '/reservation'
+              : '/'
+        }
         replace
       />
     )
