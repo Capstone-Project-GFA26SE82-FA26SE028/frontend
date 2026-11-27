@@ -22,6 +22,7 @@ export function BillingDetails({
   cashRegisterId,
   restaurantId,
   onPaid,
+  onWatchPayOsPayment,
 }: {
   selected: BillingEntry | undefined
   tab: BillingTab
@@ -30,6 +31,7 @@ export function BillingDetails({
   cashRegisterId: string
   restaurantId: string
   onPaid: (billId: string) => void
+  onWatchPayOsPayment: (paymentId: string, table: string) => void
 }) {
   const detailsRef = useRef<HTMLElement>(null)
   const billId = selected?.billId
@@ -182,6 +184,7 @@ export function BillingDetails({
                   cashShiftId={cashShiftId}
                   canPrintQr={selected.status === 'Prepared' || selected.status === 'Presented'}
                   onPrint={printBill}
+                  onWatchPayment={(paymentId) => onWatchPayOsPayment(paymentId, `Bàn ${tableName(selected)}`)}
                 />
               }
             />

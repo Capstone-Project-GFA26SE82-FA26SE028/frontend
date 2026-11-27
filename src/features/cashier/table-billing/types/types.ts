@@ -83,6 +83,10 @@ export type CashierVoucher = {
   endAt: string | null
 }
 export type BillPayOsPayment = {
+  paymentId: string
+  billId: string
+  amount: number
+  paidAt: string | null
   status: string
   qrCode: string | null
   expiresAt: string | null

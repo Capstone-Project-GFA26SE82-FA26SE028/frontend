@@ -3,10 +3,12 @@ export function TableDetail({
   table,
   areaName,
   onClose,
+  onQr,
 }: {
   table: Table
   areaName: string
   onClose: () => void
+  onQr: () => void
 }) {
   return (
     <div className="space-y-5 p-6">
@@ -33,6 +35,9 @@ export function TableDetail({
           </div>
         ))}
       </dl>
+      <button onClick={onQr} className="btn-primary min-h-11 w-full">
+        Xem / Tạo QR
+      </button>
       <button
         onClick={onClose}
         className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"

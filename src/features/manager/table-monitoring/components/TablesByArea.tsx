@@ -5,10 +5,12 @@ export function TablesByArea({
   tables,
   areas,
   onView,
+  onQr,
 }: {
   tables: Table[]
   areas: Area[]
   onView: (id: string) => void
+  onQr: (id: string) => void
 }) {
   const groups = new Map<string, Table[]>()
   for (const table of tables)
@@ -43,6 +45,7 @@ export function TablesByArea({
                   table={table}
                   areaName={name}
                   onView={() => onView(table.tableId)}
+                  onQr={() => onQr(table.tableId)}
                 />
               ))}
             </div>
