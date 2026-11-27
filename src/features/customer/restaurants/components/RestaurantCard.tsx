@@ -18,7 +18,7 @@ export function RestaurantCard({
       <Link
         to={'/restaurants/' + restaurant.restaurantId + '/menu'}
         aria-label={'Mở thực đơn ' + restaurant.restaurantName}
-        className="relative flex h-48 w-full items-center justify-center overflow-hidden border-b border-emerald-900/5 bg-gradient-to-br from-[#e4efdf] via-[#f5f8f1] to-emerald-100/70 focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-brand"
+        className="relative flex h-48 w-full shrink-0 items-center justify-center overflow-hidden border-b border-emerald-900/5 bg-gradient-to-br from-[#e4efdf] via-[#f5f8f1] to-emerald-100/70 focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-brand"
       >
         <span
           aria-hidden="true"
@@ -52,7 +52,7 @@ export function RestaurantCard({
             {restaurant.address || 'Chưa cập nhật địa chỉ'}
           </p>
         </div>
-        <div className="mt-2 flex items-center gap-2 text-sm text-muted">
+        <div className="mb-6 mt-2 flex items-center gap-2 text-sm text-muted">
           <Icon name="phone" size={15} className="shrink-0 text-brand" />
           <span className="break-all">
             {restaurant.hotline || 'Chưa cập nhật hotline'}
@@ -61,7 +61,7 @@ export function RestaurantCard({
         <Link
           to={'/restaurants/' + restaurant.restaurantId + '/menu'}
           aria-label={'Xem thực đơn ' + restaurant.restaurantName}
-          className="mt-6 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#226449] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#184c37] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          className="mt-auto inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#226449] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#184c37] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
           <Icon name="receipt" size={16} />
           Xem menu

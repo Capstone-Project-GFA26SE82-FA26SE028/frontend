@@ -22,6 +22,7 @@ export type TakeawayCart = {
       name: string
       quantity: number
       unitPrice: number
+      imageUrl?: string | null
       options: {
         optionId: string
         name: string
