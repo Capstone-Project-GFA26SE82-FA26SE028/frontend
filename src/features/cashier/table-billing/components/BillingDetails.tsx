@@ -1,4 +1,7 @@
+import { useRef } from 'react'
+import { toast } from 'react-toastify'
 import { useQuery } from '@tanstack/react-query'
+import { getOnlineRestaurants } from '../../../customer/restaurants/api/restaurantApi'
 import { cashShiftError } from '../../shifts/api/cashShiftApi'
 import { getCashierBill } from '../api/billApi'
 import type { BillingEntry, BillingTab } from '../types/types'
@@ -6,6 +9,8 @@ import { STATUS_NAMES, tableName } from '../utils/billingDisplay'
 import { LoyaltyPhoneForm } from './LoyaltyPhoneForm'
 import { BillVoucherForm } from './BillVoucherForm'
 import { BillSummary } from './BillSummary'
+import { PrintPaymentSlip } from './PrintPaymentSlip'
+import { printReceipt } from '../utils/printReceipt'
 import { CashHandoverPanel } from './CashHandoverPanel'
 import type { usePrepareBill } from '../hooks/usePrepareBill'
 
@@ -26,6 +31,7 @@ export function BillingDetails({
   restaurantId: string
   onPaid: (billId: string) => void
 }) {
+  const detailsRef = useRef<HTMLElement>(null)
   const billId = selected?.billId
   const checkoutId = selected?.checkoutId
   const canPrepare =
@@ -35,6 +41,20 @@ export function BillingDetails({
     queryFn: ({ signal }) => getCashierBill(billId!, signal),
     enabled: !!billId,
     retry: false,
+  })
+  const restaurant = useQuery({
+    queryKey: ['cashier', 'receipt-restaurant', restaurantId],
+    enabled: !!billId,
+    staleTime: 60_000,
+    retry: false,
+    queryFn: async ({ signal }) => {
+      for (let page = 1; ; page++) {
+        const result = await getOnlineRestaurants(page, 100, signal)
+        const match = result.items.find((entry) => entry.restaurantId === restaurantId)
+        if (match) return match.restaurantName
+        if (!result.items.length || page * result.pageSize >= result.totalCount) return null
+      }
+    },
   })
   const recordedAt = tab === 'paid' ? selected?.paidAt : selected?.submittedAt
   const metadata = selected
@@ -51,8 +71,22 @@ export function BillingDetails({
         .join(' · ')
     : ''
 
+  async function printBill(method?: string, qrImage?: string) {
+    if (!selected || !detailsRef.current) return
+    const table = selected.tables.some((item) => item.tableCode)
+      ? `Bàn ${tableName(selected)}`
+      : null
+    const receiptMetadata = [selected.billCode, table].filter(Boolean).join(' · ')
+    await printReceipt(detailsRef.current, {
+      restaurantName: restaurant.data || 'DineLink',
+      metadata: receiptMetadata,
+      method,
+      qrImage,
+    })
+  }
+
   return (
-    <section className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white">
+    <section ref={detailsRef} className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white">
       <header className="flex items-start justify-between gap-3 border-b border-slate-100 px-5 py-4">
         <div className="min-w-0 flex-1">
           <h2 className="break-words text-xl font-bold">
@@ -141,7 +175,23 @@ export function BillingDetails({
               restaurantId={restaurantId}
               shiftId={cashShiftId}
               adjustments={bill.data.adjustments}
+              actions={
+                <PrintPaymentSlip
+                  billId={billId}
+                  checkoutId={checkoutId}
+                  cashShiftId={cashShiftId}
+                  canPrintQr={selected.status === 'Prepared' || selected.status === 'Presented'}
+                  onPrint={printBill}
+                />
+              }
             />
+          )}
+          {tab === 'paid' && bill.data.status === 'Paid' && (
+            <div className="border-b border-slate-200 px-5 py-4">
+              <button type="button" className="btn-secondary" onClick={() => void printBill().catch(() => toast.error('Không thể mở bản in.'))}>
+                In hóa đơn
+              </button>
+            </div>
           )}
           <BillSummary bill={bill.data} paid={tab === 'paid'} />
           {tab === 'incoming' && (
