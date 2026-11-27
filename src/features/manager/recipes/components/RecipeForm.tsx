@@ -112,7 +112,7 @@ export function RecipeForm({
       }}
     >
       <p className="rounded-xl bg-emerald-50 p-3 text-sm leading-6 text-emerald-800">
-        Số lượng tính cho một phần ăn. Khi lưu sẽ tạo phiên bản mới và giữ lịch
+        Số lượng tính cho {option ? 'một đơn vị tùy chọn' : 'một phần món ăn'}. Khi lưu sẽ tạo phiên bản mới và giữ lịch
         sử sử dụng nguyên liệu. Hệ số quy đổi được máy chủ kiểm tra và lưu lại.
       </p>
       <Field label="Có hiệu lực từ (UTC+7) *">

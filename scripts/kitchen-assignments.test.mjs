@@ -26,8 +26,9 @@ test('kitchen assignments preserve paging, employee eligibility and concurrent w
     const { AssignmentForm } = await server.ssrLoadModule(
       '/src/features/manager/kitchen-assignments/components/AssignmentForm.tsx',
     )
-    const stationId = '11111111-1111-4111-8111-111111111111'
-    const userId = '22222222-2222-4222-8222-222222222222'
+    // Actual seed GUIDs are valid .NET IDs without RFC UUID version/variant bits.
+    const stationId = '20000000-0000-0000-0000-000000000021'
+    const userId = '10000000-0000-0000-0000-000000000005'
     const nextId = '33333333-3333-4333-8333-333333333333'
     const station = {
       kitchenStationId: stationId,
@@ -87,6 +88,9 @@ test('kitchen assignments preserve paging, employee eligibility and concurrent w
     assert.equal(calls.at(-1).method, 'post')
     assert.equal(calls.at(-1).url, `/kitchen-stations/${stationId}/assignment`)
     assert.deepEqual(JSON.parse(calls.at(-1).data), { userId })
+    const requestCount = calls.length
+    await assert.rejects(assignmentApi.write({ kind: 'save', stationId, userId: 'invalid-id' }))
+    assert.equal(calls.length, requestCount, 'malformed employee IDs must not be sent to the API')
     await assignmentApi.write({
       kind: 'save',
       stationId,
