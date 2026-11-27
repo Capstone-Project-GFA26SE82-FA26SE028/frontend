@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom'
 import { Icon } from '../../../../components/Icon/Icon'
 import type { FeeVersion } from '../../tax-fees/types/types'
-import type { PaymentMethods } from '../../payment-methods/schema'
+import type { PayOsConfiguration } from '../../payment-methods/types/types'
 import { DashboardSection } from './DashboardSection'
 export function DashboardSettings({
   fees,
-  methods,
+  payOs,
 }: {
   fees?: FeeVersion
-  methods: PaymentMethods
+  payOs?: PayOsConfiguration
 }) {
   return (
     <DashboardSection
@@ -41,31 +41,18 @@ export function DashboardSettings({
           Phương thức thanh toán
           <Icon name="chevron" size={14} />
         </Link>
-        {[
-          { name: 'Tiền mặt', enabled: methods.cash, icon: 'coin' },
-          {
-            name: 'PayOS (Chuyển khoản)',
-            enabled: methods.payos,
-            icon: 'receipt',
-          },
-        ].map((method) => (
-          <div
-            key={method.name}
-            className="flex items-center gap-3 px-3 py-2.5"
-          >
-            <Icon name={method.icon} size={17} className="text-slate-500" />
-            <span className="flex-1 text-slate-600">{method.name}</span>
-            <span
-              className={
-                'flex shrink-0 items-center gap-1.5 text-xs font-medium ' +
-                (method.enabled ? 'text-emerald-700' : 'text-slate-400')
-              }
-            >
-              <Icon name={method.enabled ? 'check' : 'minus'} size={15} />
-              {method.enabled ? 'Đang bật' : 'Đang tắt'}
-            </span>
-          </div>
-        ))}
+        <div className="flex items-center gap-3 px-3 py-2.5">
+          <Icon name="coin" size={17} className="text-slate-500" />
+          <span className="flex-1 text-slate-600">Tiền mặt</span>
+          <span className="text-xs text-slate-500">Thu tại quầy</span>
+        </div>
+        <div className="flex items-center gap-3 px-3 py-2.5">
+          <Icon name="receipt" size={17} className="text-slate-500" />
+          <span className="flex-1 text-slate-600">PayOS (Chuyển khoản)</span>
+          <span className="text-xs font-medium text-slate-600">
+            {!payOs ? 'Chưa có thông tin' : !payOs.configured ? 'Chưa cấu hình' : payOs.enabled ? 'Đang bật' : 'Đang tắt'}
+          </span>
+        </div>
       </div>
     </DashboardSection>
   )

@@ -2,7 +2,6 @@ import authReducer from '../features/auth/authSlice'
 import customerBillingReducer from '../features/customer/billing-feedback/billingSlice'
 import customerSessionReducer from '../features/customer/table-session/sessionSlice'
 import orderReducer from '../features/customer/payment/previewOrderSlice'
-import adminPaymentMethodsReducer from '../features/admin/payment-methods/paymentMethodSlice'
 import { configureStore } from '@reduxjs/toolkit'
 
 export const store = configureStore({
@@ -11,7 +10,6 @@ export const store = configureStore({
     customerBilling: customerBillingReducer,
     orders: orderReducer,
     customerSession: customerSessionReducer,
-    adminPaymentMethods: adminPaymentMethodsReducer,
   },
 })
 export type RootState = ReturnType<typeof store.getState>

@@ -83,7 +83,7 @@ export function DashboardPage() {
         {data.layout.data && (
           <DashboardAreas areas={data.areas} tables={data.tables} />
         )}
-        <DashboardSettings fees={data.currentFees} methods={data.methods} />
+        <DashboardSettings fees={data.currentFees} payOs={data.payOs} />
       </div>
     </div>
   )

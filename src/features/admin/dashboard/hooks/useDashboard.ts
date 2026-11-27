@@ -2,13 +2,14 @@ import { useQuery } from '@tanstack/react-query'
 import { useAppSelector } from '../../../../app/hooks'
 import { getAllAreas } from '../../areas/api/areaApi'
 import { getAllTables } from '../../tables/api/tableApi'
+import { usePayOsConfiguration } from '../../payment-methods/hooks/usePayOsConfiguration'
 import { useTaxFees } from '../../tax-fees/hooks/useTaxFees'
 import { useUserCounts } from '../../users/hooks/useUsers'
 export function useDashboard() {
-  const methods = useAppSelector((s) => s.adminPaymentMethods)
   const userCounts = useUserCounts()
   const user = useAppSelector((s) => s.auth.session?.user)
   const restaurantId = user?.restaurantId || ''
+  const { configuration: payOs } = usePayOsConfiguration(restaurantId, user?.userId ?? '')
   const layout = useQuery({
     queryKey: ['dashboard-layout', restaurantId, user?.userId],
     enabled: !!restaurantId,
@@ -37,7 +38,7 @@ export function useDashboard() {
     layout,
     restaurantId,
     currentFees,
-    methods,
+    payOs: payOs.data,
     tableStatus: [
       {
         name: 'Đang hoạt động',
