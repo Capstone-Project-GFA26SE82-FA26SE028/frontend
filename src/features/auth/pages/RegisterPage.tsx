@@ -34,6 +34,15 @@ export function RegisterPage() {
             Tạo tài khoản DineLink
           </h1>
           <RegisterForm />
+          <p className="mt-5 border-t border-slate-100 pt-5 text-center text-sm text-muted">
+            Bạn là chủ nhà hàng?{' '}
+            <Link
+              to="/register/restaurant"
+              className="font-semibold text-brand hover:underline"
+            >
+              Đăng ký admin nhà hàng
+            </Link>
+          </p>
         </section>
       </div>
     </main>

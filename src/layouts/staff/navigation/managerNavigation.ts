@@ -72,9 +72,11 @@ export const managerNavigation: StaffNavigationGroup[] = [
     title: 'THEO DÕI VẬN HÀNH',
     items: [
       { to: '/manager/reports', label: 'Báo cáo nhà hàng', icon: 'chart' },
+      { to: '/manager/orders', label: 'Quản lí đơn hàng', icon: 'clipboard' },
+      { to: '/manager/payments', label: 'Quản lý thanh toán', icon: 'coin' },
       {
         to: '/manager/table-monitoring',
-        label: 'Trạng thái bàn',
+        label: 'Bàn & QR',
         icon: 'utensils',
       },
       { to: '/manager/kitchen-monitoring', label: 'Tiến độ bếp', icon: 'fire' },

@@ -33,6 +33,11 @@ export const platformAdminNavigation: StaffNavigationGroup[] = [
         label: 'Phân công nhân viên',
         icon: 'briefcase',
       },
+      {
+        to: '/platform-admin/restaurant-registrations',
+        label: 'Hồ sơ đăng ký',
+        icon: 'clipboard',
+      },
     ],
   },
   {
