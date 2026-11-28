@@ -6,6 +6,7 @@ import type {
   ActiveRecipe,
   KitchenTask,
   KitchenItem,
+  KitchenIngredient,
   Station,
   Page,
 } from '../types'
@@ -51,13 +52,16 @@ export async function kdsList<T>(
 ) {
   const items: T[] = []
   for (let page = 1; ; page++) {
-    const result = await get<Page<T>>(
+    const raw = await get<any>(
       path,
       { ...params, page, pageSize: 100 },
       signal,
     )
-    items.push(...result.items)
-    if (items.length >= result.totalCount || result.items.length === 0)
+    if (Array.isArray(raw)) return raw
+    const list: T[] = raw?.items || raw?.Items || []
+    const totalCount: number = raw?.totalCount ?? raw?.TotalCount ?? list.length
+    items.push(...list)
+    if (items.length >= totalCount || list.length === 0)
       return items
   }
 }
@@ -106,6 +110,8 @@ export const kdsApi = {
   allTasks: (signal?: AbortSignal) =>
     kdsList<KitchenTask>('/kitchen-tasks', signal, { status: 'all' }),
   items: (signal?: AbortSignal) => kdsList<KitchenItem>('/items', signal),
+  ingredients: (signal?: AbortSignal) =>
+    kdsList<KitchenIngredient>('/ingredients', signal),
   activeRecipe: (itemId: string, signal?: AbortSignal) =>
     get<ActiveRecipe>(`/items/${itemId}/recipes/active`, undefined, signal),
   activeOptionRecipe: (optionId: string, signal?: AbortSignal) =>

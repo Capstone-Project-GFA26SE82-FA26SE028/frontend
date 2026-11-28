@@ -3,13 +3,14 @@ import { useKds } from './useKds'
 import { useClock } from './useClock'
 import { matches } from '../utils/format'
 import { groupKdsOrders } from '../utils/orders'
-import type { Ticket } from '../types'
+import type { Ticket, Status } from '../types'
 
 export function useKdsBoard() {
   const { state, tickets, run } = useKds()
   const now = useClock()
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('All')
+  const [activeColumn, setActiveColumn] = useState<'all' | Status>('all')
   const [sort, setSort] = useState('By arrival time')
   const [focus, setFocus] = useState(false)
   const [selected, setSelected] = useState('')
@@ -64,6 +65,8 @@ export function useKdsBoard() {
     setQuery,
     filter,
     setFilter,
+    activeColumn,
+    setActiveColumn,
     sort,
     setSort,
     focus,

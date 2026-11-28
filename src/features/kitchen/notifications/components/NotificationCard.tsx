@@ -30,7 +30,7 @@ export function NotificationCard({
           {item.message}
         </span>
         <time
-          dateTime={item.createdAt}
+          dateTime={item.createdAt || undefined}
           className="mt-2 block text-xs text-slate-500"
         >
           {notificationTime(item.createdAt)}

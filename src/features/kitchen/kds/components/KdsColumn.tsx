@@ -21,25 +21,43 @@ export function KdsColumn({
   onTransition,
 }: Props) {
   const tone = kdsToneStyles[column.tone]
+  const totalPortions = items.reduce(
+    (n, order) => n + order.lines.reduce((sum, t) => sum + t.quantity, 0),
+    0,
+  )
+
   return (
     <section
-      className={`flex min-w-0 flex-col overflow-hidden rounded-[13px] border ${tone.column}`}
+      id={`kds-column-${column.status}`}
+      className={`flex h-full min-h-0 min-w-0 flex-col overflow-hidden rounded-2xl border shadow-xs transition-all ${tone.column}`}
       data-status={column.status}
       key={column.status}
       aria-label={column.title}
     >
-      <div
-        className={`border-b border-black/5 px-4 py-4 text-white ${tone.header}`}
-      >
-        <div className="flex items-center gap-2 [&>h2]:flex-1 [&>h2]:text-lg [&>h2]:font-bold [&>b]:grid [&>b]:size-8 [&>b]:place-items-center [&>b]:rounded-lg [&>b]:bg-white/15 [&>b]:text-base [&>b]:font-bold [&>b]:text-white">
-          <span className="grid size-[31px] place-items-center rounded-[9px] border border-black/[0.02] bg-white/15 text-white">
-            <Icon name={column.icon} size={19} />
-          </span>
-          <h2>{column.title}</h2>
-          <b>{items.length}</b>
+      {/* Column Header */}
+      <div className={`px-4 py-3 text-white shrink-0 ${tone.header}`}>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5">
+            <span className="flex size-7 items-center justify-center rounded-lg bg-white/20 text-white shadow-xs">
+              <Icon name={column.icon} size={16} />
+            </span>
+            <h2 className="text-base font-bold tracking-tight">{column.title}</h2>
+          </div>
+          <div className="flex items-center gap-1.5">
+            {totalPortions > 0 && (
+              <span className="hidden sm:inline-block rounded-md bg-black/15 px-1.5 py-0.5 text-[11px] font-bold text-white/90">
+                {totalPortions} phần
+              </span>
+            )}
+            <span className="flex min-w-7 items-center justify-center rounded-lg bg-white/25 px-2 py-0.5 text-sm font-extrabold text-white shadow-xs">
+              {items.length}
+            </span>
+          </div>
         </div>
       </div>
-      <div className="flex min-h-0 flex-1 flex-col gap-[13px] px-[11px] py-3 md:min-h-[355px] min-[1600px]:min-h-[430px]">
+
+      {/* Tickets List - Cuộn độc lập bên trong mỗi ô khi cố định màn hình */}
+      <div className="flex min-h-0 flex-1 flex-col gap-3 p-3 overflow-y-auto">
         {items.map((order) => (
           <KdsOrderCard
             key={order.id}
@@ -54,45 +72,41 @@ export function KdsColumn({
             onTransition={onTransition}
           />
         ))}
+
+        {/* Empty state */}
         {!items.length && (
-          <div className="flex min-h-[180px] flex-1 flex-col items-center justify-center rounded-[10px] border border-dashed border-[#cfdacf] p-5 text-center text-[#475569] md:min-h-[235px] [&>span]:mb-[15px] [&>span]:grid [&>span]:size-[55px] [&>span]:place-items-center [&>span]:rounded-full [&>span]:bg-white/45 [&>span]:text-[#99b4a1] [&>strong]:text-base [&>strong]:font-semibold [&>p]:mt-[7px] [&>p]:max-w-64 [&>p]:text-sm [&>p]:leading-[1.7] [&>p]:text-[#64748b]">
-            <span>
-              <Icon name={column.icon} size={28} />
-            </span>
-            <strong>
+          <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-slate-300/80 bg-white/60 p-6 text-center text-slate-500">
+            <div className="mb-3 flex size-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+              <Icon name={column.icon} size={22} />
+            </div>
+            <strong className="text-sm font-bold text-slate-700">
               {isFiltered
                 ? 'Không có món phù hợp'
                 : column.status === 'Pending'
-                  ? 'Đã xử lý hết món đang chờ'
+                  ? 'Đã xong hết món chờ'
                   : column.status === 'Hold'
                     ? 'Không có món tạm hoãn'
                     : column.status === 'Cooking'
-                      ? 'Bếp sẵn sàng'
-                      : 'Chưa có món hoàn thành'}
+                      ? 'Bếp đang sẵn sàng'
+                      : 'Chưa có món xong'}
             </strong>
-            <p>
+            <p className="mt-1 text-xs text-slate-500 max-w-52">
               {isFiltered
-                ? 'Thử tìm kiếm hoặc bộ lọc khác.'
+                ? 'Thử thay đổi từ khóa hoặc bộ lọc.'
                 : column.status === 'Hold'
-                  ? 'Món đang giữ sẽ xuất hiện tại đây.'
+                  ? 'Món giữ theo đợt sẽ hiển thị tại đây.'
                   : column.status === 'Ready'
-                    ? 'Món đã hoàn thành sẽ xuất hiện tại đây.'
-                    : 'Món mới sẽ xuất hiện tại đây.'}
+                    ? 'Món nấu xong sẽ chờ phục vụ lấy tại đây.'
+                    : 'Món gọi mới sẽ tự động xuất hiện.'}
             </p>
           </div>
         )}
       </div>
-      <div className="mx-[13px] flex justify-between border-t border-black/[0.025] px-0.5 py-3 text-sm text-[#475569] [&>span:last-child]:text-sm  ">
-        <span>
-          {items.length} đơn ·{' '}
-          {items.reduce(
-            (n, order) =>
-              n + order.lines.reduce((sum, t) => sum + t.quantity, 0),
-            0,
-          )}{' '}
-          phần
-        </span>
-        <span>{column.title}</span>
+
+      {/* Column Footer */}
+      <div className="flex items-center justify-between border-t border-slate-200/60 bg-white/40 px-4 py-2 text-xs font-semibold text-slate-500">
+        <span>{items.length} đơn hàng</span>
+        <span>{totalPortions} phần ăn</span>
       </div>
     </section>
   )
