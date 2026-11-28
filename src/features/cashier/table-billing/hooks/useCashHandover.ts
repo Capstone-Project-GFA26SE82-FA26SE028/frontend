@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import { confirmCashHandover, findCashHandover } from '../api/cashHandoverApi'
+import { confirmCashHandover, findCashHandover, getCashHandoverError } from '../api/cashHandoverApi'
+import { formatCurrency } from '../../../../utils/currency'
 
 export function useCashHandover(
   restaurantId: string,
@@ -29,6 +30,12 @@ export function useCashHandover(
     onSuccess: () => {
       onPaid(billId)
       toast.success('Đã xác nhận nhận tiền mặt.')
+    },
+    onError: (error) => {
+      const result = getCashHandoverError(error)
+      if (result?.status !== 'CashReturnRequired') return
+      const amount = result.amount == null ? 'toàn bộ tiền mặt' : formatCurrency(result.amount)
+      toast.warning(`Khách đã thanh toán qua PayOS. Trả lại ${amount} đã nhận.`, { autoClose: false })
     },
     onSettled: () =>
       Promise.all([
