@@ -198,6 +198,17 @@ export function BillingDetails({
             </div>
           )}
           <BillSummary bill={bill.data} paid={tab === 'paid'} />
+          {tab === 'paid' && bill.data.status === 'Paid' && (
+            <CashHandoverPanel
+              key={billId}
+              billId={billId}
+              shiftId={cashShiftId}
+              registerId={cashRegisterId}
+              restaurantId={restaurantId}
+              onPaid={onPaid}
+              paid
+            />
+          )}
           {tab === 'incoming' && bill.data.status === 'Unpaid' && (
             <CashHandoverModal
               key={billId}

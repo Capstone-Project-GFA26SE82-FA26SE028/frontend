@@ -43,6 +43,12 @@ export function CashierLayout() {
         >
           Bàn & hóa đơn
         </NavLink>
+        <NavLink
+          to="/cashier/takeaway-orders"
+          className="rounded-lg px-3 py-2 text-sm font-semibold aria-[current=page]:bg-emerald-50 aria-[current=page]:text-emerald-800"
+        >
+          Đơn online
+        </NavLink>
       </nav>
       <main className="flex min-h-0 flex-1 items-center justify-center p-3 sm:p-4">
         <Outlet />

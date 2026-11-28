@@ -1,7 +1,13 @@
 import { axiosClient } from '../../../../api/axiosClient'
+import { isAxiosError } from 'axios'
 import type { CashHandover } from '../types/types'
 
 type Response<T> = { isSuccess: boolean; message?: string | null; result: T }
+
+export function getCashHandoverError(error: unknown) {
+  if (isAxiosError<Response<{ status: string; amount: number | null }>>(error))
+    return error.response?.data?.result
+}
 
 function readResult<T>(data: Response<T>) {
   if (!data.isSuccess)
@@ -28,7 +34,7 @@ export async function findCashHandover(
       (item) =>
         item.billId === billId &&
         item.cashShiftId === shiftId &&
-        item.status === 'Pending',
+        (item.status === 'Pending' || item.status === 'ReturnRequired'),
     )
     if (match) return match
     if (!result.items.length || page * pageSize >= result.totalCount)
