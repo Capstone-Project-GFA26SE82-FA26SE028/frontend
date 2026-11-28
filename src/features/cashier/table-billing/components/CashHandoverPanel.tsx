@@ -5,6 +5,7 @@ import { cashShiftError } from '../../shifts/api/cashShiftApi'
 import { useCashHandover } from '../hooks/useCashHandover'
 import { cashHandoverSchema } from '../schemas/cashHandoverSchema'
 import { money } from '../utils/billingDisplay'
+import { getCashHandoverError } from '../api/cashHandoverApi'
 
 export function CashHandoverPanel({
   restaurantId,
@@ -12,12 +13,14 @@ export function CashHandoverPanel({
   shiftId,
   billId,
   onPaid,
+  paid = false,
 }: {
   restaurantId: string
   registerId: string
   shiftId: string
   billId: string
   onPaid: (billId: string) => void
+  paid?: boolean
 }) {
   const [input, setInput] = useState('')
   const { handover, confirm } = useCashHandover(
@@ -30,6 +33,19 @@ export function CashHandoverPanel({
   const pending = handover.isSuccess ? handover.data : null
   const amount = cashHandoverSchema.safeParse(input)
   const matches = amount.success && amount.data === pending?.cashReceived
+  const result = getCashHandoverError(confirm.error)
+  const cashReturnRequired = pending?.status === 'ReturnRequired' || result?.status === 'CashReturnRequired'
+  const waitingForPayOs = result?.status === 'PendingReconciliation'
+  if (cashReturnRequired) {
+    const returnAmount = pending?.status === 'ReturnRequired' ? pending.cashReceived : result?.amount
+    return (
+      <div role="alert" className="m-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+        <p className="font-semibold">Cần trả lại tiền mặt</p>
+        <p>Khách đã thanh toán qua PayOS. Trả lại {returnAmount == null ? 'toàn bộ tiền mặt' : money.format(returnAmount)} đã nhận.</p>
+      </div>
+    )
+  }
+  if (paid) return null
 
   return (
     <section className="space-y-4 p-5 sm:p-6">
@@ -46,8 +62,8 @@ export function CashHandoverPanel({
         </button>
       </div>
       {confirm.isError && (
-        <p role="alert" className="text-sm text-rose-700">
-          {cashShiftError(confirm.error)}
+        <p role="alert" className={waitingForPayOs ? 'rounded-xl bg-amber-50 p-3 text-sm text-amber-900' : 'text-sm text-rose-700'}>
+          {waitingForPayOs ? 'Chờ đối soát PayOS. Chưa ghi nhận tiền mặt.' : cashShiftError(confirm.error)}
         </p>
       )}
       {handover.isPending ? (
@@ -111,7 +127,7 @@ export function CashHandoverPanel({
             disabled={!matches || confirm.isPending || handover.isFetching}
           >
             <Icon name="check" size={17} />
-            {confirm.isPending ? 'Đang xác nhận…' : 'Xác nhận đã nhận tiền'}
+            {confirm.isPending ? 'Đang xác nhận…' : waitingForPayOs ? 'Kiểm tra lại đối soát' : 'Xác nhận đã nhận tiền'}
           </button>
         </form>
       )}
