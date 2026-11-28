@@ -44,9 +44,8 @@ export function KdsNotificationsPage({
           type="button"
           className={button}
           onClick={m.refresh}
-          disabled={m.list.isFetching}
         >
-          Làm mới
+          {m.list.isFetching ? 'Đang tải…' : 'Làm mới'}
         </button>
         <button
           type="button"
@@ -61,11 +60,23 @@ export function KdsNotificationsPage({
         Thông báo dành cho tài khoản của bạn. Tự cập nhật mỗi 5 giây. “Đọc tất
         cả” áp dụng cho mọi thông báo, kể cả ngoài bộ lọc.
       </p>
-      {m.list.isPending && <p role="status">Đang tải thông báo…</p>}
+      {m.list.isPending && (
+        <div className="flex items-center gap-3 py-6 text-sm text-slate-500">
+          <span className="inline-block size-4 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent" />
+          <span>Đang tải thông báo…</span>
+        </div>
+      )}
       {m.list.isError && (
-        <p role="alert" className="text-sm text-rose-700">
-          {notificationError(m.list.error)}
-        </p>
+        <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+          <p className="font-medium">{notificationError(m.list.error)}</p>
+          <button
+            type="button"
+            className="mt-2 inline-flex items-center rounded-lg bg-rose-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-rose-700"
+            onClick={() => void m.list.refetch()}
+          >
+            Thử lại ngay
+          </button>
+        </div>
       )}
       {m.markRead.isError && (
         <p role="alert" className="text-sm text-rose-700">

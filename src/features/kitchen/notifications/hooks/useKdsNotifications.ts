@@ -7,8 +7,9 @@ import { notificationAccessDenied } from '../utils/notification'
 
 const readPolicy = {
   retry: (count: number, error: unknown) =>
-    !notificationAccessDenied(error) && count < 1,
-  retryOnMount: false,
+    !notificationAccessDenied(error) && count < 2,
+  retryOnMount: true,
+  staleTime: 5000,
   refetchInterval: (query: { state: { error: unknown } }) =>
     notificationAccessDenied(query.state.error)
       ? (false as const)
@@ -80,7 +81,10 @@ export function useKdsNotifications(open: boolean) {
       setSelectedId('')
     },
     refresh: () => {
+      void client.cancelQueries({ queryKey: key })
       void client.invalidateQueries({ queryKey: key })
+      void list.refetch()
+      void unread.refetch()
     },
   }
 }

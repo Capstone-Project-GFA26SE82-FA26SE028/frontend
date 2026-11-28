@@ -2,7 +2,6 @@ import type { z } from 'zod'
 import { axiosClient } from '../../../../api/axiosClient'
 import { NOTIFICATION_PAGE_SIZE } from '../constants/notification'
 import {
-  notificationEnvelopeSchema,
   notificationPageSchema,
   notificationDetailSchema,
   unreadCountSchema,
@@ -10,10 +9,21 @@ import {
 import type { NotificationFilters } from '../types/notification'
 
 function result(data: unknown) {
-  const envelope = notificationEnvelopeSchema.parse(data)
-  if (!envelope.isSuccess)
-    throw new Error(envelope.message || 'Không thể xử lý thông báo.')
-  return envelope.result
+  if (data && typeof data === 'object') {
+    const raw = data as Record<string, unknown>
+    if (typeof raw.isSuccess === 'boolean') {
+      if (!raw.isSuccess)
+        throw new Error(String(raw.message || 'Không thể xử lý thông báo.'))
+      return raw.result !== undefined ? raw.result : raw
+    }
+    if (typeof raw.IsSuccess === 'boolean') {
+      if (!raw.IsSuccess)
+        throw new Error(String(raw.Message || 'Không thể xử lý thông báo.'))
+      return raw.Result !== undefined ? raw.Result : raw
+    }
+    if (raw.result !== undefined) return raw.result
+  }
+  return data
 }
 
 async function get<T>(

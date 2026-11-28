@@ -47,11 +47,26 @@ export type KitchenItem = {
   availability: string
   version: string
 }
+export type KitchenIngredient = {
+  ingredientId: string
+  ingredientCode: string
+  ingredientName: string
+  baseUnit: string
+  stockQuantity: number
+  lowStockThreshold: number
+  isActive: boolean
+  isLowStock: boolean
+}
 export type ActiveRecipe = {
   version: number
   effectiveFrom: string
   instructions?: string | null
-  ingredients: { ingredientRef: string; baseQuantitySnapshot: number }[]
+  ingredients: {
+    ingredientRef: string
+    baseQuantitySnapshot: number
+    quantity?: number
+    unitRef?: string
+  }[]
   media?: { mediaType: string; url: string; displayOrder: number }[]
 }
 export type KitchenTask = {
@@ -115,6 +130,7 @@ export type KdsBoardProps = KdsActions & {
   now: number
   late: (ticket: Ticket) => boolean
   isFiltered: boolean
+  activeColumn?: 'all' | Status
 }
 
 export type KitchenSummary = {

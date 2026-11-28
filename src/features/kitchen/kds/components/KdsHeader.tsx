@@ -11,29 +11,43 @@ export function KdsHeader({
   onToggleFocus: () => void
 }) {
   return (
-    <>
-      <div className="mb-6 flex flex-col items-center gap-5">
-        <div className="flex w-full flex-wrap items-center justify-end gap-6">
-          <div className="grid gap-0.5 text-left md:text-right [&>strong]:text-[23px] [&>strong]:leading-none [&>strong]:tracking-[-1px] [&>strong]:tabular-nums md:[&>strong]:text-[27px] [&>span]:text-sm [&>span]:text-[#475569]">
-            <strong>{clock(now)}</strong>
-            <span>
-              {new Date(now).toLocaleDateString('en-US', {
-                weekday: 'long',
-                day: '2-digit',
-                month: '2-digit',
-              })}
-            </span>
-          </div>
-          <button
-            className="flex items-center gap-2 rounded-[9px] border border-[#d7e2dc] bg-white px-[13px] py-[11px] text-sm font-semibold whitespace-nowrap hover:bg-[#e6f1eb] motion-safe:transition-colors motion-safe:duration-150 min-[1251px]:text-sm"
-            onClick={onToggleFocus}
-            aria-pressed={focus}
-          >
-            <Icon name={focus ? 'close' : 'monitor'} size={18} />
-            {focus ? 'Thoát chế độ tập trung' : 'Chế độ tập trung'}
-          </button>
-        </div>
+    <div className="mb-3 flex items-center justify-between gap-4">
+      {/* Ngày tháng tiếng Việt */}
+      <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+        <span className="flex size-2 rounded-full bg-emerald-500" />
+        <span>
+          {new Date(now).toLocaleDateString('vi-VN', {
+            weekday: 'long',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          })}
+        </span>
       </div>
-    </>
+
+      {/* Đồng hồ thời gian thực & Nút chuyển Focus Mode */}
+      <div className="flex items-center gap-3">
+        <div className="flex items-baseline gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-1.5 shadow-2xs">
+          <Icon name="clock" size={14} className="text-emerald-700" />
+          <strong className="text-base font-black tabular-nums tracking-tight text-slate-900">
+            {clock(now)}
+          </strong>
+        </div>
+
+        <button
+          type="button"
+          onClick={onToggleFocus}
+          aria-pressed={focus}
+          className={`flex min-h-9 items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all active:scale-95 ${
+            focus
+              ? 'border-emerald-300 bg-emerald-50 text-emerald-800'
+              : 'border-slate-200/90 bg-white text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          <Icon name={focus ? 'close' : 'monitor'} size={15} />
+          <span>{focus ? 'Thoát toàn màn hình' : 'Toàn màn hình'}</span>
+        </button>
+      </div>
+    </div>
   )
 }

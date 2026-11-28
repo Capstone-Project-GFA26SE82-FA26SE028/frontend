@@ -31,7 +31,7 @@ function KitchenWorkspace() {
     return () => clearTimeout(timer)
   }, [state.feedback, dismissFeedback])
   return (
-    <div lang="vi" className="min-h-dvh bg-[#f2f8fa] text-[#253754]">
+    <div lang="vi" className="h-dvh flex flex-col overflow-hidden bg-[#f2f8fa] text-[#253754]">
       <a
         href="#kitchen-main"
         className="sr-only focus:not-sr-only focus:fixed focus:z-50 focus:bg-white focus:p-4"
@@ -39,16 +39,19 @@ function KitchenWorkspace() {
         Đến nội dung màn hình bếp
       </a>
       <KdsWorkspaceHeader />
-      <main id="kitchen-main" className="mx-auto max-w-[1920px] p-3 sm:p-6">
+      <main
+        id="kitchen-main"
+        className="mx-auto flex w-full max-w-[1920px] flex-1 min-h-0 flex-col overflow-hidden px-2.5 py-1.5 sm:px-4 sm:py-2"
+      >
         {(loading || pending) && (
-          <p role="status" className="mb-3 text-sm text-emerald-800">
+          <p role="status" className="mb-1 text-xs text-emerald-800">
             {pending ? 'Đang lưu…' : 'Đang tải dữ liệu bếp…'}
           </p>
         )}
         {errors.length > 0 && (
           <div
             role="alert"
-            className="mb-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-800"
+            className="mb-2 rounded-xl bg-rose-50 p-2 text-xs text-rose-800"
           >
             {errors.map((error) => (
               <p key={error}>{error}</p>
@@ -56,11 +59,15 @@ function KitchenWorkspace() {
           </div>
         )}
         {!loading && !errors.length && !stations.length && (
-          <p role="status" className="mb-4">
+          <p role="status" className="mb-2 text-xs">
             Chưa có trạm bếp đang hoạt động.
           </p>
         )}
-        <fieldset className="min-w-0" disabled={pending} aria-busy={pending}>
+        <fieldset
+          className="flex flex-1 min-h-0 flex-col overflow-hidden min-w-0"
+          disabled={pending}
+          aria-busy={pending}
+        >
           <Outlet />
         </fieldset>
       </main>
